@@ -1,5 +1,8 @@
 library(shiny)
-
+library(ggplot2)
+library(plotly)
+library(stringr)
+library(Hmisc)
 shinyServer(function(input, output){
   
   
