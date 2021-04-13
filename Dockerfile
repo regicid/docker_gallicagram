@@ -26,11 +26,11 @@ RUN R -e "install.packages(c('shiny', 'rmarkdown','ggplot2','plotly','stringr','
 
 
 # copy the app to the image
-RUN mkdir /root/gallicagram_app
-COPY gallicagram_app /root/gallicagram_app
+RUN mkdir /root/gallicagram
+COPY gallicagram /root/gallicagram
 
 COPY Rprofile.site /usr/lib/R/etc/
 
 EXPOSE 3838
 
-CMD ["R", "-e", "shiny::runApp('/root/gallicagram_app')"]
+CMD ["R", "-e", "shiny::runApp('/root/gallicagram')"]
