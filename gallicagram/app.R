@@ -32,7 +32,7 @@ ui <- fluidPage(
 )
 
 # Define server logic required to draw a histogram ----
-server <- function(input, output, session) {
+server <- function(input, output) {
   
   # Histogram of the Old Faithful Geyser Data ----
   # with requested number of bins
