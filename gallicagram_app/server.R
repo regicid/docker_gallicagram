@@ -12,6 +12,97 @@ library(ngramr)
 library(dplyr)
 library(htmltools)
 data = list()
+
+js <- "
+function(el, x) {
+el.on('plotly_click', function(d) {
+var point = d.points[0];
+var url = point.data.customdata[point.pointIndex];
+window.open(url);
+});
+}"
+
+Plot <- function(data,input){
+  
+  if((input$search_mode==2 & input$doc_type==1)|input$search_mode!=2)
+  {
+    tableau = data[["tableau"]]
+    if(input$doc_type==4 & input$occurrences_page==TRUE){
+      tableau$ratio_temp<-tableau$ratio_count
+    }
+    Title = paste("")
+    width = length(unique(tableau$date))
+    span = 2/width + input$span*(width-2)/(10*width)
+    tableau$loess = tableau$nb_temp
+    for(mot in str_split(data$mot,"&")[[1]]){
+      z = which(tableau$mot==mot)
+      x = 1:length(z)
+      tableau$loess[z] = loess(tableau$ratio_temp[z]~x,span=span)$fitted
+    }
+    tableau$hovers = str_c(tableau$date,": x/N = ",tableau$nb_temp,"/",tableau$base_temp,"\n                 = ",round(tableau$ratio_temp*100,digits = 1),"%")
+    plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',hoverinfo="text",customdata=tableau$url)
+    #plot = onRender(plot,js)
+    y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = ".1%")
+    x <- list(title = data[["resolution"]],titlefont = 41)
+    plot = layout(plot, yaxis = y, xaxis = x,title = Title)
+    if(length(grep(",",data$mot))==0){plot = layout(plot,showlegend=TRUE)}
+    
+    if(input$delta==TRUE){
+      mots<-str_split(input$mot,"&")
+      x = 1:sum(tableau$mot==unlist(mots)[1])
+      tableau$delta[tableau$mot==unlist(mots)[1]]<-loess((tableau$ratio_temp[tableau$mot==unlist(mots)[1]]-tableau$ratio_temp[tableau$mot==unlist(mots)[2]]~x),span=span)$fitted
+      tableau$hovers2 = str_c(tableau$date,": delta = ",round(tableau$delta*100,digits=2),"%, N = ",tableau$base_temp)
+      plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',hoverinfo="text")
+      y <- list(title = "Différence de fréquence\nd'occurrence dans le corpus",titlefont = 41,tickformat = ".1%")
+      x <- list(title = data[["resolution"]],titlefont = 41)
+      Title = paste("Freq(",unlist(mots)[1],") – Freq(",unlist(mots)[2],")")
+      Title=str_remove_all(Title," ")
+      plot = layout(plot, yaxis = y, xaxis = x,title = Title)
+    }
+    if(input$barplot){
+      width = nrow(tableau)
+      span = 2/width + input$span*(width-2)/(10*width)
+      tableau$hovers = str_c(tableau$date,": N = ",tableau$base_temp)
+      plot1 = plot_ly(tableau, x=~date[tableau$mot==mot[1]],y=~base_temp[tableau$mot==mot[1]],text=~hovers[tableau$mot==mot[1]],type='bar',hoverinfo="text",marker = list(color='rgba(31, 119, 180,1)'))
+      y <- list(title = "Nombre de numéros dans Gallica-presse",titlefont = 41)
+      x <- list(title = data[["resolution"]],titlefont = 41)
+      plot1 = layout(plot1, yaxis = y, xaxis = x,title = Title,showlegend = FALSE)
+      plot= plot%>%add_lines()
+      plot = plotly::subplot(plot,plot1,nrows = 2,legend=NULL,shareX = T)
+      return(onRender(plot,js))
+    } else{
+      plot=layout(plot)
+      return(onRender(plot,js))
+    }
+  }
+  if(input$search_mode==2 &input$doc_type==2)
+  {
+    mots = str_split(input$mot,"&")[[1]]
+    tableau=ngram(mots,corpus = "fre_2019",year_start = input$beginning,year_end = input$end,smoothing = 0 ,case_ins = TRUE,aggregate = TRUE)
+    colnames(tableau)=c("date","mot","ratio_temp","corpus")
+    tableau$mot<-str_remove_all(tableau$mot," \\(All\\)")
+    tableau$mot<-str_remove_all(tableau$mot,"\\(")
+    tableau$mot<-str_remove_all(tableau$mot,"\\)")
+    tableau$mot<-str_replace_all(tableau$mot," \\+ ","\\+")
+    Title = paste("")
+    width = length(unique(tableau$date))
+    span = 2/width + input$span*(width-2)/(10*width)
+    tableau$loess = NA
+    for(mot in mots){
+      z = which(tableau$mot==mot)
+      x = 1:length(z)
+      tableau$loess[z] = loess(tableau$ratio_temp[z]~x,span=span)$fitted
+    }
+    tableau$hovers = str_c(tableau$date," : ",round(tableau$ratio_temp*100,digits = 5),"%")
+    ngram=plot_ly(tableau,x=~date,y=~loess,color=~mot,text=~hovers,type='scatter',mode='spline',hoverinfo="text")
+    y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = ".5%")
+    x <- list(title = data[["resolution"]],titlefont = 41)
+    ngram = layout(ngram, yaxis = y, xaxis = x,title = Title,showlegend = TRUE)
+    return(ngram)
+  }
+  
+}
+
 get_data_bis <- function(mot,from,to,resolution,tot_df){
   mot=str_remove(mot,"&.+")
   mot=str_remove(mot,"[+].+")
@@ -288,7 +379,7 @@ correlation_matrix <- function(df, input,
   return(Rnew)
 }
 
-server <- function(input, output,session){
+shinyServer(function(input, output,session){
   
   output$legende1<-renderText(str_c("Corpus : presse\n"))
   observeEvent(
@@ -668,5 +759,4 @@ server <- function(input, output,session){
   })})
   
   shinyOptions(progress.style="old")
-}
-
+})
