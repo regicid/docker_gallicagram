@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libssh2-1-dev \
     libssl1.1 \
-    libxml2-dev \
+    #libxml2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # system library dependency for the gallicagram app
@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y \
 # basic shiny functionality
 RUN R -e "install.packages(c('shiny', 'rmarkdown'), repos='https://cloud.r-project.org/')"
 
-RUN R -e "install.packages(c('ggplot2','plotly','stringr','Hmisc','xml2','shinythemes','htmlwidgets','httr','ngramr','dplyr','htmltools'), repos='https://cloud.r-project.org/')"
+#RUN R -e "install.packages(c('ggplot2','plotly','stringr','Hmisc','xml2','shinythemes','htmlwidgets','httr','ngramr','dplyr','htmltools'), repos='https://cloud.r-project.org/')"
 
 # copy the app to the image
 RUN mkdir /root/gallicagram
