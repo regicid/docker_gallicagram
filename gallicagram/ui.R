@@ -12,7 +12,7 @@ library(ngramr)
 library(dplyr)
 library(htmltools)
 
-ui <- navbarPage("Gallicagram",
+shinyUI(navbarPage("Gallicagram",
                  tabPanel("Graphique",fluidPage(),
                           tags$head(
                               tags$style(HTML(".shiny-output-error-validation{color: red;}"))),
@@ -93,4 +93,5 @@ ui <- navbarPage("Gallicagram",
                  tabPanel("Tutoriel",headerPanel("Tutoriel"),
                           fluidPage(HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/SujS4t-ZGhQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'))),
                  tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/gallicapresse' target='_blank'>Gallicapresse"))
+)
 )

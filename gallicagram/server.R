@@ -381,7 +381,7 @@ correlation_matrix <- function(df, input,
 options(shiny.maxRequestSize = 100*1024^2)
 
 # Define server logic required to draw a histogram
-server <- function(input, output,session){
+shinyServer(function(input, output,session){
   
   output$legende1<-renderText(str_c("Corpus : presse\n"))
   observeEvent(
@@ -782,3 +782,4 @@ server <- function(input, output,session){
   
   shinyOptions(progress.style="old")
 }
+)
