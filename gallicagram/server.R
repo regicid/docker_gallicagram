@@ -4,6 +4,11 @@ library(plotly)
 library(stringr)
 library(Hmisc)
 library(xml2)
+library(markdown)
+library(shinythemes)
+library(htmlwidgets)
+library(httr)
+library(ngramr)
 shinyServer(function(input, output){
   
   
