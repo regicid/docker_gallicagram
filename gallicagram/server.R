@@ -3,6 +3,7 @@ library(ggplot2)
 library(plotly)
 library(stringr)
 library(Hmisc)
+library(xml2)
 shinyServer(function(input, output){
   
   
