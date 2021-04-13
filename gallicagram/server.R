@@ -9,6 +9,8 @@ library(shinythemes)
 library(htmlwidgets)
 library(httr)
 library(ngramr)
+library(dplyr)
+library(htmltools)
 shinyServer(function(input, output){
   
   
