@@ -12,6 +12,97 @@ library(ngramr)
 library(dplyr)
 library(htmltools)
 data = list()
+
+js <- "
+function(el, x) {
+el.on('plotly_click', function(d) {
+var point = d.points[0];
+var url = point.data.customdata[point.pointIndex];
+window.open(url);
+});
+}"
+
+Plot <- function(data,input){
+  if((input$search_mode==2 & input$doc_type==1)|input$search_mode!=2)
+  {
+    tableau = data[["tableau"]]
+    if(input$doc_type==4 & input$occurrences_page==TRUE){
+      tableau$ratio_temp<-tableau$ratio_count
+    }
+    Title = paste("")
+    width = length(unique(tableau$date))
+    span = 2/width + input$span*(width-2)/(10*width)
+    tableau$loess = tableau$ratio_temp
+    if(input$span >0){
+      for(mot in str_split(data$mot,"&")[[1]]){
+        z = which(tableau$mot==mot)
+        x = 1:length(z)
+        tableau$loess[z] = loess(tableau$ratio_temp[z]~x,span=span)$fitted
+      }}
+    tableau$hovers = str_c(tableau$date,": x/N = ",tableau$nb_temp,"/",tableau$base_temp,"\n                 = ",round(tableau$ratio_temp*100,digits = 1),"%")
+    plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',hoverinfo="text",customdata=tableau$url)
+    #plot = onRender(plot,js)
+    y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = ".1%")
+    x <- list(title = data[["resolution"]],titlefont = 41)
+    plot = layout(plot, yaxis = y, xaxis = x,title = Title)
+    if(length(grep(",",data$mot))==0){plot = layout(plot,showlegend=TRUE)}
+    
+    if(input$delta==TRUE){
+      mots<-str_split(input$mot,"&")
+      x = 1:sum(tableau$mot==unlist(mots)[1])
+      tableau$delta[tableau$mot==unlist(mots)[1]]<-loess((tableau$ratio_temp[tableau$mot==unlist(mots)[1]]-tableau$ratio_temp[tableau$mot==unlist(mots)[2]]~x),span=span)$fitted
+      tableau$hovers2 = str_c(tableau$date,": delta = ",round(tableau$delta*100,digits=2),"%, N = ",tableau$base_temp)
+      plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',hoverinfo="text")
+      y <- list(title = "Différence de fréquence\nd'occurrence dans le corpus",titlefont = 41,tickformat = ".1%")
+      x <- list(title = data[["resolution"]],titlefont = 41)
+      Title = paste("Freq(",unlist(mots)[1],") – Freq(",unlist(mots)[2],")")
+      Title=str_remove_all(Title," ")
+      plot = layout(plot, yaxis = y, xaxis = x,title = Title)
+    }
+    if(input$barplot){
+      width = nrow(tableau)
+      span = 2/width + input$span*(width-2)/(10*width)
+      tableau$hovers = str_c(tableau$date,": N = ",tableau$base_temp)
+      plot1 = plot_ly(tableau, x=~date[tableau$mot==mot[1]],y=~base_temp[tableau$mot==mot[1]],text=~hovers[tableau$mot==mot[1]],type='bar',hoverinfo="text",marker = list(color='rgba(31, 119, 180,1)'))
+      y <- list(title = "Nombre de numéros dans Gallica-presse",titlefont = 41)
+      x <- list(title = data[["resolution"]],titlefont = 41)
+      plot1 = layout(plot1, yaxis = y, xaxis = x,title = Title,showlegend = FALSE)
+      plot= plot%>%add_lines()
+      plot = plotly::subplot(plot,plot1,nrows = 2,legend=NULL,shareX = T)
+      return(onRender(plot,js))
+    } else{
+      plot=layout(plot)
+      return(onRender(plot,js))
+    }
+  }
+  if(input$search_mode==2 &input$doc_type==2)
+  {
+    mots = str_split(input$mot,"&")[[1]]
+    tableau=ngram(mots,corpus = "fre_2019",year_start = input$beginning,year_end = input$end,smoothing = 0 ,case_ins = TRUE,aggregate = TRUE)
+    colnames(tableau)=c("date","mot","ratio_temp","corpus")
+    tableau$mot<-str_remove_all(tableau$mot," \\(All\\)")
+    tableau$mot<-str_remove_all(tableau$mot,"\\(")
+    tableau$mot<-str_remove_all(tableau$mot,"\\)")
+    tableau$mot<-str_replace_all(tableau$mot," \\+ ","\\+")
+    Title = paste("")
+    width = length(unique(tableau$date))
+    span = 2/width + input$span*(width-2)/(10*width)
+    tableau$loess = tableau$ratio_temp
+    if(input$span >0){
+      for(mot in mots){
+        z = which(tableau$mot==mot)
+        x = 1:length(z)
+        tableau$loess[z] = loess(tableau$ratio_temp[z]~x,span=span)$fitted
+      }}
+    tableau$hovers = str_c(tableau$date," : ",round(tableau$ratio_temp*100,digits = 5),"%")
+    ngram=plot_ly(tableau,x=~date,y=~loess,color=~mot,text=~hovers,type='scatter',mode='spline',hoverinfo="text")
+    y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = ".5%")
+    x <- list(title = data[["resolution"]],titlefont = 41)
+    ngram = layout(ngram, yaxis = y, xaxis = x,title = Title,showlegend = TRUE)
+    return(ngram)
+  }
+  
+}
 get_data_bis <- function(mot,from,to,resolution,tot_df){
   mot=str_remove(mot,"&.+")
   mot=str_remove(mot,"[+].+")
@@ -23,9 +114,9 @@ get_data_bis <- function(mot,from,to,resolution,tot_df){
     tot_df$date<-str_remove_all(tot_df$date,"-.+")
   }
   if (resolution=="Mois"){
-  from=str_c(from,"-01")
-  to=str_c(to,"-12")
-  tot_df$date<-str_extract(tot_df$date,".......")
+    from=str_c(from,"-01")
+    to=str_c(to,"-12")
+    tot_df$date<-str_extract(tot_df$date,".......")
   }
   tot_df<-tot_df[is.na(tot_df$date)==FALSE,]
   tot_df$date<-as.character(tot_df$date)
@@ -42,23 +133,23 @@ get_data_bis <- function(mot,from,to,resolution,tot_df){
   
   tot_df$detect<-FALSE
   for (i in 1:length(tot_df$ark)) {
-  url<-str_c("https://gallica.bnf.fr/services/ContentSearch?ark=",tot_df$ark[i],"&query=",mot)
-  resultat<-as.character(read_html(RETRY("GET",url,times = 3)))
-  resultat=str_remove_all(resultat,"[:space:]")
-  resultat=str_remove_all(resultat,".+countresults")
-  resultat=str_remove_all(resultat,"searchtime.+")
-  resultat=str_extract(resultat,"[:digit:]+")
-  tot_df$resultats[i]<-as.integer(resultat)
-  
-  url_base<-str_c("https://gallica.bnf.fr/services/ContentSearch?ark=",tot_df$ark[i],"&query=%20")
-  resultat_base<-as.character(read_html(RETRY("GET",url_base,times = 3)))
-  resultat_base=str_remove_all(resultat_base,"[:space:]")
-  resultat_base=str_remove_all(resultat_base,".+countresults")
-  resultat_base=str_remove_all(resultat_base,"searchtime.+")
-  resultat_base=str_extract(resultat_base,"[:digit:]+")
-  tot_df$resultats_base[i]<-as.integer(resultat_base)
-  if(as.integer(resultat)>0){tot_df$detect[i]<-TRUE}
-  progress$inc(1/length(tot_df$ark), detail = paste(as.integer(i*100/length(tot_df$ark)),"% traités"))
+    url<-str_c("https://gallica.bnf.fr/services/ContentSearch?ark=",tot_df$ark[i],"&query=",mot)
+    resultat<-as.character(read_html(RETRY("GET",url,times = 3)))
+    resultat=str_remove_all(resultat,"[:space:]")
+    resultat=str_remove_all(resultat,".+countresults")
+    resultat=str_remove_all(resultat,"searchtime.+")
+    resultat=str_extract(resultat,"[:digit:]+")
+    tot_df$resultats[i]<-as.integer(resultat)
+    
+    url_base<-str_c("https://gallica.bnf.fr/services/ContentSearch?ark=",tot_df$ark[i],"&query=%20")
+    resultat_base<-as.character(read_html(RETRY("GET",url_base,times = 3)))
+    resultat_base=str_remove_all(resultat_base,"[:space:]")
+    resultat_base=str_remove_all(resultat_base,".+countresults")
+    resultat_base=str_remove_all(resultat_base,"searchtime.+")
+    resultat_base=str_extract(resultat_base,"[:digit:]+")
+    tot_df$resultats_base[i]<-as.integer(resultat_base)
+    if(as.integer(resultat)>0){tot_df$detect[i]<-TRUE}
+    progress$inc(1/length(tot_df$ark), detail = paste(as.integer(i*100/length(tot_df$ark)),"% traités"))
   }
   tableau$count<-0
   tableau$detect<-0
@@ -102,17 +193,17 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
       or<-""
       or_end<-""
       if(str_detect(mot2,"[+]")){
-      mots_or = str_split(mot2,"[+]")[[1]]
-      or1<-NA
-      or1_end<-NA
-      for (j in 2:length(mots_or)) {
-        
-        or1[j]<-str_c("or%20text%20adj%20%22",mots_or[j],"%22%20")
-        or1_end[j]<-str_c("%20",mots_or[j])
-        or<-str_c(or,or1[j])
-        or_end<-str_c(or_end,or1_end[j])
-      }
-      mot1<-mots_or[1]}else{mot1=mot2}
+        mots_or = str_split(mot2,"[+]")[[1]]
+        or1<-NA
+        or1_end<-NA
+        for (j in 2:length(mots_or)) {
+          
+          or1[j]<-str_c("or%20text%20adj%20%22",mots_or[j],"%22%20")
+          or1_end[j]<-str_c("%20",mots_or[j])
+          or<-str_c(or,or1[j])
+          or_end<-str_c(or_end,or1_end[j])
+        }
+        mot1<-mots_or[1]}else{mot1=mot2}
       
       if(doc_type==3 & length(titres)>1){
         ark1<-titres[1]
@@ -127,7 +218,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
       {
         ark1<-titres
         ark3<-""
-        }
+      }
       ###
       end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
       if(i%%4==0){end_of_month[2]=29} #Ne pas oublier les années bisextiles (merci Maxendre de m'y avoir fait penser)
@@ -139,35 +230,35 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
       
       
       if(doc_type !=2){
-      for(j in I){
-        if(resolution=="Mois"){
-          z = as.character(j)
-          if(nchar(z)<2){z<-str_c("0",z)}
-          beginning = str_c(y,"/",z,"/01")
-          end = str_c(y,"/",z,"/",end_of_month[j])}
-        url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
-        if(doc_type == 3){
-          url <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)sortby%20dc.date%20")
+        for(j in I){
+          if(resolution=="Mois"){
+            z = as.character(j)
+            if(nchar(z)<2){z<-str_c("0",z)}
+            beginning = str_c(y,"/",z,"/01")
+            end = str_c(y,"/",z,"/",end_of_month[j])}
+          url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
+          if(doc_type == 3){
+            url <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)sortby%20dc.date%20")
           }
-        ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
-        a<-str_extract(str_extract(ngram,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
-        
-        if(doc_type == 3){
-          url_base <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)%20sortby%20dc.date")
-          ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
-          b<-str_extract(str_extract(ngram_base,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
-        }
-        if(resolution=="Mois"& doc_type==1){
-          date=str_c(y,"/",z)
-          b<-as.integer(base$base_temp[base$date==date])}
-        else if (resolution=="Année" & doc_type==1){b<-as.integer(base$base_temp[base$date==y])}
-        if(length(b)==0L){b=0}
-        tableau[nrow(tableau)+1,] = NA
-        date=y
-        if(resolution=="Mois"){date = paste(y,z,sep="/")}
-        tableau[nrow(tableau),]<-c(date,a,b,mot,url)
-        progress$inc(1/((to-from+1)*length(I)*length(mots)), detail = paste("Gallicagram ratisse l'an", i))
-      }}
+          ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
+          a<-str_extract(str_extract(ngram,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
+          
+          if(doc_type == 3){
+            url_base <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)%20sortby%20dc.date")
+            ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
+            b<-str_extract(str_extract(ngram_base,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
+          }
+          if(resolution=="Mois"& doc_type==1){
+            date=str_c(y,"/",z)
+            b<-as.integer(base$base_temp[base$date==date])}
+          else if (resolution=="Année" & doc_type==1){b<-as.integer(base$base_temp[base$date==y])}
+          if(length(b)==0L){b=0}
+          tableau[nrow(tableau)+1,] = NA
+          date=y
+          if(resolution=="Mois"){date = paste(y,z,sep="/")}
+          tableau[nrow(tableau),]<-c(date,a,b,mot,url)
+          progress$inc(1/((to-from+1)*length(I)*length(mots)), detail = paste("Gallicagram ratisse l'an", i))
+        }}
       
       if(doc_type==2){
         url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=true&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)&suggest=10&keywords=",mot1,or_end)
@@ -220,16 +311,16 @@ correlation_matrix <- function(df, input,
     df$mot<-str_remove_all(df$mot,"\\)")
     df$mot<-str_replace_all(df$mot," \\+ ","\\+")
   }else{
- df=df[["tableau"]]}
- df=select(df,mot,ratio_temp)
- mots<-unlist(unique(df$mot))
- a<-df$ratio_temp[df$mot==mots[1]]
- for (i in 2:length(mots)) {
-   a<-cbind(a,df$ratio_temp[df$mot==mots[i]])
- }
- df=as.data.frame(a)
- colnames(df)=mots
-   # check arguments
+    df=df[["tableau"]]}
+  df=select(df,mot,ratio_temp)
+  mots<-unlist(unique(df$mot))
+  a<-df$ratio_temp[df$mot==mots[1]]
+  for (i in 2:length(mots)) {
+    a<-cbind(a,df$ratio_temp[df$mot==mots[i]])
+  }
+  df=as.data.frame(a)
+  colnames(df)=mots
+  # check arguments
   stopifnot({
     is.numeric(digits)
     digits >= 0
@@ -287,19 +378,20 @@ correlation_matrix <- function(df, input,
   Rnew<-Rnew[,-1]
   return(Rnew)
 }
+options(shiny.maxRequestSize = 100*1024^2)
 
-server <- function(input, output,session){
+shinyServer(function(input, output,session){
   
   output$legende1<-renderText(str_c("Corpus : presse\n"))
   observeEvent(
     input$doc_type,
     {if(input$doc_type==3 && is.null(input$titres))
-      {
-        liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
-        updateSelectizeInput(session,"titres",choices = setNames(liste_journaux$ark,liste_journaux$title),selected="cb39294634r")
-      }
+    {
+      liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
+      updateSelectizeInput(session,"titres",choices = setNames(liste_journaux$ark,liste_journaux$title),selected="cb39294634r")
+    }
       
-  })
+    })
   observeEvent(
     input$do,
     {if(input$doc_type==3)
@@ -311,22 +403,22 @@ server <- function(input, output,session){
       
       if(input$doc_type!=3){output$legende1<-renderText(str_c(if(input$doc_type==1){"Corpus : presse\n"} else if (input$doc_type==2){"Corpus : livres\n"}))}
     })
-
+  
   output$plot <- renderPlotly({Plot(data,input)})
   output$corr<-renderTable(correlation_matrix(data,input),rownames = TRUE)
   output$pvalue=renderText("***p<.001 ; **p<.01 ; *p<.05")
   observeEvent(input$search_mode,{observeEvent(input$doc_type,{
     if(input$search_mode==2 & input$doc_type==2)
     {output$legende=renderText("Source : books.google.com/ngrams")}
-      else{output$legende=renderText("Source : gallica.bnf.fr")}
-        })})
+    else{output$legende=renderText("Source : gallica.bnf.fr")}
+  })})
   output$legende0=renderText("Affichage : Gallicagram par Benjamin Azoulay et Benoît de Courson")
   observeEvent(
     input$occurrences_page,{
-  output$legende2<-renderText(if(input$doc_type!=4 | input$occurrences_page!=TRUE){str_c(as.character(sum(data[["tableau"]]$base_temp))," documents épluchés\n")}else if(input$doc_type==4 & input$occurrences_page==TRUE){str_c(as.character(sum(data[["tableau"]]$base_count))," pages épluchées\n")})
-  output$legende3<-renderText(if(input$doc_type!=4 | input$occurrences_page!=TRUE){str_c(as.character(sum(data[["tableau"]]$nb_temp))," résultats trouvés")}else if(input$doc_type==4 & input$occurrences_page==TRUE){str_c(as.character(sum(data[["tableau"]]$count))," pages correspondant à la recherche")})
-})
- 
+      output$legende2<-renderText(if(input$doc_type!=4 | input$occurrences_page!=TRUE){str_c(as.character(sum(data[["tableau"]]$base_temp))," documents épluchés\n")}else if(input$doc_type==4 & input$occurrences_page==TRUE){str_c(as.character(sum(data[["tableau"]]$base_count))," pages épluchées\n")})
+      output$legende3<-renderText(if(input$doc_type!=4 | input$occurrences_page!=TRUE){str_c(as.character(sum(data[["tableau"]]$nb_temp))," résultats trouvés")}else if(input$doc_type==4 & input$occurrences_page==TRUE){str_c(as.character(sum(data[["tableau"]]$count))," pages correspondant à la recherche")})
+    })
+  
   output$downloadData <- downloadHandler(
     filename = function() {
       paste('data-', Sys.Date(), '.csv', sep='')
@@ -341,13 +433,13 @@ server <- function(input, output,session){
     content = function(con) {
       htmlwidgets::saveWidget(as_widget(Plot(data,input)), con)
     })
-
+  
   
   observeEvent(input$do,{
     datasetInput <- reactive({
       data$tableau})
     if (input$doc_type!=4){
-    df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres)}
+      df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
       tot_df<- read.csv(inFile$datapath, header = TRUE,sep = ";",encoding = "UTF-8")
@@ -360,7 +452,7 @@ server <- function(input, output,session){
       colnames(tot_df)<-c("identifier","type","title","creator","contributor","publisher","date","description","format","source","rights","relation")
       tot_df$identifier<-str_remove_all(tot_df$identifier," .+")
       df=get_data_bis(input$mot,input$beginning,input$end,input$resolution,tot_df)
-      }
+    }
     
     output$plot <- renderPlotly({Plot(df,input)})
     
@@ -382,7 +474,7 @@ server <- function(input, output,session){
       content = function(con) {
         htmlwidgets::saveWidget(as_widget(Plot(df,input)), con)
       })
-    })
+  })
   
   output$currentTime <- renderText({
     invalidateLater(1000, session)
@@ -402,12 +494,6 @@ server <- function(input, output,session){
         x <- list(title = "Date",titlefont = 41)
         plot2 = layout(plot2, yaxis = y, xaxis = x,title = Title)
         return(plot2)
-      }
-      else if(input$corpus_structure_p==7){
-        p_titres<-read.csv("p_titres.csv",encoding = "UTF-8")
-        plot3<-plot_ly(p_titres,x=~as.integer(p_titres$date),y=~n,color=~principaux_titres,type='bar',colors="Dark2")
-        plot3<-layout(plot3, title="Distribution des numéros de presse en français \nselon le journal d'origine", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
-        return(plot3)
       }
       else if(input$corpus_structure_p==2){
         p_villes<-read.csv("p_villes.csv",encoding = "UTF-8")
@@ -430,7 +516,7 @@ server <- function(input, output,session){
       else if(input$corpus_structure_p==3){
         p_droits<-read.csv("p_droits.csv",encoding = "UTF-8")
         plot5<-plot_ly(p_droits,x=~date,y=~n,color=~rights,type='bar',colors="Dark2")
-        plot5<-layout(plot5, title="Distribution des numéros de presse en français \nselon leur régime juridique", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
+        plot5<-layout(plot5, title="Distribution des numéros de presse en français \nselon leur mode d'accès", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
         return(plot5)
       }
       else if(input$corpus_structure_p==4){
@@ -455,12 +541,6 @@ server <- function(input, output,session){
         plot2 = layout(plot2, yaxis = y, xaxis = x,title = Title)
         return(plot2)
       }
-      else if(input$corpus_structure_p==7){
-        p_titres<-read.csv("p_titres.csv",encoding = "UTF-8")
-        plot4<-plot_ly(p_titres,x=~as.integer(p_titres$date),y=~n,color=~principaux_titres,type='bar',colors="Dark2")
-        plot4<-layout(plot4, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4),title="Distribution des numéros de presse en français \nselon le journal d'origine", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Part des documents à chaque période"),barmode="stack",bargap=0,barnorm="percent")
-        return(plot4)
-      }
       else if(input$corpus_structure_p==2){
         p_villes<-read.csv("p_villes.csv",encoding = "UTF-8")
         plot8<-plot_ly(p_villes,x=~as.integer(p_villes$date),y=~n,color=~principales_villes,type='bar',colors="Dark2")
@@ -482,7 +562,7 @@ server <- function(input, output,session){
       else if(input$corpus_structure_p==3){
         p_droits<-read.csv("p_droits.csv",encoding = "UTF-8")
         plot5<-plot_ly(p_droits,x=~date,y=~n,color=~rights,type='bar',colors="Dark2")
-        plot5<-layout(plot5, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4), title="Distribution des numéros de presse en français \nselon leur régime juridique", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Part des documents à chaque période"),barmode="stack",barnorm="percent",bargap=0)
+        plot5<-layout(plot5, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4), title="Distribution des numéros de presse en français \nselon leur mode d'accès", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Part des documents à chaque période"),barmode="stack",barnorm="percent",bargap=0)
         return(plot5)
       }
       else if(input$corpus_structure_p==4){
@@ -504,14 +584,24 @@ server <- function(input, output,session){
   corpus_display_l<-function() {
     
     if(input$corpus_relative_l==FALSE){
-      if(input$corpus_structure_l==1){
+      if(input$corpus_structure_l==1 & input$corpus_ngram_l==FALSE){
         table<-read.csv("base_livres_annees.csv",encoding="UTF-8")
         somme<-sum(table$base_temp)
         table<-table[table$date>=1450,]
         table$hovers = str_c(table$date,": N = ",table$base_temp)
         plot2<-plot_ly(table, x=~date,y=~base_temp,text=~hovers,type='bar',hoverinfo="text")
-        Title = paste("<a href = 'https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&collapsing=true&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(gallicapublication_date%3E=%221380%22%20and%20gallicapublication_date%3C=%222021%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords='> <b>Répartition des ",somme," livres océrisés dans Gallica<b> </a>")
+        Title = paste("<a href = 'https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&collapsing=true&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(gallicapublication_date%3E=%221380%22%20and%20gallicapublication_date%3C=%222021%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords='> <b>Répartition des ",somme," livres en français océrisés\ndans Gallica<b> </a>")
         y <- list(title = "Nombre de livres dans Gallica",titlefont = 41)
+        x <- list(title = "Date",titlefont = 41)
+        plot2 = layout(plot2, yaxis = y, xaxis = x,title = Title)
+        return(plot2)
+      }
+      else if(input$corpus_structure_l==1 & input$corpus_ngram_l==TRUE){
+        ngram<-read.csv("ngram_viewer_fre_20200217.csv",encoding = "UTF-8")
+        total_volume_count<-sum(ngram$volume_count)
+        plot2<-plot_ly(ngram, x=~year,y=~volume_count,type='bar')
+        Title = paste("<b>Répartition des ",total_volume_count," livres océrisés et en français\nexploités dans"," <a href = 'https://books.google.com/ngrams/graph?content=Joffre%2CP%C3%A9tain%2CFoch&year_start=1914&year_end=1920&corpus=30&smoothing=0&direct_url=t1%3B%2CJoffre%3B%2Cc0%3B.t1%3B%2CP%C3%A9tain%3B%2Cc0%3B.t1%3B%2CFoch%3B%2Cc0'>Google Ngram Viewer</a><b>")
+        y <- list(title = "Nombre de livres exploités dans Ngram Viewer",titlefont = 41)
         x <- list(title = "Date",titlefont = 41)
         plot2 = layout(plot2, yaxis = y, xaxis = x,title = Title)
         return(plot2)
@@ -569,10 +659,10 @@ server <- function(input, output,session){
         tableau1$corpus<-"Numérisé et océrisé"
         tableau3$corpus<-"Numérisé mais pas océrisé"
         tableau2<-bind_rows(tableau,tableau1,tableau3)
-
+        
         plot18<-plot_ly(tableau2,x=~as.integer(tableau2$date),y=~base_temp,color=~corpus,type='bar',colors="Dark2")
         plot18<-layout(plot18, title="Distribution des livres en français \nselon leur état de numérisation", xaxis=list(title="Date",tickangle="-45",range=c("1380","2021")),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
-
+        
         return(plot18)
       }
       else if(input$corpus_structure_l==9){
@@ -581,16 +671,32 @@ server <- function(input, output,session){
         plot4<-layout(plot4, title="Distribution des livres en français \nselon leur date de numérisation", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack")
         return(plot4)
       }
+      else if(input$corpus_structure_l==10){
+        p_dewey_livres<-read.csv("p_themes_livres.csv",encoding = "UTF-8")
+        plot4<-plot_ly(p_dewey_livres,x=~date,y=~n,color=~dewey_nom,type='bar',colors="Dark2")
+        plot4<-layout(plot4, title="Distribution des livres en français \nselon leur classement thématique Dewey", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
+        return(plot4)
+      }
     }
     else if(input$corpus_relative_l==TRUE){
-      if(input$corpus_structure_l==1){
+      if(input$corpus_structure_l==1 & input$corpus_ngram_l==FALSE){
         table<-read.csv("base_livres_annees.csv",encoding="UTF-8")
         somme<-sum(table$base_temp)
         table<-table[table$date>=1450,]
         table$hovers = str_c(table$date,": N = ",table$base_temp)
         plot2<-plot_ly(table, x=~date,y=~base_temp,text=~hovers,type='bar',hoverinfo="text")
-        Title = paste("<a href = 'https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&collapsing=true&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(gallicapublication_date%3E=%221380%22%20and%20gallicapublication_date%3C=%222021%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords='> <b>Répartition des ",somme," livres océrisés dans Gallica<b> </a>")
+        Title = paste("<a href = 'https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&collapsing=true&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(gallicapublication_date%3E=%221380%22%20and%20gallicapublication_date%3C=%222021%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords='> <b>Répartition des ",somme," livres en français océrisés\ndans Gallica<b> </a>")
         y <- list(title = "Nombre de livres dans Gallica",titlefont = 41)
+        x <- list(title = "Date",titlefont = 41)
+        plot2 = layout(plot2, yaxis = y, xaxis = x,title = Title)
+        return(plot2)
+      }
+      else if(input$corpus_structure_l==1 & input$corpus_ngram_l==TRUE){
+        ngram<-read.csv("ngram_viewer_fre_20200217.csv",encoding = "UTF-8")
+        total_volume_count<-sum(ngram$volume_count)
+        plot2<-plot_ly(ngram, x=~year,y=~volume_count,type='bar')
+        Title = paste("<b>Répartition des ",total_volume_count," livres océrisés et en français\nexploités dans"," <a href = 'https://books.google.com/ngrams/graph?content=Joffre%2CP%C3%A9tain%2CFoch&year_start=1914&year_end=1920&corpus=30&smoothing=0&direct_url=t1%3B%2CJoffre%3B%2Cc0%3B.t1%3B%2CP%C3%A9tain%3B%2Cc0%3B.t1%3B%2CFoch%3B%2Cc0'>Google Ngram Viewer</a><b>")
+        y <- list(title = "Nombre de livres exploités dans Ngram Viewer",titlefont = 41)
         x <- list(title = "Date",titlefont = 41)
         plot2 = layout(plot2, yaxis = y, xaxis = x,title = Title)
         return(plot2)
@@ -648,10 +754,10 @@ server <- function(input, output,session){
         tableau1$corpus<-"Numérisé et océrisé"
         tableau3$corpus<-"Numérisé mais pas océrisé"
         tableau2<-bind_rows(tableau,tableau1,tableau3)
-
+        
         plot19<-plot_ly(tableau2,x=~as.integer(tableau2$date),y=~base_temp,color=~corpus,type='bar',colors="Dark2")
         plot19<-layout(plot19, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4),title="Distribution des livres en français \nselon leur état de numérisation", xaxis=list(title="Date",tickangle="-45",range=c("1380","2021")),yaxis=list(title="Part des documents à chaque période"),barmode="stack",bargap=0,barnorm="percent")
-
+        
         return(plot19)
       }
       else if(input$corpus_structure_l==9){
@@ -660,7 +766,13 @@ server <- function(input, output,session){
         plot4<-layout(plot4, title="Distribution des livres en français \nselon leur date de numérisation", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack")
         return(plot4)
       }
-    
+      else if(input$corpus_structure_l==10){
+        p_dewey_livres<-read.csv("p_themes_livres.csv",encoding = "UTF-8")
+        plot4<-plot_ly(p_dewey_livres,x=~date,y=~n,color=~dewey_nom,type='bar',colors="Dark2")
+        plot4<-layout(plot4, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4), title="Distribution des livres en français \nselon leur classement thématique Dewey", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Part des documents à chaque période"),barmode="stack",bargap=0,barnorm="percent")
+        return(plot4)
+      }
+      
     }
   }
   observeEvent(input$corpus_structure_l,{observeEvent(input$corpus_relative_l,{
@@ -668,5 +780,4 @@ server <- function(input, output,session){
   })})
   
   shinyOptions(progress.style="old")
-}
-
+})
