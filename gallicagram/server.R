@@ -382,6 +382,8 @@ options(shiny.maxRequestSize = 100*1024^2)
 
 shinyServer(function(input, output,session){
   
+  output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans Gallica</li></ul>'))
+  
   output$legende1<-renderText(str_c("Corpus : presse\n"))
   observeEvent(
     input$doc_type,
