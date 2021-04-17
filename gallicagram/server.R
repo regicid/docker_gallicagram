@@ -664,6 +664,7 @@ shinyServer(function(input, output,session){
     output$corpus1<-renderPlotly({corpus_display_p()})
   })})
   
+  
   corpus_display_l<-function() {
     
     if(input$corpus_relative_l==FALSE){
@@ -860,6 +861,16 @@ shinyServer(function(input, output,session){
   }
   observeEvent(input$corpus_structure_l,{observeEvent(input$corpus_relative_l,{
     output$corpus2<-renderPlotly({corpus_display_l()})
+    if (input$corpus_structure_l==9){
+      first_indexation_date<-read.csv("first_indexation_date.csv",encoding = "UTF-8")
+      for (i in 2:length(first_indexation_date$count)) {
+        first_indexation_date$count[i]<-first_indexation_date$count[i]+first_indexation_date$count[i-1]
+      }
+      ploplo<-plot_ly(first_indexation_date,x=~first_indexation_date,y=~count,type='bar',colors="Dark2")
+      ploplo<-layout(ploplo, title="Distribution des livres en français \nselon leur date de numérisation", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack")
+      
+      output$corpus3<-renderPlotly(ploplo)
+    }
   })})
   
   shinyOptions(progress.style="old")
