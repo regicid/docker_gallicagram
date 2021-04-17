@@ -38,7 +38,7 @@ shinyUI(navbarPage("Gallicagram",
                                                                  selectInput("resolution", label = "Résolution", choices = c("Année","Mois"))),
                                                 conditionalPanel(condition="input.doc_type == 2",
                                                                  selectInput("resolution", label = "Résolution", choices = c("Année"))),
-                                                actionButton("do","Générer le graphique"),
+                                                conditionalPanel(condition="input.doc_type != 4 || (input.doc_type == 4 && output.fileUploaded == 1)",actionButton("do","Générer le graphique")),
                                                 p(""),
                                                 sliderInput("span","Lissage de la courbe",min = 0,max = 10,value = 0)
                                             ),

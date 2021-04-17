@@ -25,10 +25,13 @@ window.open(url);
 
 Plot <- function(data,input){
 
-    tableau = data[["tableau"]]
-    if(input$doc_type==4 & input$occurrences_page==TRUE){
-      tableau$ratio<-tableau$ratio_count
-    }
+  if(input$doc_type!=4){tableau = data[["tableau"]]}
+  if(input$doc_type==4 & input$occurrences_page==TRUE){
+      tableau = data[["tableau_page"]]
+  }
+  if(input$doc_type==4 & input$occurrences_page==FALSE){
+    tableau = data[["tableau_volume"]]
+  }
     Title = paste("")
     width = length(unique(tableau$date))
     span = 2/width + input$span*(width-2)/(10*width)
@@ -79,7 +82,7 @@ Plot <- function(data,input){
     }
   
 }
-get_data_bis <- function(mot,from,to,resolution,tot_df){
+get_corpus_perso <- function(mot,from,to,resolution,tot_df){
   mot=str_remove(mot,"&.+")
   mot=str_remove(mot,"[+].+")
   mot=str_replace_all(mot,"[:punct:]"," ")
@@ -137,13 +140,30 @@ get_data_bis <- function(mot,from,to,resolution,tot_df){
   }
   tableau$mot<-mot_init
   tableau$url<-"https://gallica.bnf.fr/"
-  colnames(tableau)<-c("date","base","count","count","base_count","mot","url")
+  colnames(tableau)<-c("date","base","page_count","count","page_base","mot","url")
   tableau$ratio<-tableau$count/tableau$base
-  tableau$ratio_count<-tableau$count/tableau$base_count
+  tableau$ratio_page<-tableau$page_count/tableau$page_base
   tableau$ratio[is.na(tableau$ratio)]<-0
-  tableau$ratio_count[is.na(tableau$ratio_count)]<-0
-  data = list(tableau,paste(mot),resolution)
-  names(data) = c("tableau","mot","resolution")
+  tableau$ratio_page[is.na(tableau$ratio_page)]<-0
+  tableau$date<-str_replace_all(tableau$date,"-","/")
+  
+  tableau_page<-select(tableau,date,page_count,page_base,mot,url,ratio_page)
+  tableau_page$resolution<-resolution
+  tableau_page$corpus<-"corpus_perso"
+  tableau_page$search_mode<-"page"
+  colnames(tableau_page)<-c("date",	"count",	"base",	"mot",	"url",	"ratio",	"resolution",	"corpus",	"search_mode")
+  
+  tableau_volume<-select(tableau,date,count,base,mot,url,ratio)
+  tableau_volume$resolution<-resolution
+  tableau_volume$corpus<-"corpus_perso"
+  tableau_volume$search_mode<-"volume"
+  colnames(tableau_volume)<-c("date",	"count",	"base",	"mot",	"url",	"ratio",	"resolution",	"corpus",	"search_mode")
+
+  memoire<<-bind_rows(tableau_volume,memoire)
+  memoire<<-bind_rows(tableau_page,memoire)
+  
+  data = list(tableau_volume,tableau_page,paste(mot),resolution)
+  names(data) = c("tableau_volume","tableau_page","mot","resolution")
   return(data)
 }
 
@@ -430,6 +450,15 @@ shinyServer(function(input, output,session){
   
   output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans Gallica</li></ul>'))
   
+  indicator_file <- reactive({
+    if(is.null(input$target_upload)) {return(0)}
+    else{return(1)}
+  })
+  output$fileUploaded <- reactive({
+    return(indicator_file())
+  })
+  outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
+  
   output$legende1<-renderText(str_c("Corpus : presse\n"))
   observeEvent(
     input$doc_type,
@@ -469,21 +498,21 @@ shinyServer(function(input, output,session){
   
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste('data-', Sys.Date(), '.csv', sep='')
+      paste("data_",input$mot,"_",input$beginning,"_",input$end,'.csv', sep='')
     },
     content = function(con) {
       write.csv(data$tableau, con,row.names = F,fileEncoding = "UTF-8")
     })
   output$downloadPlot <- downloadHandler(
     filename = function() {
-      paste('plot-', Sys.Date(), '.html', sep='')
+      paste('plot_',input$mot,"_",input$beginning,"_",input$end,'.html', sep='')
     },
     content = function(con) {
       htmlwidgets::saveWidget(as_widget(Plot(data,input)), con)
     })
   output$data_session <- downloadHandler(
     filename = function() {
-      paste('data-session-', Sys.Date(), '.csv', sep='')
+      paste('data-session_', Sys.Date(),'.csv', sep='')
     },
     content = function(con) {
       write.csv(memoire, con,row.names = F,fileEncoding = "UTF-8")
@@ -505,7 +534,7 @@ shinyServer(function(input, output,session){
       tot_df<-select(tot_df,URLdaccesaudocument,Typededocument,Titre,Auteurs,Contributeur,Editeurs,Datededition,Description,NombredeVues,Provenance,Droits,ArkCatalogue)
       colnames(tot_df)<-c("identifier","type","title","creator","contributor","publisher","date","description","format","source","rights","relation")
       tot_df$identifier<-str_remove_all(tot_df$identifier," .+")
-      df=get_data_bis(input$mot,input$beginning,input$end,input$resolution,tot_df)
+      df=get_corpus_perso(input$mot,input$beginning,input$end,input$resolution,tot_df)
     }
     
     output$plot <- renderPlotly({Plot(df,input)})
@@ -545,14 +574,14 @@ shinyServer(function(input, output,session){
     
     output$downloadData <- downloadHandler(
       filename = function() {
-        paste('data-', Sys.Date(), '.csv', sep='')
+        paste("data_",input$mot,"_",input$beginning,"_",input$end,'.csv', sep='')
       },
       content = function(con) {
         write.csv(df$tableau, con,row.names = F,fileEncoding = "UTF-8")
       })
     output$downloadPlot <- downloadHandler(
       filename = function() {
-        paste('plot-', Sys.Date(), '.html', sep='')
+        paste('plot_',input$mot,"_",input$beginning,"_",input$end,'.html', sep='')
       },
       content = function(con) {
         htmlwidgets::saveWidget(as_widget(Plot(df,input)), con)
