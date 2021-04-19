@@ -757,16 +757,10 @@ shinyServer(function(input, output,session){
         return(plot4)
       }
       else if(input$corpus_structure_l==5){
-        p_pages_livres<-read.csv("p_pages_livres.csv",encoding = "UTF-8")
-        plot7<-plot_ly(p_pages_livres,x=~date,y=~Mean,type='bar',colors="Dark2")
-        plot7<-layout(plot7, title="Distribution des livres en français \nselon leur volume (nombre de pages moyen)", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de pages"),barmode="stack",bargap=0)
+        p_pages_livres<-read.csv("base_pages_livres_annees.csv",encoding = "UTF-8")
+        plot7<-plot_ly(p_pages_livres,x=~date,y=~count,type='bar',colors="Dark2")
+        plot7<-layout(plot7, title="Volume du corpus de livres de Gallica", xaxis=list(title="Date",tickangle="-45",range=c("1500","2021")),yaxis=list(title="Nombre de pages dans le corpus"),barmode="stack")
         return(plot7)
-      }
-      else if(input$corpus_structure_l==6){
-        p_pages_livres<-read.csv("p_pages_livres.csv",encoding = "UTF-8")
-        plot6<-plot_ly(p_pages_livres,x=~date,y=~Median,type='bar',colors="Dark2")
-        plot6<-layout(plot6, title="Distribution des livres en français \nselon leur volume (nombre de pages médian)", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de pages"),barmode="stack",bargap=0)
-        return(plot6)
       }
       else if(input$corpus_structure_l==7){
         tableau<-read.csv("base_livres_annees_bnf.csv",encoding = "UTF-8")
@@ -859,16 +853,10 @@ shinyServer(function(input, output,session){
         return(plot4)
       }
       else if(input$corpus_structure_l==5){
-        p_pages_livres<-read.csv("p_pages_livres.csv",encoding = "UTF-8")
-        plot7<-plot_ly(p_pages_livres,x=~date,y=~Mean,type='bar',colors="Dark2")
-        plot7<-layout(plot7, title="Distribution des livres en français \nselon leur volume (nombre de pages moyen)", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de pages"),barmode="stack",bargap=0)
+        p_pages_livres<-read.csv("base_pages_livres_annees.csv",encoding = "UTF-8")
+        plot7<-plot_ly(p_pages_livres,x=~date,y=~count,type='bar',colors="Dark2")
+        plot7<-layout(plot7, title="Volume du corpus de livres de Gallica", xaxis=list(title="Date",tickangle="-45",range=c("1500","2021")),yaxis=list(title="Nombre de pages dans le corpus"),barmode="stack")
         return(plot7)
-      }
-      else if(input$corpus_structure_l==6){
-        p_pages_livres<-read.csv("p_pages_livres.csv",encoding = "UTF-8")
-        plot6<-plot_ly(p_pages_livres,x=~date,y=~Median,type='bar',colors="Dark2")
-        plot6<-layout(plot6, title="Distribution des livres en français \nselon leur volume (nombre de pages médian)", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de pages"),barmode="stack",bargap=0)
-        return(plot6)
       }
       else if(input$corpus_structure_l==7){
         tableau<-read.csv("base_livres_annees_bnf.csv",encoding = "UTF-8")
@@ -923,6 +911,17 @@ shinyServer(function(input, output,session){
       
       output$corpus3<-renderPlotly(ploplo)
     }
+    if (input$corpus_structure_l==5){
+      
+      p_pages_livres<-read.csv("p_pages_livres.csv",encoding = "UTF-8")
+      plot7<-plot_ly(p_pages_livres,x=~date,y=~Mean,type='bar',colors="Dark2")
+      plot7<-layout(plot7, title="Distribution des livres en français \nselon leur volume (nombre de pages moyen)", xaxis=list(title="Date",tickangle="-45",range=c("1500","2021")),yaxis=list(title="Nombre de pages"),barmode="stack")
+      output$corpus4<-renderPlotly(plot7)
+      plot6<-plot_ly(p_pages_livres,x=~date,y=~Median,type='bar',colors="Dark2")
+      plot6<-layout(plot6, title="Distribution des livres en français \nselon leur volume (nombre de pages médian)", xaxis=list(title="Date",tickangle="-45",range=c("1500","2021")),yaxis=list(title="Nombre de pages"),barmode="stack")
+      output$corpus5<-renderPlotly(plot6)
+    }
+    
   })})
   
   shinyOptions(progress.style="old")
