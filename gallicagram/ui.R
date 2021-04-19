@@ -71,7 +71,7 @@ shinyUI(navbarPage("Gallicagram",
                             pageWithSidebar(headerPanel(''),
                                             sidebarPanel(
                                                 radioButtons("corpus_structure_p", "Données à analyser :",choices = list("Distribution"=1,"Ville de publication" = 2,"Mode d'accès"=3,"Bibliothèque d'origine"=4, "Classement thématique de Dewey" = 5,"Périodicité" = 6),selected = 1),
-                                                conditionalPanel(condition="input.corpus_structure_p!=1",checkboxInput("corpus_relative_p", "Afficher les résultats en valeurs relatives", value = FALSE))
+                                                conditionalPanel(condition="input.corpus_structure_p!=0",checkboxInput("corpus_relative_p", "Afficher les résultats en valeurs relatives", value = FALSE))
                                             ),
                                             mainPanel(
                                                 fluidRow(plotlyOutput("corpus1")),

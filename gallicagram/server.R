@@ -614,7 +614,7 @@ shinyServer(function(input, output,session){
         plot2<-plot_ly(table, x=~date,y=~base,text=~hovers,type='bar',hoverinfo="text")
         Title = paste("<a href = 'https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&maximumRecords=50&page=1&exactSearch=true&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(gallicapublication_date%3E=%221631/01/01%22%20and%20gallicapublication_date%3C=%222021/12/31%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords='> <b>Répartition des ",somme," numéros de presse océrisés dans Gallica<b> </a>")
         y <- list(title = "Nombre de numéros dans Gallica-presse",titlefont = 41)
-        x <- list(title = "Date",titlefont = 41)
+        x <- list(title = "Date",titlefont = 41,range=c("1500","2021"))
         plot2 = layout(plot2, yaxis = y, xaxis = x,title = Title)
         return(plot2)
       }
@@ -656,11 +656,17 @@ shinyServer(function(input, output,session){
       if(input$corpus_structure_p==1){
         table<-read.csv("base_presse_annees.csv",encoding="UTF-8")
         somme<-sum(table$base)
-        table$hovers = str_c(table$date,": N = ",table$base)
-        plot2<-plot_ly(table, x=~date,y=~base,text=~hovers,type='bar',hoverinfo="text")
-        Title = paste("<a href = 'https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&maximumRecords=50&page=1&exactSearch=true&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(gallicapublication_date%3E=%221631/01/01%22%20and%20gallicapublication_date%3C=%222021/12/31%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords='> <b>Répartition des ",somme," numéros de presse océrisés dans Gallica<b> </a>")
-        y <- list(title = "Nombre de numéros dans Gallica-presse",titlefont = 41)
-        x <- list(title = "Date",titlefont = 41)
+        
+        for (i in 2:length(table$base)) {
+          table$base[i]<-table$base[i]+table$base[i-1]
+        }
+        table$base=table$base/table$base[length(table$base)]
+        
+        plot2<-plot_ly(table, x=~date,y=~base,type='bar')
+        Title = paste("<b>Distribution chronologique du corpus de presse en français\nde Gallica<b>")
+        y <- list(title = "Proportion du corpus publié\navant la date indiquée en abscisse",titlefont = 41,tickformat=".1%")
+        x <- list(title = "Date",titlefont = 41,range=c("1500","2021"))
+        
         plot2 = layout(plot2, yaxis = y, xaxis = x,title = Title)
         return(plot2)
       }
