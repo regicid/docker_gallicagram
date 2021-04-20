@@ -11,6 +11,7 @@ library(httr)
 library(ngramr)
 library(dplyr)
 library(htmltools)
+library(purrr)
 
 
 
@@ -27,11 +28,11 @@ window.open(url);
 
 Plot <- function(data,input){
 
-  if(input$doc_type!=4){tableau = data[["tableau"]]}
-  if(input$doc_type==4 & input$occurrences_page==TRUE){
+  if(input$search_mode == 1 & input$doc_type != 4){tableau = data[["tableau"]]}
+  if(input$search_mode==2){
       tableau = data[["tableau_page"]]
   }
-  if(input$doc_type==4 & input$occurrences_page==FALSE){
+  if(input$doc_type==4 & input$search_mode==1){
     tableau = data[["tableau_volume"]]
   }
     Title = paste("")
@@ -95,7 +96,184 @@ Plot <- function(data,input){
     }
   
 }
-get_corpus_perso <- function(mot,from,to,resolution,tot_df){
+
+message<-function(mot,from,to,doc_type){
+  
+  mot=str_remove(mot,"&.+")
+  mot=str_remove(mot,"[+].+")
+  mot=str_replace_all(mot,"[:punct:]"," ")
+  
+  
+  mot2 = str_replace_all(mot," ","%20")
+
+  ###
+  or<-""
+  or_end<-""
+  if(str_detect(mot2,"[+]")){
+    mots_or = str_split(mot2,"[+]")[[1]]
+    or1<-NA
+    or1_end<-NA
+    for (j in 2:length(mots_or)) {
+      
+      or1[j]<-str_c("or%20text%20adj%20%22",mots_or[j],"%22%20")
+      or1_end[j]<-str_c("%20",mots_or[j])
+      or<-str_c(or,or1[j])
+      or_end<-str_c(or_end,or1_end[j])
+    }
+    mot1<-mots_or[1]} else{mot1=mot2}
+  ###
+  i=1
+  page<-function(i,maxR)
+  {
+    
+    beginning=from
+    end=to
+    if(doc_type==2){
+      url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=",maxR,"&startRecord=",i,"&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
+    }
+    if(doc_type==1){
+      url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=",maxR,"&startRecord=",i,"&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"/01/01%22%20and%20gallicapublication_date%3C=%22",end,"/12/01%22)&suggest=10&keywords=",mot1,or_end)
+    }
+    read_xml(RETRY("GET",url,times = 3))
+  }
+  tot<-page(1,50)
+  te <- xml2::as_list(tot)
+  nmax <- as.integer(unlist(te$searchRetrieveResponse$numberOfRecords))
+  
+  texte<-str_c("Votre recherche apparait dans ",nmax," documents.")
+  
+  if(nmax>5000){texte<-str_c(texte, " Modifiez votre recherche.")}
+  return(texte)
+}
+
+rapport <- function(mot,from,to,doc_type){
+  progress <- shiny::Progress$new()
+  on.exit(progress$close())
+  progress$set(message = "Patience...", value = 0)
+  
+  mot=str_remove(mot,"&.+")
+  mot=str_remove(mot,"[+].+")
+  mot=str_replace_all(mot,"[:punct:]"," ")
+  
+  
+  mot2 = str_replace_all(mot," ","%20")
+  ###
+  or<-""
+  or_end<-""
+  if(str_detect(mot2,"[+]")){
+    mots_or = str_split(mot2,"[+]")[[1]]
+    or1<-NA
+    or1_end<-NA
+    for (j in 2:length(mots_or)) {
+      
+      or1[j]<-str_c("or%20text%20adj%20%22",mots_or[j],"%22%20")
+      or1_end[j]<-str_c("%20",mots_or[j])
+      or<-str_c(or,or1[j])
+      or_end<-str_c(or_end,or1_end[j])
+    }
+    mot1<-mots_or[1]} else{mot1=mot2}
+  ###
+  i=1
+  page<-function(i,maxR)
+  {
+    
+    beginning=from
+    end=to
+    if(doc_type==2){
+    url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=",maxR,"&startRecord=",i,"&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
+    }
+    if(doc_type==1){
+      url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=",maxR,"&startRecord=",i,"&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"/01/01%22%20and%20gallicapublication_date%3C=%22",end,"/12/01%22)&suggest=10&keywords=",mot1,or_end)
+    }
+    read_xml(RETRY("GET",url,times = 3))
+  }
+  tot<-page(1,50)
+  te <- xml2::as_list(tot)
+  nmax <- as.integer(unlist(te$searchRetrieveResponse$numberOfRecords))
+  if(nmax<=50){tot <- page(1,5)
+  for (j in seq(6, nmax, by = 5)){
+    temp <- page(j,5)
+    for (l in xml2::xml_children(temp)){
+      xml2::xml_add_child(tot, l)
+    }
+    progress$inc(5/nmax, message = paste("Téléchargement en cours...",as.integer((j/nmax)*100),"%"))
+  }}
+  if(nmax>50){
+    for (j in seq(51, nmax, by = 50)){
+      temp <- page(j,50)
+      for (l in xml2::xml_children(temp)){
+        xml2::xml_add_child(tot, l)
+      }
+      progress$inc(50/nmax, message = paste("Téléchargement en cours...",as.integer((j/nmax)*100),"%"))
+    }}
+  progress$set(message = "Traitement en cours ; cette étape va être longue...", value = 100)
+  xml_to_df <- function(doc, ns = xml_ns(doc)) {
+    split_by <- function(.x, .f, ...) {
+      vals <- map(.x, .f, ...)
+      split(.x, simplify_all(transpose(vals)))
+    }
+    node_to_df <- function(node) {
+      # Filter the attributes for ones that aren't namespaces
+      # x <- list(.index = 0, .name = xml_name(node, ns))
+      x <- list(.name = xml_name(node, ns))
+      # Attributes as column headers, and their values in the first row
+      attrs <- xml_attrs(node)
+      if (length(attrs) > 0) {attrs <- attrs[!grepl("xmlns", names(attrs))]}
+      if (length(attrs) > 0) {x <- c(x, attrs)}
+      # Build data frame manually, to avoid as.data.frame's good intentions
+      children <- xml_children(node)
+      if (length(children) >= 1) {
+        x <- 
+          children %>%
+          # Recurse here
+          map(node_to_df) %>%
+          split_by(".name") %>%
+          map(bind_rows) %>%
+          map(list) %>%
+          {c(x, .)}
+        attr(x, "row.names") <- 1L
+        class(x) <- c("tbl_df", "data.frame")
+      } else {
+        x$.value <- xml_text(node)
+      }
+      x
+    }
+    node_to_df(doc)
+  }
+  x = 1:3
+  parse_gallica <- function(x){
+    xml2::xml_find_all(tot, ".//srw:recordData")[x] %>% 
+      xml_to_df() %>% 
+      select(-.name) %>% 
+      .$`oai_dc:dc` %>% 
+      .[[1]] %>% 
+      mutate(recordId = 1:nrow(.)) %>% 
+      #    tidyr::unnest() %>% 
+      tidyr::gather(var, val, - recordId) %>% 
+      group_by(recordId, var) %>% 
+      mutate(value = purrr::map(val, '.value') %>% purrr::flatten_chr() %>% paste0( collapse = " -- ")) %>% 
+      select(recordId, var, value) %>% 
+      ungroup() %>% 
+      mutate(var = stringr::str_remove(var, 'dc:')) %>% 
+      tidyr::spread(var, value) %>% 
+      select(-.name)
+  }
+  # h=1
+  # tot_df<-h%>%parse_gallica
+  # for (h in 2:nmax) {
+  #   ligne<-h%>%parse_gallica
+  #   tot_df<-bind_rows(tot_df,ligne)
+  #   progress$inc((1/nmax), detail = paste("Traitement des données",as.integer((h/nmax)*100),"%"))
+  # }
+  tot_df <- 1:nmax %>% 
+    parse_gallica %>% 
+    bind_rows()
+  tot_df<-select(tot_df,identifier,type,title,creator,contributor,publisher,date,description,format,source,rights,relation)
+  tot_df$format<-str_remove_all(tot_df$format,"Nombre total de vues : ")
+  return(tot_df)
+}
+
+page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode){
   mot=str_remove(mot,"&.+")
   mot=str_remove(mot,"[+].+")
   mot=str_replace_all(mot,"[:punct:]"," ")
@@ -123,6 +301,8 @@ get_corpus_perso <- function(mot,from,to,resolution,tot_df){
   on.exit(progress$close())
   progress$set(message = "Patience...", value = 0)
   
+  if(doc_type==2){base_pages<-read.csv("base_pages_livres_annees.csv",encoding = "UTF-8")}
+  
   tot_df$detect<-FALSE
   for (i in 1:length(tot_df$ark)) {
     url<-str_c("https://gallica.bnf.fr/services/ContentSearch?ark=",tot_df$ark[i],"&query=",mot)
@@ -133,6 +313,7 @@ get_corpus_perso <- function(mot,from,to,resolution,tot_df){
     resultat=str_extract(resultat,"[:digit:]+")
     tot_df$resultats[i]<-as.integer(resultat)
     
+    if(doc_type==4){
     url_base<-str_c("https://gallica.bnf.fr/services/ContentSearch?ark=",tot_df$ark[i],"&query=%20")
     resultat_base<-as.character(read_html(RETRY("GET",url_base,times = 3)))
     resultat_base=str_remove_all(resultat_base,"[:space:]")
@@ -140,6 +321,12 @@ get_corpus_perso <- function(mot,from,to,resolution,tot_df){
     resultat_base=str_remove_all(resultat_base,"searchtime.+")
     resultat_base=str_extract(resultat_base,"[:digit:]+")
     tot_df$resultats_base[i]<-as.integer(resultat_base)
+    }
+    if(doc_type==2){
+      base<-base_pages$count[tot_df$date[i]==base_pages$date]
+      tot_df$resultats_base[i]<-as.integer(base)
+    }
+    
     if(as.integer(resultat)>0){tot_df$detect[i]<-TRUE}
     progress$inc(1/length(tot_df$ark), detail = paste(as.integer(i*100/length(tot_df$ark)),"% traités"))
   }
@@ -456,7 +643,8 @@ shinyServer(function(input, output,session){
   memoire<<-read.csv("exemple.csv",encoding="UTF-8")
   memoire$date<<-as.character(memoire$date)
   recherche_precedente<<-"Joffre&Pétain&Foch_1914_1920_Année"
-  corpus_precedent<<-"1_FALSE"
+  corpus_precedent<<-"1_1"
+  
   
   output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans Gallica</li></ul>'))
   
@@ -500,10 +688,36 @@ shinyServer(function(input, output,session){
     else{output$legende=renderText("Source : gallica.bnf.fr")}
   })
   output$legende0=renderText("Affichage : Gallicagram par Benjamin Azoulay et Benoît de Courson")
+  recherche_texte<-reactive({input$mot})
+  recherche_from<-reactive({input$beginning})
+  recherche_to<-reactive({input$end})
+  recherche_doc_type<-reactive({input$doc_type})
+  observeEvent(input$doc_type,{
+      if(input$doc_type == 2){
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
+      updateSelectInput(session,"resolution",choices = c("Année"),selected = "Année")
+      }
+    if(input$doc_type == 4){
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
+      updateSelectInput(session,"resolution",choices = c("Année","Mois"),selected = "Année")
+    }
+      if(input$doc_type == 1 | input$doc_type == 3){
+        updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
+        updateSelectInput(session,"resolution",choices = c("Année","Mois"),selected = "Année")
+      }
+    if(input$doc_type == 5){
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
+      updateSelectInput(session,"resolution",choices = c("Année"),selected = "Année")
+    }
+    })
+  
   observeEvent(
-    input$occurrences_page,{
-      output$legende2<-renderText(if(input$doc_type!=4){str_c(as.character(sum(data[["tableau"]]$base))," documents épluchés\n")}else if(input$doc_type==4 & input$occurrences_page==TRUE){str_c(as.character(sum(data[["tableau_page"]]$base))," pages épluchées\n")}else if(input$doc_type==4 & input$occurrences_page==FALSE){str_c(as.character(sum(data[["tableau_volume"]]$base))," documents épluchées\n")})
-      output$legende3<-renderText(if(input$doc_type!=4){str_c(as.character(sum(data[["tableau"]]$count))," résultats trouvés")}else if(input$doc_type==4 & input$occurrences_page==TRUE){str_c(as.character(sum(data[["tableau_page"]]$count))," pages correspondant à la recherche")}else if(input$doc_type==4 & input$occurrences_page==FALSE){str_c(as.character(sum(data[["tableau_volume"]]$count))," résultats trouvés")})
+    input$search_mode,{
+      output$legende2<-renderText(if(input$doc_type!=4){str_c(as.character(sum(data[["tableau"]]$base))," documents épluchés\n")}else if(input$doc_type==4 & input$search_mode==2){str_c(as.character(sum(data[["tableau_page"]]$base))," pages épluchées\n")}else if(input$doc_type==4 & input$search_mode==1){str_c(as.character(sum(data[["tableau_volume"]]$base))," documents épluchées\n")})
+      output$legende3<-renderText(if(input$doc_type!=4){str_c(as.character(sum(data[["tableau"]]$count))," résultats trouvés")}else if(input$doc_type==4 & input$search_mode==2){str_c(as.character(sum(data[["tableau_page"]]$count))," pages correspondant à la recherche")}else if(input$doc_type==4 & input$search_mode==1){str_c(as.character(sum(data[["tableau_volume"]]$count))," résultats trouvés")})
+      if(input$search_mode==2){
+        output$avertissement<-renderText(message(recherche_texte(),recherche_from(),recherche_to(),recherche_doc_type()))
+    }
     })
   
   output$downloadData <- downloadHandler(
@@ -531,7 +745,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$do,{
     # datasetInput <- reactive({
     #   data$tableau})
-    if (input$doc_type!=4){
+    if (input$doc_type==1 |input$doc_type==3 | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) ){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
@@ -544,18 +758,23 @@ shinyServer(function(input, output,session){
       tot_df<-select(tot_df,URLdaccesaudocument,Typededocument,Titre,Auteurs,Contributeur,Editeurs,Datededition,Description,NombredeVues,Provenance,Droits,ArkCatalogue)
       colnames(tot_df)<-c("identifier","type","title","creator","contributor","publisher","date","description","format","source","rights","relation")
       tot_df$identifier<-str_remove_all(tot_df$identifier," .+")
-      df=get_corpus_perso(input$mot,input$beginning,input$end,input$resolution,tot_df)
+      df=page_search(input$mot,input$beginning,input$end,input$resolution,tot_df,input$doc_type,input$search_mode)
+    }
+    else if(input$doc_type==2 & input$search_mode==2){
+      df=rapport(input$mot,input$beginning,input$end,input$doc_type)
+      df$identifier<-str_remove_all(df$identifier," .+")
+      df=page_search(input$mot,input$beginning,input$end,input$resolution,df,input$doc_type,input$search_mode)
     }
     
     output$plot <- renderPlotly({Plot(df,input)})
     
-    output$legende2<-renderText(if(input$doc_type!=4){str_c(as.character(sum(df[["tableau"]]$base))," documents épluchés\n")}else if(input$doc_type==4 & input$occurrences_page==TRUE){str_c(as.character(sum(df[["tableau_page"]]$base))," pages épluchées\n")}else if(input$doc_type==4 & input$occurrences_page==FALSE){str_c(as.character(sum(df[["tableau_volume"]]$base))," documents épluchées\n")})
-    output$legende3<-renderText(if(input$doc_type!=4){str_c(as.character(sum(df[["tableau"]]$count))," résultats trouvés")}else if(input$doc_type==4 & input$occurrences_page==TRUE){str_c(as.character(sum(df[["tableau_page"]]$count))," pages correspondant à la recherche")}else if(input$doc_type==4 & input$occurrences_page==FALSE){str_c(as.character(sum(df[["tableau_volume"]]$count))," résultats trouvés")})
+    output$legende2<-renderText(if(input$doc_type!=4){str_c(as.character(sum(df[["tableau"]]$base))," documents épluchés\n")}else if(input$doc_type==4 & input$search_mode==2){str_c(as.character(sum(df[["tableau_page"]]$base))," pages épluchées\n")}else if(input$doc_type==4 & input$search_mode==1){str_c(as.character(sum(df[["tableau_volume"]]$base))," documents épluchées\n")})
+    output$legende3<-renderText(if(input$doc_type!=4){str_c(as.character(sum(df[["tableau"]]$count))," résultats trouvés")}else if(input$doc_type==4 & input$search_mode==2){str_c(as.character(sum(df[["tableau_page"]]$count))," pages correspondant à la recherche")}else if(input$doc_type==4 & input$search_mode==1){str_c(as.character(sum(df[["tableau_volume"]]$count))," résultats trouvés")})
     if(str_detect(input$mot,".+&.+"))
     {output$corr<-renderTable(correlation_matrix(prepare_correlation(df),"corr1"),rownames = TRUE)}
     else{output$corr<-renderTable(as.matrix(NA),colnames = FALSE)}
     
-    if(recherche_precedente==str_c(input$mot,"_",input$beginning,"_",input$end,"_",input$resolution)&corpus_precedent!=str_c(input$doc_type,"_",input$occurrences_page)){
+    if(recherche_precedente==str_c(input$mot,"_",input$beginning,"_",input$end,"_",input$resolution)&corpus_precedent!=str_c(input$doc_type,"_",input$search_mode)){
     matrice2<-prepare_memoire(input$beginning,input$end,input$resolution)
     j=length(matrice2)
     for (i in j:1) {
@@ -581,7 +800,7 @@ shinyServer(function(input, output,session){
     }
     else{output$corr2<-renderTable(as.matrix(NA),colnames = FALSE)}
     recherche_precedente<<-str_c(input$mot,"_",input$beginning,"_",input$end,"_",input$resolution)
-    corpus_precedent<<-str_c(input$doc_type,"_",input$occurrences_page)
+    corpus_precedent<<-str_c(input$doc_type,"_",input$search_mode)
 
     output$downloadData <- downloadHandler(
       filename = function() {
