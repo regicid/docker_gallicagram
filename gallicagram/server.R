@@ -756,27 +756,18 @@ shinyServer(function(input, output,session){
     }
       
     })
-  observeEvent(
-    input$do,
-    {if(input$doc_type==3)
-    {
-      liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
-      titres<-reactive({liste_journaux$title[liste_journaux$ark==input$titres]})
-      output$legende1<-renderText(paste(titres()))
-    }
-      
-      if(input$doc_type!=3){output$legende1<-renderText(str_c(if(input$doc_type==1){"Corpus : presse\n"} else if (input$doc_type==2 | input$doc_type==5){"Corpus : livres\n"}))}
-    })
+  
   
   output$plot <- renderPlotly({Plot(data,input)})
   output$corr<-renderTable(correlation_matrix(prepare_correlation(data),"corr1"),rownames = TRUE)
   output$pvalue=renderText("***p<.001 ; **p<.01 ; *p<.05")
-  observeEvent(input$doc_type,{
-    if(input$doc_type==5)
-    {output$legende=renderText("Source : books.google.com/ngrams")}
-    else{output$legende=renderText("Source : gallica.bnf.fr")}
-  })
+  
+  output$legende=renderText("Source : gallica.bnf.fr")
   output$legende0=renderText("Affichage : Gallicagram par Benjamin Azoulay et Benoît de Courson")
+  nb_mots<-length(unique(data[["tableau"]]$mot))
+  output$legende2<-renderText(str_c(as.character(sum(data[["tableau"]]$base)/nb_mots)," documents épluchés"))
+  output$legende3<-renderText(str_c(as.character(sum(data[["tableau"]]$count))," résultats trouvés"))
+  
   recherche_texte<-reactive({input$mot})
   recherche_from<-reactive({input$beginning})
   recherche_to<-reactive({input$end})
@@ -801,10 +792,9 @@ shinyServer(function(input, output,session){
     }
     })
   
+  
   observeEvent(
     input$search_mode,{
-      output$legende2<-renderText(if(input$doc_type!=4){str_c(as.character(sum(data[["tableau"]]$base))," documents épluchés\n")}else if(input$doc_type==4 & input$search_mode==2){str_c(as.character(sum(data[["tableau_page"]]$base))," pages épluchées\n")}else if(input$doc_type==4 & input$search_mode==1){str_c(as.character(sum(data[["tableau_volume"]]$base))," documents épluchées\n")})
-      output$legende3<-renderText(if(input$doc_type!=4){str_c(as.character(sum(data[["tableau"]]$count))," résultats trouvés")}else if(input$doc_type==4 & input$search_mode==2){str_c(as.character(sum(data[["tableau_page"]]$count))," pages correspondant à la recherche")}else if(input$doc_type==4 & input$search_mode==1){str_c(as.character(sum(data[["tableau_volume"]]$count))," résultats trouvés")})
       if(input$search_mode==2){
         output$avertissement<-renderText(message(recherche_texte(),recherche_from(),recherche_to(),recherche_doc_type(),recherche_titres()))
     }
@@ -858,8 +848,46 @@ shinyServer(function(input, output,session){
     
     output$plot <- renderPlotly({Plot(df,input)})
     
-    output$legende2<-renderText(if(input$doc_type!=4){str_c(as.character(sum(df[["tableau"]]$base))," documents épluchés\n")}else if(input$doc_type==4 & input$search_mode==2){str_c(as.character(sum(df[["tableau_page"]]$base))," pages épluchées\n")}else if(input$doc_type==4 & input$search_mode==1){str_c(as.character(sum(df[["tableau_volume"]]$base))," documents épluchées\n")})
-    output$legende3<-renderText(if(input$doc_type!=4){str_c(as.character(sum(df[["tableau"]]$count))," résultats trouvés")}else if(input$doc_type==4 & input$search_mode==2){str_c(as.character(sum(df[["tableau_page"]]$count))," pages correspondant à la recherche")}else if(input$doc_type==4 & input$search_mode==1){str_c(as.character(sum(df[["tableau_volume"]]$count))," résultats trouvés")})
+    if(input$doc_type==1 | (input$doc_type==2 & input$search_mode==1) | (input$doc_type==3 & input$search_mode==1)){
+      nb_mots<-length(unique(df[["tableau"]]$mot))
+      output$legende2<-renderText(str_c(as.character(sum(df[["tableau"]]$base)/nb_mots)," documents épluchés"))
+      output$legende3<-renderText(str_c(as.character(sum(df[["tableau"]]$count))," résultats trouvés"))
+    }
+    else if(input$doc_type==4 & input$search_mode==1){
+      nb_mots<-length(unique(df[["tableau_volume"]]$mot))
+      output$legende2<-renderText(str_c(as.character(sum(df[["tableau_volume"]]$base)/nb_mots)," documents épluchées"))
+      output$legende3<-renderText(str_c(as.character(sum(df[["tableau_volume"]]$count))," résultats trouvés"))
+    }
+    else if (input$doc_type==5){
+      output$legende2<-NULL
+      output$legende3<-NULL
+    }
+    else {
+      nb_mots<-length(unique(df[["tableau_page"]]$mot))
+      output$legende2<-renderText(str_c(as.character(sum(df[["tableau_page"]]$base)/nb_mots)," pages épluchées"))
+      output$legende3<-renderText(str_c(as.character(sum(df[["tableau_page"]]$count))," pages correspondant à la recherche"))
+    }
+    
+    
+    if(input$doc_type==5){output$legende=renderText("Source : books.google.com/ngrams")}
+    if(input$doc_type!=5){output$legende=renderText("Source : gallica.bnf.fr")}
+    
+    if(input$doc_type==1){output$legende1<-renderText("Corpus : presse")}
+    if(input$doc_type==2 | input$doc_type==5){output$legende1<-renderText("Corpus : livres")}
+    if(input$doc_type==4){output$legende1<-renderText("Corpus : personnalisé")}
+    if(input$doc_type==3){
+      liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
+      title<-liste_journaux$title[liste_journaux$ark==input$titres[1]]
+      title=str_c("Corpus : ",title)
+      if(length(input$titres)>=2){
+        for (i in 2:length(input$titres)) {
+          title<-str_c(title," + ",liste_journaux$title[liste_journaux$ark==input$titres[i]])
+        }}
+      output$legende1<-renderText(paste(title))
+    }
+    
+    
+    
     if(str_detect(input$mot,".+&.+"))
     {output$corr<-renderTable(correlation_matrix(prepare_correlation(df),"corr1"),rownames = TRUE)}
     else{output$corr<-renderTable(as.matrix(NA),colnames = FALSE)}
