@@ -28,12 +28,14 @@ window.open(url);
 
 Plot <- function(data,input){
 
-  if(input$search_mode == 1 & input$doc_type != 4){tableau = data[["tableau"]]}
+  tableau = data[["tableau"]]
+  if(is.null(data[["tableau_page"]])==FALSE){
   if(input$search_mode==2){
       tableau = data[["tableau_page"]]
   }
   if(input$doc_type==4 & input$search_mode==1){
     tableau = data[["tableau_volume"]]
+  }
   }
     Title = paste("")
     width = length(unique(tableau$date))
@@ -218,10 +220,10 @@ rapport <- function(mot,from,to,doc_type,titres){
     url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=",maxR,"&startRecord=",i,"&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
     }
     if(doc_type==1){
-      url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=",maxR,"&startRecord=",i,"&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"/01/01%22%20and%20gallicapublication_date%3C=%22",end,"/12/01%22)&suggest=10&keywords=",mot1,or_end)
+      url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=",maxR,"&startRecord=",i,"&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"/01/01%22%20and%20gallicapublication_date%3C=%22",end,"/12/31%22)&suggest=10&keywords=",mot1,or_end)
     }
     if(doc_type == 3){
-      url <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=",maxR,"&page=",i,"&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"/01/01%22%20and%20gallicapublication_date%3C=%22",end,"/12/01%22)sortby%20dc.date%20")
+      url <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=",maxR,"&page=",i,"&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"/01/01%22%20and%20gallicapublication_date%3C=%22",end,"/12/31%22)sortby%20dc.date%20")
     }
     read_xml(RETRY("GET",url,times = 3))
   }
@@ -318,6 +320,39 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
   mot_init<-mot
   mot=str_replace_all(mot,"[:space:]","%20")
   
+  mot2 = mot
+  ###
+  or<-""
+  or_end<-""
+  if(str_detect(mot2,"[+]")){
+    mots_or = str_split(mot2,"[+]")[[1]]
+    or1<-NA
+    or1_end<-NA
+    for (j in 2:length(mots_or)) {
+      
+      or1[j]<-str_c("or%20text%20adj%20%22",mots_or[j],"%22%20")
+      or1_end[j]<-str_c("%20",mots_or[j])
+      or<-str_c(or,or1[j])
+      or_end<-str_c(or_end,or1_end[j])
+    }
+    mot1<-mots_or[1]} else{mot1=mot2}
+  
+  
+  if(doc_type==3 & length(titres)>1){
+    ark1<-titres[1]
+    ark3<-""
+    for (v in 2:length(titres)) 
+    {
+      ark<-titres[v]
+      ark2<-str_c("%20or%20dc.relation%20any%20%22",ark,"%22")
+      ark3<-str_c(ark3,ark2)
+    }
+  }else if(doc_type==3 & length(titres)==1)
+  {
+    ark1<-titres
+    ark3<-""
+  }
+  
   if(resolution=="Année"){
     tot_df$date<-str_remove_all(tot_df$date,"-.+")
   }
@@ -365,19 +400,31 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
       tot_df$resultats_base[i]<-as.integer(base)
     }
     
+    
     if(as.integer(resultat)>0){tot_df$detect[i]<-TRUE}
     progress$inc(1/length(tot_df$ark), detail = paste(as.integer(i*100/length(tot_df$ark)),"% traités"))
   }
   tableau$count<-0
   tableau$detect<-0
   tableau$count_base<-0
+  tableau$mot<-mot_init
   for (j in 1:length(tableau$date)) {
     tableau$count[j]<-sum(tot_df$resultats[tot_df$date==tableau$date[j]])
     tableau$count_base[j]<-sum(tot_df$resultats_base[tot_df$date==tableau$date[j]])
     tableau$detect[j]<-sum(tot_df$detect[tot_df$date==tableau$date[j]])
+    
+    if(doc_type==2){tableau$url[j]<-str_c(url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",tableau$date[j],"%22%20and%20gallicapublication_date%3C=%22",tableau$date[j],"%22)&suggest=10&keywords=",mot1,or_end))}
+    if(doc_type==3){
+      beginning<-str_replace_all(tableau$date[j],"-","/")
+      end<-str_replace_all(tableau$date[j],"-","/")
+      if(resolution=="Années"){
+        beginning=str_c(beginning,"/01")
+        end=str_c(end,"/12")}
+      tableau$url[j]<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=20&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(text%20adj%20%22",mot,"%22%20)%20and%20(gallicapublication_date%3E=%22",beginning,"/01%22%20and%20gallicapublication_date%3C=%22",end,"/31%22)sortby%20dc.date%20")}
+    if(doc_type==4){tableau$url[j]<-"https://gallica.bnf.fr/"}
   }
-  tableau$mot<-mot_init
-  tableau$url<-"https://gallica.bnf.fr/"
+
+  
   colnames(tableau)<-c("date","base","page_count","count","page_base","mot","url")
   tableau$ratio<-tableau$count/tableau$base
   tableau$ratio_page<-tableau$page_count/tableau$page_base
@@ -749,7 +796,7 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"resolution",choices = c("Année","Mois"),selected = "Année")
       }
     if(input$doc_type == 5){
-      updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
+      updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
       updateSelectInput(session,"resolution",choices = c("Année"),selected = "Année")
     }
     })
@@ -847,11 +894,14 @@ shinyServer(function(input, output,session){
 
     output$downloadData <- downloadHandler(
       filename = function() {
-        paste("data_",input$mot,"_",input$beginning,"_",input$end,'.csv', sep='')
+        paste("gallicagram_",input$mot,"_",input$beginning,"_",input$end,'.csv', sep='')
       },
       content = function(con) {
-        write.csv(df$tableau, con,row.names = F,fileEncoding = "UTF-8")
-      })
+        if(input$search_mode==2){write.csv(df$tableau_page, con,row.names = F,fileEncoding = "UTF-8")}
+        if(input$search_mode==1 & input$doc_type!=4){write.csv(df$tableau, con,row.names = F,fileEncoding = "UTF-8")}
+        if(input$search_mode==3){write.csv(df$tableau, con,row.names = F,fileEncoding = "UTF-8")}
+        if(input$search_mode==1 & input$doc_type==4){write.csv(df$tableau_volume, con,row.names = F,fileEncoding = "UTF-8")}
+        })
     output$downloadPlot <- downloadHandler(
       filename = function() {
         paste('plot_',input$mot,"_",input$beginning,"_",input$end,'.html', sep='')
