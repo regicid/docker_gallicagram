@@ -39,6 +39,11 @@ Plot <- function(data,input){
     tableau = data[["tableau_volume"]]
   }
   }
+  
+  if(data[["resolution"]]=="Mois"){
+    tableau$date<-str_c(tableau$date,"/01")
+    tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
+  }
     Title = paste("")
     width = length(unique(tableau$date))
     span = 2/width + input$span*(width-2)/(10*width)
@@ -60,16 +65,17 @@ Plot <- function(data,input){
     digit_number<-str_c(".",digit_number,"%")
     }
     
-    tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")
+    if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
+    else{tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
     y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = digit_number)
-    x <- list(title = data[["resolution"]],titlefont = 41)
+    x <- list(title = "",titlefont = 41)
     if(input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){
       tableau$hovers = str_c(tableau$date," : ",round(tableau$ratio*100,digits = 5),"%")
       y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = digit_number)
       }
     plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',hoverinfo="text",customdata=tableau$url)
     plot = layout(plot, yaxis = y, xaxis = x,title = Title)
-    if(length(grep(",",data$mot))==0){plot = layout(plot,showlegend=TRUE)}
+    if(length(grep(",",data$mot))==0){plot = layout(plot,showlegend=TRUE,legend = list(orientation = 'h',x=1,xanchor="right"))}
     
     if(input$delta==TRUE){
       mots<-str_split(input$mot,"&")
@@ -78,7 +84,7 @@ Plot <- function(data,input){
       tableau$hovers2 = str_c(tableau$date,": delta = ",round(tableau$delta*100,digits=2),"%, N = ",tableau$base)
       plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',hoverinfo="text")
       y <- list(title = "Différence de fréquence\nd'occurrence dans le corpus",titlefont = 41,tickformat = digit_number)
-      x <- list(title = data[["resolution"]],titlefont = 41)
+      x <- list(title = "",titlefont = 41)
       Title = paste("Freq(",unlist(mots)[1],") – Freq(",unlist(mots)[2],")")
       Title=str_remove_all(Title," ")
       plot = layout(plot, yaxis = y, xaxis = x,title = Title)
@@ -89,7 +95,7 @@ Plot <- function(data,input){
       tableau$hovers = str_c(tableau$date,": N = ",tableau$base)
       plot1 = plot_ly(tableau, x=~date[tableau$mot==mot[1]],y=~base[tableau$mot==mot[1]],text=~hovers[tableau$mot==mot[1]],type='bar',hoverinfo="text",marker = list(color='rgba(31, 119, 180,1)'))
       y <- list(title = "Nombre de numéros dans Gallica-presse",titlefont = 41)
-      x <- list(title = data[["resolution"]],titlefont = 41)
+      x <- list(title = "",titlefont = 41)
       plot1 = layout(plot1, yaxis = y, xaxis = x,title = Title,showlegend = FALSE)
       plot= plot%>%add_lines()
       plot = plotly::subplot(plot,plot1,nrows = 2,legend=NULL,shareX = T)
@@ -1174,11 +1180,10 @@ shinyServer(function(input, output,session){
         paste("gallicagram_",input$mot,"_",input$beginning,"_",input$end,'.csv', sep='')
       },
       content = function(con) {
-        if(input$search_mode==2){write.csv(df$tableau_page, con,row.names = F,fileEncoding = "UTF-8")}
-        if(input$search_mode==1 & input$doc_type!=4){write.csv(df$tableau, con,row.names = F,fileEncoding = "UTF-8")}
-        if(input$search_mode==3){write.csv(df$tableau, con,row.names = F,fileEncoding = "UTF-8")}
-        if(input$search_mode==1 & input$doc_type==4){write.csv(df$tableau_volume, con,row.names = F,fileEncoding = "UTF-8")}
-        })
+        if((input$doc_type==2 | input$doc_type==3 | input$doc_type==4) & input$search_mode==2){write.csv(df$tableau_page, con,row.names = F,fileEncoding = "UTF-8")}
+        else if(input$search_mode==1 & input$doc_type==4){write.csv(df$tableau_volume, con,row.names = F,fileEncoding = "UTF-8")}
+        else{write.csv(df$tableau, con,row.names = F,fileEncoding = "UTF-8")}
+      })
     output$downloadPlot <- downloadHandler(
       filename = function() {
         paste('plot_',input$mot,"_",input$beginning,"_",input$end,'.html', sep='')
