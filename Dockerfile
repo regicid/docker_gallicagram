@@ -30,6 +30,10 @@ RUN R -e "install.packages(c('shinyWidgets'), repos='https://cloud.r-project.org
 
 RUN R -e "install.packages(c('purrr'), repos='https://cloud.r-project.org/')"
 
+RUN R -e "install.packages(c('RSelenium'), repos='https://cloud.r-project.org/')"
+
+RUN R -e "install.packages(c('rvest'), repos='https://cloud.r-project.org/')"
+
 # copy the app to the image
 RUN mkdir /root/gallicagram
 COPY gallicagram /root/gallicagram
