@@ -156,7 +156,7 @@ message<-function(mot,from,to,doc_type,titres){
     }
     mot1<-mots_or[1]} else{mot1=mot2}
   
-  if(doc_type==3 & length(titres)>1){
+  if(doc_type == 3 & length(titres)>1){
     ark1<-titres[1]
     ark3<-""
     for (v in 2:length(titres)) 
@@ -165,7 +165,7 @@ message<-function(mot,from,to,doc_type,titres){
       ark2<-str_c("%20or%20dc.relation%20any%20%22",ark,"%22")
       ark3<-str_c(ark3,ark2)
     }
-  }else if(doc_type==3 & length(titres)==1)
+  }else if(doc_type == 3 & length(titres)==1)
   {
     ark1<-titres
     ark3<-""
@@ -227,7 +227,7 @@ rapport <- function(mot,from,to,doc_type,titres){
     mot1<-mots_or[1]} else{mot1=mot2}
   
   
-  if(doc_type==3 & length(titres)>1){
+  if(doc_type == 3 & length(titres)>1){
     ark1<-titres[1]
     ark3<-""
     for (v in 2:length(titres)) 
@@ -236,7 +236,7 @@ rapport <- function(mot,from,to,doc_type,titres){
       ark2<-str_c("%20or%20dc.relation%20any%20%22",ark,"%22")
       ark3<-str_c(ark3,ark2)
     }
-  }else if(doc_type==3 & length(titres)==1)
+  }else if(doc_type == 3 & length(titres)==1)
   {
     ark1<-titres
     ark3<-""
@@ -370,7 +370,7 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
     mot1<-mots_or[1]} else{mot1=mot2}
   
   
-  if(doc_type==3 & length(titres)>1){
+  if(doc_type == 3 & length(titres)>1){
     ark1<-titres[1]
     ark3<-""
     for (v in 2:length(titres)) 
@@ -379,7 +379,7 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
       ark2<-str_c("%20or%20dc.relation%20any%20%22",ark,"%22")
       ark3<-str_c(ark3,ark2)
     }
-  }else if(doc_type==3 & length(titres)==1)
+  }else if(doc_type == 3 & length(titres)==1)
   {
     ark1<-titres
     ark3<-""
@@ -418,7 +418,7 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
     resultat=str_extract(resultat,"[:digit:]+")
     tot_df$resultats[i]<-as.integer(resultat)
     
-    if(doc_type==4 | doc_type==3){
+    if(doc_type==4 | doc_type == 3){
     url_base<-str_c("https://gallica.bnf.fr/services/ContentSearch?ark=",tot_df$ark[i],"&query=%20")
     resultat_base<-as.character(read_html(RETRY("GET",url_base,times = 3)))
     resultat_base=str_remove_all(resultat_base,"[:space:]")
@@ -446,7 +446,7 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
     tableau$detect[j]<-sum(tot_df$detect[tot_df$date==tableau$date[j]])
     
     if(doc_type==2){tableau$url[j]<-str_c(url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",tableau$date[j],"%22%20and%20gallicapublication_date%3C=%22",tableau$date[j],"%22)&suggest=10&keywords=",mot1,or_end))}
-    if(doc_type==3){
+    if(doc_type == 3){
       beginning<-str_replace_all(tableau$date[j],"-","/")
       end<-str_replace_all(tableau$date[j],"-","/")
       if(resolution=="Années"){
@@ -467,7 +467,7 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
   tableau_page<-select(tableau,date,page_count,page_base,mot,url,ratio_page)
   tableau_page$resolution<-resolution
   if(doc_type==2){tableau_page$corpus<-"livres_gallica"}
-  if(doc_type==3){tableau_page$corpus<-"titre_presse_gallica"}
+  if(doc_type == 3){tableau_page$corpus<-"titre_presse_gallica"}
   if(doc_type==4){tableau_page$corpus<-"perso_gallica"}
   tableau_page$search_mode<-"page"
   colnames(tableau_page)<-c("date",	"count",	"base",	"mot",	"url",	"ratio",	"resolution",	"corpus",	"search_mode")
@@ -475,7 +475,7 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
   tableau_volume<-select(tableau,date,count,base,mot,url,ratio)
   tableau_volume$resolution<-resolution
   if(doc_type==2){tableau_volume$corpus<-"livres_gallica"}
-  if(doc_type==3){tableau_volume$corpus<-"titre_presse_gallica"}
+  if(doc_type == 3){tableau_volume$corpus<-"titre_presse_gallica"}
   if(doc_type==4){tableau_volume$corpus<-"perso_gallica"}
   tableau_volume$search_mode<-"volume"
   colnames(tableau_volume)<-c("date",	"count",	"base",	"mot",	"url",	"ratio",	"resolution",	"corpus",	"search_mode")
@@ -608,7 +608,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
         or1<-NA
         or1_end<-NA
         for (j in 2:length(mots_or)) {
-          if(doc_type==1 | doc_type==2 | doc_type==3 | doc_type==4 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26)
+          if(doc_type==1 | doc_type==2 | doc_type == 3 | doc_type==4 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26)
           {or1[j]<-str_c("or%20text%20adj%20%22",mots_or[j],"%22%20")
           or1_end[j]<-str_c("%20",mots_or[j])}
           if(doc_type==6 | doc_type==7 | doc_type==8)
@@ -633,20 +633,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
         or<-URLencode(or)
         }
       
-      if(doc_type==3 & length(titres)>1){
-        ark1<-titres[1]
-        ark3<-""
-        for (v in 2:length(titres)) 
-        {
-          ark<-titres[v]
-          ark2<-str_c("%20or%20dc.relation%20any%20%22",ark,"%22")
-          ark3<-str_c(ark3,ark2)
-        }
-      }else if(doc_type==3 & length(titres)==1)
-      {
-        ark1<-titres
-        ark3<-""
-      }
+      
       ###
       end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
       if(i%%4==0){end_of_month[2]=29}
@@ -666,7 +653,42 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
             beginning = str_c(y,"/",z,"/01")
             end = str_c(y,"/",z,"/",end_of_month[j])}
           if(doc_type == 1){url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)}
-          if(doc_type == 3){url <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)sortby%20dc.date%20")}
+          if(doc_type == 3){
+            liste_titres<-titres
+            longueur_max=15
+            iterations<-ceiling(length(liste_titres)/longueur_max)
+            reste=iterations*longueur_max-length(liste_titres)
+            a=0
+            b=0
+            for (k in 1:iterations) {
+              if(k==iterations){titres<-liste_titres[((k-1)*longueur_max+1):(k*longueur_max-reste)]}
+              else{titres<-liste_titres[((k-1)*longueur_max+1):(k*longueur_max)]}
+              if(doc_type == 3 & length(titres)>1){
+                ark1<-titres[1]
+                ark3<-""
+                for (v in 2:length(titres)) 
+                {
+                  ark<-titres[v]
+                  ark2<-str_c("%20or%20dc.relation%20any%20%22",ark,"%22")
+                  ark3<-str_c(ark3,ark2)
+                }
+              }else if(doc_type == 3 & length(titres)==1)
+              {
+                ark1<-titres
+                ark3<-""
+              }
+              url <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)sortby%20dc.date%20")
+              ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
+              a<-a+as.integer(str_extract(str_extract(ngram,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+"))
+              url_base <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)%20sortby%20dc.date")
+              ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
+              b<-b+as.integer(str_extract(str_extract(ngram_base,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+"))
+            }
+            a<-as.character(a)
+            b<-as.character(b)
+            url="https://gallica.bnf.fr/"
+            titres<-liste_titres
+          }
           if(doc_type == 6){beginning<-str_replace_all(beginning,"/","-")
             end<-str_replace_all(end,"/","-")
             langue="de"
@@ -776,7 +798,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
           }
         
         
-          if(doc_type == 1 | doc_type == 3| doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
+          if(doc_type == 1 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
             ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
             a<-str_extract(str_extract(ngram,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
           }
@@ -941,11 +963,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
             }
           }
         
-          if(doc_type == 3){
-            url_base <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)%20sortby%20dc.date")
-            ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
-            b<-str_extract(str_extract(ngram_base,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
-          }
+         
           if(resolution=="Mois"& (doc_type==1 | doc_type==6 | doc_type==7 | doc_type==8 | doc_type==11 | doc_type==13 | doc_type==14 | doc_type==15 | doc_type==16 | doc_type==17 | doc_type==18 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26 | doc_type==27 | doc_type==28)){
             date=str_c(y,"/",z)
             b<-as.integer(base$base[base$date==date])}
@@ -1031,7 +1049,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
   if(doc_type==2){tableau$corpus="livres_gallica"
   tableau$search_mode<-"volume"}
   if(doc_type==5){tableau$corpus="livres_fr_ngram"}
-  if(doc_type==3){tableau$corpus="titre_presse_gallica"
+  if(doc_type == 3){tableau$corpus="titre_presse_gallica"
   tableau$search_mode<-"volume"}
   if(doc_type==4){tableau$corpus="perso_gallica"
   tableau$search_mode<-"volume"}
@@ -1239,14 +1257,23 @@ shinyServer(function(input, output,session){
   
   output$legende1<-renderText(str_c("Corpus : presse\n"))
   observeEvent(
-    input$doc_type,
-    {if(input$doc_type==3 && is.null(input$titres))
-    {
-      liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
-      updateSelectizeInput(session,"titres",choices = setNames(liste_journaux$ark,liste_journaux$title),selected="cb39294634r")
-    }
-      
-    })
+    input$doc_type,{observeEvent(input$theme_presse,{
+      if(input$doc_type == 3 & input$theme_presse==1)
+      {
+        liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
+        output$titres<-renderUI({selectizeInput("titres","Titre des journaux",choices = setNames(liste_journaux$ark,liste_journaux$title),selected="cb39294634r",multiple=T)})
+      }
+      if(input$doc_type == 3 & input$theme_presse==2)
+      {
+        liste_journaux<-read.csv("liste_themes_principaux-quotidiens.csv",encoding="UTF-8")
+        output$titres<-renderUI({pickerInput("titres","Titre des journaux",choices = setNames(as.character(liste_journaux$ark),as.character(liste_journaux$titre)), options = list(`actions-box` = TRUE),multiple = T)})
+      }
+      if(input$doc_type == 3 & input$theme_presse==3)
+      {
+        liste_journaux<-read.csv("liste_themes_presse-litteraire.csv",encoding="UTF-8")
+        output$titres<-renderUI({pickerInput("titres","Titre des journaux",choices = setNames(as.character(liste_journaux$ark),as.character(liste_journaux$titre)), options = list(`actions-box` = TRUE),multiple = T)})
+      }
+    })})
   
   
   output$plot <- renderPlotly({Plot(data,input)})
@@ -1268,9 +1295,12 @@ shinyServer(function(input, output,session){
   observeEvent(input$language,{
     observeEvent(input$bibli,{
     if(input$language == 1 & input$bibli==1){
-      updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15, "Presse wallonne / KBR"=13, "Presse québécoise / BAnQ"=28, "Presse française / Gallica" = 1,"Recherche par titre de presse / Gallica" = 3, "Corpus personnalisé / Gallica"=4, "Livres / Gallica" = 2,"Livres / Ngram Viewer - Google Books" = 5),selected = 1)
+      updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse française / Gallica" = 1,"Recherche par titre de presse / Gallica" = 3, "Livres / Gallica" = 2, "Corpus personnalisé / Gallica"=4),selected = 1)
     }
     else if(input$language == 1 & input$bibli==2){
+      updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15, "Presse wallonne / KBR"=13, "Presse québécoise / BAnQ"=28, "Livres / Ngram Viewer - Google Books" = 5),selected = 5)
+    }
+    else if(input$language == 1 & input$bibli==3){
       updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse Auvergne-Rhône-Alpes / Lectura"=17, "Presse du sillon lorrain / Limedia"=18, "Presse méridionale / Mémonum"=19, "Presse de Saint-Denis / Commun-Patrimoine"=20, "Presse de Brest / Yroise"=21, "Presse des Pyrénées / Pireneas"=22, "Presse toulousaine / Rosalis"=23, "Presse diplomatique / Bibliothèque diplomatique numérique"=24, "Presse francophone / RFN"=25, "Presse alsacienne / Numistral"=26, "Presse de Roubaix / BN-R"=27),selected = 17)
     }
     else if(input$language == 2){
@@ -1319,7 +1349,7 @@ shinyServer(function(input, output,session){
   
   observeEvent(
     input$search_mode,{
-      if(input$search_mode==2 & (input$doc_type ==1 |input$doc_type ==2 |input$doc_type ==3 |input$doc_type ==4)){
+      if(input$search_mode==2 & (input$doc_type ==1 |input$doc_type ==2 |input$doc_type == 3 |input$doc_type ==4)){
         output$avertissement<-renderText(message(recherche_texte(),recherche_from(),recherche_to(),recherche_doc_type(),recherche_titres()))
     }
     })
@@ -1349,7 +1379,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$do,{
     # datasetInput <- reactive({
     #   data$tableau})
-    if (input$doc_type==1 |(input$doc_type==3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28){
+    if (input$doc_type==1 |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
@@ -1364,7 +1394,7 @@ shinyServer(function(input, output,session){
       tot_df$identifier<-str_remove_all(tot_df$identifier," .+")
       df=page_search(input$mot,input$beginning,input$end,input$resolution,tot_df,input$doc_type,input$search_mode,input$titres)
     }
-    else if( (input$doc_type==2 | input$doc_type==3) & input$search_mode==2){
+    else if( (input$doc_type==2 | input$doc_type == 3) & input$search_mode==2){
       df=rapport(input$mot,input$beginning,input$end,input$doc_type,input$titres)
       df$identifier<-str_remove_all(df$identifier," .+")
       df=page_search(input$mot,input$beginning,input$end,input$resolution,df,input$doc_type,input$search_mode,input$titres)
@@ -1372,7 +1402,7 @@ shinyServer(function(input, output,session){
     
     output$plot <- renderPlotly({Plot(df,input)})
     
-    if(input$doc_type==1 | (input$doc_type==2 & input$search_mode==1) | (input$doc_type==3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28){
+    if(input$doc_type==1 | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28){
       nb_mots<-length(unique(df[["tableau"]]$mot))
       output$legende2<-renderText(str_c("Documents épluchés : ",as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Résultats trouvés : ", as.character(sum(df[["tableau"]]$count))))
@@ -1402,7 +1432,7 @@ shinyServer(function(input, output,session){
       output$legende3<-renderText(str_c("Pages correspondant à la recherche : ", as.character(sum(df[["tableau_page"]]$count))))
     }
     
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==3 | input$doc_type==4){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/'> ","gallica.bnf.fr","</a>"),sep = ""))}
+    if(input$doc_type==1 | input$doc_type==2 | (input$doc_type == 3 & input$theme_presse==1) | input$doc_type==4){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/'> ","gallica.bnf.fr","</a>"),sep = ""))}
     if(input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://books.google.com/ngrams/'> ","books.google.com/ngrams","</a>"),sep = ""))}
     if(input$doc_type==6 | input$doc_type==7){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.europeana.eu/'> ","europeana.eu","</a>"),sep = ""))}
     if(input$doc_type==8){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.britishnewspaperarchive.co.uk/'> ","britishnewspaperarchive.co.uk","</a>"),sep = ""))}
@@ -1421,8 +1451,10 @@ shinyServer(function(input, output,session){
     if(input$doc_type==26){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.numistral.fr/'> ","numistral.fr","</a>"),sep = ""))}
     if(input$doc_type==27){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.bn-r.fr/'> ","bn-r.fr","</a>"),sep = ""))}
     if(input$doc_type==28){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.banq.qc.ca/'> ","banq.qc.ca","</a>"),sep = ""))}
+    if(input$doc_type == 3 & input$theme_presse == 2){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/html/presse-et-revues/les-principaux-quotidiens?mode=desktop'> ","gallica.bnf.fr","</a>"),sep = ""))}
+    if(input$doc_type == 3 & input$theme_presse == 3){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/html/presse-et-revues/presse-litteraire?mode=desktop'> ","gallica.bnf.fr","</a>"),sep = ""))}
     
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28){output$legende4=renderText("Langue : français")}
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28){output$legende4=renderText("Langue : français")}
     if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16){output$legende4=renderText("Langue : allemand")}
     if(input$doc_type==7 | input$doc_type==14){output$legende4=renderText("Langue : néerlandais")}
     if(input$doc_type==8 | input$doc_type==10){output$legende4=renderText("Langue : anglais")}
@@ -1431,7 +1463,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28){output$legende1<-renderText("Corpus : presse")}
     if(input$doc_type==2 | input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){output$legende1<-renderText("Corpus : livres")}
     if(input$doc_type==4){output$legende1<-renderText("Corpus : personnalisé")}
-    if(input$doc_type==3){
+    if(input$doc_type == 3 & input$theme_presse == 1){
       liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
       title<-liste_journaux$title[liste_journaux$ark==input$titres[1]]
       title=str_c("Corpus : ",title)
@@ -1441,7 +1473,8 @@ shinyServer(function(input, output,session){
         }}
       output$legende1<-renderText(paste(title))
     }
-    
+    if(input$doc_type == 3 & input$theme_presse == 2){output$legende1<-renderText("Corpus : principaux quotidiens")}
+    if(input$doc_type == 3 & input$theme_presse == 3){output$legende1<-renderText("Corpus : presse littéraire")}
     
     
     if(str_detect(input$mot,".+&.+"))
@@ -1481,7 +1514,7 @@ shinyServer(function(input, output,session){
         paste("gallicagram_",input$mot,"_",input$beginning,"_",input$end,'.csv', sep='')
       },
       content = function(con) {
-        if((input$doc_type==2 | input$doc_type==3 | input$doc_type==4) & input$search_mode==2){write.csv(df$tableau_page, con,row.names = F,fileEncoding = "UTF-8")}
+        if((input$doc_type==2 | input$doc_type == 3 | input$doc_type==4) & input$search_mode==2){write.csv(df$tableau_page, con,row.names = F,fileEncoding = "UTF-8")}
         else if(input$search_mode==1 & input$doc_type==4){write.csv(df$tableau_volume, con,row.names = F,fileEncoding = "UTF-8")}
         else{write.csv(df$tableau, con,row.names = F,fileEncoding = "UTF-8")}
       })
