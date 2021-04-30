@@ -32,7 +32,8 @@ doc_type=1
       else{mot1=mot2}
       ###
       end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
-      if( i%%4==0){end_of_month[2]=29} #Ne pas oublier les années bisextiles (merci Maxendre de m'y avoir fait penser)
+      if( i%%4==0){end_of_month[2]=29}
+      if(i==1700 | i==1800 | i==1900){end_of_month[2]=28}#Ne pas oublier les années bisextiles (merci Maxendre de m'y avoir fait penser)
       y<-as.character(i)
       if(resolution=="Année"){beginning = str_c(y,"/01/01")
       end = str_c(y,"/12/31")}

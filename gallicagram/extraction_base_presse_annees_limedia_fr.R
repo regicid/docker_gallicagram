@@ -1,9 +1,10 @@
 library(stringr)
 library(xml2)
 library(httr)
-from="1700"
-to="1947"
-resolution="Mois"
+library(rvest)
+from="1769"
+to="1950"
+resolution="Année"
 tableau<-as.data.frame(matrix(nrow=0,ncol=2),stringsAsFactors = FALSE)
 
 
@@ -24,11 +25,11 @@ for (i in from:to){
       z = as.character(j)
       if(nchar(z)<2){z<-str_c("0",z)}
       beginning = str_c(y,"-",z,"-01")
-      end = str_c(y,"-",z,"-",end_of_month[j])}
-    url_base<-str_c("https://www.europeana.eu/fr/search?page=1&qf=MEDIA%3Atrue&qf=TYPE%3A%22TEXT%22&qf=LANGUAGE%3A%22de%22&qf=collection%3Anewspaper&qf=proxy_dcterms_issued%3A%5B",beginning,"%20TO%20",end,"%5D&view=grid&api=fulltext")
-    ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
-    ngram_base<-str_remove_all(ngram_base,",")
-    b<-str_extract(str_extract(ngram_base,"Résultats: [:digit:]+"),"[:digit:]+")
+      end = str_c(y,"-",z,"-",end_of_month[j])
+      url_base<-str_c("https://kiosque.limedia.fr/recherche/?query=&search_type=or&uniform_title=&date=&period_start=01/",z,"/",y,"&period_end=",end_of_month[j],"/",z,"/",y,"&filter_language=fre&sort_patrimonial=item_created_start_asc")}
+    if(resolution=="Année"){url_base<-str_c("https://kiosque.limedia.fr/recherche/?query=&search_type=or&uniform_title=&date=&period_start=01/01/",y,"&period_end=31/12/",y,"&filter_language=fre&sort_patrimonial=item_created_start_asc")}
+    ngram_base<-read_html(RETRY("GET",url_base,times = 6))
+    b<-str_extract(html_text(html_node(ngram_base,".col-milieu")),"[:digit:]+")
     tableau[nrow(tableau)+1,] = NA
     date=y
     if(resolution=="Mois"){date = paste(y,z,sep="-")}
@@ -43,4 +44,4 @@ colnames(tableau)<-c("date","base")
 tableau$date<-str_replace_all(tableau$date,"-","/")
 tableau$base[is.na(tableau$base)]<-0
 tableau$base<-as.integer(tableau$base)
-write.csv(tableau,'C:/Users/Benjamin/gallicagram_app/base_presse_mois_europeana_de.csv',fileEncoding = "UTF-8",row.names = FALSE)  
+write.csv(tableau,'C:/Users/Benjamin/gallicagram_app/base_presse_annees_limedia_fr.csv',fileEncoding = "UTF-8",row.names = FALSE)  

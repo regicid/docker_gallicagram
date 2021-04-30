@@ -41,6 +41,7 @@ for (i in from:to){
 
 
 colnames(tableau)<-c("date","base")
+tableau$date<-str_replace_all(tableau$date,"-","/")
 tableau$base[is.na(tableau$base)]<-0
 tableau$base<-as.integer(tableau$base)
 write.csv(tableau,'C:/Users/Benjamin/gallicagram_app/base_presse_annees_europeana_de.csv',fileEncoding = "UTF-8",row.names = FALSE)  

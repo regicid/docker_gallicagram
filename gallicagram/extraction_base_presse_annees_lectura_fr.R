@@ -1,9 +1,9 @@
 library(stringr)
 library(xml2)
 library(httr)
-from="1700"
-to="1947"
-resolution="Mois"
+from="1800"
+to="1950"
+resolution="Année"
 tableau<-as.data.frame(matrix(nrow=0,ncol=2),stringsAsFactors = FALSE)
 
 
@@ -24,11 +24,13 @@ for (i in from:to){
       z = as.character(j)
       if(nchar(z)<2){z<-str_c("0",z)}
       beginning = str_c(y,"-",z,"-01")
-      end = str_c(y,"-",z,"-",end_of_month[j])}
-    url_base<-str_c("https://www.europeana.eu/fr/search?page=1&qf=MEDIA%3Atrue&qf=TYPE%3A%22TEXT%22&qf=LANGUAGE%3A%22de%22&qf=collection%3Anewspaper&qf=proxy_dcterms_issued%3A%5B",beginning,"%20TO%20",end,"%5D&view=grid&api=fulltext")
+      end = str_c(y,"-",z,"-",end_of_month[j])
+      url_base<-str_c("https://www.lectura.plus/Presse/search/?query=&fromDate=01%2F",z,"%2F",y,"&untilDate=",end_of_month[j],"%2F",z,"%2F",y)}
+    if(resolution=="Année"){url_base<-str_c("https://www.lectura.plus/Presse/search/?query=&fromDate=01%2F01%2F",y,"&untilDate=31%2F12%2F",y)}
     ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
-    ngram_base<-str_remove_all(ngram_base,",")
-    b<-str_extract(str_extract(ngram_base,"Résultats: [:digit:]+"),"[:digit:]+")
+    ngram_base<-str_extract(ngram_base,"width:100px.+")
+    ngram_base<-str_remove(ngram_base,"width:100px")
+    b<-str_extract(ngram_base,"[:digit:]+")
     tableau[nrow(tableau)+1,] = NA
     date=y
     if(resolution=="Mois"){date = paste(y,z,sep="-")}
@@ -43,4 +45,4 @@ colnames(tableau)<-c("date","base")
 tableau$date<-str_replace_all(tableau$date,"-","/")
 tableau$base[is.na(tableau$base)]<-0
 tableau$base<-as.integer(tableau$base)
-write.csv(tableau,'C:/Users/Benjamin/gallicagram_app/base_presse_mois_europeana_de.csv',fileEncoding = "UTF-8",row.names = FALSE)  
+write.csv(tableau,'C:/Users/Benjamin/gallicagram_app/base_presse_annees_lectura_fr.csv',fileEncoding = "UTF-8",row.names = FALSE)  
