@@ -63,7 +63,7 @@ Plot <- function(data,input){
     
       for(mot in unique(tableau$mot)){
         z = which(tableau$mot==mot)
-        tableau$scale[z]=scale(tableau$scale[z],center = T,scale = T)
+        tableau$scale[z]=scale(tableau$scale[z],center = F,scale = T)
         }
     
     width = length(unique(tableau$date))
