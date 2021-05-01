@@ -1256,23 +1256,67 @@ shinyServer(function(input, output,session){
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
   
   output$legende1<-renderText(str_c("Corpus : presse\n"))
-  observeEvent(
-    input$doc_type,{observeEvent(input$theme_presse,{
-      if(input$doc_type == 3 & input$theme_presse==1)
+  
+  observeEvent(input$doc_type,{observeEvent(input$filtre,{
+    
+    if(input$doc_type == 3 & input$filtre==1)
+    {
+      updateSelectizeInput(session,"theme_presse","Thématique",choices = list("Liste de titres personnalisée"=1,"Principaux quotidiens"=2,
+                                                                           "Hebdomadaires"=3,"Feuilles de tranchée"=4,
+                                                                           "Principaux titres de la Résistance"=5,"Journaux clandestins - zone sud"=6,
+                                                                           "Journaux clandestins - zone réservée"=7,"Journaux clandestins - Alsace-Moselle"=8,
+                                                                           "Journaux clandestins - Empire français"=9,"Journaux clandestins - Région parisienne"=10,
+                                                                           "Journaux clandestins - zone nord"=11,"Anciens combattants"=12,
+                                                                           "Faits-divers"=13,"Presse artistique"=14,
+                                                                           "Presse coloniale"=15,"Presse culinaire"=16,
+                                                                           "Presse d'annonces"=17,"Presse de cinéma"=18,
+                                                                           "Presse de loisir"=19,"Presse de mode"=20,
+                                                                           "Presse de musique"=21,"Presse de spectacles"=22,
+                                                                           "Presse des immigrations"=23,"Presse économique"=24,
+                                                                           "Presse enfantine"=25,"Journaux d'entreprises"=26,
+                                                                           "Presse financière"=27,"Presse par secteurs d'activité"=28,
+                                                                           "Annuaires professionnels"=29,"Presse féminine"=30,
+                                                                           "Presse féministe"=31, "Presse littéraire"=32,
+                                                                           "Presse médicale"=33,
+                                                                           "Presse ouvrière"=34,"Presse politique : Révolution-Empire"=35,
+                                                                           "Presse politique : Restauration-Second Empire"=36,"Presse politique : 3e République"=37,
+                                                                           "Presse professionnelle"=38,"Presse religieuse"=39,
+                                                                           "Presse scientifique"=40,"Presse sportive"=41,
+                                                                           "Presse syndicale"=42))
+    }
+    if(input$doc_type == 3 & input$filtre==2)
+    {
+      liste_departements<-read.csv("liste_departements.csv",encoding = "UTF-8")
+      updateSelectizeInput(session,"theme_presse","Région",choices = setNames(as.character(liste_departements$num),as.character(liste_departements$titre)))
+    }
+  })})
+  
+  observeEvent(input$doc_type,{observeEvent(input$theme_presse,{
+    if(input$doc_type == 3)
+    {  
+      if(input$theme_presse==1)
       {
         liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
         output$titres<-renderUI({selectizeInput("titres","Titre des journaux",choices = setNames(liste_journaux$ark,liste_journaux$title),selected="cb39294634r",multiple=T)})
       }
-      if(input$doc_type == 3 & input$theme_presse==2)
+      else if(as.integer(input$theme_presse) & as.integer(input$theme_presse)<=50)
       {
-        liste_journaux<-read.csv("liste_themes_principaux-quotidiens.csv",encoding="UTF-8")
+        themes<-read.csv("liste_themes.csv",encoding = "UTF-8")
+        fichier<-as.character(themes$csv[themes$num==input$theme_presse])
+        liste_journaux<-read.csv(fichier,encoding="UTF-8")
+        liste_journaux$titre<-str_remove_all(liste_journaux$titre,"\n")
         output$titres<-renderUI({pickerInput("titres","Titre des journaux",choices = setNames(as.character(liste_journaux$ark),as.character(liste_journaux$titre)), options = list(`actions-box` = TRUE),multiple = T)})
       }
-      if(input$doc_type == 3 & input$theme_presse==3)
+      else if(as.integer(input$theme_presse)>=51)
       {
-        liste_journaux<-read.csv("liste_themes_presse-litteraire.csv",encoding="UTF-8")
+        departement<-read.csv("liste_departements.csv",encoding = "UTF-8")
+        fichier<-as.character(departement$csv[as.character(departement$num)==as.character(input$theme_presse)])
+        liste_journaux<-read.csv(fichier,encoding="UTF-8")
+        liste_journaux$titre<-str_remove_all(liste_journaux$titre,"\n")
         output$titres<-renderUI({pickerInput("titres","Titre des journaux",choices = setNames(as.character(liste_journaux$ark),as.character(liste_journaux$titre)), options = list(`actions-box` = TRUE),multiple = T)})
       }
+    }
+      
     })})
   
   
