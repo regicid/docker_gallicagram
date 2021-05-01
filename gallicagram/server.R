@@ -116,7 +116,8 @@ Plot <- function(data,input){
     if(input$barplot){
       width = nrow(tableau)
       span = 2/width + input$span*(width-2)/(10*width)
-      tableau$hovers = str_c(tableau$date,": N = ",tableau$base)
+      if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": N = ",tableau$base)}
+      else{tableau$hovers = str_c(str_extract(tableau$date,"...."),": N = ",tableau$base)}
       plot1 = plot_ly(tableau, x=~date[tableau$mot==mot[1]],y=~base[tableau$mot==mot[1]],text=~hovers[tableau$mot==mot[1]],type='bar',hoverinfo="text",marker = list(color='rgba(31, 119, 180,1)'))
       y <- list(title = "",titlefont = 41)
       x <- list(title = "",titlefont = 41)
@@ -1285,7 +1286,7 @@ shinyServer(function(input, output,session){
         fichier<-as.character(themes$csv[themes$num==input$theme_presse])
         liste_journaux<-read.csv(fichier,encoding="UTF-8")
         liste_journaux$titre<-str_remove_all(liste_journaux$titre,"\n")
-        output$titres<-renderUI({pickerInput("titres","Titre des journaux",choices = setNames(as.character(liste_journaux$ark),as.character(liste_journaux$titre)), options = list(`actions-box` = TRUE),multiple = T)})
+        output$titres<-renderUI({pickerInput("titres","Titre des journaux",choices = setNames(as.character(liste_journaux$ark),as.character(liste_journaux$titre)), options = list(`actions-box` = TRUE),multiple = T,selected = as.character(liste_journaux$ark))})
       }
       else if(as.integer(input$theme_presse)>=51)
       {
@@ -1293,7 +1294,7 @@ shinyServer(function(input, output,session){
         fichier<-as.character(departement$csv[as.character(departement$num)==as.character(input$theme_presse)])
         liste_journaux<-read.csv(fichier,encoding="UTF-8")
         liste_journaux$titre<-str_remove_all(liste_journaux$titre,"\n")
-        output$titres<-renderUI({pickerInput("titres","Titre des journaux",choices = setNames(as.character(liste_journaux$ark),as.character(liste_journaux$titre)), options = list(`actions-box` = TRUE),multiple = T)})
+        output$titres<-renderUI({pickerInput("titres","Titre des journaux",choices = setNames(as.character(liste_journaux$ark),as.character(liste_journaux$titre)), options = list(`actions-box` = TRUE),multiple = T,selected = as.character(liste_journaux$ark))})
       }
     }
       
