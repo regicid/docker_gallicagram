@@ -1261,28 +1261,8 @@ shinyServer(function(input, output,session){
     
     if(input$doc_type == 3 & input$filtre==1)
     {
-      updateSelectizeInput(session,"theme_presse","Thématique",choices = list("Liste de titres personnalisée"=1,"Principaux quotidiens"=2,
-                                                                           "Hebdomadaires"=3,"Feuilles de tranchée"=4,
-                                                                           "Principaux titres de la Résistance"=5,"Journaux clandestins - zone sud"=6,
-                                                                           "Journaux clandestins - zone réservée"=7,"Journaux clandestins - Alsace-Moselle"=8,
-                                                                           "Journaux clandestins - Empire français"=9,"Journaux clandestins - Région parisienne"=10,
-                                                                           "Journaux clandestins - zone nord"=11,"Anciens combattants"=12,
-                                                                           "Faits-divers"=13,"Presse artistique"=14,
-                                                                           "Presse coloniale"=15,"Presse culinaire"=16,
-                                                                           "Presse d'annonces"=17,"Presse de cinéma"=18,
-                                                                           "Presse de loisir"=19,"Presse de mode"=20,
-                                                                           "Presse de musique"=21,"Presse de spectacles"=22,
-                                                                           "Presse des immigrations"=23,"Presse économique"=24,
-                                                                           "Presse enfantine"=25,"Journaux d'entreprises"=26,
-                                                                           "Presse financière"=27,"Presse par secteurs d'activité"=28,
-                                                                           "Annuaires professionnels"=29,"Presse féminine"=30,
-                                                                           "Presse féministe"=31, "Presse littéraire"=32,
-                                                                           "Presse médicale"=33,
-                                                                           "Presse ouvrière"=34,"Presse politique : Révolution-Empire"=35,
-                                                                           "Presse politique : Restauration-Second Empire"=36,"Presse politique : 3e République"=37,
-                                                                           "Presse professionnelle"=38,"Presse religieuse"=39,
-                                                                           "Presse scientifique"=40,"Presse sportive"=41,
-                                                                           "Presse syndicale"=42))
+      liste_themes<-read.csv("liste_themes.csv",encoding = "UTF-8")
+      updateSelectizeInput(session,"theme_presse","Thématique",choices = setNames(as.character(liste_themes$num),as.character(liste_themes$titre)))
     }
     if(input$doc_type == 3 & input$filtre==2)
     {
@@ -1495,9 +1475,8 @@ shinyServer(function(input, output,session){
     if(input$doc_type==26){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.numistral.fr/'> ","numistral.fr","</a>"),sep = ""))}
     if(input$doc_type==27){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.bn-r.fr/'> ","bn-r.fr","</a>"),sep = ""))}
     if(input$doc_type==28){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.banq.qc.ca/'> ","banq.qc.ca","</a>"),sep = ""))}
-    if(input$doc_type == 3 & input$theme_presse == 2){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/html/presse-et-revues/les-principaux-quotidiens?mode=desktop'> ","gallica.bnf.fr","</a>"),sep = ""))}
-    if(input$doc_type == 3 & input$theme_presse == 3){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/html/presse-et-revues/presse-litteraire?mode=desktop'> ","gallica.bnf.fr","</a>"),sep = ""))}
-    
+    if(input$doc_type == 3 & input$theme_presse != 1){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/html/und/presse-et-revues/presse-et-revues'> ","gallica.bnf.fr","</a>"),sep = ""))}
+
     if(input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28){output$legende4=renderText("Langue : français")}
     if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16){output$legende4=renderText("Langue : allemand")}
     if(input$doc_type==7 | input$doc_type==14){output$legende4=renderText("Langue : néerlandais")}
@@ -1517,9 +1496,17 @@ shinyServer(function(input, output,session){
         }}
       output$legende1<-renderText(paste(title))
     }
-    if(input$doc_type == 3 & input$theme_presse == 2){output$legende1<-renderText("Corpus : principaux quotidiens")}
-    if(input$doc_type == 3 & input$theme_presse == 3){output$legende1<-renderText("Corpus : presse littéraire")}
-    
+    if(input$doc_type == 3 & as.integer(input$theme_presse>=2) & as.integer(input$theme_presse<=50)){
+      liste_themes<-read.csv("liste_themes.csv",encoding="UTF-8")
+      title<-liste_themes$titre[as.character(liste_themes$num)==as.character(input$theme_presse)]
+      output$legende1<-renderText(str_c("Corpus : ",title))
+    }
+    if(input$doc_type == 3 & as.integer(input$theme_presse>=51)){
+      liste_departements<-read.csv("liste_departements.csv",encoding="UTF-8")
+      title<-liste_departements$titre[as.character(liste_departements$num)==as.character(input$theme_presse)]
+      output$legende1<-renderText(str_c("Corpus : ",title))
+    }
+
     
     if(str_detect(input$mot,".+&.+"))
     {output$corr<-renderTable(correlation_matrix(prepare_correlation(df),"corr1"),rownames = TRUE)}
