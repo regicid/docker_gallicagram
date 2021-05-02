@@ -12,6 +12,7 @@ library(ngramr)
 library(dplyr)
 library(htmltools)
 library(shinyWidgets)
+library(rclipboard)
 
 shinyUI(navbarPage("Gallicagram",
                    tabPanel("Graphique",fluidPage(),
@@ -46,7 +47,8 @@ shinyUI(navbarPage("Gallicagram",
                                                 sliderInput("span","Lissage de la courbe",min = 0,max = 10,value = 0)
                                             ),
                                             
-                                            mainPanel(dropdownButton(tags$h3("Options avancées"),
+                                            mainPanel(rclipboardSetup(),
+                                                      div(style="display: inline-block;vertical-align:bottom",dropdownButton(tags$h3("Options avancées"),
                                                                      checkboxInput("barplot", "Afficher la distribution des documents de la base de données ", value = FALSE),
                                                                      checkboxInput("correlation_test", "Afficher les matrices de corrélation", value = FALSE),
                                                                      checkboxInput("delta", "Représenter la différence de fréquence entre les deux premiers termes F(a)-F(b)", value = FALSE),
@@ -57,7 +59,8 @@ shinyUI(navbarPage("Gallicagram",
                                                                      circle = TRUE, status = "default",
                                                                      icon = icon("sliders"), width = "300px",
                                                                      tooltip = tooltipOptions(title = "Afficher les options avancées")
-                                                                     ),
+                                                                     )),
+                                                      div(style="display: inline-block;vertical-align:top;float:right",rclipButton("clipbtn", "Citer cet outil",clipText = "Gallicagram par Benjamin Azoulay et Benoît de Courson",icon = icon("clipboard"))),
                                                       plotlyOutput("plot"),
                                                       fluidRow(uiOutput("legende"),align="right"),
                                                       fluidRow(textOutput("legende0"),align="right"),
