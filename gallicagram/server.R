@@ -1162,7 +1162,7 @@ correlation_matrix <- function(df, corr,
                                show_significance = TRUE, 
                                replace_diagonal = TRUE, 
                                replacement = ""){
-  
+
   mots = colnames(df)
   # check arguments
   stopifnot({
@@ -1185,12 +1185,16 @@ correlation_matrix <- function(df, corr,
   
   # transform input data frame to matrix
   x <- as.matrix(df)
-  
+
   # run correlation analysis using Hmisc package
   correlation_matrix <- Hmisc::rcorr(x, type = )
   R <- correlation_matrix$r # Matrix of correlation coeficients
   p <- correlation_matrix$P # Matrix of p-value 
   
+  R[is.nan(R)]<-0
+  R[is.na(R)]<-0
+  p[is.nan(p)]<-1
+  p[is.na(p)]<-1
   # transform correlations to specific character format
   Rformatted = formatC(R, format = 'f', digits = digits, decimal.mark = decimal.mark)
   
@@ -1331,7 +1335,7 @@ shinyServer(function(input, output,session){
     else if(input$language == 2){
       updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse allemande / Europeana" = 6,"Presse suisse-allemande / Bibliothèque nationale suisse"=16 , "Livres / Ngram Viewer Allemand" = 9),selected = 6)
     }else if(input$language == 3){
-      updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse flamande / KBR"=14, "Presse néerlandaise / Europeana" = 7),selected = 14)
+      updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse néerlandaise / Europeana" = 7,"Presse flamande / KBR"=14),selected = 7)
     }else if(input$language == 4){
       updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse britannique / BNA" = 8, "Livres / Ngram Viewer Anglais" = 10),selected = 8)
     }else if(input$language == 5){
