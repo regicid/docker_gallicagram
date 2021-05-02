@@ -700,7 +700,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
             url<-str_c("https://newspapers.eanadev.org/api/v2/search.json?query=%22",mot1,"%22",or,"&rows=1&profile=hits&wskey=%20athrobid&qf=proxy_dcterms_issued:%5B",beginning,"+TO+",end,"%5D&qf=LANGUAGE:nl")}
           if(doc_type == 8){beginning<-str_replace_all(beginning,"/","-")
             end<-str_replace_all(end,"/","-")
-            url<-str_c("https://www.britishnewspaperarchive.co.uk/search/results/",beginning,"/",end,"?basicsearch=%22",mot1,"%22",or,"&exactsearch=true&retrievecountrycounts=false")}
+            url<-str_c("https://www.britishnewspaperarchive.co.uk/search/results/",beginning,"/",end,"?basicsearch=%22",mot1,"%22",or,"&exactsearch=true&contenttype=article")}
           if(doc_type == 11){
             if(resolution=="Mois"){
               z = as.character(j)

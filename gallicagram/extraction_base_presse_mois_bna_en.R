@@ -25,7 +25,7 @@ for (i in from:to){
       if(nchar(z)<2){z<-str_c("0",z)}
       beginning = str_c(y,"-",z,"-01")
       end = str_c(y,"-",z,"-",end_of_month[j])}
-    url_base<-str_c("https://www.britishnewspaperarchive.co.uk/search/results/",beginning,"/",end,"?exactsearch=true&retrievecountrycounts=false&sortorder=dayearly")
+    url_base<-str_c("https://www.britishnewspaperarchive.co.uk/search/results/",beginning,"/",end,"?basicsearch=a&contenttype=article")
     ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
     ngram_base<-str_remove_all(ngram_base,"[:space:]")
     ngram_base<-str_extract(ngram_base,"Date--.+Newspapers--")
