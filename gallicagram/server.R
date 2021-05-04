@@ -832,6 +832,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
             if (is.na(a)){a<-str_extract(str_extract(ngram,"Résultats[:digit:]+"),"[:digit:]+")}
           }
           if(doc_type == 13 | doc_type == 14){
+            print(url)
             remDr$navigate(url)
             print("url ok")
             Sys.sleep(2) # give the page time to fully load
