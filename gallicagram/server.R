@@ -588,10 +588,13 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
   
   if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28){
     if(se=="windows"){system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
-      rD <- rsDriver(browser = "firefox", port = 4444L)}
+      rD <- rsDriver(browser = "firefox", port = 4444L)
+      remDr <- rD[["client"]]}
     #if(se=="linux"){system("kill -9 $(lsof -t -i:4444)", intern=FALSE, ignore.stdout=FALSE)}
-    if(se=="linux"){rD <- rsDriver(browser = "firefox", port = 4444L)}
-    remDr <- rD[["client"]]
+    #if(se=="linux"){rD <- rsDriver(browser = "firefox", port = 4444L)}
+    remDr <- remoteDriver()
+    remDr<-remDr$open()
+    #remDr <- rD[["client"]]
   }
   if(doc_type==28){
     url="https://numerique.banq.qc.ca/rechercheExterne/encoded/Sm9mZnJl/false/P/desc/W3sibm9tIjoiY29ycHVzIiwidmFsZXVyIjoiUGF0cmltb2luZSUyMHF1w6liw6ljb2lzIn0seyJub20iOiJ0eXBlX2RvY19mIiwidmFsZXVyIjoiUmV2dWVzJTIwZXQlMjBqb3VybmF1eCJ9LHsibm9tIjoibGFuZ3Vlc19jb250ZW51IiwidmFsZXVyIjoiZnJhbsOnYWlzIn0seyJub20iOiJhdmVjX3RleHRlX2ludGVncmFsIiwidmFsZXVyIjoib3VpIn0seyJub20iOiJnZW5yZV9mIiwidmFsZXVyIjoiSm91cm5hdXgifV0=/Liste%20de%20r%C3%A9sultats/true/false/eyJkZWJ1dCI6eyJhbm5lZSI6MTkxNCwibW9pcyI6MSwiam91ciI6MX0sImZpbiI6eyJhbm5lZSI6MTkxNCwibW9pcyI6MTIsImpvdXIiOjMxfX0="
