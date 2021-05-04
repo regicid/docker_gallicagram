@@ -1002,10 +1002,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
   
   if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28){
     remDr$close()
+    if(se=="windows"){
     rD$server$stop()
     rm(rD)
     gc()
-    if(se=="windows"){system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)}
+    system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)}
     #if(se=="linux"){system("kill -9 $(lsof -t -i:4444)", intern=FALSE, ignore.stdout=FALSE)}
   }
   
