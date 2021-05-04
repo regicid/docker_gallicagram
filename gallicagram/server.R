@@ -49,7 +49,8 @@ Plot <- function(data,input){
       tableau<-tableau[tableau$resolution=="Année",]
     }
   }
-  
+  tableau<-distinct(tableau)
+
   if(data[["resolution"]]=="Mois"){
     tableau$date<-str_c(tableau$date,"/01")
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
@@ -1355,7 +1356,7 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
-    if(input$doc_type == 4 | input$doc_type == 3){
+    if(input$doc_type == 4){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
@@ -1379,12 +1380,24 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par article" = 4),selected = 4)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
+    if(input$doc_type == 3){
+      observeEvent(input$theme_presse,{observeEvent(input$titres,{
+      if(input$theme_presse == 1 & length(input$titres)<=15){
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
+      updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
+      }
+      else{
+        updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
+        updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
+        
+      }
+    })})}
     })
   
   
   observeEvent(
     input$search_mode,{
-      if(input$search_mode==2 & (input$doc_type ==1 |input$doc_type ==2 |input$doc_type == 3 |input$doc_type ==4)){
+      if(input$search_mode==2 & (input$doc_type ==1 |input$doc_type ==2 |(input$doc_type == 3 & length(input$titres)<=15 & input$theme_presse==1) |input$doc_type ==4)){
         output$avertissement<-renderText(message(recherche_texte(),recherche_from(),recherche_to(),recherche_doc_type(),recherche_titres()))
     }
     })
