@@ -594,7 +594,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
     #if(se=="linux"){rD <- rsDriver(browser = "firefox", port = 4444L)}
     remDr <- remoteDriver(remoteServerAddr = "172.19.0.4", port = 4444L, browserName = "firefox")
     remDr<-remDr$open()
-    Sys.sleep(1)
+    remDr$navigate("https://www.google.com/")
     #remDr <- rD[["client"]]
   }
   if(doc_type==28){
