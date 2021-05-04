@@ -592,7 +592,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
       remDr <- rD[["client"]]}
     #if(se=="linux"){system("kill -9 $(lsof -t -i:4444)", intern=FALSE, ignore.stdout=FALSE)}
     #if(se=="linux"){rD <- rsDriver(browser = "firefox", port = 4444L)}
-    remDr <- remoteDriver(remoteServerAddr = "yourIP", port = 4444L, browserName = "firefox")
+    remDr <- remoteDriver(remoteServerAddr = "172.19.0.4/16", port = 4444L, browserName = "firefox")
     remDr<-remDr$open()
     #remDr <- rD[["client"]]
   }
