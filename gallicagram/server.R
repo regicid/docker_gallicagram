@@ -593,9 +593,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
     #if(se=="linux"){system("kill -9 $(lsof -t -i:4444)", intern=FALSE, ignore.stdout=FALSE)}
     #if(se=="linux"){rD <- rsDriver(browser = "firefox", port = 4444L)}
     remDr <- remoteDriver(remoteServerAddr = "172.19.0.4", port = 4444L, browserName = "firefox")
-    print("remDRok")
     remDr<-remDr$open()
-    print("ouvert")
+    Sys.sleep(1)
     #remDr <- rD[["client"]]
   }
   if(doc_type==28){
@@ -834,6 +833,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
           }
           if(doc_type == 13 | doc_type == 14){
             remDr$navigate(url)
+            print("url ok")
             Sys.sleep(2) # give the page time to fully load
             ngram <- remDr$getPageSource()[[1]]
             ngram<-str_extract(ngram,"foundnumber.+")
