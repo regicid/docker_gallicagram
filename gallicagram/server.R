@@ -1424,6 +1424,33 @@ shinyServer(function(input, output,session){
       write.csv(memoire, con,row.names = F,fileEncoding = "UTF-8")
     })
   
+  corpus_table<-function(bloblo){
+    blabla<-as.data.frame(unique(bloblo[,2]))
+    colnames(blabla)<-c("Categorie")
+    blabla$Total<-0
+    for (i in 1:length(blabla$Total)) {
+      blabla$Total[i]<-sum(bloblo[,3][bloblo[,2]==blabla$Categorie[i]])
+    }
+    blabla$Part<-blabla$Total/sum(blabla$Total)
+    blabla$Part<-str_c(round(blabla$Part*100,digits = 2),"%")
+    blabla<-blabla[order(blabla$Total,decreasing = T),]
+    blabla$Total<-as.integer(blabla$Total)
+    output$total_table<-renderTable({blabla})
+  }
+  corpus_table_bis<-function(bloblo){
+    blabla<-as.data.frame(unique(bloblo[,2]))
+    colnames(blabla)<-c("Categorie")
+    blabla$Total<-0
+    for (i in 1:length(blabla$Total)) {
+      blabla$Total[i]<-sum(bloblo[,3][bloblo[,2]==blabla$Categorie[i]])
+    }
+    blabla$Part<-blabla$Total/sum(blabla$Total)
+    blabla$Part<-str_c(round(blabla$Part*100,digits = 2),"%")
+    blabla<-blabla[order(blabla$Total,decreasing = T),]
+    blabla$Total<-as.integer(blabla$Total)
+    output$total_table_bis<-renderTable({blabla})
+  }
+  
   observeEvent(input$do,{
     # datasetInput <- reactive({
     #   data$tableau})
@@ -1603,30 +1630,35 @@ shinyServer(function(input, output,session){
       }
       else if(input$corpus_structure_p==2){
         p_villes<-read.csv("p_villes.csv",encoding = "UTF-8")
+        corpus_table(p_villes)
         plot7<-plot_ly(p_villes,x=~as.integer(p_villes$date),y=~n,color=~principales_villes,type='bar',colors="Dark2")
         plot7<-layout(plot7, title="Distribution des numéros de presse en français \nselon la ville d'édition", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
         return(plot7)
       }
       else if(input$corpus_structure_p==5){
         p_themes<-read.csv("p_themes.csv",encoding = "UTF-8")
+        corpus_table(p_themes)
         plot11<-plot_ly(p_themes,x=~as.integer(p_themes$date),y=~n,color=~principaux_themes,type='bar',colors="Dark2")
         plot11<-layout(plot11, title="Distribution des numéros de presse en français \nselon le thème du journal d'origine", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
         return(plot11)
       }
       else if(input$corpus_structure_p==6){
         periodicite<-read.csv("periodicite.csv",encoding = "UTF-8")
+        corpus_table(periodicite)
         plot16<-plot_ly(periodicite,x=~as.integer(periodicite$date),y=~n,color=~is_quotidien,type='bar',colors="Dark2")
         plot16<-layout(plot16, title="Distribution des numéros de presse en français \nselon la périodicité du journal d'origine", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
         return(plot16)
       }
       else if(input$corpus_structure_p==3){
         p_droits<-read.csv("p_droits.csv",encoding = "UTF-8")
+        corpus_table(p_droits)
         plot5<-plot_ly(p_droits,x=~date,y=~n,color=~rights,type='bar',colors="Dark2")
         plot5<-layout(plot5, title="Distribution des numéros de presse en français \nselon leur mode d'accès", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
         return(plot5)
       }
       else if(input$corpus_structure_p==4){
         p_sources<-read.csv("p_sources.csv",encoding = "UTF-8")
+        corpus_table(p_sources)
         p_sources$principales_sources<-str_remove_all(p_sources$principales_sources,"[/].+")
         p_sources$principales_sources<-str_remove_all(p_sources$principales_sources,"[-].+")
         p_sources$principales_sources<-str_remove_all(p_sources$principales_sources,"[()].+")
@@ -1655,30 +1687,35 @@ shinyServer(function(input, output,session){
       }
       else if(input$corpus_structure_p==2){
         p_villes<-read.csv("p_villes.csv",encoding = "UTF-8")
+        corpus_table(p_villes)
         plot8<-plot_ly(p_villes,x=~as.integer(p_villes$date),y=~n,color=~principales_villes,type='bar',colors="Dark2")
         plot8<-layout(plot8, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4), title="Distribution des numéros de presse en français \nselon la ville d'édition", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Part des documents à chaque période"),barmode="stack",bargap=0,barnorm="percent")
         return(plot8)
       }
       else if(input$corpus_structure_p==5){
         p_themes<-read.csv("p_themes.csv",encoding = "UTF-8")
+        corpus_table(p_themes)
         plot12<-plot_ly(p_themes,x=~as.integer(p_themes$date),y=~n,color=~principaux_themes,type='bar',colors="Dark2")
         plot12<-layout(plot12, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4), title="Distribution des numéros de presse en français \nselon le thème du journal d'origine", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Part des documents à chaque période"),barmode="stack",bargap=0,barnorm="percent")
         return(plot12)
       }
       else if(input$corpus_structure_p==6){
         periodicite<-read.csv("periodicite.csv",encoding = "UTF-8")
+        corpus_table(periodicite)
         plot17<-plot_ly(periodicite,x=~as.integer(periodicite$date),y=~n,color=~is_quotidien,type='bar',colors="Dark2")
         plot17<-layout(plot17, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4), title="Distribution des numéros de presse en français \nselon la périodicité du journal d'origine", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Part des documents à chaque période"),barmode="stack",barnorm="percent",bargap=0)
         return(plot17)
       }
       else if(input$corpus_structure_p==3){
         p_droits<-read.csv("p_droits.csv",encoding = "UTF-8")
+        corpus_table(p_droits)
         plot5<-plot_ly(p_droits,x=~date,y=~n,color=~rights,type='bar',colors="Dark2")
         plot5<-layout(plot5, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4), title="Distribution des numéros de presse en français \nselon leur mode d'accès", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Part des documents à chaque période"),barmode="stack",barnorm="percent",bargap=0)
         return(plot5)
       }
       else if(input$corpus_structure_p==4){
         p_sources<-read.csv("p_sources.csv",encoding = "UTF-8")
+        corpus_table(p_sources)
         p_sources$principales_sources<-str_remove_all(p_sources$principales_sources,"[/].+")
         p_sources$principales_sources<-str_remove_all(p_sources$principales_sources,"[-].+")
         p_sources$principales_sources<-str_remove_all(p_sources$principales_sources,"[()].+")
@@ -1720,18 +1757,21 @@ shinyServer(function(input, output,session){
       }
       else if(input$corpus_structure_l==2){
         p_villes_livres<-read.csv("p_villes_livres.csv",encoding = "UTF-8")
+        corpus_table_bis(p_villes_livres)
         plot3<-plot_ly(p_villes_livres,x=~date,y=~n,color=~principales_villes,type='bar',colors="Dark2")
         plot3<-layout(plot3, title="Distribution des livres en français \nselon leur ville de publication", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
         return(plot3)
       }
       else if(input$corpus_structure_l==3){
         p_droits_livres<-read.csv("p_droits_livres.csv",encoding = "UTF-8")
+        corpus_table_bis(p_droits_livres)
         plot5<-plot_ly(p_droits_livres,x=~date,y=~n,color=~rights,type='bar',colors="Dark2")
         plot5<-layout(plot5, title="Distribution des livres en français \nselon leur régime juridique", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
         return(plot5)
       }
       else if(input$corpus_structure_l==4){
         p_sources_livres<-read.csv("p_sources_livres.csv",encoding = "UTF-8")
+        corpus_table_bis(p_sources_livres)
         p_sources_livres$principales_sources<-str_remove_all(p_sources_livres$principales_sources,"[/].+")
         p_sources_livres$principales_sources<-str_remove_all(p_sources_livres$principales_sources,"[-].+")
         p_sources_livres$principales_sources<-str_remove_all(p_sources_livres$principales_sources,"[()].+")
@@ -1765,6 +1805,8 @@ shinyServer(function(input, output,session){
         tableau1$corpus<-"Numérisé et océrisé"
         tableau3$corpus<-"Numérisé mais pas océrisé"
         tableau2<-bind_rows(tableau,tableau1,tableau3)
+        tableau2<-select(tableau2,date,corpus,base)
+        corpus_table_bis(tableau2)
         
         plot18<-plot_ly(tableau2,x=~as.integer(tableau2$date),y=~base,color=~corpus,type='bar',colors="Dark2")
         plot18<-layout(plot18, title="Distribution des livres en français \nselon leur état de numérisation", xaxis=list(title="Date",tickangle="-45",range=c("1380","2021")),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
@@ -1779,6 +1821,7 @@ shinyServer(function(input, output,session){
       }
       else if(input$corpus_structure_l==10){
         p_dewey_livres<-read.csv("p_themes_livres.csv",encoding = "UTF-8")
+        corpus_table_bis(p_dewey_livres)
         plot4<-plot_ly(p_dewey_livres,x=~date,y=~n,color=~dewey_nom,type='bar',colors="Dark2")
         plot4<-layout(plot4, title="Distribution des livres en français \nselon leur classement thématique Dewey", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Nombre de documents"),barmode="stack",bargap=0)
         return(plot4)
@@ -1816,18 +1859,21 @@ shinyServer(function(input, output,session){
       }
       else if(input$corpus_structure_l==2){
         p_villes_livres<-read.csv("p_villes_livres.csv",encoding = "UTF-8")
+        corpus_table_bis(p_villes_livres)
         plot3<-plot_ly(p_villes_livres,x=~date,y=~n,color=~principales_villes,type='bar',colors="Dark2")
         plot3<-layout(plot3, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4), title="Distribution des livres en français \nselon leur ville de publication", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Part des documents à chaque période"),barmode="stack",bargap=0,barnorm="percent")
         return(plot3)
       }
       else if(input$corpus_structure_l==3){
         p_droits_livres<-read.csv("p_droits_livres.csv",encoding = "UTF-8")
+        corpus_table_bis(p_droits_livres)
         plot5<-plot_ly(p_droits_livres,x=~date,y=~n,color=~rights,type='bar',colors="Dark2")
         plot5<-layout(plot5, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4), title="Distribution des livres en français \nselon leur régime juridique", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Part des documents à chaque période"),barmode="stack",bargap=0,barnorm="percent")
         return(plot5)
       }
       else if(input$corpus_structure_l==4){
         p_sources_livres<-read.csv("p_sources_livres.csv",encoding = "UTF-8")
+        corpus_table_bis(p_sources_livres)
         p_sources_livres$principales_sources<-str_remove_all(p_sources_livres$principales_sources,"[/].+")
         p_sources_livres$principales_sources<-str_remove_all(p_sources_livres$principales_sources,"[-].+")
         p_sources_livres$principales_sources<-str_remove_all(p_sources_livres$principales_sources,"[()].+")
@@ -1861,6 +1907,8 @@ shinyServer(function(input, output,session){
         tableau1$corpus<-"Numérisé et océrisé"
         tableau3$corpus<-"Numérisé mais pas océrisé"
         tableau2<-bind_rows(tableau,tableau1,tableau3)
+        tableau2<-select(tableau2,date,corpus,base)
+        corpus_table_bis(tableau2)
         
         plot19<-plot_ly(tableau2,x=~as.integer(tableau2$date),y=~base,color=~corpus,type='bar',colors="Dark2")
         plot19<-layout(plot19, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4),title="Distribution des livres en français \nselon leur état de numérisation", xaxis=list(title="Date",tickangle="-45",range=c("1380","2021")),yaxis=list(title="Part des documents à chaque période"),barmode="stack",bargap=0,barnorm="percent")
@@ -1875,6 +1923,7 @@ shinyServer(function(input, output,session){
       }
       else if(input$corpus_structure_l==10){
         p_dewey_livres<-read.csv("p_themes_livres.csv",encoding = "UTF-8")
+        corpus_table_bis(p_dewey_livres)
         plot4<-plot_ly(p_dewey_livres,x=~date,y=~n,color=~dewey_nom,type='bar',colors="Dark2")
         plot4<-layout(plot4, margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4), title="Distribution des livres en français \nselon leur classement thématique Dewey", xaxis=list(title="Date",tickangle="-45"),yaxis=list(title="Part des documents à chaque période"),barmode="stack",bargap=0,barnorm="percent")
         return(plot4)
