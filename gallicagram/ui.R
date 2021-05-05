@@ -16,7 +16,7 @@ library(rclipboard)
 
 shinyUI(navbarPage("Gallicagram",
                    tabPanel("Graphique",fluidPage(),
-                            tags$head(includeScript("google-analytics.html"),
+                            tags$head(includeHTML(("google-analytics.html")),
                                 tags$style(HTML(".shiny-output-error-validation{color: red;}"))),
                             pageWithSidebar(headerPanel(''),
                                             sidebarPanel(
