@@ -1280,7 +1280,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type == 3 & input$filtre==2)
     {
       liste_departements<-read.csv("liste_departements.csv",encoding = "UTF-8")
-      output$themes_presse<-renderUI({pickerInput("theme_presse","Région",choices = setNames(as.character(liste_departements$num),as.character(liste_departements$titre)), options = list(`actions-box` = TRUE),multiple = T, selected = 51)})
+      output$themes_presse<-renderUI({pickerInput("theme_presse","Presse locale",choices = setNames(as.character(liste_departements$num),as.character(liste_departements$titre)), options = list(`actions-box` = TRUE),multiple = T, selected = 51)})
     }
   })})
   
