@@ -19,7 +19,7 @@
 - L'utilisateur peut choisir le corpus qu'il souhaite explorer.
 - Il peut régler les bornes chronologiques de sa recherche.
 - Pour certains corpus, il peut choisir la résolution (mensuelle ou annuelle) avec laquelle les résultats seront affichés.
-- Pour chaque mode de recherche et chaque corpus, Gallicagram extrait aussi le volume de la base de donnée correspondante (nombre total de documents, de pages, d'articles, ou de n-grammes pour chaque sous-période).
+- Pour chaque mode de recherche et chaque corpus, Gallicagram extrait aussi le volume de la base de données correspondante (nombre total de documents, de pages, d'articles, ou de n-grammes pour chaque sous-période).
 
 ### Syntaxe de recherche
 - L'utilisateur peut chercher un syntagme unique (ex. Clemenceau).
@@ -30,7 +30,7 @@
 
 ### Options de visualisation
 - L'utilisateur peut : 
-	- isoler certaines recherche dans le visualiseur en cliquant sur la légende des courbes qu'il souhaite faire disparaitre ;
+	- isoler certaines recherches dans le visualiseur en cliquant sur la légende des courbes qu'il souhaite faire disparaître ;
 	- effectuer des zooms sur le graphique et afficher la valeur précise de chaque point de la courbe en y positionnant la souris ;
 	- afficher la distribution chronologique des documents composant la base de données sur la période qu'il a choisie ;
 	- comparer toutes les recherches effectuées au cours de sa session à l'intérieur d'un seul graphique ;
@@ -54,5 +54,7 @@
 
 ### Conception et précautions d'usage
 - Toutes les informations nécessaires à la bonne utilisation de Gallicagram sont indiquées dans l'article de recherche associé à ce logiciel.
+
+###
 
 
