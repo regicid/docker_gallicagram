@@ -54,7 +54,3 @@
 
 ### Conception et précautions d'usage
 - Toutes les informations nécessaires à la bonne utilisation de Gallicagram sont indiquées dans l'article de recherche associé à ce logiciel.
-
-###
-
-
