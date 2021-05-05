@@ -31,7 +31,7 @@ shinyUI(navbarPage("Gallicagram",
                                                 div(style="display: inline-block;vertical-align:bottom;width: 45%;",selectInput("search_mode", "Mode de recherche",choices = list("Par document" = 1),selected = 1)),
 
                                                 conditionalPanel(condition="input.doc_type == 3",radioButtons("filtre", "",choices = list("Filtre thématique"=1,"Filtre géographique"=2),inline = T)),
-                                                conditionalPanel(condition="input.doc_type == 3",selectizeInput("theme_presse", "Thématique",choices = list("Liste de titres personnalisée"=1))),
+                                                conditionalPanel(condition="input.doc_type == 3",uiOutput("themes_presse")),
                                                 conditionalPanel(condition="input.doc_type == 3",uiOutput("titres")),
                                                 conditionalPanel(condition="input.doc_type == 4",fileInput('target_upload','', 
                                                                                                            accept = c(

@@ -1244,6 +1244,8 @@ shinyServer(function(input, output,session){
   memoire$date<<-as.character(memoire$date)
   recherche_precedente<<-"Joffre&Pétain&Foch_1914_1920_Année"
   corpus_precedent<<-"1_1"
+  output$themes_presse<- renderUI({selectizeInput("theme_presse","Thématique",choices = list("Liste de titres personnalisée"=1))})
+  options(warn = -1) 
   
   observeEvent(input$doc_type,{observeEvent(input$search_mode,{
     if((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1)|input$doc_type == 5|input$doc_type == 6|input$doc_type == 7|input$doc_type == 8|input$doc_type == 9|input$doc_type == 10|input$doc_type == 11|input$doc_type == 12|input$doc_type == 15|input$doc_type == 16|input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26){
@@ -1272,12 +1274,13 @@ shinyServer(function(input, output,session){
     if(input$doc_type == 3 & input$filtre==1)
     {
       liste_themes<-read.csv("liste_themes.csv",encoding = "UTF-8")
-      updateSelectizeInput(session,"theme_presse","Thématique",choices = setNames(as.character(liste_themes$num),as.character(liste_themes$titre)))
+      output$themes_presse<-renderUI({selectizeInput("theme_presse","Thématique",choices = setNames(as.character(liste_themes$num),as.character(liste_themes$titre)))})
+      
     }
     if(input$doc_type == 3 & input$filtre==2)
     {
       liste_departements<-read.csv("liste_departements.csv",encoding = "UTF-8")
-      updateSelectizeInput(session,"theme_presse","Région",choices = setNames(as.character(liste_departements$num),as.character(liste_departements$titre)))
+      output$themes_presse<-renderUI({pickerInput("theme_presse","Région",choices = setNames(as.character(liste_departements$num),as.character(liste_departements$titre)), options = list(`actions-box` = TRUE),multiple = T, selected = 51)})
     }
   })})
   
@@ -1297,11 +1300,20 @@ shinyServer(function(input, output,session){
         liste_journaux$titre<-str_remove_all(liste_journaux$titre,"\n")
         output$titres<-renderUI({pickerInput("titres","Titre des journaux",choices = setNames(as.character(liste_journaux$ark),as.character(liste_journaux$titre)), options = list(`actions-box` = TRUE),multiple = T,selected = as.character(liste_journaux$ark))})
       }
-      else if(as.integer(input$theme_presse)>=51)
+      else if(as.integer(input$theme_presse[1])>=51)
       {
         departement<-read.csv("liste_departements.csv",encoding = "UTF-8")
-        fichier<-as.character(departement$csv[as.character(departement$num)==as.character(input$theme_presse)])
-        liste_journaux<-read.csv(fichier,encoding="UTF-8")
+        fichier<-as.character(departement$csv[as.character(departement$num)==as.character(input$theme_presse[1])])
+        if(length(input$theme_presse)>=2){
+        for (h in 1:length(input$theme_presse)) {
+          
+            fichier<-c(fichier,as.character(departement$csv[as.character(departement$num)==as.character(input$theme_presse[h])]))
+        }}
+        liste_journaux<-read.csv(fichier[1],encoding="UTF-8")
+        if(length(fichier)>=2){
+        for (h in 2:length(fichier)) {
+          liste_journaux<-bind_rows(liste_journaux,read.csv(fichier[h],encoding="UTF-8"))
+        }}
         liste_journaux$titre<-str_remove_all(liste_journaux$titre,"\n")
         output$titres<-renderUI({pickerInput("titres","Titre des journaux",choices = setNames(as.character(liste_journaux$ark),as.character(liste_journaux$titre)), options = list(`actions-box` = TRUE),multiple = T,selected = as.character(liste_journaux$ark))})
       }
@@ -1397,9 +1409,14 @@ shinyServer(function(input, output,session){
   
   observeEvent(
     input$search_mode,{
-      if(input$search_mode==2 & (input$doc_type ==1 |input$doc_type ==2 |(input$doc_type == 3 & length(input$titres)<=15 & input$theme_presse==1) |input$doc_type ==4)){
+      if(input$search_mode==2 & (input$doc_type ==1 |input$doc_type ==2 |input$doc_type ==4)){
         output$avertissement<-renderText(message(recherche_texte(),recherche_from(),recherche_to(),recherche_doc_type(),recherche_titres()))
-    }
+      }else if (input$search_mode==2 & input$doc_type == 3){
+          if (length(input$titres)<=15 & input$theme_presse==1){
+            output$avertissement<-renderText(message(recherche_texte(),recherche_from(),recherche_to(),recherche_doc_type(),recherche_titres()))
+          }
+       }
+    
     })
   
   output$downloadData <- downloadHandler(
