@@ -16,8 +16,7 @@ library(rclipboard)
 
 shinyUI(navbarPage("Gallicagram",
                    tabPanel("Graphique",fluidPage(),
-                            tags$head(includeHTML(("google-analytics.html")),
-                                tags$style(HTML(".shiny-output-error-validation{color: red;}"))),
+                            tags$head(includeHTML(("google-analytics.html"))),
                             pageWithSidebar(headerPanel(''),
                                             sidebarPanel(
                                                 textInput("mot","Recherche","Joffre&Pétain&Foch"),
