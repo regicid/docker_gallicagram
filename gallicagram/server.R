@@ -94,7 +94,7 @@ Plot <- function(data,input){
     if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41)}
     x <- list(title = "",titlefont = 41)
     if(input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){
-      tableau$hovers = str_c(tableau$date," : ",round(tableau$ratio*100,digits = 5),"%")
+      tableau$hovers = str_c(str_extract(tableau$date,"....")," : ",round(tableau$ratio*100,digits = 6),"%")
       y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = digit_number)
       if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41)}
       }
