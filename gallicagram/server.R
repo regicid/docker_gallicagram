@@ -688,10 +688,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
               url_base <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)%20sortby%20dc.date")
               ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
               b<-b+as.integer(str_extract(str_extract(ngram_base,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+"))
+              if(k==1){url1<-url}
             }
             a<-as.character(a)
             b<-as.character(b)
-            url="https://gallica.bnf.fr/"
+            url=url1
             titres<-liste_titres
           }
           if(doc_type == 6){beginning<-str_replace_all(beginning,"/","-")
