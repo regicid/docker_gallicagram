@@ -74,9 +74,13 @@ Plot <- function(data,input){
     if(input$span >0){
       for(mot in str_split(data$mot,"&")[[1]]){
         z = which(tableau$mot==mot)
-        x = 1:length(z)
-        tableau$loess[z] = loess(tableau$loess[z]~x,span=span)$fitted
-      }}
+        for(i in 1:length(z)){
+          j = max(i-floor(input$span/2),0)
+          k = i+ceil(input$span/2)
+          pond = tableau$base[z][j:k]
+          tableau$loess[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm = T)
+        }}
+      }
     if(input$scale==FALSE & input$multicourbes==FALSE){tableau$loess[tableau$loess<0]<-0}
     dn<-as.character(max(format(tableau$ratio,scientific=FALSE)))
     if(max(tableau$ratio)>=0.1){digit_number=".1%"}
@@ -1025,7 +1029,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
     if(doc_type==12){tableau=ngrami(mots,corpus = "spa_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)}
     tableau$search_mode<-"match"
     colnames(tableau)=c("date","mot","ratio","corpus","search_mode")
-    tableau$base<-0
+    tableau$base<-1
     tableau$date<-as.character(tableau$date)
     tableau$count<-0
     tableau$url<-""
