@@ -102,7 +102,7 @@ Plot <- function(data,input){
       y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = digit_number)
       if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41)}
       }
-    plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',hoverinfo="text",customdata=tableau$url)
+    plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url)
     plot = layout(plot, yaxis = y, xaxis = x,title = Title)
     if(length(grep(",",data$mot))==0){plot = layout(plot,showlegend=TRUE,legend = list(orientation = 'h',x=1,xanchor="right"))}
     
