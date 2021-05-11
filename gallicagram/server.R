@@ -110,8 +110,9 @@ Plot <- function(data,input){
       mots<-str_split(input$mot,"&")
       x = 1:sum(tableau$mot==unlist(mots)[1])
       tableau$delta[tableau$mot==unlist(mots)[1]]<-loess((tableau$ratio[tableau$mot==unlist(mots)[1]]-tableau$ratio[tableau$mot==unlist(mots)[2]]~x),span=span)$fitted
-      tableau$hovers2 = str_c(tableau$date,": delta = ",round(tableau$delta*100,digits=2),"%, N = ",tableau$base)
-      plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',hoverinfo="text")
+      if(data[["resolution"]]=="Mois"){tableau$hovers2 = str_c(str_extract(tableau$date,"......."),": delta = ",round(tableau$delta*100,digits=2),"%")}
+      else{tableau$hovers2 = str_c(str_extract(tableau$date,"...."),": delta = ",round(tableau$delta*100,digits=2),"%")}
+      plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text")
       y <- list(title = "Différence de fréquence\nd'occurrence dans le corpus",titlefont = 41,tickformat = digit_number)
       x <- list(title = "",titlefont = 41)
       Title = paste("Freq(",unlist(mots)[1],") – Freq(",unlist(mots)[2],")")
