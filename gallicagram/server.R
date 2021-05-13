@@ -71,7 +71,9 @@ Plot <- function(data,input){
     span = 2/width + input$span*(width-2)/(10*width)
     if(input$scale==TRUE |input$multicourbes==TRUE){tableau$loess = tableau$scale}
     else {tableau$loess = tableau$ratio}
+    
     if(input$span >0){
+      if(input$loess==F){
       for(mot in str_split(data$mot,"&")[[1]]){
         z = which(tableau$mot==mot)
         for(i in 1:length(z)){
@@ -81,6 +83,15 @@ Plot <- function(data,input){
           tableau$loess[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm = T)
         }}
       }
+      if(input$loess==T){
+        for(mot in str_split(data$mot,"&")[[1]]){
+          z = which(tableau$mot==mot)
+          x = 1:length(z)
+          tableau$loess[z] = loess(tableau$loess[z]~x,span=span)$fitted
+        }
+      }
+      
+    }
     if(input$scale==FALSE & input$multicourbes==FALSE){tableau$loess[tableau$loess<0]<-0}
     dn<-as.character(max(format(tableau$ratio,scientific=FALSE)))
     if(max(tableau$ratio)>=0.1){digit_number=".1%"}
@@ -109,6 +120,9 @@ Plot <- function(data,input){
       plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url)
       
     }
+    if(input$histogramme==T){
+      y <- list(title = "Nombre d'occurrences dans\nle corpus",titlefont = 41)
+      plot = plot_ly(tableau, x=~date,y=~count,text=~hovers,color =~mot,type='bar', hoverinfo="text",customdata=tableau$url)}
     plot = layout(plot, yaxis = y, xaxis = x,title = Title)
     if(length(grep(",",data$mot))==0){plot = layout(plot,showlegend=TRUE,legend = list(orientation = 'h',x=1,xanchor="right"))}
     
@@ -2055,21 +2069,21 @@ shinyServer(function(input, output,session){
       table<-read.csv("base_livres_annees_ngram_de.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://books.google.com/ngrams/graph?content=Hitler&year_start=1918&year_end=1945&corpus=31&smoothing=0&direct_url=t1%3B%2CHitler%3B%2Cc0"
-      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français exploités par\nNgram Viewer<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," livres en allemand exploités par\nNgram Viewer<b> </a>")
       type="de documents"
     }
     if(input$distribution==10){
       table<-read.csv("base_livres_annees_ngram_en.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://books.google.com/ngrams/graph?content=Churchill&year_start=1918&year_end=1945&corpus=26&smoothing=0&direct_url=t1%3B%2CChurchill%3B%2Cc0"
-      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français exploités par\nNgram Viewer<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," livres en anglais exploités par\nNgram Viewer<b> </a>")
       type="de documents"
     }
     if(input$distribution==12){
       table<-read.csv("base_livres_annees_ngram_es.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://books.google.com/ngrams/graph?content=Primo+de+Rivera&year_start=1918&year_end=1945&corpus=32&smoothing=0&direct_url=t1%3B%2CPrimo%20de%20Rivera%3B%2Cc0"
-      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français exploités par\nNgram Viewer<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," livres en espagnol exploités par\nNgram Viewer<b> </a>")
       type="de documents"
     }
     if(input$distribution==6){
