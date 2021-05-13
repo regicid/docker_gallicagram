@@ -588,11 +588,15 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
     base=read.csv("base_presse_annees_banq_fr.csv")
   }else  if(doc_type==28 & resolution=="Mois"){
     base=read.csv("base_presse_mois_banq_fr.csv")
+  }else  if(doc_type==29 & resolution=="Année"){
+    base=read.csv("base_presse_annees_anno_de.csv")
+  }else  if(doc_type==29 & resolution=="Mois"){
+    base=read.csv("base_presse_mois_anno_de.csv")
   }
   
   
   
-  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28){
+  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29){
     if(se=="windows"){system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
       rD <- rsDriver(browser = "firefox", port = 4444L)
       remDr <- rD[["client"]]}
@@ -632,6 +636,9 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
           or1_end[j]<-str_c("")}
           if(doc_type==19)
           {or1[j]<-str_c(",%22",mots_or[j],"%22")
+          or1_end[j]<-str_c("")}
+          if(doc_type==29)
+          {or1[j]<-str_c("+OR+%22",mots_or[j],"%22")
           or1_end[j]<-str_c("")}
           
           or<-str_c(or,or1[j])
@@ -807,6 +814,18 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
             url<-str_c("https://www.bn-r.fr/presse_ancienne_resultats.php?type_rech=pr&q_fulltext=%22",mot1,"%22&pr_jour=&pr_mois=&pr_annee=&date_debut=01-01-",y,"&date_fin=31-12-",y,"&sort=date_formated%20asc,tri_titre%20asc&from=presse#")
             }
           }
+          if(doc_type == 29){
+            if(resolution=="Mois"){
+              z = as.character(j)
+              if(nchar(z)<2){z<-str_c("0",z)}
+              beginning = str_c(y,"-",z,"-01")
+              end = str_c(y,"-",z,"-",end_of_month[j])
+              url<-str_c("https://anno.onb.ac.at/anno-suche#searchMode=complex&text=%22",mot1,"%22",or,"&language=ger&dateMode=date&dateFrom=01.",z,".",y,"&dateTo=",end_of_month[j],".",z,".",y,"&from=1")
+            }
+            if (resolution=="Année"){
+              url<-str_c("https://anno.onb.ac.at/anno-suche#searchMode=complex&text=%22",mot1,"%22",or,"&language=ger&dateMode=date&dateFrom=01.01.",y,"&dateTo=31.12.",y,"&from=1")
+            }
+          }
         
         
           if(doc_type == 1 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
@@ -931,6 +950,15 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
               webElem$clickElement()
               
             }
+            if(doc_type==29){
+              remDr$navigate(url)
+              Sys.sleep(2) # give the page time to fully load
+              ngram <- remDr$getPageSource()[[1]]
+              ngram <- str_extract(ngram,".+Ergebnisse")
+              ngram<-str_remove_all(ngram,"[:punct:]")
+              ngram<-str_extract(ngram,"[:digit:]+ Ergebnisse")
+              a<-str_extract(ngram,"[:digit:]+")
+            }
             
             if(resolution=="Année"){
               Sys.sleep(2)
@@ -975,10 +1003,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
           }
         
          
-          if(resolution=="Mois"& (doc_type==1 | doc_type==6 | doc_type==7 | doc_type==8 | doc_type==11 | doc_type==13 | doc_type==14 | doc_type==15 | doc_type==16 | doc_type==17 | doc_type==18 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26 | doc_type==27 | doc_type==28)){
+          if(resolution=="Mois"& (doc_type==1 | doc_type==6 | doc_type==7 | doc_type==8 | doc_type==11 | doc_type==13 | doc_type==14 | doc_type==15 | doc_type==16 | doc_type==17 | doc_type==18 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26 | doc_type==27 | doc_type==28 | doc_type==29)){
             date=str_c(y,"/",z)
             b<-as.integer(base$base[base$date==date])}
-          else if (resolution=="Année" & (doc_type==1 | doc_type==6 | doc_type==7 | doc_type==8 | doc_type==11 | doc_type==13 | doc_type==14 | doc_type==15 | doc_type==16 | doc_type==17 | doc_type==18 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26 | doc_type==27 | doc_type==28)){b<-as.integer(base$base[base$date==y])}
+          else if (resolution=="Année" & (doc_type==1 | doc_type==6 | doc_type==7 | doc_type==8 | doc_type==11 | doc_type==13 | doc_type==14 | doc_type==15 | doc_type==16 | doc_type==17 | doc_type==18 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26 | doc_type==27 | doc_type==28 | doc_type==29)){b<-as.integer(base$base[base$date==y])}
           if(length(b)==0L){b=0}
           tableau[nrow(tableau)+1,] = NA
           date=y
@@ -1007,7 +1035,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
   tableau$url = str_replace(tableau$url,"SRU","services/engine/search/sru")
   tableau$url = str_replace(tableau$url,"maximumRecords=1","maximumRecords=25")
   
-  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28){
+  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29){
     remDr$close()
     if(se=="windows"){
     rD$server$stop()
@@ -1107,6 +1135,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
   if(doc_type==27){tableau$corpus="presse_fr_bn-r"
   tableau$search_mode<-"volume"}
   if(doc_type==28){tableau$corpus="presse_fr_banq"
+  tableau$search_mode<-"volume"}
+  if(doc_type==29){tableau$corpus="presse_de_anno"
   tableau$search_mode<-"volume"}
   
   memoire<<-bind_rows(tableau,memoire)
@@ -1254,7 +1284,7 @@ shinyServer(function(input, output,session){
   options(warn = -1) 
   
   observeEvent(input$doc_type,{observeEvent(input$search_mode,{
-    if((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1)|input$doc_type == 5|input$doc_type == 6|input$doc_type == 7|input$doc_type == 8|input$doc_type == 9|input$doc_type == 10|input$doc_type == 11|input$doc_type == 12|input$doc_type == 15|input$doc_type == 16|input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26){
+    if((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1)|input$doc_type == 5|input$doc_type == 6|input$doc_type == 7|input$doc_type == 8|input$doc_type == 9|input$doc_type == 10|input$doc_type == 11|input$doc_type == 12|input$doc_type == 15|input$doc_type == 16|input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 29){
       output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>'))
       
     }else if(input$doc_type==13|input$doc_type==14|input$doc_type==17|input$doc_type==18 | input$doc_type == 27 | input$doc_type == 28){
@@ -1358,7 +1388,7 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse Auvergne-Rhône-Alpes / Lectura"=17, "Presse du sillon lorrain / Limedia"=18, "Presse méridionale / Mémonum"=19, "Presse de Saint-Denis / Commun-Patrimoine"=20, "Presse de Brest / Yroise"=21, "Presse des Pyrénées / Pireneas"=22, "Presse toulousaine / Rosalis"=23, "Presse diplomatique / Bibliothèque diplomatique numérique"=24, "Presse francophone / RFN"=25, "Presse alsacienne / Numistral"=26, "Presse de Roubaix / BN-R"=27),selected = 17)
     }
     else if(input$language == 2){
-      updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse allemande / Europeana" = 6,"Presse suisse-allemande / Bibliothèque nationale suisse"=16 , "Livres / Ngram Viewer Allemand" = 9),selected = 6)
+      updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse allemande / Europeana" = 6, "Presse austro-hongroise / ANNO"=29, "Presse suisse-allemande / Bibliothèque nationale suisse"=16 , "Livres / Ngram Viewer Allemand" = 9),selected = 6)
     }else if(input$language == 3){
       updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse néerlandaise / Europeana" = 7,"Presse flamande / KBR"=14),selected = 7)
     }else if(input$language == 4){
@@ -1378,7 +1408,7 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
-    if(input$doc_type == 1 | input$doc_type == 6 | input$doc_type == 7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28){
+    if(input$doc_type == 1 | input$doc_type == 6 | input$doc_type == 7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
@@ -1477,7 +1507,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$do,{
     # datasetInput <- reactive({
     #   data$tableau})
-    if (input$doc_type==1 |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28){
+    if (input$doc_type==1 |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
@@ -1500,7 +1530,7 @@ shinyServer(function(input, output,session){
     
     output$plot <- renderPlotly({Plot(df,input)})
     
-    if(input$doc_type==1 | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28){
+    if(input$doc_type==1 | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29){
       nb_mots<-length(unique(df[["tableau"]]$mot))
       output$legende2<-renderText(str_c("Documents épluchés : ",as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Résultats trouvés : ", as.character(sum(df[["tableau"]]$count))))
@@ -1550,14 +1580,15 @@ shinyServer(function(input, output,session){
     if(input$doc_type==27){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.bn-r.fr/', target=\'_blank\'> ","bn-r.fr","</a>"),sep = ""))}
     if(input$doc_type==28){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.banq.qc.ca/', target=\'_blank\'> ","banq.qc.ca","</a>"),sep = ""))}
     if(input$doc_type == 3 & input$theme_presse != 1){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/html/und/presse-et-revues/presse-et-revues', target=\'_blank\'> ","gallica.bnf.fr","</a>"),sep = ""))}
-
+    if(input$doc_type==29){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://anno.onb.ac.at/', target=\'_blank\'> ","anno.onb.ac.at","</a>"),sep = ""))}
+    
     if(input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28){output$legende4=renderText("Langue : français")}
-    if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16){output$legende4=renderText("Langue : allemand")}
+    if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16 |input$doc_type==29){output$legende4=renderText("Langue : allemand")}
     if(input$doc_type==7 | input$doc_type==14){output$legende4=renderText("Langue : néerlandais")}
     if(input$doc_type==8 | input$doc_type==10){output$legende4=renderText("Langue : anglais")}
     if(input$doc_type==11 | input$doc_type==12){output$legende4=renderText("Langue : espagnol")}
     
-    if(input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28){output$legende1<-renderText("Corpus : presse")}
+    if(input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29){output$legende1<-renderText("Corpus : presse")}
     if(input$doc_type==2 | input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){output$legende1<-renderText("Corpus : livres")}
     if(input$doc_type==4){output$legende1<-renderText("Corpus : personnalisé")}
     if(input$doc_type == 3 & input$theme_presse == 1){
@@ -2162,6 +2193,13 @@ shinyServer(function(input, output,session){
       Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans la Bibliothèque numérique de Roubaix<b> </a>")
       type="de documents"
     }
+    if(input$distribution==29){
+      table<-read.csv("base_presse_annees_anno_de.csv",encoding="UTF-8")
+      somme<-sum(table$base)
+      lien="https://anno.onb.ac.at/anno-suche#searchMode=complex&language=ger&dateMode=period&from=1"
+      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en allemand océrisés\ndans AustriaN Newspapers Online<b> </a>")
+      type="de documents"
+    }
     
     table$hovers = str_c(table$date,": N = ",table$base)
     plot2<-plot_ly(table, x=~date,y=~base,text=~hovers,type='bar',hoverinfo="text")
@@ -2183,7 +2221,7 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"distribution", "Corpus",choices = list("Presse Auvergne-Rhône-Alpes / Lectura"=17, "Presse du sillon lorrain / Limedia"=18, "Presse méridionale / Mémonum"=19, "Presse de Saint-Denis / Commun-Patrimoine"=20, "Presse de Brest / Yroise"=21, "Presse des Pyrénées / Pireneas"=22, "Presse toulousaine / Rosalis"=23, "Presse diplomatique / Bibliothèque diplomatique numérique"=24, "Presse francophone / RFN"=25, "Presse alsacienne / Numistral"=26, "Presse de Roubaix / BN-R"=27),selected = 17)
       }
       else if(input$d_language == 2){
-        updateSelectInput(session,"distribution", "Corpus",choices = list("Presse allemande / Europeana" = 6,"Presse suisse-allemande / Bibliothèque nationale suisse"=16 , "Livres / Ngram Viewer Allemand" = 9),selected = 6)
+        updateSelectInput(session,"distribution", "Corpus",choices = list("Presse allemande / Europeana" = 6,"Presse austro-hongroise / ANNO"=29,"Presse suisse-allemande / Bibliothèque nationale suisse"=16 , "Livres / Ngram Viewer Allemand" = 9),selected = 6)
       }else if(input$d_language == 3){
         updateSelectInput(session,"distribution", "Corpus",choices = list("Presse néerlandaise / Europeana" = 7,"Presse flamande / KBR"=14),selected = 7)
       }else if(input$d_language == 4){
