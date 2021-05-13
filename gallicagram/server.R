@@ -602,8 +602,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
       remDr <- rD[["client"]]}
     #if(se=="linux"){system("kill -9 $(lsof -t -i:4444)", intern=FALSE, ignore.stdout=FALSE)}
     #if(se=="linux"){rD <- rsDriver(browser = "firefox", port = 4444L)}
-    remDr<-remoteDriver$new(remoteServerAddr = "172.19.0.4", port = 4444L, browserName = "firefox")
-    remDr$open()
+    if(se=="linux"){remDr<-remoteDriver$new(remoteServerAddr = "172.19.0.4", port = 4444L, browserName = "firefox")
+    remDr$open()}
     #remDr <- rD[["client"]]
   }
   if(doc_type==28){
@@ -826,8 +826,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
               url<-str_c("https://anno.onb.ac.at/anno-suche#searchMode=complex&text=%22",mot1,"%22",or,"&language=ger&dateMode=date&dateFrom=01.01.",y,"&dateTo=31.12.",y,"&from=1")
             }
           }
-        
-        
+
+          
           if(doc_type == 1 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
             ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
             a<-str_extract(str_extract(ngram,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
@@ -950,15 +950,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
               webElem$clickElement()
               
             }
-            if(doc_type==29){
-              remDr$navigate(url)
-              Sys.sleep(2) # give the page time to fully load
-              ngram <- remDr$getPageSource()[[1]]
-              ngram <- str_extract(ngram,".+Ergebnisse")
-              ngram<-str_remove_all(ngram,"[:punct:]")
-              ngram<-str_extract(ngram,"[:digit:]+ Ergebnisse")
-              a<-str_extract(ngram,"[:digit:]+")
-            }
+            
             
             if(resolution=="Année"){
               Sys.sleep(2)
@@ -1000,6 +992,15 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
               webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
               webElem$clickElement()
             }
+          }
+          if(doc_type==29){
+            remDr$navigate(url)
+            Sys.sleep(2) # give the page time to fully load
+            ngram <- remDr$getPageSource()[[1]]
+            ngram <- str_extract(ngram,".+Ergebnisse")
+            ngram<-str_remove_all(ngram,"[:punct:]")
+            ngram<-str_extract(ngram,"[:digit:]+ Ergebnisse")
+            a<-str_extract(ngram,"[:digit:]+")
           }
         
          
