@@ -5,7 +5,7 @@ library(RSelenium)
 rD <- rsDriver(browser="firefox", port=4547L, verbose=F)
 remDr <- rD[["client"]]
 
-from="1527"
+from="1689"
 to="2021"
 resolution="Mois"
 tableau<-as.data.frame(matrix(nrow=0,ncol=2),stringsAsFactors = FALSE)

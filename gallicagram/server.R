@@ -102,7 +102,13 @@ Plot <- function(data,input){
       y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = digit_number)
       if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41)}
       }
+    if(length(unique(tableau$date))<=20){
     plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url)
+    }
+    else{
+      plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url)
+      
+    }
     plot = layout(plot, yaxis = y, xaxis = x,title = Title)
     if(length(grep(",",data$mot))==0){plot = layout(plot,showlegend=TRUE,legend = list(orientation = 'h',x=1,xanchor="right"))}
     
@@ -112,7 +118,12 @@ Plot <- function(data,input){
       tableau$delta[tableau$mot==unlist(mots)[1]]<-loess((tableau$ratio[tableau$mot==unlist(mots)[1]]-tableau$ratio[tableau$mot==unlist(mots)[2]]~x),span=span)$fitted
       if(data[["resolution"]]=="Mois"){tableau$hovers2 = str_c(str_extract(tableau$date,"......."),": delta = ",round(tableau$delta*100,digits=2),"%")}
       else{tableau$hovers2 = str_c(str_extract(tableau$date,"...."),": delta = ",round(tableau$delta*100,digits=2),"%")}
-      plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text")
+      if(length(unique(tableau$date))<=20){
+        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text")
+      }
+      else{
+        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text")
+      }
       y <- list(title = "Différence de fréquence\nd'occurrence dans le corpus",titlefont = 41,tickformat = digit_number)
       x <- list(title = "",titlefont = 41)
       Title = paste("Freq(",unlist(mots)[1],") – Freq(",unlist(mots)[2],")")
@@ -1059,26 +1070,33 @@ get_data <- function(mot,from,to,resolution,doc_type,titres){
     if(doc_type==12){tableau=ngrami(mots,corpus = "spa_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)}
     tableau$search_mode<-"match"
     colnames(tableau)=c("date","mot","ratio","corpus","search_mode")
-    tableau$base<-1
     tableau$date<-as.character(tableau$date)
     tableau$count<-0
     tableau$url<-""
     if(doc_type==5){
       for (i in 1:length(tableau$date)) {
+        base<-read.csv("base_livres_annees_ngram_fr.csv")
         tableau$url[i]=str_c("https://www.google.com/search?q=%22",tableau$mot[i],"%22&tbm=bks&tbs=cdr:1,cd_min:",tableau$date[i],",cd_max:",tableau$date[i],"&lr=lang_fr") 
       }}
     if(doc_type==9){
       for (i in 1:length(tableau$date)) {
+        base<-read.csv("base_livres_annees_ngram_de.csv")
         tableau$url[i]=str_c("https://www.google.com/search?q=%22",tableau$mot[i],"%22&tbm=bks&tbs=cdr:1,cd_min:",tableau$date[i],",cd_max:",tableau$date[i],"&lr=lang_de") 
       }}
     if(doc_type==10){
       for (i in 1:length(tableau$date)) {
+        base<-read.csv("base_livres_annees_ngram_en.csv")
         tableau$url[i]=str_c("https://www.google.com/search?q=%22",tableau$mot[i],"%22&tbm=bks&tbs=cdr:1,cd_min:",tableau$date[i],",cd_max:",tableau$date[i],"&lr=lang_en") 
       }}
     if(doc_type==12){
       for (i in 1:length(tableau$date)) {
+        base<-read.csv("base_livres_annees_ngram_es.csv")
         tableau$url[i]=str_c("https://www.google.com/search?q=%22",tableau$mot[i],"%22&tbm=bks&tbs=cdr:1,cd_min:",tableau$date[i],",cd_max:",tableau$date[i],"&lr=lang_es") 
       }}
+    
+    base$date<-as.character(base$date)
+    tableau<-left_join(tableau,base,by="date")
+    tableau$base[is.na(tableau$base)]<-0
   }
   
   tableau$resolution<-resolution
