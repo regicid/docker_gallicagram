@@ -2,7 +2,7 @@ library(stringr)
 library(xml2)
 library(rvest)
 library(RSelenium)
-rD <- rsDriver(browser="firefox", port=4546L, verbose=F)
+rD <- rsDriver(browser="firefox", port=4549L, verbose=F)
 remDr <- rD[["client"]]
 
 from="1527"
@@ -12,7 +12,7 @@ tableau<-as.data.frame(matrix(nrow=0,ncol=2),stringsAsFactors = FALSE)
 
 
 for (i in from:to){
-  
+  ngram_base<-NA
   
   end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
   if( i%%4==0){end_of_month[2]=29} 
