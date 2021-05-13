@@ -2034,189 +2034,189 @@ shinyServer(function(input, output,session){
       table<-read.csv("base_presse_annees.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(gallicapublication_date%3E=%221380%22%20and%20gallicapublication_date%3C=%222021%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords="
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Gallica<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Gallica<b> </a>")
       type="de documents"
     }
     if(input$distribution==2){
       table<-read.csv("base_livres_annees.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(gallicapublication_date%3E=%221380%22%20and%20gallicapublication_date%3C=%222021%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords="
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français océrisés\ndans Gallica<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français océrisés\ndans Gallica<b> </a>")
       type="de documents"
     }
     if(input$distribution==5){
       table<-read.csv("base_livres_annees_ngram_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://books.google.com/ngrams/graph?content=Joffre%252CP%C3%A9tain%252CFoch&year_start=1914&year_end=1920&corpus=30&smoothing=0&direct_url=t1%253B%252CJoffre%253B%252Cc0%253B.t1%253B%252CP%C3%A9tain%253B%252Cc0%253B.t1%253B%252CFoch%253B%252Cc0"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français exploités par\nNgram Viewer<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français exploités par\nNgram Viewer<b> </a>")
       type="de documents"
     }
     if(input$distribution==9){
       table<-read.csv("base_livres_annees_ngram_de.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://books.google.com/ngrams/graph?content=Hitler&year_start=1918&year_end=1945&corpus=31&smoothing=0&direct_url=t1%3B%2CHitler%3B%2Cc0"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français exploités par\nNgram Viewer<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français exploités par\nNgram Viewer<b> </a>")
       type="de documents"
     }
     if(input$distribution==10){
       table<-read.csv("base_livres_annees_ngram_en.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://books.google.com/ngrams/graph?content=Churchill&year_start=1918&year_end=1945&corpus=26&smoothing=0&direct_url=t1%3B%2CChurchill%3B%2Cc0"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français exploités par\nNgram Viewer<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français exploités par\nNgram Viewer<b> </a>")
       type="de documents"
     }
     if(input$distribution==12){
       table<-read.csv("base_livres_annees_ngram_es.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://books.google.com/ngrams/graph?content=Primo+de+Rivera&year_start=1918&year_end=1945&corpus=32&smoothing=0&direct_url=t1%3B%2CPrimo%20de%20Rivera%3B%2Cc0"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français exploités par\nNgram Viewer<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," livres en français exploités par\nNgram Viewer<b> </a>")
       type="de documents"
     }
     if(input$distribution==6){
       table<-read.csv("base_presse_annees_europeana_de.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://classic.europeana.eu/portal/fr/collections/newspapers?f%5BLANGUAGE%5D%5B%5D=de&f%5BMEDIA%5D%5B%5D=true&f%5BTYPE%5D%5B%5D=TEXT&f%5Bapi%5D%5B%5D=collection&q="
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en allemand océrisés\ndans Europeana<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en allemand océrisés\ndans Europeana<b> </a>")
       type="de documents"
     }
     if(input$distribution==7){
       table<-read.csv("base_presse_annees_europeana_nl.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://classic.europeana.eu/portal/fr/collections/newspapers?f%5BMEDIA%5D%5B%5D=true&f%5BTYPE%5D%5B%5D=TEXT&f%5Bapi%5D%5B%5D=collection&q=&f%5BLANGUAGE%5D%5B%5D=nl"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en néerlandais océrisés\ndans Europeana<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en néerlandais océrisés\ndans Europeana<b> </a>")
       type="de documents"
     }
     if(input$distribution==8){
       table<-read.csv("base_presse_annees_bna_en.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://www.britishnewspaperarchive.co.uk/search/results/1699-01-01/2021-12-31?basicsearch=a&exactsearch=false&contenttype=article&retrievecountrycounts=false"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," articles en anglais océrisés\ndans The British Newspaper Archive<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," articles en anglais océrisés\ndans The British Newspaper Archive<b> </a>")
       type="d'articles"
     }
     if(input$distribution==11){
       table<-read.csv("base_presse_annees_bne_es.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="http://hemerotecadigital.bne.es/results.vm?d=creation&d=1700&d=01&d=01&d=2021&d=12&d=31&t=%2Bcreation&l=700&s=0&view=&lang=fr"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," pages de presse en espagnol océrisées\ndans Hemeroteca digital<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," pages de presse en espagnol océrisées\ndans Hemeroteca digital<b> </a>")
       type="de pages"
     }
     if(input$distribution==28){
       table<-read.csv("base_presse_annees_banq_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://numerique.banq.qc.ca/rechercheExterne/encoded/Kg==/false/D/asc/W3sibm9tIjoiY29ycHVzIiwidmFsZXVyIjoiUGF0cmltb2luZSUyMHF1w6liw6ljb2lzIn0seyJub20iOiJ0eXBlX2RvY19mIiwidmFsZXVyIjoiUmV2dWVzJTIwZXQlMjBqb3VybmF1eCJ9LHsibm9tIjoiZ2VucmVfZiIsInZhbGV1ciI6IkpvdXJuYXV4In0seyJub20iOiJhdmVjX3RleHRlX2ludGVncmFsIiwidmFsZXVyIjoib3VpIn0seyJub20iOiJsYW5ndWVzX2NvbnRlbnUiLCJ2YWxldXIiOiJmcmFuw6dhaXMifV0=/Toutes%20les%20ressources/true/false/"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans BAnQ<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans BAnQ<b> </a>")
       type="de documents"
     }
     if(input$distribution==13){
       table<-read.csv("base_presse_annees_kbr_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://www.belgicapress.be/pressshow.php?adv=1&all_q=&any_q=&exact_q=&none_q=&from_d=1814&to_d=1970&per_lang=fr&per=&lang=FR&per_type=1"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," pages de presse en français océrisés\ndans KBR<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," pages de presse en français océrisés\ndans KBR<b> </a>")
       type="de pages"
     }
     if(input$distribution==14){
       table<-read.csv("base_presse_annees_kbr_nl.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://www.belgicapress.be/pressshow.php?adv=1&all_q=&any_q=&exact_q=&none_q=&from_d=1814&to_d=1970&per_lang=nl&per=&lang=FR&per_type=1"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," pages de presse en néerlandais océrisés\ndans KBR<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," pages de presse en néerlandais océrisés\ndans KBR<b> </a>")
       type="de pages"
     }
     if(input$distribution==15){
       table<-read.csv("base_presse_annees_e-newspaperarchives_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://www.e-newspaperarchives.ch/?a=q&hs=1&r=1&results=1&txq=der+OR+die+OR+das+OR+ein+OR+ich+OR+du+OR+er+OR+sie+OR+es&dafdq=01&dafmq=01&dafyq=1698&datdq=31&datmq=12&datyq=1698&laq=de&puq=&txf=txIN&ssnip=&ccq=&l=fr"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," articles de presse en français océrisés\ndans e-newspaperarchives<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," articles de presse en français océrisés\ndans e-newspaperarchives<b> </a>")
       type="d'articles"
     }
     if(input$distribution==16){
       table<-read.csv("base_presse_annees_e-newspaperarchives_de.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://www.e-newspaperarchives.ch/?a=q&hs=1&r=1&results=1&txq=der+OR+die+OR+das+OR+ein+OR+ich+OR+du+OR+er+OR+sie+OR+es&dafdq=01&dafmq=01&dafyq=1698&datdq=31&datmq=12&datyq=1698&laq=de&puq=&txf=txIN&ssnip=&ccq=&l=fr"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," articles de presse en français océrisés\ndans e-newspaperarchives<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," articles de presse en français océrisés\ndans e-newspaperarchives<b> </a>")
       type="d'articles"
     }
     if(input$distribution==17){
       table<-read.csv("base_presse_annees_lectura_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://www.lectura.plus/Presse/search/?query=&fromDate=01%2F01%2F1800&untilDate=31%2F12%2F2021"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," pages de presse en français océrisés\ndans Lectura<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," pages de presse en français océrisés\ndans Lectura<b> </a>")
       type="de pages"
     }
     if(input$distribution==18){
       table<-read.csv("base_presse_annees_limedia_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://kiosque.limedia.fr/recherche/?query=&search_type=exact&uniform_title=&date=&period_start=01%2F01%2F1600&period_end=31%2F12%2F2021"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Limedia<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Limedia<b> </a>")
       type="de documents"
     }
     if(input$distribution==19){
       table<-read.csv("base_presse_annees_memonum_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://memonum-mediatheques.montpellier3m.fr/form.aspx?SC=MEMONUM_ENCART_SEARCH#/Search/(query:(ForceSearch:!t,Grid:%7B%7D,Page:0,PageRange:3,QueryString:!n,ResultSize:10,ScenarioCode:MEMONUM_ENCART_SEARCH,SearchContext:1))"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Mémonum<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Mémonum<b> </a>")
       type="de documents"
     }
     if(input$distribution==20){
       table<-read.csv("base_presse_annees_communpatrimoine_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://www.communpatrimoine.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=null&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords="
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Commun patrimoine<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Commun patrimoine<b> </a>")
       type="de documents"
     }
     if(input$distribution==21){
       table<-read.csv("base_presse_annees_yroise_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://yroise.biblio.brest.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=null&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords="
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Yroise<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Yroise<b> </a>")
       type="de documents"
     }
     if(input$distribution==22){
       table<-read.csv("base_presse_annees_pireneas_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://www.pireneas.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=null&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords="
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Pireneas<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Pireneas<b> </a>")
       type="de documents"
     }
     if(input$distribution==23){
       table<-read.csv("base_presse_annees_rosalis_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://rosalis.bibliotheque.toulouse.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=null&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords="
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Rosalis<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Rosalis<b> </a>")
       type="de documents"
     }
     if(input$distribution==24){
       table<-read.csv("base_presse_annees_bdn_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://bibliotheque-numerique.diplomatie.gouv.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=null&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords="
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans la Bibliothèque diplomatique numérique<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans la Bibliothèque diplomatique numérique<b> </a>")
       type="de documents"
     }
     if(input$distribution==25){
       table<-read.csv("base_presse_annees_rfnum_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="http://rfnum-bibliotheque.org/services/engine/search/sru?operation=searchRetrieve&exactSearch=null&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords="
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans la Bibliothèque francophone numérique<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans la Bibliothèque francophone numérique<b> </a>")
       type="de documents"
     }
     if(input$distribution==26){
       table<-read.csv("base_presse_annees_numistral_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://www.numistral.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=null&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords="
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Numistral<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans Numistral<b> </a>")
       type="de documents"
     }
     if(input$distribution==27){
       table<-read.csv("base_presse_annees_bn-r_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://www.bn-r.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=null&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords="
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans la Bibliothèque numérique de Roubaix<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en français océrisés\ndans la Bibliothèque numérique de Roubaix<b> </a>")
       type="de documents"
     }
     if(input$distribution==29){
       table<-read.csv("base_presse_annees_anno_de.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://anno.onb.ac.at/anno-suche#searchMode=complex&language=ger&dateMode=period&from=1"
-      Title = paste("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en allemand océrisés\ndans AustriaN Newspapers Online<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en allemand océrisés\ndans AustriaN Newspapers Online<b> </a>")
       type="de documents"
     }
     
