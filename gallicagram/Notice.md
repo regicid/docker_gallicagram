@@ -1,9 +1,9 @@
 # Notice de Gallicagram
 
-- Gallicagram est un programme représentant graphiquement l’évolution au cours du temps de la fréquence d’apparition d’un ou plusieurs syntagmes dans les corpus numérisés de [Gallica](https://gallica.bnf.fr/) et de beaucoup d'autres bibliothèques.
-- Développé par [Benjamin Azoulay](mailto:benjamin.azoulay@ens-paris-saclay.fr) et [Benoît de Courson](https://regicid.github.io/), il est intégralement rédigé en langage [R](https://www.r-project.org/) et présente une interface graphique interactive [Shiny](https://shiny.rstudio.com/).
-- Les données produites sont téléchargeables par l’utilisateur. Le [code source](https://github.com/regicid/docker_gallicagram) de Gallicagram est libre d'accès et de droits.
-- L'analyse de la structure des recherches dans le corpus de presse de Gallica peut être réalisée dans [Gallicapresse](https://shiny.ens-paris-saclay.fr/app/gallicapresse).
+- Gallicagram est un programme représentant graphiquement l’évolution au cours du temps de la fréquence d’apparition d’un ou plusieurs syntagmes dans les corpus numérisés de <a href="https://gallica.bnf.fr/" target="_blank">Gallica</a> et de beaucoup d'autres bibliothèques.
+- Développé par [Benjamin Azoulay](mailto:benjamin.azoulay@ens-paris-saclay.fr) et <a href="https://regicid.github.io/" target="_blank">Benoît de Courson</a>, il est intégralement rédigé en langage <a href="https://www.r-project.org/" target="_blank">R</a> et présente une interface graphique interactive <a href="https://shiny.rstudio.com/" target="_blank">Shiny</a>.
+- Les données produites sont téléchargeables par l’utilisateur. Le <a href="https://github.com/regicid/docker_gallicagram" target="_blank">code source</a> de Gallicagram est libre d'accès et de droits.
+- L'analyse de la structure des recherches dans le corpus de presse de Gallica peut être réalisée dans <a href="https://shiny.ens-paris-saclay.fr/app/gallicapresse" target="_blank">Gallicapresse</a>.
 
 ### Corpus
 - Gallicagram a accès à de nombreuses bibliothèques. Quelle que soit la bibliothèque choisie, le corpus est circonscrit aux documents numérisés et océrisés et rédigés dans la langue choisie par l'utilisateur.
@@ -47,7 +47,7 @@
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
 
-\\[ratio_i=\frac{count_i}{base_i} =\frac{x_i}{N_i}\\]
+$$ ratio_i=\frac{count_i}{base_i} =\frac{x_i}{N_i} $$
 
 
 - Le graphique présente cette fréquence en ordonnées et le temps en abscisses selon l’échelle sélectionnée. La courbe qu’il affiche relie les points calculés par l’ordinateur.
