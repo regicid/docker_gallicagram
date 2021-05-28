@@ -127,8 +127,13 @@ shinyUI(navbarPage("Gallicagram",
                                             )
                             )
                    ),
-                   tabPanel("Tutoriel",headerPanel("Tutoriel"),
-                            fluidPage(HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/SujS4t-ZGhQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'))),
+                   tabPanel("Tutoriel",
+                            fluidPage(
+                              h3("Tutoriel"),
+                              fluidRow(HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/SujS4t-ZGhQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')),
+                              h3("Présentation de Gallicagram"),
+                              fluidRow(uiOutput("pdfview"))
+                              )),
                    tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicapresse' target='_blank'>Gallicapresse")),
                    tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicanet' target='_blank'>Gallicanet"))
 ))

@@ -2264,5 +2264,9 @@ shinyServer(function(input, output,session){
       }
     })})
   
+  output$pdfview <- renderUI({
+    tags$iframe(style="height:600px; width:100%", src="presentation_gallicagram.pdf")
+  })
+  
   shinyOptions(progress.style="old")
 })
