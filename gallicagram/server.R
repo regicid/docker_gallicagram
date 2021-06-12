@@ -1333,7 +1333,7 @@ shinyServer(function(input, output,session){
   output$themes_presse<- renderUI({selectizeInput("theme_presse","Thématique",choices = list("Liste de titres personnalisée"=1))})
   options(warn = -1) 
   
-  con <- dbConnect(RSQLite::SQLite(),"/1gram/1gram.db")
+  con <- dbConnect(RSQLite::SQLite(),"/opt/bazoulay/ngram/1gram.db")
   a = dbSendQuery(con,'SELECT n,annee FROM monogram WHERE monogram="roi" AND annee BETWEEN 1800 AND 1900;')
   print(dbFetch(a))
   
