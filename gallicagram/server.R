@@ -14,6 +14,7 @@ library(htmltools)
 library(purrr)
 library(rvest)
 library(RSelenium)
+library(RSQLite)
 
 
 
@@ -1331,6 +1332,11 @@ shinyServer(function(input, output,session){
   corpus_precedent<<-"1_1"
   output$themes_presse<- renderUI({selectizeInput("theme_presse","Thématique",choices = list("Liste de titres personnalisée"=1))})
   options(warn = -1) 
+  
+  con <- dbConnect(RSQLite::SQLite(),"/1gram/1gram.db")
+  a = dbSendQuery(con,'SELECT n,annee FROM monogram WHERE monogram="roi" AND annee BETWEEN 1800 AND 1900;')
+  print(dbFetch(a))
+  
   
   observeEvent(input$doc_type,{observeEvent(input$search_mode,{observeEvent(input$cooccurrences,{observeEvent(input$prox,{
     if(input$cooccurrences==T & ((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1))){
