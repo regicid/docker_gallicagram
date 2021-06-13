@@ -15,6 +15,8 @@ library(purrr)
 library(rvest)
 library(RSelenium)
 library(RSQLite)
+library(tidytext)
+library(DBI)
 
 
 
@@ -519,6 +521,62 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
   data = list(tableau_volume,tableau_page,paste(mot),resolution)
   names(data) = c("tableau_volume","tableau_page","mot","resolution")
   return(data)
+}
+
+ngramize<-function(input){
+  from<-input$beginning
+  to<-input$end
+  mots = str_split(input$mot,"&")[[1]]
+  
+  increment<-1
+    
+  for(mot in mots){
+      table<-unnest_tokens(as.data.frame(mot),ngram,mot, token = "ngrams", n = 1)
+      nb<-length(table$ngram)
+      mot<-table$ngram[1]
+      if(nb>1){for(x in 2:nb){mot<-str_c(mot," ",table$ngram[x])}}
+      
+      if(input$doc_type==2){
+        if(nb<=5){ngram_file<-str_c("/mnt/persistent/",nb,"gram.db")
+        if(nb==1){gram<-"monogram"
+        base<-read.csv("base_livres_gallica_monogrammes.csv")}
+        if(nb==2){gram<-"bigram"
+        base<-read.csv("base_livres_gallica_bigrammes.csv")}
+        if(nb==3){gram<-"trigram"
+        base<-read.csv("base_livres_gallica_trigrammes.csv")}
+        if(nb==4){gram<-"tetragram"
+        base<-read.csv("base_livres_gallica_tetragrammes.csv")}
+        if(nb==5){gram<-"pentagram"
+        base<-read.csv("base_livres_gallica_pentagrammes.csv")}
+        
+        base<-base[base$date<=to,]
+        base<-base[base$date>=from,]
+        
+        dbConnect(RSQLite::SQLite(),dbname = ngram_file)
+        
+        
+        query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND monogram="',mot,'"'))
+        z = dbFetch(query)
+        colnames(z)=c("count","date")
+        z = left_join(z,base,by="date")
+        z$ratio=z$count/z$base
+        z$mot<-mot
+        z$url<-"https://gallica.bnf.fr"
+        z$resolution<-"Année"
+        z$corpus<-"livres_gallica"
+        z$search_mode<-"match"
+        
+        if(increment==1){tableau=z}
+        else{tableau=bind_rows(tableau,z)}
+        increment=increment+1
+        }
+      }   
+  }
+  memoire<<-bind_rows(tableau,memoire)
+  data = list(tableau,paste(input$mot,collapse="&"),input$resolution)
+  names(data) = c("tableau","mot","resolution")
+  return(data)
+  
 }
 
 get_data <- function(mot,from,to,resolution,doc_type,titres,cooccurrences,prox){
@@ -1331,11 +1389,7 @@ shinyServer(function(input, output,session){
   recherche_precedente<<-"Joffre&Pétain&Foch_1914_1920_Année"
   corpus_precedent<<-"1_1"
   output$themes_presse<- renderUI({selectizeInput("theme_presse","Thématique",choices = list("Liste de titres personnalisée"=1))})
-  options(warn = -1) 
-  
-  con <- dbConnect(RSQLite::SQLite(),"/mnt/persistent/1gram.db")
-  a = dbSendQuery(con,'SELECT n,annee FROM monogram WHERE monogram="roi" AND annee BETWEEN 1800 AND 1900;')
-  print(dbFetch(a))
+  options(warn = -1)
   
   
   observeEvent(input$doc_type,{observeEvent(input$search_mode,{observeEvent(input$cooccurrences,{observeEvent(input$prox,{
@@ -1459,7 +1513,7 @@ shinyServer(function(input, output,session){
   
   observeEvent(input$doc_type,{
     if(input$doc_type == 2){
-      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2,"Par n-gramme"=3),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
     if(input$doc_type == 4){
@@ -1584,6 +1638,9 @@ shinyServer(function(input, output,session){
       df=rapport(input$mot,input$beginning,input$end,input$doc_type,input$titres)
       df$identifier<-str_remove_all(df$identifier," .+")
       df=page_search(input$mot,input$beginning,input$end,input$resolution,df,input$doc_type,input$search_mode,input$titres)
+    }
+    else if(input$search_mode==3){
+      df=ngramize(input)
     }
     
     output$plot <- renderPlotly({Plot(df,input)})
