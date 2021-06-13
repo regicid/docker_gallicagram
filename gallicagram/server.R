@@ -77,7 +77,7 @@ Plot <- function(data,input){
     
     if(input$span >0){
       if(input$loess==F){
-      for(mot in str_split(data$mot,"&")[[1]]){
+      for(mot in unique(tableau$mot)){
         z = which(tableau$mot==mot)
         for(i in 1:length(z)){
           j = max(i-floor(input$span/2),0)
@@ -87,7 +87,7 @@ Plot <- function(data,input){
         }}
       }
       if(input$loess==T){
-        for(mot in str_split(data$mot,"&")[[1]]){
+        for(mot in unique(tableau$mot)){
           z = which(tableau$mot==mot)
           x = 1:length(z)
           tableau$loess[z] = loess(tableau$loess[z]~x,span=span)$fitted
@@ -536,6 +536,9 @@ ngramize<-function(input){
       mot<-table$ngram[1]
       if(nb>1){for(x in 2:nb){mot<-str_c(mot," ",table$ngram[x])}}
       
+      if(nb>1){tableau=data.frame(date=from:to, count=0, ratio=0,mot=mot,url="https://gallica.bnf.fr",resolution="Année",corpus="livres_gallica",search_mode="match")
+      next}
+      
       if(input$doc_type==2){
         if(nb<=5){ngram_file<-str_c("/mnt/persistent/",nb,"gram.db")
         if(nb==1){gram<-"monogram"
@@ -560,7 +563,6 @@ ngramize<-function(input){
         y=data.frame(annee=from:to, n=0)
         z=left_join(y,z,by="annee")
         z<-z[,-2]
-        print(z)
         colnames(z)=c("date","count")
         z$count[is.na(z$count)]<-0
         z = left_join(z,base,by="date")
@@ -571,7 +573,6 @@ ngramize<-function(input){
         z$corpus<-"livres_gallica"
         z$search_mode<-"match"
         
-        print(z)
         if(increment==1){tableau=z}
         else{tableau=bind_rows(tableau,z)}
         increment=increment+1
@@ -1652,10 +1653,16 @@ shinyServer(function(input, output,session){
     
     output$plot <- renderPlotly({Plot(df,input)})
     
-    if(input$doc_type==1 | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29){
+    if((input$doc_type==1 & input$search_mode==1) | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29){
       nb_mots<-length(unique(df[["tableau"]]$mot))
       output$legende2<-renderText(str_c("Documents épluchés : ",as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Résultats trouvés : ", as.character(sum(df[["tableau"]]$count))))
+    }
+    else if((input$doc_type==1 & input$search_mode==3) | (input$doc_type==2 & input$search_mode==3)){
+      nb_mots<-length(unique(df[["tableau"]]$mot))
+      output$legende2<-renderText(str_c("Nombre de n-grammes dans la base : ",as.character(sum(df[["tableau"]]$base)/nb_mots)))
+      output$legende3<-renderText(str_c("Nombre d'occurrences trouvées : ", as.character(sum(df[["tableau"]]$count))))
+    }
     }
     else if(input$doc_type==4 & input$search_mode==1){
       nb_mots<-length(unique(df[["tableau_volume"]]$mot))
