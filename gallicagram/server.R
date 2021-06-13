@@ -530,54 +530,73 @@ ngramize<-function(input){
   
   increment<-1
     
-  for(mot in mots){
+  for(mot1 in mots){
+      
+      mots2 = str_split(mot1,"[+]")[[1]]
+      
+      increment2<-1
+      for(mot in mots2){
+    
       table<-unnest_tokens(as.data.frame(mot),ngram,mot, token = "ngrams", n = 1)
       nb<-length(table$ngram)
       mot<-table$ngram[1]
       if(nb>1){for(x in 2:nb){mot<-str_c(mot," ",table$ngram[x])}}
       
-      if(nb>1){tableau=data.frame(date=from:to, count=0, ratio=0,mot=mot,url="https://gallica.bnf.fr",resolution="Année",corpus="livres_gallica",search_mode="match")
+      if(nb>1){z=data.frame(date=from:to, count=0, base=0,ratio=0)
       next}
       
       if(input$doc_type==2){
-        if(nb<=5){ngram_file<-str_c("/mnt/persistent/",nb,"gram.db")
-        if(nb==1){gram<-"monogram"
-        base<-read.csv("base_livres_gallica_monogrammes.csv")}
-        if(nb==2){gram<-"bigram"
-        base<-read.csv("base_livres_gallica_bigrammes.csv")}
-        if(nb==3){gram<-"trigram"
-        base<-read.csv("base_livres_gallica_trigrammes.csv")}
-        if(nb==4){gram<-"tetragram"
-        base<-read.csv("base_livres_gallica_tetragrammes.csv")}
-        if(nb==5){gram<-"pentagram"
-        base<-read.csv("base_livres_gallica_pentagrammes.csv")}
-        
-        base<-base[base$date<=to,]
-        base<-base[base$date>=from,]
+        if(nb<=5){
+          ngram_file<-str_c("/mnt/persistent/",nb,"gram.db")
+          if(nb==1){gram<-"monogram"
+          base<-read.csv("base_livres_gallica_monogrammes.csv")}
+          if(nb==2){gram<-"bigram"
+          base<-read.csv("base_livres_gallica_bigrammes.csv")}
+          if(nb==3){gram<-"trigram"
+          base<-read.csv("base_livres_gallica_trigrammes.csv")}
+          if(nb==4){gram<-"tetragram"
+          base<-read.csv("base_livres_gallica_tetragrammes.csv")}
+          if(nb==5){gram<-"pentagram"
+          base<-read.csv("base_livres_gallica_pentagrammes.csv")}
+        }
+      }
+      base<-base[base$date<=to,]
+      base<-base[base$date>=from,]
         
         con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
         
         
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND monogram="',mot,'"'))
-        z = dbFetch(query)
+        w = dbFetch(query)
         y=data.frame(annee=from:to, n=0)
-        z=left_join(y,z,by="annee")
-        z<-z[,-2]
-        colnames(z)=c("date","count")
-        z$count[is.na(z$count)]<-0
-        z = left_join(z,base,by="date")
-        z$ratio=z$count/z$base
-        z$mot<-mot
-        z$url<-"https://gallica.bnf.fr"
-        z$resolution<-"Année"
-        z$corpus<-"livres_gallica"
-        z$search_mode<-"match"
+        w=left_join(y,w,by="annee")
+        w<-w[,-2]
+        colnames(w)=c("date","count")
+        w$count[is.na(w$count)]<-0
+        w = left_join(w,base,by="date")
+        w$ratio=w$count/w$base
+        w$ratio[is.na(w$ratio)]<-0
+        w$ratio[is.infinite(w$ratio)]<-0
         
-        if(increment==1){tableau=z}
-        else{tableau=bind_rows(tableau,z)}
-        increment=increment+1
-        }
-      }   
+        if(increment2==1){z=w}
+        else{z$count=z$count+w$count
+        z$base=z$base+w$base
+        z$ratio=z$ratio+w$ratio}
+        increment2=increment2+1
+         
+  }
+      
+      z$ratio[is.na(z$ratio)]<-0
+      z$ratio[is.infinite(z$ratio)]<-0
+      z$mot<-mot1
+      z$url<-"https://gallica.bnf.fr"
+      z$resolution<-"Année"
+      z$corpus<-"livres_gallica"
+      z$search_mode<-"match"
+      
+      if(increment==1){tableau=z}
+      else{tableau=bind_rows(tableau,z)}
+      increment=increment+1
   }
   tableau$date<-as.character(tableau$date)
   memoire<<-bind_rows(tableau,memoire)
@@ -1662,7 +1681,6 @@ shinyServer(function(input, output,session){
       nb_mots<-length(unique(df[["tableau"]]$mot))
       output$legende2<-renderText(str_c("Nombre de n-grammes dans la base : ",as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Nombre d'occurrences trouvées : ", as.character(sum(df[["tableau"]]$count))))
-    }
     }
     else if(input$doc_type==4 & input$search_mode==1){
       nb_mots<-length(unique(df[["tableau_volume"]]$mot))
