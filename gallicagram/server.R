@@ -574,6 +574,7 @@ ngramize<-function(input){
         }
       }   
   }
+  tableau$date<-as.character(tableau$date)
   memoire<<-bind_rows(tableau,memoire)
   data = list(tableau,paste(input$mot,collapse="&"),input$resolution)
   names(data) = c("tableau","mot","resolution")
