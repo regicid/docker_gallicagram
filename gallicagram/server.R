@@ -552,7 +552,7 @@ ngramize<-function(input){
         base<-base[base$date<=to,]
         base<-base[base$date>=from,]
         
-        dbConnect(RSQLite::SQLite(),dbname = ngram_file)
+        con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
         
         
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND monogram="',mot,'"'))
