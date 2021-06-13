@@ -557,6 +557,7 @@ ngramize<-function(input){
         
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND monogram="',mot,'"'))
         z = dbFetch(query)
+        print(z)
         colnames(z)=c("count","date")
         z = left_join(z,base,by="date")
         z$ratio=z$count/z$base
@@ -566,6 +567,7 @@ ngramize<-function(input){
         z$corpus<-"livres_gallica"
         z$search_mode<-"match"
         
+        print(z)
         if(increment==1){tableau=z}
         else{tableau=bind_rows(tableau,z)}
         increment=increment+1
