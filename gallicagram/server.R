@@ -557,8 +557,12 @@ ngramize<-function(input){
         
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND monogram="',mot,'"'))
         z = dbFetch(query)
+        y=data.frame(annee=from:to, n=0)
+        z=left_join(y,z,by="annee")
+        z<-z[,-2]
         print(z)
-        colnames(z)=c("count","date")
+        colnames(z)=c("date","count")
+        z$count[is.na(z$count)]<-0
         z = left_join(z,base,by="date")
         z$ratio=z$count/z$base
         z$mot<-mot
