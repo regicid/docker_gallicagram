@@ -376,7 +376,7 @@ rapport <- function(mot,from,to,doc_type,titres){
   
     parse_gallica %>% 
     bind_rows()
-  
+
   return(tot_df)
 }
 
@@ -445,7 +445,7 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
   
   tot_df$detect<-FALSE
   for (i in 1:length(tot_df$ark)) {
-    url<-str_c("https://gallica.bnf.fr/services/ContentSearch?ark=",tot_df$ark[i],"&query=",mot)
+    url<-str_c("https://gallica.bnf.fr/services/ContentSearch?ark=",tot_df$ark[i],"&query=%22",mot,"%22")
     resultat<-as.character(read_html(RETRY("GET",url,times = 3)))
     resultat=str_remove_all(resultat,"[:space:]")
     resultat=str_remove_all(resultat,".+countresults")
@@ -454,7 +454,7 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
     tot_df$resultats[i]<-as.integer(resultat)
     
     if(doc_type==4 | doc_type == 3){
-    url_base<-str_c("https://gallica.bnf.fr/services/ContentSearch?ark=",tot_df$ark[i],"&query=%20")
+    url_base<-str_c("https://gallica.bnf.fr/services/ContentSearch?ark=",tot_df$ark[i],"&query=%22%20%22")
     resultat_base<-as.character(read_html(RETRY("GET",url_base,times = 3)))
     resultat_base=str_remove_all(resultat_base,"[:space:]")
     resultat_base=str_remove_all(resultat_base,".+countresults")
@@ -1421,7 +1421,7 @@ shinyServer(function(input, output,session){
   
   observeEvent(input$doc_type,{observeEvent(input$search_mode,{observeEvent(input$cooccurrences,{observeEvent(input$prox,{
     if(input$cooccurrences==T & ((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1))){
-      output$instructions <- renderUI(HTML(str_c('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Utiliser "a*b" pour rechercher a à ',input$prox,' mots maximum de b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>')))
+      output$instructions <- renderUI(HTML(str_c('<ul><li>Utiliser "a+b" pour rechercher a OU b</li><li>Utiliser "a*b" pour rechercher a à ',input$prox,' mots maximum de b</li><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>')))
       
     }else if((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1)|input$doc_type == 5|input$doc_type == 6|input$doc_type == 7|input$doc_type == 8|input$doc_type == 9|input$doc_type == 10|input$doc_type == 11|input$doc_type == 12|input$doc_type == 15|input$doc_type == 16|input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 29){
       output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>'))
