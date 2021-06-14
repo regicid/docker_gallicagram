@@ -471,6 +471,12 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
     if(as.integer(resultat)>0){tot_df$detect[i]<-TRUE}
     progress$inc(1/length(tot_df$ark), detail = paste(as.integer(i*100/length(tot_df$ark)),"% traités"))
   }
+  
+  if (doc_type==2){
+    a<-data.frame(date=min(tableau$date):max(tableau$date))
+    a$date<-as.character(a$date)
+    tableau<-left_join(a,tableau,by="date")
+  }
   tableau$count<-0
   tableau$detect<-0
   tableau$count_base<-0
@@ -493,6 +499,7 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
 
   
   colnames(tableau)<-c("date","base","page_count","count","page_base","mot","url")
+  
   tableau$ratio<-tableau$count/tableau$base
   tableau$ratio_page<-tableau$page_count/tableau$page_base
   tableau$ratio[is.na(tableau$ratio)]<-0
