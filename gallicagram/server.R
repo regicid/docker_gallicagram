@@ -124,6 +124,7 @@ Plot <- function(data,input){
       
     }
     if(input$histogramme==T){
+      tableau$hovers = str_c(tableau$mot," : ",tableau$count)
       y <- list(title = "Nombre d'occurrences dans\nle corpus",titlefont = 41)
       plot = plot_ly(tableau, x=~date,y=~count,text=~hovers,color =~mot,type='bar', hoverinfo="text",customdata=tableau$url)}
     plot = layout(plot, yaxis = y, xaxis = x,title = Title)
@@ -1687,6 +1688,7 @@ shinyServer(function(input, output,session){
     else if((input$doc_type==1 & input$search_mode==3) | (input$doc_type==2 & input$search_mode==3)){
       nb_mots<-length(unique(df[["tableau"]]$mot))
       #output$legende2<-renderText(str_c("Nombre de n-grammes dans la base : ",as.character(sum(df[["tableau"]]$base)/nb_mots)))
+      output$legende2<-NULL
       output$legende3<-renderText(str_c("Nombre d'occurrences trouvées : ", as.character(sum(df[["tableau"]]$count))))
     }
     else if(input$doc_type==4 & input$search_mode==1){
