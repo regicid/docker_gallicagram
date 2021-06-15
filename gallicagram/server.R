@@ -597,7 +597,24 @@ ngramize<-function(input){
       z$ratio[is.na(z$ratio)]<-0
       z$ratio[is.infinite(z$ratio)]<-0
       z$mot<-mot1
-      z$url<-"https://gallica.bnf.fr"
+      mot2<-mot1
+      or<-""
+      or_end<-""
+      if(str_detect(mot2,"[+]")){
+        mots_or = str_split(mot2,"[+]")[[1]]
+        or1<-NA
+        or1_end<-NA
+        for (j in 2:length(mots_or)) {
+          
+          or1[j]<-str_c("or%20text%20adj%20%22",mots_or[j],"%22%20")
+          or1_end[j]<-str_c("%20",mots_or[j])
+          or<-str_c(or,or1[j])
+          or_end<-str_c(or_end,or1_end[j])
+        }
+        mot1<-mots_or[1]} else{mot1=mot2}
+      if(input$doc_type==2){
+        z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"%22%20and%20gallicapublication_date%3C=%22",z$date,"%22)&suggest=10&keywords=",mot1,or_end)
+        }
       z$resolution<-"Année"
       z$corpus<-"livres_gallica"
       z$search_mode<-"match"
