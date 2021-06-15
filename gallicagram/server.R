@@ -750,13 +750,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,cooccurrences,prox){
   for (i in from:to){
     for(mot in mots){
       mot2 = str_replace_all(mot," ","%20")
+      mot2=URLencode(mot2)
+      mot1=""
       
-      if(str_detect(mot2,"[*]")){
-        if(doc_type==1|doc_type==2|doc_type==3)
-        {
-        mots_co = str_split(mot2,"[*]")[[1]]
-        co<-str_c("(%20text%20adj%20%22",mots_co[1],"%22%20%20prox/unit=word/distance=",prox,"%20%22",mots_co[2],"%22)")
-        }}
+      
       ###
       or<-""
       or_end<-""
@@ -764,8 +761,28 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,cooccurrences,prox){
         mots_or = str_split(mot2,"[+]")[[1]]
         or1<-NA
         or1_end<-NA
+        
+        if(str_detect(mots_or[1],"[*]") & (doc_type==1 | doc_type==2 | doc_type == 3)){
+          mots_co = str_split(mots_or[1],"[*]")[[1]]
+          mot1<-str_c("(%20text%20adj%20%22",mots_co[1],"%22%20%20prox/unit=word/distance=",prox,"%20%22",mots_co[2],"%22)")
+        }
+        if(str_detect(mots_or[1],"[*]")==F & (doc_type==1 | doc_type==2 | doc_type == 3)){
+          mot1<-str_c("(%20text%20adj%20%22",mots_or[1],"%22%20)")
+        }
+        
         for (j in 2:length(mots_or)) {
-          if(doc_type==1 | doc_type==2 | doc_type == 3 | doc_type==4 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26)
+          if(doc_type==1 | doc_type==2 | doc_type == 3)
+          {
+            if(str_detect(mots_or[j],"[*]")==F){
+              or1[j]<-str_c("or%20(%20text%20adj%20%22",mots_or[j],"%22%20)")
+              if(mot1==""){mot1<-str_c("(%20text%20adj%20%22",mots_or[1],"%22%20)")}
+            }
+            else{
+              mots_co = str_split(mots_or[j],"[*]")[[1]]
+              or1[j]<-str_c("%20or%20(%20text%20adj%20%22",mots_co[1],"%22%20%20prox/unit=word/distance=",prox,"%20%22",mots_co[2],"%22)")
+              }
+          }
+          if(doc_type==4 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26)
           {or1[j]<-str_c("or%20text%20adj%20%22",mots_or[j],"%22%20")
           or1_end[j]<-str_c("%20",mots_or[j])}
           if(doc_type==6 | doc_type==7 | doc_type==8)
@@ -786,8 +803,20 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,cooccurrences,prox){
           
           or<-str_c(or,or1[j])
           or_end<-str_c(or_end,or1_end[j])
+          
         }
-        mot1<-mots_or[1]}else{mot1=mot2}
+        if(doc_type!=1 & doc_type!=2 & doc_type != 3){mot1<-mots_or[1]}
+        }
+        else{
+          if(doc_type==1 | doc_type==2 | doc_type == 3){
+          if(str_detect(mot2,"[*]")){
+            mots_co = str_split(mot2,"[*]")[[1]]
+            mot1<-str_c("(%20text%20adj%20%22",mots_co[1],"%22%20%20prox/unit=word/distance=",prox,"%20%22",mots_co[2],"%22)")
+            }
+          else{mot1=str_c("(%20text%20adj%20%22",mot2,"%22%20)")}}
+          else{mot1=mot2}
+          
+        }
       if(doc_type==15 | doc_type==16 | doc_type==18){
         mot1<-URLencode(mot1)
         or<-URLencode(or)
@@ -813,10 +842,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,cooccurrences,prox){
             beginning = str_c(y,"/",z,"/01")
             end = str_c(y,"/",z,"/",end_of_month[j])}
           if(doc_type == 1){
-            url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
-            if(cooccurrences==T & str_detect(mot2,"[*]")){
-              url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20",co,"%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=")
-            }
+            url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)")
             }
           if(doc_type == 3){
             liste_titres<-titres
@@ -842,8 +868,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,cooccurrences,prox){
                 ark1<-titres
                 ark3<-""
               }
-              url <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)sortby%20dc.date%20")
-              if(cooccurrences==T & str_detect(mot2,"[*]")){url <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20",co,"%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)sortby%20dc.date%20")}
+              url <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(",mot1,or,")%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)sortby%20dc.date%20")
               ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
               a<-a+as.integer(str_extract(str_extract(ngram,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+"))
               url_base <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)%20sortby%20dc.date")
@@ -1166,10 +1191,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,cooccurrences,prox){
         }}
       
       if(doc_type==2){
-        url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)&suggest=10&keywords=",mot1,or_end)
-        if(cooccurrences==T & str_detect(mot2,"[*]")){
-          url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20",co,"%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)&suggest=10&keywords=")
-        }
+        url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)")
         ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
         a<-str_extract(str_extract(ngram,"numberOfRecords>[:digit:]+"),"[:digit:]+")
         b<-as.integer(base$base[base$date==y])
