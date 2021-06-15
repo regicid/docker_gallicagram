@@ -111,7 +111,7 @@ Plot <- function(data,input){
     y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = digit_number)
     if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41)}
     x <- list(title = "",titlefont = 41)
-    if(input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){
+    if(input$search_mode==3){
       tableau$hovers = str_c(str_extract(tableau$date,"....")," : ",round(tableau$ratio*100,digits = 6),"%")
       y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = digit_number)
       if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41)}
@@ -1686,7 +1686,7 @@ shinyServer(function(input, output,session){
     }
     else if((input$doc_type==1 & input$search_mode==3) | (input$doc_type==2 & input$search_mode==3)){
       nb_mots<-length(unique(df[["tableau"]]$mot))
-      output$legende2<-renderText(str_c("Nombre de n-grammes dans la base : ",as.character(sum(df[["tableau"]]$base)/nb_mots)))
+      #output$legende2<-renderText(str_c("Nombre de n-grammes dans la base : ",as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Nombre d'occurrences trouvées : ", as.character(sum(df[["tableau"]]$count))))
     }
     else if(input$doc_type==4 & input$search_mode==1){

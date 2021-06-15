@@ -133,11 +133,13 @@ shinyUI(navbarPage("Gallicagram",
                    ),
                    tabPanel("Tutoriel",
                             fluidPage(
-                              h3("Tutoriel"),
-                              fluidRow(HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/SujS4t-ZGhQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')),
+                              h3("Tutoriel et Séminaire de présentation"),
+                              div(style="display: inline-block;vertical-align:bottom",fluidRow(HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/SujS4t-ZGhQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'))),
+                              div(style="display: inline-block;vertical-align:bottom",fluidRow(HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/jMyeFT5Ny3s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'))),
+                              p(HTML("<li><a href='http://savoirs.ens.fr/expose.php?id=3989' target='_blank'>Lien vers la vidéo du séminaire DHAI du 11 mai 2021</a>")),
                               h3("Présentation de Gallicagram"),
                               fluidRow(uiOutput("pdfview"))
                               )),
-                   tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicapresse' target='_blank'>Gallicapresse")),
-                   tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicanet' target='_blank'>Gallicanet"))
+                   tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicapresse' target='_blank'>Gallicapresse</a>")),
+                   tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicanet' target='_blank'>Gallicanet</a>"))
 ))
