@@ -63,17 +63,10 @@ Plot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
     Title = paste("")
-    tableau$scale<-tableau$ratio
-    
-      for(mot in unique(tableau$mot)){
-        z = which(tableau$mot==mot)
-        tableau$scale[z]=scale(tableau$scale[z],center = F,scale = T)
-        }
-    
+    tableau$loess=tableau$ratio
     width = length(unique(tableau$date))
     span = 2/width + input$span*(width-2)/(10*width)
-    if(input$scale==TRUE |input$multicourbes==TRUE){tableau$loess = tableau$scale}
-    else {tableau$loess = tableau$ratio}
+    
     
     if(input$span >0){
       if(input$loess==F){
@@ -95,7 +88,17 @@ Plot <- function(data,input){
       }
       
     }
-    if(input$scale==FALSE & input$multicourbes==FALSE){tableau$loess[tableau$loess<0]<-0}
+    
+    tableau$scale<-tableau$loess
+    
+    for(mot in unique(tableau$mot)){
+      z = which(tableau$mot==mot)
+      tableau$scale[z]=scale(tableau$scale[z],center = F,scale = T)
+    }
+    if(input$scale==TRUE |input$multicourbes==TRUE){tableau$loess = tableau$scale}
+    
+    
+    tableau$loess[tableau$loess<0]<-0
     dn<-as.character(max(format(tableau$ratio,scientific=FALSE)))
     if(max(tableau$ratio)>=0.1){digit_number=".1%"}
     else{
