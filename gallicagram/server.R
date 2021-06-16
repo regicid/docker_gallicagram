@@ -591,7 +591,8 @@ ngramize<-function(input){
         
         if(increment2==1){z=w}
         else{z$count=z$count+w$count
-        z$base=z$base+w$base
+        if(sum(z$base==0)){z$base=w$base}
+        
         z$ratio=z$ratio+w$ratio}
         increment2=increment2+1
          
