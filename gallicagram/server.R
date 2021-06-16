@@ -115,7 +115,8 @@ Plot <- function(data,input){
     if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41)}
     x <- list(title = "",titlefont = 41)
     if(input$search_mode==3){
-      tableau$hovers = str_c(str_extract(tableau$date,"....")," : ",round(tableau$ratio*100,digits = 6),"%")
+      if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ",round(tableau$ratio*100,digits = 6),"%")}
+      else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ",round(tableau$ratio*100,digits = 6),"%")}
       y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = digit_number)
       if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41)}
       }
@@ -127,7 +128,8 @@ Plot <- function(data,input){
       
     }
     if(input$histogramme==T){
-      tableau$hovers = str_c(tableau$mot," : ",tableau$count)
+      if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ", tableau$count)}
+      else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ", tableau$count)}
       y <- list(title = "Nombre d'occurrences dans\nle corpus",titlefont = 41)
       plot = plot_ly(tableau, x=~date,y=~count,text=~hovers,color =~mot,type='bar', hoverinfo="text",customdata=tableau$url)}
     plot = layout(plot, yaxis = y, xaxis = x,title = Title)
@@ -137,8 +139,8 @@ Plot <- function(data,input){
       mots<-str_split(input$mot,"&")
       x = 1:sum(tableau$mot==unlist(mots)[1])
       tableau$delta[tableau$mot==unlist(mots)[1]]<-loess((tableau$ratio[tableau$mot==unlist(mots)[1]]-tableau$ratio[tableau$mot==unlist(mots)[2]]~x),span=span)$fitted
-      if(data[["resolution"]]=="Mois"){tableau$hovers2 = str_c(str_extract(tableau$date,"......."),": delta = ",round(tableau$delta*100,digits=2),"%")}
-      else{tableau$hovers2 = str_c(str_extract(tableau$date,"...."),": delta = ",round(tableau$delta*100,digits=2),"%")}
+      if(data[["resolution"]]=="Mois"){tableau$hovers2 = str_c(str_extract(tableau$date,".......")," : delta = ",round(tableau$delta*100,digits=2),"%")}
+      else{tableau$hovers2 = str_c(str_extract(tableau$date,"....")," : delta = ",round(tableau$delta*100,digits=2),"%")}
       if(length(unique(tableau$date))<=20){
         plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text")
       }
