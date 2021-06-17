@@ -1,0 +1,118 @@
+sdewey,sdewey_nom,dewey_nom
+999,-,-
+1,PHILOSOPHIE ET PSYCHOLOGIE,Philosophie et psychologie
+10,_Philosophie et psychologie:Généralités,Philosophie et psychologie
+11,_Métaphysique,Philosophie et psychologie
+12,_Epistémologie,Philosophie et psychologie
+13,"_Esotérisme,phénomènes paranormaux",Philosophie et psychologie
+14,_Ecoles philosophiques,Philosophie et psychologie
+15,_Psychologie,Philosophie et psychologie
+16,_Logique,Philosophie et psychologie
+17,_Ethique,Philosophie et psychologie
+18,"_Philosophie antique, médiévale",Philosophie et psychologie
+181,"_Philosophie orientale, ancienne et moderne",Philosophie et psychologie
+189,_Philosophie du Moyen Age,Philosophie et psychologie
+19,_Philosophie moderne,Philosophie et psychologie
+2,RELIGION,Religion
+20,_Religion:Généralités,Religion
+21,_Théologie,Religion
+22,_La Bible,Religion
+23,_Théologie chrétienne,Religion
+24,_Théologie morale et spirituelle chrétienne,Religion
+25,_Eglises et ordres chrétiens,Religion
+26,_Théologie sociale chrétienne,Religion
+27,_Histoire du christianisme,Religion
+28,_Confessions et sectes chrétiennes,Religion
+29,_Autres religions,Religion
+3,ECONOMIE ET SOCIETE,Economie et société
+30,_Sciences sociales,Economie et société
+301,_Sociologie,Economie et société
+306,_Ethnologie et anthropologie,Economie et société
+31,_Statistiques,Economie et société
+32,_Science politique,Economie et société
+33,_Economie,Economie et société
+34,_Droit,Economie et société
+35,_Administration publique,Economie et société
+36,_Services sociaux,Economie et société
+37,_Education,Economie et société
+38,"_Commerce, communications, transports",Economie et société
+39,"_Coutume, folklore",Economie et société
+4,LANGUES,Langues
+40,_Langues:Généralités,Langues
+403,_Dictionnaires de langues (sauf français),Langues
+41,_Linguistique,Langues
+42,_Anglais,Langues
+43,_Allemand,Langues
+44,_Français,Langues
+443,_Dictionnaires de langue française,Langues
+45,"_Italien, roumain",Langues
+46,"_Espagnol, portugais",Langues
+47,_Latin,Langues
+48,_Grec,Langues
+49,_Autres langues,Langues
+5,SCIENCES,Sciences
+50,_Sciences:Généralités,Sciences
+51,_Mathématiques,Sciences
+52,_Astronomie,Sciences
+53,_Physique,Sciences
+54,_Chimie,Sciences
+55,_Sciences de la terre,Sciences
+56,_Paléontologie,Sciences
+57,_Biologie,Sciences
+58,_Botanique,Sciences
+59,_Zoologie,Sciences
+6,TECHNIQUES,Techniques
+60,_Techniques:Généralités,Techniques
+61,_Médecine,Techniques
+62,_Ingénierie,Techniques
+63,_Agriculture,Techniques
+64,_Vie domestique,Techniques
+65,_Gestion,Techniques
+66,_Chimie,Techniques
+67,_Industrie,Techniques
+68,_Artisanat,Techniques
+69,_Contruction,Techniques
+7,ARTS ET LOISIRS,Arts et loisirs
+70,_Arts et loisirs:Généralités,Arts et loisirs
+71,"_Urbanisme, arts du paysage",Arts et loisirs
+72,_Architecture,Arts et loisirs
+73,"_Sculpture, arts plastiques",Arts et loisirs
+74,"_Dessin, arts décoratifs",Arts et loisirs
+75,_Peinture,Arts et loisirs
+76,_Arts graphiques,Arts et loisirs
+77,_Photographie,Arts et loisirs
+78,_Musique,Arts et loisirs
+79,"_Loisirs, sports, arts du spectacle",Arts et loisirs
+8,LITTERATURE,Littérature
+80,_Littérature:Généralités,Littérature
+81,_Littérature américaine,Littérature
+82,_Littérature anglaise,Littérature
+83,_Littérature germanique,Littérature
+84,_Littérature francophone,Littérature
+85,_Littérature italienne et roumaine,Littérature
+86,_Littérature espagnole et portugaise,Littérature
+87,_Littérature latine,Littérature
+88,_Littérature grecque,Littérature
+89,_Littérature des autres langues,Littérature
+9,HISTOIRE ET GEOGRAPHIE,Histoire et géographie
+90,_Histoire et géographie:Généralités,Histoire et géographie
+91,_Géographie et voyages,Histoire et géographie
+92,_Biographies et généalogie,Histoire et géographie
+93,_Histoire de l'Antiquité,Histoire et géographie
+94,_Histoire de l'Europe,Histoire et géographie
+944,_Histoire de France,Histoire et géographie
+95,_Histoire de l'Asie,Histoire et géographie
+96,_Histoire de l'Afrique,Histoire et géographie
+97,_Histoire de l'Amérique du Nord,Histoire et géographie
+98,_Histoire de l'Amérique du Sud,Histoire et géographie
+99,_Histoire des autres parties du monde,Histoire et géographie
+0,GENERALITES,Généralités
+0,"_Savoir, livre, informatique",Généralités
+1,_Bibliographie,Généralités
+2,_Sciences de l'information,Généralités
+3,_Encyclopédies,Généralités
+5,_Périodiques,Généralités
+6,_Organisations,Généralités
+7,_Presse et édition,Généralités
+8,_Collections générales,Généralités
+9,_Bibliophilie,Généralités
