@@ -1508,9 +1508,11 @@ shinyServer(function(input, output,session){
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
   
   observeEvent(input$doc_type,{
+    if(input$doc_type == 2 & input$search_mode==1)
+    {
     sdewey<-read.csv("sdewey.csv",encoding="UTF-8")
     output$theme<-renderUI({selectizeInput("dewey","Thématique",choices = setNames(sdewey$sdewey,sdewey$sdewey_nom),selected="999",multiple=F)})
-  })
+  }})
   
   observeEvent(input$doc_type,{observeEvent(input$filtre,{
     
