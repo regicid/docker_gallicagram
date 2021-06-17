@@ -637,7 +637,7 @@ ngramize<-function(input){
   
 }
 
-get_data <- function(mot,from,to,resolution,doc_type,titres,cooccurrences,prox){
+get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,prox){
   if(doc_type==6 | doc_type==7){mot <- iconv(mot, from="UTF-8",to="ASCII//TRANSLIT//IGNORE")}
   mots = str_split(mot,"&")[[1]]
   tableau<-as.data.frame(matrix(nrow=0,ncol=5),stringsAsFactors = FALSE)
@@ -1197,10 +1197,21 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,cooccurrences,prox){
         }}
       
       if(doc_type==2){
-        url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)")
+        url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)")
+        if(input$dewey!="999"){
+          if(str_length(input$dewey)==1){url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20and%20(dewey%20all%20%22",input$dewey,"%22)")}
+          if(str_length(input$dewey)>1){url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20and%20(sdewey%20all%20%22",input$dewey,"%22)")}
+          }
         ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
         a<-str_extract(str_extract(ngram,"numberOfRecords>[:digit:]+"),"[:digit:]+")
         b<-as.integer(base$base[base$date==y])
+        if(input$dewey!="999"){
+          if(str_length(input$dewey)==1){url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20and%20(dewey%20all%20%22",input$dewey,"%22)")}
+          if(str_length(input$dewey)>1){url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20and%20(sdewey%20all%20%22",input$dewey,"%22)")}
+          ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
+          b<-str_extract(str_extract(ngram_base,"numberOfRecords>[:digit:]+"),"[:digit:]+")
+          }
+    
         if(length(b)==0L){b=0}
         tableau[nrow(tableau)+1,] = NA
         date=y
@@ -1469,6 +1480,7 @@ shinyServer(function(input, output,session){
   recherche_precedente<<-"Joffre&Pétain&Foch_1914_1920_Année"
   corpus_precedent<<-"1_1"
   output$themes_presse<- renderUI({selectizeInput("theme_presse","Thématique",choices = list("Liste de titres personnalisée"=1))})
+  output$theme<- renderUI({selectizeInput("dewey","Thématique",choices = list("-"="999"))})
   options(warn = -1)
   
   
@@ -1495,7 +1507,10 @@ shinyServer(function(input, output,session){
   })
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
   
-  
+  observeEvent(input$doc_type,{
+    sdewey<-read.csv("sdewey.csv",encoding="UTF-8")
+    output$theme<-renderUI({selectizeInput("dewey","Thématique",choices = setNames(sdewey$sdewey,sdewey$sdewey_nom),selected="999",multiple=F)})
+  })
   
   observeEvent(input$doc_type,{observeEvent(input$filtre,{
     
@@ -1700,7 +1715,7 @@ shinyServer(function(input, output,session){
     # datasetInput <- reactive({
     #   data$tableau})
     if (input$doc_type==1 |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29){
-      df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input$cooccurrences,input$prox)}
+      df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
       tot_df<- read.csv(inFile$datapath, header = TRUE,sep = ";",encoding = "UTF-8")
