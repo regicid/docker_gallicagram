@@ -555,7 +555,7 @@ ngramize<-function(input){
       mot<-table$ngram[1]
       if(nb>1){for(x in 2:nb){mot<-str_c(mot," ",table$ngram[x])}}
       
-      if(nb>1){z=data.frame(date=from:to, count=0, base=0,ratio=0)
+      if(nb>5){z=data.frame(date=from:to, count=0, base=0,ratio=0)
       next}
       
       if(input$doc_type==2){
