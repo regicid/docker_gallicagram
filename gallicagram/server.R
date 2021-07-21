@@ -573,13 +573,32 @@ ngramize<-function(input){
           base<-read.csv("base_livres_gallica_pentagrammes.csv")}
         }
       }
+      if(input$doc_type==1){
+        if(nb<=5){
+          ngram_file<-str_c("/mnt/persistent/",nb,"gram_presse.db")
+          if(nb==1){gram<-"monogram"
+          base<-read.csv("base_livres_gallica_monogrammes.csv")}
+          if(nb==2){gram<-"bigram"
+          base<-read.csv("base_livres_gallica_bigrammes.csv")}
+          if(nb==3){gram<-"trigram"
+          base<-read.csv("base_livres_gallica_trigrammes.csv")}
+          if(nb==4){gram<-"tetragram"
+          base<-read.csv("base_livres_gallica_tetragrammes.csv")}
+          if(nb==5){gram<-"pentagram"
+          base<-read.csv("base_livres_gallica_pentagrammes.csv")}
+        }
+      }
       base<-base[base$date<=to,]
       base<-base[base$date>=from,]
         
         con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
         
-        
-        query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
+        if(input$doc_type==2){
+          query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
+        }
+        if(input$doc_type==1 & input$resolution=="Année"){
+          query = dbSendQuery(con,str_c('SELECT sum(n),annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'GROUP BY annee"'))
+        }
         w = dbFetch(query)
         y=data.frame(annee=from:to, n=0)
         w=left_join(y,w,by="annee")
@@ -1609,7 +1628,7 @@ shinyServer(function(input, output,session){
   
   
   observeEvent(input$doc_type,{
-    if(input$doc_type == 2){
+    if(input$doc_type == 2 | input$doc_type == 1){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2,"Par n-gramme"=3),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
@@ -1617,7 +1636,7 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
-    if(input$doc_type == 1 | input$doc_type == 6 | input$doc_type == 7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29){
+    if(input$doc_type == 6 | input$doc_type == 7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
@@ -1716,7 +1735,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$do,{
     # datasetInput <- reactive({
     #   data$tableau})
-    if (input$doc_type==1 |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29){
+    if ((input$doc_type==1 & input$search_mode==1) |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
