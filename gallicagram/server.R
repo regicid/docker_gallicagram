@@ -595,12 +595,32 @@ ngramize<-function(input){
         
         if(input$doc_type==2){
           query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
-        }
+          w = dbFetch(query)
+          }
         if(input$doc_type==1 & input$resolution=="Année"){
           query = dbSendQuery(con,str_c('SELECT sum(n),annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'GROUP BY annee"'))
+          w = dbFetch(query)
+          colnames(w)=c("n","annee")
+          }
+        
+        if(input$resolution=="Année"){
+          y=data.frame(annee=from:to, n=0)
         }
-        w = dbFetch(query)
-        y=data.frame(annee=from:to, n=0)
+        if(input$resolution=="Mois"){
+          y=data.frame(annee="AAAA-MM", n=0)
+          for (i in from:to) {
+            for (j in 1:12) {
+              if(j<=9){k=str_c(0,j)}
+              else{k=j}
+              z=as.data.frame(cbind(str_c(i,"-",k),0))
+              colnames(z)=c("annee","n")
+              z$n<-as.integer(z$n)
+              y=bind_rows(y,z)
+            }
+            
+          }
+          y<-y[-1,]
+        }
         w=left_join(y,w,by="annee")
         w<-w[,-2]
         colnames(w)=c("date","count")
@@ -1628,15 +1648,19 @@ shinyServer(function(input, output,session){
   
   
   observeEvent(input$doc_type,{
-    if(input$doc_type == 2 | input$doc_type == 1){
+    if(input$doc_type == 2){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2,"Par n-gramme"=3),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
+    }
+    if( (input$doc_type == 1 & input$search_mode==3)){
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 1)
+      updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
     if(input$doc_type == 4){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
-    if(input$doc_type == 6 | input$doc_type == 7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29){
+    if( (input$doc_type == 1 & input$search_mode!=3) | input$doc_type == 6 | input$doc_type == 7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
