@@ -1652,15 +1652,20 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2,"Par n-gramme"=3),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
-    if( (input$doc_type == 1 & input$search_mode==3)){
+    if( input$doc_type == 1 ){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 1)
-      updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
+      observeEvent(input$search_mode,{
+        if(input$search_mode == 1){
+        updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)}
+        if(input$search_mode == 3){
+          updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)}
+      })
     }
     if(input$doc_type == 4){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
-    if( (input$doc_type == 1 & input$search_mode!=3) | input$doc_type == 6 | input$doc_type == 7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29){
+    if( input$doc_type == 6 | input$doc_type == 7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
