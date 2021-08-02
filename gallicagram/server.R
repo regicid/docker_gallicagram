@@ -603,6 +603,7 @@ ngramize<-function(input){
         if(input$doc_type==1 & input$resolution=="Année"){
           query = dbSendQuery(con,str_c('SELECT sum(n),annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'GROUP BY annee"'))
           w = dbFetch(query)
+          print(w)
           colnames(w)=c("n","annee")
           }
         
