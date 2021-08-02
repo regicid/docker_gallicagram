@@ -577,7 +577,10 @@ ngramize<-function(input){
         if(nb<=5){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_presse.db")
           if(nb==1){gram<-"monogram"
-          base<-read.csv("base_livres_gallica_monogrammes.csv")}
+          if(input$resolution=="Année"){
+            base<-read.csv("base_presse_annees_gallica_monogrammes.csv")}
+          if(input$resolution=="Mois"){
+            base<-read.csv("base_presse_mois_gallica_monogrammes.csv")}}
           if(nb==2){gram<-"bigram"
           base<-read.csv("base_livres_gallica_bigrammes.csv")}
           if(nb==3){gram<-"trigram"
