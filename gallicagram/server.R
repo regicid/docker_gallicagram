@@ -609,10 +609,12 @@ ngramize<-function(input){
           q=str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
           query = dbSendQuery(con,q)
           w = dbFetch(query)
+          print(w)
           colnames(w)=c("n","annee","mois")
           if(str_length(w$mois)==1){w$mois<-str_c("0",w$mois)}
           w$annee<-str_c(w$annee,w$mois)
           w<-w[,-3]
+          print(w)
         }
         
         if(input$resolution=="Année"){
@@ -648,7 +650,6 @@ ngramize<-function(input){
         
         z$ratio=z$ratio+w$ratio}
         increment2=increment2+1
-        print(z)
   }
       
       z$ratio[is.na(z$ratio)]<-0
@@ -687,9 +688,7 @@ ngramize<-function(input){
       increment=increment+1
   }
   tableau$date<-as.character(tableau$date)
-  print(tableau)
   memoire<<-bind_rows(tableau,memoire)
-  print("a")
   data = list(tableau,paste(input$mot,collapse="&"),input$resolution)
   names(data) = c("tableau","mot","resolution")
   return(data)
