@@ -672,6 +672,7 @@ ngramize<-function(input){
       increment=increment+1
   }
   tableau$date<-as.character(tableau$date)
+  print(tableau)
   memoire<<-bind_rows(tableau,memoire)
   data = list(tableau,paste(input$mot,collapse="&"),input$resolution)
   names(data) = c("tableau","mot","resolution")
