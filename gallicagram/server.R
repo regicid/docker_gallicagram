@@ -593,7 +593,6 @@ ngramize<-function(input){
       }
       base<-base[base$date<=to,]
       base<-base[base$date>=from,]
-        print(ngram_file)
         con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
         
         if(input$doc_type==2){
@@ -602,10 +601,8 @@ ngramize<-function(input){
           }
         if(input$doc_type==1 & input$resolution=="Année"){
           q=str_c('SELECT sum(n),annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" GROUP BY annee')
-          print(q)
           query = dbSendQuery(con,q)
           w = dbFetch(query)
-          print(w)
           colnames(w)=c("n","annee")
           }
         
@@ -627,7 +624,9 @@ ngramize<-function(input){
           }
           y<-y[-1,]
         }
+        print(w)
         w=left_join(y,w,by="annee")
+        print(w)
         w<-w[,-2]
         colnames(w)=c("date","count")
         w$count[is.na(w$count)]<-0
