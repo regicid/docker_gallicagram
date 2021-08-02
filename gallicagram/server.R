@@ -597,7 +597,9 @@ ngramize<-function(input){
         con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
         
         if(input$doc_type==2){
-          query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
+          q=str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
+          print(q)
+          query = dbSendQuery(con,q)
           w = dbFetch(query)
           }
         if(input$doc_type==1 & input$resolution=="Année"){
