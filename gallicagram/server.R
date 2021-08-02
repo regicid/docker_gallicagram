@@ -624,9 +624,7 @@ ngramize<-function(input){
           }
           y<-y[-1,]
         }
-        print(w)
         w=left_join(y,w,by="annee")
-        print(w)
         w<-w[,-2]
         colnames(w)=c("date","count")
         w$count[is.na(w$count)]<-0
@@ -641,7 +639,7 @@ ngramize<-function(input){
         
         z$ratio=z$ratio+w$ratio}
         increment2=increment2+1
-         
+        print(z)
   }
       
       z$ratio[is.na(z$ratio)]<-0
