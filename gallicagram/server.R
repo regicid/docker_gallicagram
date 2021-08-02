@@ -604,18 +604,27 @@ ngramize<-function(input){
           query = dbSendQuery(con,q)
           w = dbFetch(query)
           colnames(w)=c("n","annee")
-          }
+        }
+        if(input$doc_type==1 & input$resolution=="Mois"){
+          q=str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
+          query = dbSendQuery(con,q)
+          w = dbFetch(query)
+          colnames(w)=c("n","annee","mois")
+          if(str_length(w$mois)==1){w$mois<-str_c("0",w$mois)}
+          w$annee<-str_c(w$annee,w$mois)
+          w<-w[,-3]
+        }
         
         if(input$resolution=="Année"){
           y=data.frame(annee=from:to, n=0)
         }
         if(input$resolution=="Mois"){
-          y=data.frame(annee="AAAA-MM", n=0)
+          y=data.frame(annee="AAAA/MM", n=0)
           for (i in from:to) {
             for (j in 1:12) {
               if(j<=9){k=str_c(0,j)}
               else{k=j}
-              z=as.data.frame(cbind(str_c(i,"-",k),0))
+              z=as.data.frame(cbind(str_c(i,"/",k),0))
               colnames(z)=c("annee","n")
               z$n<-as.integer(z$n)
               y=bind_rows(y,z)
@@ -1665,12 +1674,7 @@ shinyServer(function(input, output,session){
     }
     if( input$doc_type == 1 ){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 1)
-      observeEvent(input$search_mode,{
-        if(input$search_mode == 1){
-        updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)}
-        if(input$search_mode == 3){
-          updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)}
-      })
+      updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
     if(input$doc_type == 4){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
