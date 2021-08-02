@@ -593,7 +593,7 @@ ngramize<-function(input){
       }
       base<-base[base$date<=to,]
       base<-base[base$date>=from,]
-        
+        print(ngram_file)
         con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
         
         if(input$doc_type==2){
