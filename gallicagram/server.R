@@ -606,7 +606,7 @@ ngramize<-function(input){
           colnames(w)=c("n","annee")
         }
         if(input$doc_type==1 & input$resolution=="Mois"){
-          q=str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
+          q=str_c('SELECT *,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
           query = dbSendQuery(con,q)
           w = dbFetch(query)
           print(w)
