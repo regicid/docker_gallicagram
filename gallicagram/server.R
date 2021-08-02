@@ -591,8 +591,14 @@ ngramize<-function(input){
           base<-read.csv("base_livres_gallica_pentagrammes.csv")}
         }
       }
+      if(input$resolution=="Année"){
       base<-base[base$date<=to,]
       base<-base[base$date>=from,]
+      }
+      if(input$resolution=="Mois"){
+        base<-base[base$date<=str_c(to,"/12"),]
+        base<-base[base$date>=str_c(from,"/01"),]
+      }
         con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
         
         if(input$doc_type==2){
