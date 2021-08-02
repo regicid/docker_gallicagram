@@ -612,7 +612,7 @@ ngramize<-function(input){
           print(w)
           w<-w[,-2]
           w<-w[,-4]
-          if(str_length(w$mois)==1){w$mois<-str_c("0",w$mois)}
+          for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}}
           w$annee<-str_c(w$annee,"/",w$mois)
           w<-w[,-3]
           print(w)
