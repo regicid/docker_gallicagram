@@ -610,7 +610,8 @@ ngramize<-function(input){
           query = dbSendQuery(con,q)
           w = dbFetch(query)
           print(w)
-          colnames(w)=c("n","annee","mois")
+          w<-w[,-2]
+          w<-w[,-4]
           if(str_length(w$mois)==1){w$mois<-str_c("0",w$mois)}
           w$annee<-str_c(w$annee,w$mois)
           w<-w[,-3]
