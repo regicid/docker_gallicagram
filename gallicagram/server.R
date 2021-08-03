@@ -17,6 +17,8 @@ library(RSelenium)
 library(RSQLite)
 library(tidytext)
 library(DBI)
+library(shinybusy)
+
 
 
 
@@ -537,6 +539,9 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
 }
 
 ngramize<-function(input){
+  
+  show_modal_spinner()
+  
   from<-input$beginning
   to<-input$end
   mots = str_split(input$mot,"&")[[1]]
@@ -599,7 +604,12 @@ ngramize<-function(input){
         base<-base[base$date<=str_c(to,"/12"),]
         base<-base[base$date>=str_c(from,"/01"),]
       }
+      
+        print(Sys.time())
+      
         con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
+        
+        print(Sys.time())
         
         if(input$doc_type==2){
           query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
@@ -621,6 +631,8 @@ ngramize<-function(input){
           w$annee<-str_c(w$annee,"/",w$mois)
           w<-w[,-3]
         }
+        
+        print(Sys.time())
         
         if(input$resolution=="Année"){
           y=data.frame(annee=from:to, n=0)
@@ -699,6 +711,9 @@ ngramize<-function(input){
   memoire<<-bind_rows(tableau,memoire)
   data = list(tableau,paste(input$mot,collapse="&"),input$resolution)
   names(data) = c("tableau","mot","resolution")
+  
+  remove_modal_spinner()
+  
   return(data)
   
 }
