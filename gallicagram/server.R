@@ -605,10 +605,12 @@ ngramize<-function(input){
         base<-base[base$date>=str_c(from,"/01"),]
       }
       
+        print("1")
         print(Sys.time())
       
         con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
         
+        print("2")
         print(Sys.time())
         
         if(input$doc_type==2){
@@ -632,6 +634,7 @@ ngramize<-function(input){
           w<-w[,-3]
         }
         
+        print("3")
         print(Sys.time())
         
         if(input$resolution=="Année"){
@@ -713,6 +716,9 @@ ngramize<-function(input){
   names(data) = c("tableau","mot","resolution")
   
   remove_modal_spinner()
+  
+  print("4")
+  print(Sys.time())
   
   return(data)
   
