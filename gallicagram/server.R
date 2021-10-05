@@ -554,7 +554,8 @@ ngramize<-function(input){
       
       increment2<-1
       for(mot in mots2){
-    
+      
+      print("0")
       table<-unnest_tokens(as.data.frame(mot),ngram,mot, token = "ngrams", n = 1)
       nb<-length(table$ngram)
       mot<-table$ngram[1]
