@@ -839,10 +839,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     remDr$open()}
     #remDr <- rD[["client"]]
   }
-  if(doc_type==28){
-    url="https://numerique.banq.qc.ca/rechercheExterne/encoded/Sm9mZnJl/false/P/desc/W3sibm9tIjoiY29ycHVzIiwidmFsZXVyIjoiUGF0cmltb2luZSUyMHF1w6liw6ljb2lzIn0seyJub20iOiJ0eXBlX2RvY19mIiwidmFsZXVyIjoiUmV2dWVzJTIwZXQlMjBqb3VybmF1eCJ9LHsibm9tIjoibGFuZ3Vlc19jb250ZW51IiwidmFsZXVyIjoiZnJhbsOnYWlzIn0seyJub20iOiJhdmVjX3RleHRlX2ludGVncmFsIiwidmFsZXVyIjoib3VpIn0seyJub20iOiJnZW5yZV9mIiwidmFsZXVyIjoiSm91cm5hdXgifV0=/Liste%20de%20r%C3%A9sultats/true/false/eyJkZWJ1dCI6eyJhbm5lZSI6MTkxNCwibW9pcyI6MSwiam91ciI6MX0sImZpbiI6eyJhbm5lZSI6MTkxNCwibW9pcyI6MTIsImpvdXIiOjMxfX0="
-    remDr$navigate(url)
-    }
+  
   
   for (i in from:to){
     for(mot in mots){
@@ -940,6 +937,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             end = str_c(y,"/",z,"/",end_of_month[j])}
           if(doc_type == 1){
             url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)")
+            url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=")
             }
           if(doc_type == 3){
             liste_titres<-titres
@@ -981,14 +979,20 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           if(doc_type == 6){beginning<-str_replace_all(beginning,"/","-")
             end<-str_replace_all(end,"/","-")
             langue="de"
-            url<-str_c("https://newspapers.eanadev.org/api/v2/search.json?query=%22",mot1,"%22",or,"&rows=1&profile=hits&wskey=%20athrobid&qf=proxy_dcterms_issued:%5B",beginning,"+TO+",end,"%5D&qf=LANGUAGE:de")}
+            url<-str_c("https://newspapers.eanadev.org/api/v2/search.json?query=%22",mot1,"%22",or,"&rows=1&profile=hits&wskey=%20athrobid&qf=proxy_dcterms_issued:%5B",beginning,"+TO+",end,"%5D&qf=LANGUAGE:de")
+            url_base<-str_c("https://www.europeana.eu/fr/search?page=1&qf=MEDIA%3Atrue&qf=TYPE%3A%22TEXT%22&qf=LANGUAGE%3A%22de%22&qf=collection%3Anewspaper&qf=proxy_dcterms_issued%3A%5B",beginning,"%20TO%20",end,"%5D&view=grid&api=fulltext")
+            }
           if(doc_type == 7){beginning<-str_replace_all(beginning,"/","-")
             end<-str_replace_all(end,"/","-")
             langue="nl"
-            url<-str_c("https://newspapers.eanadev.org/api/v2/search.json?query=%22",mot1,"%22",or,"&rows=1&profile=hits&wskey=%20athrobid&qf=proxy_dcterms_issued:%5B",beginning,"+TO+",end,"%5D&qf=LANGUAGE:nl")}
+            url<-str_c("https://newspapers.eanadev.org/api/v2/search.json?query=%22",mot1,"%22",or,"&rows=1&profile=hits&wskey=%20athrobid&qf=proxy_dcterms_issued:%5B",beginning,"+TO+",end,"%5D&qf=LANGUAGE:nl")
+            url_base<-str_c("https://www.europeana.eu/fr/search?page=1&qf=MEDIA%3Atrue&qf=TYPE%3A%22TEXT%22&qf=LANGUAGE%3A%22nl%22&qf=collection%3Anewspaper&qf=proxy_dcterms_issued%3A%5B",beginning,"%20TO%20",end,"%5D&view=grid&api=fulltext")
+            }
           if(doc_type == 8){beginning<-str_replace_all(beginning,"/","-")
             end<-str_replace_all(end,"/","-")
-            url<-str_c("https://www.britishnewspaperarchive.co.uk/search/results/",beginning,"/",end,"?basicsearch=%22",mot1,"%22",or,"&exactsearch=true&contenttype=article")}
+            url<-str_c("https://www.britishnewspaperarchive.co.uk/search/results/",beginning,"/",end,"?basicsearch=%22",mot1,"%22",or,"&exactsearch=true&contenttype=article")
+            url_base<-str_c("https://www.britishnewspaperarchive.co.uk/search/results/",beginning,"/",end,"?basicsearch=a&contenttype=article")
+            }
           if(doc_type == 11){
             if(resolution=="Mois"){
               z = as.character(j)
@@ -996,18 +1000,22 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               beginning = str_c(y,"-",z,"-01")
               end = str_c(y,"-",z,"-",end_of_month[j])
               url<-str_c("http://hemerotecadigital.bne.es/results.vm?o=",or,"&w=%22",mot1,"%22",or_end,"&f=text&d=creation&d=",y,"&d=",z,"&d=01&d=",y,"&d=",z,"&d=",end_of_month[j],"&t=%2Bcreation&l=700&s=0&view=&lang=fr")
+              url_base<-str_c("http://hemerotecadigital.bne.es/results.vm?d=creation&d=",y,"&d=",z,"&d=01&d=",y,"&d=",z,"&d=",end_of_month[j],"&t=%2Bcreation&l=700&s=0&view=&lang=fr")
             }
             if(resolution=="Année"){
               url<-str_c("http://hemerotecadigital.bne.es/results.vm?o=",or,"&w=%22",mot1,"%22",or_end,"&f=text&d=creation&d=",y,"&d=01&d=01&d=",y,"&d=12&d=31&t=%2Bcreation&l=700&s=0&view=&lang=fr")
+              url_base<-str_c("http://hemerotecadigital.bne.es/results.vm?d=creation&d=",y,"&d=01&d=01&d=",y,"&d=12&d=31&t=%2Bcreation&l=700&s=0&view=&lang=fr")
             }
           }
           if(doc_type == 13){beginning<-str_replace_all(beginning,"/","-")
             end<-str_replace_all(end,"/","-")
             url<-str_c("https://www.belgicapress.be/pressshow.php?adv=1&all_q=&any_q=&exact_q=",mot1,"&none_q=&from_d=",beginning,"&to_d=",end,"&per_lang=fr&per=&lang=FR&per_type=1")
+            url_base<-str_c("https://www.belgicapress.be/pressshow.php?adv=1&all_q=&any_q=&exact_q=&none_q=&from_d=",beginning,"&to_d=",end,"&per_lang=fr&per=&lang=FR&per_type=1")
           }
           if(doc_type == 14){beginning<-str_replace_all(beginning,"/","-")
             end<-str_replace_all(end,"/","-")
             url<-str_c("https://www.belgicapress.be/pressshow.php?adv=1&all_q=&any_q=&exact_q=",mot1,"&none_q=&from_d=",beginning,"&to_d=",end,"&per_lang=nl&per=&lang=FR&per_type=1")
+            url_base<-str_c("https://www.belgicapress.be/pressshow.php?adv=1&all_q=&any_q=&exact_q=&none_q=&from_d=",beginning,"&to_d=",end,"&per_lang=nl&per=&lang=FR&per_type=1")
           }
           if(doc_type == 15){
             if(resolution=="Mois"){
@@ -1016,9 +1024,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               beginning = str_c(y,"-",z,"-01")
               end = str_c(y,"-",z,"-",end_of_month[j])
               url<-str_c("https://www.e-newspaperarchives.ch/?a=q&hs=1&r=1&results=1&txq=%22",mot1,"%22",or,"&dafdq=01&dafmq=",z,"&dafyq=",y,"&datdq=",end_of_month[j],"&datmq=",z,"&datyq=",y,"&laq=fr&puq=&txf=txIN&ssnip=&ccq=&l=fr&tyq=ARTICLE")
+              url_base<-str_c("https://www.e-newspaperarchives.ch/?a=q&hs=1&r=1&results=1&txq=la+OR+le+OR+un+OR+et+OR+une+OR+des+OR+les+OR+ou+OR+donc&dafdq=01&dafmq=",z,"&dafyq=",y,"&datdq=",end_of_month[j],"&datmq=",z,"&datyq=",y,"&laq=fr&puq=&txf=txIN&ssnip=&ccq=&l=fr")
             }
             if(resolution=="Année"){
               url<-str_c("https://www.e-newspaperarchives.ch/?a=q&hs=1&r=1&results=1&txq=%22",mot1,"%22",or,"&dafdq=01&dafmq=01&dafyq=",y,"&datdq=31&datmq=12&datyq=",y,"&laq=fr&puq=&txf=txIN&ssnip=&ccq=&l=fr&tyq=ARTICLE")
+              url_base<-str_c("https://www.e-newspaperarchives.ch/?a=q&hs=1&r=1&results=1&txq=la+OR+le+OR+un+OR+et+OR+une+OR+des+OR+les+OR+ou+OR+donc&dafdq=01&dafmq=01&dafyq=",y,"&datdq=31&datmq=12&datyq=",y,"&laq=fr&puq=&txf=txIN&ssnip=&ccq=&l=fr")
             }
           }
           if(doc_type == 16){
@@ -1028,9 +1038,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               beginning = str_c(y,"-",z,"-01")
               end = str_c(y,"-",z,"-",end_of_month[j])
               url<-str_c("https://www.e-newspaperarchives.ch/?a=q&hs=1&r=1&results=1&txq=%22",mot1,"%22",or,"&dafdq=01&dafmq=",z,"&dafyq=",y,"&datdq=",end_of_month[j],"&datmq=",z,"&datyq=",y,"&laq=de&puq=&txf=txIN&ssnip=&ccq=&l=fr&tyq=ARTICLE")
+              url_base<-str_c("https://www.e-newspaperarchives.ch/?a=q&hs=1&r=1&results=1&txq=der+OR+die+OR+das+OR+ein+OR+ich+OR+du+OR+er+OR+sie+OR+es&dafdq=01&dafmq=",z,"&dafyq=",y,"&datdq=",end_of_month[j],"&datmq=",z,"&datyq=",y,"&laq=de&puq=&txf=txIN&ssnip=&ccq=&l=fr")
             }
             if(resolution=="Année"){
               url<-str_c("https://www.e-newspaperarchives.ch/?a=q&hs=1&r=1&results=1&txq=%22",mot1,"%22",or,"&dafdq=01&dafmq=01&dafyq=",y,"&datdq=31&datmq=12&datyq=",y,"&laq=de&puq=&txf=txIN&ssnip=&ccq=&l=fr&tyq=ARTICLE")
+              url_base<-str_c("https://www.e-newspaperarchives.ch/?a=q&hs=1&r=1&results=1&txq=der+OR+die+OR+das+OR+ein+OR+ich+OR+du+OR+er+OR+sie+OR+es&dafdq=01&dafmq=01&dafyq=",y,"&datdq=31&datmq=12&datyq=",y,"&laq=de&puq=&txf=txIN&ssnip=&ccq=&l=fr")
             }
           }
           if(doc_type == 17){
@@ -1040,9 +1052,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               beginning = str_c(y,"-",z,"-01")
               end = str_c(y,"-",z,"-",end_of_month[j])
               url<-str_c("https://www.lectura.plus/Presse/search/?query=",mot1,"&fromDate=01%2F",z,"%2F",y,"&untilDate=",end_of_month[j],"%2F",z,"%2F",y)
+              url_base<-str_c("https://www.lectura.plus/Presse/search/?query=&fromDate=01%2F",z,"%2F",y,"&untilDate=",end_of_month[j],"%2F",z,"%2F",y)
               }
             if(resolution=="Année"){
               url<-str_c("https://www.lectura.plus/Presse/search/?query=",mot1,"&fromDate=01%2F01%2F",y,"&untilDate=31%2F12%2F",y)
+              url_base<-str_c("https://www.lectura.plus/Presse/search/?query=&fromDate=01%2F01%2F",y,"&untilDate=31%2F12%2F",y)
             }
           }
           if(doc_type == 18){
@@ -1052,9 +1066,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               beginning = str_c(y,"-",z,"-01")
               end = str_c(y,"-",z,"-",end_of_month[j])
               url<-str_c("https://kiosque.limedia.fr/recherche/?query=",mot1,"&search_type=exact&uniform_title=&date=&period_start=01/",z,"/",y,"&period_end=",end_of_month[j],"/",z,"/",y,"&filter_language=fre&sort_patrimonial=item_created_start_asc")
+              url_base<-str_c("https://kiosque.limedia.fr/recherche/?query=&search_type=or&uniform_title=&date=&period_start=01/",z,"/",y,"&period_end=",end_of_month[j],"/",z,"/",y,"&filter_language=fre&sort_patrimonial=item_created_start_asc")
               }
             if(resolution=="Année"){
               url<-str_c("https://kiosque.limedia.fr/recherche/?query=",mot1,"&search_type=exact&uniform_title=&date=&period_start=01/01/",y,"&period_end=31/12/",y,"&filter_language=fre&sort_patrimonial=item_created_start_asc")
+              url_base<-str_c("https://kiosque.limedia.fr/recherche/?query=&search_type=or&uniform_title=&date=&period_start=01/01/",y,"&period_end=31/12/",y,"&filter_language=fre&sort_patrimonial=item_created_start_asc")
               }
           }
           if(doc_type == 19){
@@ -1063,16 +1079,41 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               if(nchar(z)<2){z<-str_c("0",z)}
               beginning = str_c(y,"-",z,"-01")
               end = str_c(y,"-",z,"-",end_of_month[j])
-              url<-str_c("https://memonum-mediatheques.montpellier3m.fr/form.aspx?SC=MEMONUM_ENCART_SEARCH#/Search/(query:(ForceSearch:!t,Grid:'%7B%22717%22:%5B%22",mot1,"%22",or,"%5D,%22719%22:%5B%22*",z,"/",y,"%22%5D%7D',Page:0,PageRange:3,QueryString:!n,ResultSize:10,ScenarioCode:MEMONUM_ENCART_SEARCH,SearchContext:1))")}
-            if(resolution=="Année"){url<-str_c("https://memonum-mediatheques.montpellier3m.fr/form.aspx?SC=MEMONUM_ENCART_SEARCH#/Search/(query:(ForceSearch:!t,Grid:'%7B%22717%22:%5B%22",mot1,"%22",or,"%5D,%22719%22:%5B%22*",y,"%22%5D%7D',Page:0,PageRange:3,QueryString:!n,ResultSize:10,ScenarioCode:MEMONUM_ENCART_SEARCH,SearchContext:1))")}
+              url<-str_c("https://memonum-mediatheques.montpellier3m.fr/form.aspx?SC=MEMONUM_ENCART_SEARCH#/Search/(query:(ForceSearch:!t,Grid:'%7B%22717%22:%5B%22",mot1,"%22",or,"%5D,%22719%22:%5B%22*",z,"/",y,"%22%5D%7D',Page:0,PageRange:3,QueryString:!n,ResultSize:10,ScenarioCode:MEMONUM_ENCART_SEARCH,SearchContext:1))")
+              url_base<-str_c("https://memonum-mediatheques.montpellier3m.fr/form.aspx?SC=MEMONUM_ENCART_SEARCH#/Search/(query:(ForceSearch:!t,Grid:'%7B%22717%22:%5B%22de%22,%22du%22,%22le%22,%22la%22,%22un%22%5D,%22719%22:%5B%22*",z,"/",y,"%22%5D%7D',Page:0,PageRange:3,QueryString:!n,ResultSize:10,ScenarioCode:MEMONUM_ENCART_SEARCH,SearchContext:1))")
+              }
+            if(resolution=="Année"){url<-str_c("https://memonum-mediatheques.montpellier3m.fr/form.aspx?SC=MEMONUM_ENCART_SEARCH#/Search/(query:(ForceSearch:!t,Grid:'%7B%22717%22:%5B%22",mot1,"%22",or,"%5D,%22719%22:%5B%22*",y,"%22%5D%7D',Page:0,PageRange:3,QueryString:!n,ResultSize:10,ScenarioCode:MEMONUM_ENCART_SEARCH,SearchContext:1))")
+            url_base<-str_c("https://memonum-mediatheques.montpellier3m.fr/form.aspx?SC=MEMONUM_ENCART_SEARCH#/Search/(query:(ForceSearch:!t,Grid:'%7B%22717%22:%5B%22de%22,%22du%22,%22le%22,%22la%22,%22un%22%5D,%22719%22:%5B%22*",y,"%22%5D%7D',Page:0,PageRange:3,QueryString:!n,ResultSize:10,ScenarioCode:MEMONUM_ENCART_SEARCH,SearchContext:1))")
+            }
           }
-          if(doc_type == 20){url<-str_c("https://www.communpatrimoine.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)}
-          if(doc_type == 21){url<-str_c("https://yroise.biblio.brest.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)}
-          if(doc_type == 22){url<-str_c("https://www.pireneas.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)}
-          if(doc_type == 23){url<-str_c("https://rosalis.bibliotheque.toulouse.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)}
-          if(doc_type == 24){url<-str_c("https://bibliotheque-numerique.diplomatie.gouv.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)}
-          if(doc_type == 25){url<-str_c("http://rfnum-bibliotheque.org/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)}
-          if(doc_type == 26){url<-str_c("https://www.numistral.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)}
+          if(doc_type == 20){
+            url<-str_c("https://www.communpatrimoine.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
+            url_base<-str_c("https://www.communpatrimoine.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=")
+          }
+          if(doc_type == 21){
+            url<-str_c("https://yroise.biblio.brest.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
+            url_base<-str_c("https://yroise.biblio.brest.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=")
+            }
+          if(doc_type == 22){
+            url<-str_c("https://www.pireneas.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
+            url_base<-str_c("https://www.pireneas.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=")
+            }
+          if(doc_type == 23){
+            url<-str_c("https://rosalis.bibliotheque.toulouse.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
+            url_base<-str_c("https://rosalis.bibliotheque.toulouse.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=")
+            }
+          if(doc_type == 24){
+            url<-str_c("https://bibliotheque-numerique.diplomatie.gouv.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
+            url_base<-str_c("https://bibliotheque-numerique.diplomatie.gouv.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=")
+            }
+          if(doc_type == 25){
+            url<-str_c("http://rfnum-bibliotheque.org/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
+            url_base<-str_c("http://rfnum-bibliotheque.org/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=")
+            }
+          if(doc_type == 26){
+            url<-str_c("https://www.numistral.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
+            url_base<-str_c("https://www.numistral.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=")
+            }
           if(doc_type == 27){
             if(resolution=="Mois"){
               z = as.character(j)
@@ -1080,10 +1121,16 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               beginning = str_c(y,"-",z,"-01")
               end = str_c(y,"-",z,"-",end_of_month[j])
               url<-str_c("https://www.bn-r.fr/presse_ancienne_resultats.php?type_rech=pr&q_fulltext=%22",mot1,"%22&pr_jour=&pr_mois=&pr_annee=&date_debut=01-",z,"-",y,"&date_fin=",end_of_month[j],"-",z,"-",y,"&sort=date_formated%20asc,tri_titre%20asc&from=presse#")
-            }
+              url_base<-str_c("https://www.bn-r.fr/presse_ancienne_resultats.php?type_rech=pr&q_fulltext=&pr_jour=&pr_mois=&pr_annee=&date_debut=01-",z,"-",y,"&date_fin=",end_of_month[j],"-",z,"-",y,"&sort=date_formated%20asc,tri_titre%20asc&from=presse#")
+              }
             if(resolution=="Année"){
             url<-str_c("https://www.bn-r.fr/presse_ancienne_resultats.php?type_rech=pr&q_fulltext=%22",mot1,"%22&pr_jour=&pr_mois=&pr_annee=&date_debut=01-01-",y,"&date_fin=31-12-",y,"&sort=date_formated%20asc,tri_titre%20asc&from=presse#")
+            url_base<-str_c("https://www.bn-r.fr/presse_ancienne_resultats.php?type_rech=pr&q_fulltext=&pr_jour=&pr_mois=&pr_annee=&date_debut=01-01-",y,"&date_fin=31-12-",y,"&sort=date_formated%20asc,tri_titre%20asc&from=presse#")
             }
+          }
+          if(doc_type==28){
+            url="https://numerique.banq.qc.ca/rechercheExterne/encoded/Sm9mZnJl/false/P/desc/W3sibm9tIjoiY29ycHVzIiwidmFsZXVyIjoiUGF0cmltb2luZSUyMHF1w6liw6ljb2lzIn0seyJub20iOiJ0eXBlX2RvY19mIiwidmFsZXVyIjoiUmV2dWVzJTIwZXQlMjBqb3VybmF1eCJ9LHsibm9tIjoibGFuZ3Vlc19jb250ZW51IiwidmFsZXVyIjoiZnJhbsOnYWlzIn0seyJub20iOiJhdmVjX3RleHRlX2ludGVncmFsIiwidmFsZXVyIjoib3VpIn0seyJub20iOiJnZW5yZV9mIiwidmFsZXVyIjoiSm91cm5hdXgifV0=/Liste%20de%20r%C3%A9sultats/true/false/eyJkZWJ1dCI6eyJhbm5lZSI6MTkxNCwibW9pcyI6MSwiam91ciI6MX0sImZpbiI6eyJhbm5lZSI6MTkxNCwibW9pcyI6MTIsImpvdXIiOjMxfX0="
+            url_base="https://numerique.banq.qc.ca/rechercheExterne/encoded/Kg==/false/T/asc/W3sibm9tIjoiY29ycHVzIiwidmFsZXVyIjoiUGF0cmltb2luZSUyMHF1w6liw6ljb2lzIn0seyJub20iOiJ0eXBlX2RvY19mIiwidmFsZXVyIjoiUmV2dWVzJTIwZXQlMjBqb3VybmF1eCJ9LHsibm9tIjoibGFuZ3Vlc19jb250ZW51IiwidmFsZXVyIjoiZnJhbsOnYWlzIn0seyJub20iOiJhdmVjX3RleHRlX2ludGVncmFsIiwidmFsZXVyIjoib3VpIn0seyJub20iOiJnZW5yZV9mIiwidmFsZXVyIjoiSm91cm5hdXgifV0=/Liste%20de%20r%C3%A9sultats/true/false/eyJkZWJ1dCI6eyJhbm5lZSI6MTkzMywibW9pcyI6MSwiam91ciI6MX0sImZpbiI6eyJhbm5lZSI6MTkzMywibW9pcyI6MTIsImpvdXIiOjMxfX0="
           }
           if(doc_type == 29){
             if(resolution=="Mois"){
@@ -1092,9 +1139,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               beginning = str_c(y,"-",z,"-01")
               end = str_c(y,"-",z,"-",end_of_month[j])
               url<-str_c("https://anno.onb.ac.at/anno-suche#searchMode=complex&text=%22",mot1,"%22",or,"&language=ger&dateMode=date&dateFrom=01.",z,".",y,"&dateTo=",end_of_month[j],".",z,".",y,"&from=1")
-            }
+              url_base<-str_c("https://anno.onb.ac.at/anno-suche#searchMode=complex&language=ger&dateMode=date&dateFrom=01.",z,".",y,"&dateTo=",end_of_month[j],".",z,".",y,"&from=1")
+              }
             if (resolution=="Année"){
               url<-str_c("https://anno.onb.ac.at/anno-suche#searchMode=complex&text=%22",mot1,"%22",or,"&language=ger&dateMode=date&dateFrom=01.01.",y,"&dateTo=31.12.",y,"&from=1")
+              url_base<-str_c("https://anno.onb.ac.at/anno-suche#searchMode=complex&language=ger&dateMode=date&dateFrom=01.01.",y,"&dateTo=31.12.",y,"&from=1")
             }
           }
 
@@ -1102,11 +1151,16 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           if(doc_type == 1 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
             ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
             a<-str_extract(str_extract(ngram,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
+            ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
+            b<-str_extract(str_extract(ngram_base,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
           }
           if(doc_type == 6 | doc_type == 7){
             ngram<-as.character(read_html(RETRY("GET",url,times = 6)))
             ngram<-str_replace_all(ngram,"[:punct:]","")
             a<-str_extract(str_extract(ngram,"totalResults[:digit:]+"),"[:digit:]+")
+            ngram_base<-as.character(read_html(url_base))
+            ngram_base<-str_remove_all(ngram_base,",")
+            b<-str_extract(str_extract(ngram_base,"Résultats: [:digit:]+"),"[:digit:]+")
             url<-str_c("https://classic.europeana.eu/portal/fr/collections/newspapers?q=%22",mot1,"%22",or,"&f%5BMEDIA%5D%5B%5D=true&f%5BTYPE%5D%5B%5D=TEXT&f%5BLANGUAGE%5D%5B%5D=",langue,"&f%5Bapi%5D%5B%5D=collection&range%5Bproxy_dcterms_issued%5D%5Bbegin%5D=",beginning,"&range%5Bproxy_dcterms_issued%5D%5Bend%5D=",end)}
           if(doc_type == 8){
             ngram<-as.character(read_html(RETRY("GET",url,times = 6)))
@@ -1118,6 +1172,16 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_remove_all(ngram,"<")
             ngram<-str_remove_all(ngram,">")
             a<-sum(as.integer(ngram))
+            
+            ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
+            ngram_base<-str_remove_all(ngram_base,"[:space:]")
+            ngram_base<-str_extract(ngram_base,"Date--.+Newspapers--")
+            ngram_base<-str_extract(ngram_base,'list-group-item"title.+')
+            ngram_base<-str_remove_all(ngram_base,",")
+            ngram_base<-str_c(unlist(str_extract_all(ngram_base,">[:digit:]+<")))
+            ngram_base<-str_remove_all(ngram_base,"<")
+            ngram_base<-str_remove_all(ngram_base,">")
+            b<-sum(as.integer(ngram_base))
           }
           if(doc_type == 11){
             ngram<-as.character(read_html(RETRY("GET",url,times = 6)))
@@ -1126,6 +1190,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_remove_all(ngram,"<strong>")
             a<-str_extract(str_extract(ngram,"Results[:digit:]+"),"[:digit:]+")
             if (is.na(a)){a<-str_extract(str_extract(ngram,"Résultats[:digit:]+"),"[:digit:]+")}
+            ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
+            ngram_base<-str_remove_all(ngram_base,"[:punct:]")
+            ngram_base<-str_remove_all(ngram_base,"[:space:]")
+            ngram_base<-str_remove_all(ngram_base,"<strong>")
+            b<-str_extract(str_extract(ngram_base,"Results[:digit:]+"),"[:digit:]+")
+            if (is.na(b)){b<-str_extract(str_extract(ngram_base,"Résultats[:digit:]+"),"[:digit:]+")}
           }
           if(doc_type == 13 | doc_type == 14){
             remDr$navigate(url)
@@ -1134,6 +1204,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_extract(ngram,"foundnumber.+")
             ngram<-str_remove_all(ngram,"[:punct:]")
             a<-as.integer(str_extract(ngram,"[:digit:]+"))
+            remDr$navigate(url_base)
+            Sys.sleep(2) # give the page time to fully load
+            ngram_base <- remDr$getPageSource()[[1]]
+            ngram_base<-str_extract(ngram_base,"foundnumber.+")
+            ngram_base<-str_remove_all(ngram_base,"[:punct:]")
+            b<-as.integer(str_extract(ngram_base,"[:digit:]+"))
           }
           if(doc_type == 15 | doc_type == 16){
             ngram<-as.character(read_html(RETRY("GET",url,times = 6)))
@@ -1141,16 +1217,27 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_extract(ngram,"Résultats 1 - 20 de  .+")
             ngram<-str_remove(ngram,"Résultats 1 - 20 de  ")
             a<-str_extract(ngram,"[:digit:]+")
+            ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
+            ngram_base<-str_remove_all(ngram_base,",")
+            ngram_base<-str_extract(ngram_base,"Résultats 1 - 20 de  .+")
+            ngram_base<-str_remove(ngram_base,"Résultats 1 - 20 de  ")
+            b<-str_extract(ngram_base,"[:digit:]+")
           }
           if(doc_type == 17){
             ngram<-as.character(read_html(RETRY("GET",url,times = 6)))
             ngram<-str_extract(ngram,"width:100px.+")
             ngram<-str_remove(ngram,"width:100px")
             a<-str_extract(ngram,"[:digit:]+")
+            ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
+            ngram_base<-str_extract(ngram_base,"width:100px.+")
+            ngram_base<-str_remove(ngram_base,"width:100px")
+            b<-str_extract(ngram_base,"[:digit:]+")
           }
           if(doc_type == 18){
             ngram<-read_html(RETRY("GET",url,times = 6))
             a<-str_extract(html_text(html_node(ngram,".col-milieu")),"[:digit:]+")
+            ngram_base<-read_html(RETRY("GET",url_base,times = 6))
+            b<-str_extract(html_text(html_node(ngram_base,".col-milieu")),"[:digit:]+")
           }
           if(doc_type == 19){
             remDr$navigate(url)
@@ -1161,25 +1248,41 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_remove_all(ngram,"</span>")
             ngram<-str_extract(ngram,"Résultats1à[:digit:]+sur[:digit:]+")
             a<-str_remove(ngram,"Résultats1à[:digit:]+sur")
+            remDr$navigate(url_base)
+            Sys.sleep(2) # give the page time to fully load
+            ngram_base <- remDr$getPageSource()[[1]]
+            ngram_base<-str_remove_all(ngram_base,"[:space:]")
+            ngram_base<-str_remove_all(ngram_base,"<span>")
+            ngram_base<-str_remove_all(ngram_base,"</span>")
+            ngram_base<-str_extract(ngram_base,"Résultats1à[:digit:]+sur[:digit:]+")
+            b<-str_remove(ngram_base,"Résultats1à[:digit:]+sur")
           }
           if(doc_type ==26){
             ngram<-read_html(url)
             ngram<-html_text(html_node(ngram,"head > title:nth-child(3)"))
             ngram<- str_remove_all(ngram,"[:space:]")
             a<-str_extract(ngram,"[:digit:]+")
+            ngram_base<-read_html(url_base)
+            ngram_base<-html_text(html_node(ngram_base,"head > title:nth-child(3)"))
+            ngram_base<- str_remove_all(ngram_base,"[:space:]")
+            b<-str_extract(ngram_base,"[:digit:]+")
           }
           if(doc_type ==27){
             ngram<-as.character(read_html(url))
             ngram<-str_extract(ngram,"Résultats de la recherche.+")
             a<-str_extract(ngram,"[:digit:]+")
+            ngram_base<-as.character(read_html(url_base))
+            ngram_base<-str_extract(ngram_base,"Résultats de la recherche.+")
+            b<-str_extract(ngram_base,"[:digit:]+")
           }
           if(doc_type ==28){
-            if(resolution=="Mois"){
+              if(resolution=="Mois"){
               z = as.character(j)
               if(nchar(z)<2){z<-str_c("0",z)}
               beginning = str_c(y,"-",z,"-01")
               end = str_c(y,"-",z,"-",end_of_month[j])
               
+              remDr$navigate(url)
               Sys.sleep(2)
               webElem <- remDr$findElement(using = 'css selector',"#debutAnnee") #on accepte les cookies
               webElem$clickElement() #le clic pour accepter les cookies du coup
@@ -1220,10 +1323,42 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
               webElem$clickElement()
               
+              remDr$navigate(url_base)
+              Sys.sleep(2)
+              webElem <- remDr$findElement(using = 'css selector',"#debutAnnee") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$sendKeysToElement(list(as.character(y)))
+              webElem <- remDr$findElement(using = 'css selector',"#debutMois") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$sendKeysToElement(list(as.character(z)))
+              webElem <- remDr$findElement(using = 'css selector',"#debutJour") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$sendKeysToElement(list("01"))
+              webElem <- remDr$findElement(using = 'css selector',"#finAnnee") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$sendKeysToElement(list(as.character(y)))
+              webElem <- remDr$findElement(using = 'css selector',"#finMois") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$sendKeysToElement(list(as.character(z)))
+              webElem <- remDr$findElement(using = 'css selector',"#finJour") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$sendKeysToElement(list(as.character(end_of_month[j])))
+              webElem <- remDr$findElement(using = 'css selector',"#submit") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              Sys.sleep(2)
+              page <- read_html(remDr$getPageSource()[[1]])
+              b<-html_text(html_node(page,".chapoNbResultat"))
+              b<-str_extract(b,"[:digit:]+")
+              webElem <- remDr$findElement(using = 'css selector',"#dateInterval")
+              webElem$clickElement()
+              Sys.sleep(1)
+              webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
+              webElem$clickElement()
             }
             
             
             if(resolution=="Année"){
+              remDr$navigate(url)
               Sys.sleep(2)
               webElem <- remDr$findElement(using = 'css selector',"#debutAnnee") #on accepte les cookies
               webElem$clickElement() #le clic pour accepter les cookies du coup
@@ -1262,6 +1397,38 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               Sys.sleep(1)
               webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
               webElem$clickElement()
+              
+              remDr$navigate(url_base)
+              Sys.sleep(2)
+              webElem <- remDr$findElement(using = 'css selector',"#debutAnnee") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$sendKeysToElement(list(as.character(y)))
+              webElem <- remDr$findElement(using = 'css selector',"#debutMois") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$sendKeysToElement(list("01"))
+              webElem <- remDr$findElement(using = 'css selector',"#debutJour") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$sendKeysToElement(list("01"))
+              webElem <- remDr$findElement(using = 'css selector',"#finAnnee") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$sendKeysToElement(list(as.character(y)))
+              webElem <- remDr$findElement(using = 'css selector',"#finMois") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$sendKeysToElement(list("12"))
+              webElem <- remDr$findElement(using = 'css selector',"#finJour") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$sendKeysToElement(list("31"))
+              webElem <- remDr$findElement(using = 'css selector',"#submit") #on accepte les cookies
+              webElem$clickElement() #le clic pour accepter les cookies du coup
+              Sys.sleep(2)
+              page <- read_html(remDr$getPageSource()[[1]])
+              b<-html_text(html_node(page,".chapoNbResultat"))
+              b<-str_extract(b,"[:digit:]+")
+              webElem <- remDr$findElement(using = 'css selector',"#dateInterval")
+              webElem$clickElement()
+              Sys.sleep(1)
+              webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
+              webElem$clickElement()
             }
           }
           if(doc_type==29){
@@ -1272,13 +1439,20 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_remove_all(ngram,"[:punct:]")
             ngram<-str_extract(ngram,"[:digit:]+ Ergebnisse")
             a<-str_extract(ngram,"[:digit:]+")
+            remDr$navigate(url_base)
+            Sys.sleep(2) # give the page time to fully load
+            ngram_base <- remDr$getPageSource()[[1]]
+            ngram_base <- str_extract(ngram_base,".+Ergebnisse")
+            ngram_base<-str_remove_all(ngram_base,"[:punct:]")
+            ngram_base<-str_extract(ngram_base,"[:digit:]+ Ergebnisse")
+            b<-str_extract(ngram_base,"[:digit:]+")
           }
         
          
-          if(resolution=="Mois"& (doc_type==1 | doc_type==6 | doc_type==7 | doc_type==8 | doc_type==11 | doc_type==13 | doc_type==14 | doc_type==15 | doc_type==16 | doc_type==17 | doc_type==18 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26 | doc_type==27 | doc_type==28 | doc_type==29)){
-            date=str_c(y,"/",z)
-            b<-as.integer(base$base[base$date==date])}
-          else if (resolution=="Année" & (doc_type==1 | doc_type==6 | doc_type==7 | doc_type==8 | doc_type==11 | doc_type==13 | doc_type==14 | doc_type==15 | doc_type==16 | doc_type==17 | doc_type==18 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26 | doc_type==27 | doc_type==28 | doc_type==29)){b<-as.integer(base$base[base$date==y])}
+          # if(resolution=="Mois"& (doc_type==1 | doc_type==6 | doc_type==7 | doc_type==8 | doc_type==11 | doc_type==13 | doc_type==14 | doc_type==15 | doc_type==16 | doc_type==17 | doc_type==18 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26 | doc_type==27 | doc_type==28 | doc_type==29)){
+          #   date=str_c(y,"/",z)
+          #   b<-as.integer(base$base[base$date==date])}
+          # else if (resolution=="Année" & (doc_type==1 | doc_type==6 | doc_type==7 | doc_type==8 | doc_type==11 | doc_type==13 | doc_type==14 | doc_type==15 | doc_type==16 | doc_type==17 | doc_type==18 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26 | doc_type==27 | doc_type==28 | doc_type==29)){b<-as.integer(base$base[base$date==y])}
           if(length(b)==0L){b=0}
           tableau[nrow(tableau)+1,] = NA
           date=y
@@ -1289,13 +1463,16 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       
       if(doc_type==2){
         url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)")
+        url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords=")
         if(input$dewey!="999"){
           if(str_length(input$dewey)==1){url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20and%20(dewey%20all%20%22",input$dewey,"%22)")}
           if(str_length(input$dewey)>1){url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20and%20(sdewey%20all%20%22",input$dewey,"%22)")}
           }
         ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
         a<-str_extract(str_extract(ngram,"numberOfRecords>[:digit:]+"),"[:digit:]+")
-        b<-as.integer(base$base[base$date==y])
+        ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
+        b<-str_extract(str_extract(ngram_base,"numberOfRecords>[:digit:]+"),"[:digit:]+")
+        #b<-as.integer(base$base[base$date==y])
         if(input$dewey!="999"){
           if(str_length(input$dewey)==1){url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20and%20(dewey%20all%20%22",input$dewey,"%22)")}
           if(str_length(input$dewey)>1){url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20and%20(sdewey%20all%20%22",input$dewey,"%22)")}
@@ -1705,7 +1882,7 @@ shinyServer(function(input, output,session){
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
     if( input$doc_type == 1 ){
-      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 1)
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
     if(input$doc_type == 4){
