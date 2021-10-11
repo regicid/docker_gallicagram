@@ -555,7 +555,6 @@ ngramize<-function(input){
       increment2<-1
       for(mot in mots2){
       
-      print("0")
       table<-unnest_tokens(as.data.frame(mot),ngram,mot, token = "ngrams", n = 1)
       nb<-length(table$ngram)
       mot<-table$ngram[1]
@@ -579,7 +578,6 @@ ngramize<-function(input){
           base<-read.csv("base_livres_gallica_pentagrammes.csv")}
         }
       }
-      print("0.1")
       if(input$doc_type==1){
         if(nb<=5){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_presse.db")
@@ -601,7 +599,6 @@ ngramize<-function(input){
           base<-read.csv("base_livres_gallica_pentagrammes.csv")}
         }
       }
-      print("0.2")
       if(input$resolution=="Année"){
       base<-base[base$date<=to,]
       base<-base[base$date>=from,]
@@ -611,14 +608,9 @@ ngramize<-function(input){
         base<-base[base$date>=str_c(from,"/01"),]
       }
       
-        print("1")
-        print(Sys.time())
-      
         con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
         
-        print("2")
-        print(Sys.time())
-        
+
         if(input$doc_type==2){
           query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
           w = dbFetch(query)
@@ -641,11 +633,9 @@ ngramize<-function(input){
           w<-w[,-3]
         }
         
-        print("3")
 
         if(input$resolution=="Année"){
           y=data.frame(annee=from:to, n=0)
-          print("3.1")
         }
         if(input$resolution=="Mois"){
           y=data.frame(annee="AAAA/MM", n=0)
@@ -663,7 +653,6 @@ ngramize<-function(input){
           y<-y[-1,]
         }
         w=left_join(y,w,by="annee")
-        print("3.2")
         w<-w[,-2]
         colnames(w)=c("date","count")
         w$count[is.na(w$count)]<-0
@@ -671,14 +660,16 @@ ngramize<-function(input){
         w$ratio=w$count/w$base
         w$ratio[is.na(w$ratio)]<-0
         w$ratio[is.infinite(w$ratio)]<-0
-        print("3.3")
+        print("0")
+        
         if(increment2==1){z=w}
+        print("1")
         else{z$count=z$count+w$count
+        print("2")
         if(sum(z$base==0)){z$base=w$base}
-        print("3.4")
+
         z$ratio=z$ratio+w$ratio}
         increment2=increment2+1
-        print("3.5")
   }
       
       z$ratio[is.na(z$ratio)]<-0
@@ -725,9 +716,6 @@ ngramize<-function(input){
   names(data) = c("tableau","mot","resolution")
   
   remove_modal_spinner()
-  
-  print("4")
-  print(Sys.time())
   
   return(data)
   
