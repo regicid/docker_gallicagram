@@ -579,6 +579,7 @@ ngramize<-function(input){
           base<-read.csv("base_livres_gallica_pentagrammes.csv")}
         }
       }
+      print("0.1")
       if(input$doc_type==1){
         if(nb<=5){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_presse.db")
@@ -600,6 +601,7 @@ ngramize<-function(input){
           base<-read.csv("base_livres_gallica_pentagrammes.csv")}
         }
       }
+      print("0.2")
       if(input$resolution=="Année"){
       base<-base[base$date<=to,]
       base<-base[base$date>=from,]
@@ -675,6 +677,7 @@ ngramize<-function(input){
         
         z$ratio=z$ratio+w$ratio}
         increment2=increment2+1
+        print("3.5")
   }
       
       z$ratio[is.na(z$ratio)]<-0
