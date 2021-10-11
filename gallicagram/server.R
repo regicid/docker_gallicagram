@@ -642,10 +642,10 @@ ngramize<-function(input){
         }
         
         print("3")
-        print(Sys.time())
-        
+
         if(input$resolution=="Année"){
           y=data.frame(annee=from:to, n=0)
+          print("3.1")
         }
         if(input$resolution=="Mois"){
           y=data.frame(annee="AAAA/MM", n=0)
@@ -663,6 +663,7 @@ ngramize<-function(input){
           y<-y[-1,]
         }
         w=left_join(y,w,by="annee")
+        print("3.2")
         w<-w[,-2]
         colnames(w)=c("date","count")
         w$count[is.na(w$count)]<-0
@@ -670,11 +671,11 @@ ngramize<-function(input){
         w$ratio=w$count/w$base
         w$ratio[is.na(w$ratio)]<-0
         w$ratio[is.infinite(w$ratio)]<-0
-        
+        print("3.3")
         if(increment2==1){z=w}
         else{z$count=z$count+w$count
         if(sum(z$base==0)){z$base=w$base}
-        
+        print("3.4")
         z$ratio=z$ratio+w$ratio}
         increment2=increment2+1
         print("3.5")
