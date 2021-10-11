@@ -666,6 +666,7 @@ ngramize<-function(input){
           {
           z$count=z$count+w$count
           print(z)
+          z$base[is.na(z$base)]<-0
           if(sum(z$base)==0){z$base=w$base}
           z$ratio=z$ratio+w$ratio
           }
