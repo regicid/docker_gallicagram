@@ -662,11 +662,13 @@ ngramize<-function(input){
         w$ratio[is.infinite(w$ratio)]<-0
         print("0")
         if(increment2==1){z=w}
-        else{z$count=z$count+w$count
-        print("1")
-        if(sum(z$base==0)){z$base=w$base}
-        print("2")
-        z$ratio=z$ratio+w$ratio}
+        else
+          {
+          z$count=z$count+w$count
+          print(z)
+          if(sum(z$base)==0){z$base=w$base}
+          z$ratio=z$ratio+w$ratio
+          }
         increment2=increment2+1
   }
       
