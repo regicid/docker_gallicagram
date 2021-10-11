@@ -660,12 +660,10 @@ ngramize<-function(input){
         w$ratio=w$count/w$base
         w$ratio[is.na(w$ratio)]<-0
         w$ratio[is.infinite(w$ratio)]<-0
-        print("0")
         if(increment2==1){z=w}
         else
           {
           z$count=z$count+w$count
-          print(z)
           z$base[is.na(z$base)]<-0
           if(sum(z$base)==0){z$base=w$base}
           z$ratio=z$ratio+w$ratio
