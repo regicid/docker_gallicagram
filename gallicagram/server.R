@@ -608,9 +608,9 @@ ngramize<-function(input){
         base<-base[base$date>=str_c(from,"/01"),]
       }
       
+
         con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
         
-
         if(input$doc_type==2){
           query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
           w = dbFetch(query)
@@ -661,13 +661,11 @@ ngramize<-function(input){
         w$ratio[is.na(w$ratio)]<-0
         w$ratio[is.infinite(w$ratio)]<-0
         print("0")
-        
         if(increment2==1){z=w}
-        print("1")
         else{z$count=z$count+w$count
-        print("2")
+        print("1")
         if(sum(z$base==0)){z$base=w$base}
-
+        print("2")
         z$ratio=z$ratio+w$ratio}
         increment2=increment2+1
   }
@@ -716,6 +714,7 @@ ngramize<-function(input){
   names(data) = c("tableau","mot","resolution")
   
   remove_modal_spinner()
+  
   
   return(data)
   
