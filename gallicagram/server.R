@@ -112,6 +112,7 @@ Plot <- function(data,input){
     }
     
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
+    else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
     else{tableau$hovers = str_c(str_extract(tableau$date,"...."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
     y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = digit_number)
     if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41)}
@@ -1731,6 +1732,101 @@ correlation_matrix <- function(df, corr,
   Rnew<-Rnew[,-1]}
   return(Rnew)
 }
+
+contempo<-function(input){
+  mots = str_split(input$mot,"&")[[1]]
+  from=min(input$dateRange)
+  to=max(input$dateRange)
+  y=from
+  
+  tableau<-as.data.frame(matrix(nrow=0,ncol=5),stringsAsFactors = FALSE)
+  progress <- shiny::Progress$new()
+  on.exit(progress$close())
+  progress$set(message = "Patience...", value = 0)
+  
+  while(y<to){
+    z=y+days(6)
+    for(mot in mots){
+      mot2 = str_replace_all(mot," ","%20")
+      mot2=URLencode(mot2)
+      mot1=mot2
+      
+      if(input$doc_type == 30){
+        url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=",day(y),"%2F",month(y),"%2F",year(y),"&end_at=",day(z),"%2F",month(z),"%2F",year(z),"&search_sort=date_asc")
+        url_base<-str_c("https://www.lemonde.fr/recherche/?search_keywords=le&start_at=",day(y),"%2F",month(y),"%2F",year(y),"&end_at=",day(z),"%2F",month(z),"%2F",year(z),"&search_sort=date_asc")
+
+        page<-read_html(RETRY("GET",url,times = 6))
+        ngram<-page
+        ngram<-html_text(html_node(ngram,"#js-body > main > article > section > section.page__float > section.page__content.river.river--rubrique.river--search > section.river__pagination"))
+        ngram<-str_squish(ngram)
+        a<-str_extract(ngram,"([:digit:]+)$")
+        
+        if(is.na(a)){
+          ngram<-page
+          ngram<-html_node(ngram,"#js-body > main > article > section > section.page__float > section.page__content.river.river--rubrique.river--search > section.js-river-search")
+          ngram<-as.character(ngram)
+          a<-str_count(ngram,"teaser teaser--inline-picture")
+        }
+        else{
+          url<-str_c(url,"&page=",a)
+          page<-read_html(RETRY("GET",url,times = 6))
+          ngram<-page
+          ngram<-html_node(ngram,"#js-body > main > article > section > section.page__float > section.page__content.river.river--rubrique.river--search > section.js-river-search")
+          ngram<-as.character(ngram)
+          c<-str_count(ngram,"teaser teaser--inline-picture")
+          a<-as.integer(a)
+          c<-as.integer(c)
+          a<-(a-1)*40+c
+        }
+        
+        ngram<-read_html(RETRY("GET",url_base,times = 6))
+        ngram<-html_text(html_node(ngram,"#js-body > main > article > section > section.page__float > section.page__content.river.river--rubrique.river--search > section.river__pagination"))
+        ngram<-str_squish(ngram)
+        b<-str_extract(ngram,"([:digit:]+)$")
+        b<-as.integer(b)
+        b=40*b
+        
+      }
+      if(input$doc_type == 31){
+        url<-str_c("https://recherche.lefigaro.fr/recherche/",mot1,"/?publication=lefigaro.fr&datemin=",day(y),"-",month(y),"-",year(y),"&datemax=",day(z),"-",month(z),"-",year(z))
+        url_base<-str_c("https://recherche.lefigaro.fr/recherche/_/?publication=lefigaro.fr&datemin=",day(y),"-",month(y),"-",year(y),"&datemax=",day(z),"-",month(z),"-",year(z))
+        ngram<-read_html(RETRY("GET",url,times = 6))
+        ngram<-as.character(html_node(ngram,".facettes__nombre"))
+        ngram<-str_replace_all(ngram,"[:space:]","")
+        a<-str_extract(ngram,"[:digit:]+")
+        ngram_base<-read_html(RETRY("GET",url_base,times = 6))
+        ngram_base<-as.character(html_node(ngram_base,".facettes__nombre"))
+        ngram_base<-str_replace_all(ngram_base,"[:space:]","")
+        b<-str_extract(ngram_base,"[:digit:]+")
+        
+      }
+      if(length(b)==0L){b=0}
+      tableau[nrow(tableau)+1,] = NA
+      tableau[nrow(tableau),]<-c(as.character(y),a,b,mot,url)
+      progress$inc(7/as.integer(to-from), detail = str_c(""))
+      
+      
+    }
+    y=y+days(7)
+  }
+  colnames(tableau)<-c("date","count","base","mot","url")
+  tableau$count[is.na(tableau$count)]<-0
+  tableau$count<-as.integer(tableau$count)
+  tableau$base<-as.integer(tableau$base)
+  tableau$ratio<-tableau$count/tableau$base
+  tableau$ratio[is.na(tableau$ratio)]<-0
+  tableau$resolution<-input$resolution
+  if(input$doc_type==30){tableau$corpus="presse_lemonde"
+  tableau$search_mode<-"article"}
+  if(input$doc_type==30){tableau$corpus="presse_lefigaro"
+  tableau$search_mode<-"article"}
+  
+  memoire<<-bind_rows(tableau,memoire)
+  data = list(tableau,paste(mots,collapse="&"),input$resolution)
+  names(data) = c("tableau","mot","resolution")
+  return(data)
+}
+
 options(shiny.maxRequestSize = 100*1024^2)
 
 shinyServer(function(input, output,session){
@@ -1857,6 +1953,9 @@ shinyServer(function(input, output,session){
     else if(input$language == 1 & input$bibli==3){
       updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse Auvergne-Rhône-Alpes / Lectura"=17, "Presse du sillon lorrain / Limedia"=18, "Presse méridionale / Mémonum"=19, "Presse de Saint-Denis / Commun-Patrimoine"=20, "Presse de Brest / Yroise"=21, "Presse des Pyrénées / Pireneas"=22, "Presse toulousaine / Rosalis"=23, "Presse diplomatique / Bibliothèque diplomatique numérique"=24, "Presse francophone / RFN"=25, "Presse alsacienne / Numistral"=26, "Presse de Roubaix / BN-R"=27),selected = 17)
     }
+    else if(input$language == 1 & input$bibli==4){
+      updateSelectInput(session,"doc_type", "Corpus",choices = list("Le Monde"=30, "Le Figaro"=31),selected = 31)
+    }
     else if(input$language == 2){
       updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse allemande / Europeana" = 6, "Presse austro-hongroise / ANNO"=29, "Presse suisse-allemande / Bibliothèque nationale suisse"=16 , "Livres / Ngram Viewer Allemand" = 9),selected = 6)
     }else if(input$language == 3){
@@ -1877,6 +1976,10 @@ shinyServer(function(input, output,session){
     if( input$doc_type == 1 ){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
+    }
+    if( input$doc_type == 30 | input$doc_type == 31){
+      updateSelectInput(session,"search_mode",choices = list("Par article" = 4),selected = 4)
+      updateRadioButtons(session,"resolution",choices = c("Semaine"),selected = "Semaine",inline = T)
     }
     if(input$doc_type == 4){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
@@ -2004,6 +2107,9 @@ shinyServer(function(input, output,session){
     else if(input$search_mode==3){
       df=ngramize(input)
     }
+    else if(input$doc_type==30 | input$doc_type==31){
+      df=contempo(input)
+    }
     
     output$plot <- renderPlotly({Plot(df,input)})
     
@@ -2032,11 +2138,12 @@ shinyServer(function(input, output,session){
       output$legende2<-renderText(str_c("Pages épluchées : ", as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Pages correspondant à la recherche : ", as.character(sum(df[["tableau"]]$count))))
     }
-    else if (input$doc_type==8 | input$doc_type==15 | input$doc_type==16) {
+    else if (input$doc_type==8 | input$doc_type==15 | input$doc_type==16 | input$doc_type==30 | input$doc_type==31) {
       nb_mots<-length(unique(df[["tableau"]]$mot))
       output$legende2<-renderText(str_c("Articles épluchés : ", as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Articles correspondant à la recherche : ", as.character(sum(df[["tableau"]]$count))))
     }
+    
     else {
       nb_mots<-length(unique(df[["tableau_page"]]$mot))
       output$legende2<-renderText(str_c("Pages épluchées : ", as.character(sum(df[["tableau_page"]]$base)/nb_mots)))
@@ -2064,14 +2171,16 @@ shinyServer(function(input, output,session){
     if(input$doc_type==28){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.banq.qc.ca/', target=\'_blank\'> ","banq.qc.ca","</a>"),sep = ""))}
     if(input$doc_type == 3 & input$theme_presse != 1){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/html/und/presse-et-revues/presse-et-revues', target=\'_blank\'> ","gallica.bnf.fr","</a>"),sep = ""))}
     if(input$doc_type==29){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://anno.onb.ac.at/', target=\'_blank\'> ","anno.onb.ac.at","</a>"),sep = ""))}
+    if(input$doc_type==31){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.lefigaro.fr/', target=\'_blank\'> ","lefigaro.fr","</a>"),sep = ""))}
+    if(input$doc_type==30){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.lemonde.fr/', target=\'_blank\'> ","lemonde.fr","</a>"),sep = ""))}
     
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28){output$legende4=renderText("Langue : français")}
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31){output$legende4=renderText("Langue : français")}
     if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16 |input$doc_type==29){output$legende4=renderText("Langue : allemand")}
     if(input$doc_type==7 | input$doc_type==14){output$legende4=renderText("Langue : néerlandais")}
     if(input$doc_type==8 | input$doc_type==10){output$legende4=renderText("Langue : anglais")}
     if(input$doc_type==11 | input$doc_type==12){output$legende4=renderText("Langue : espagnol")}
     
-    if(input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29){output$legende1<-renderText("Corpus : presse")}
+    if(input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 30 | input$doc_type == 31){output$legende1<-renderText("Corpus : presse")}
     if(input$doc_type==2 | input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){output$legende1<-renderText("Corpus : livres")}
     if(input$doc_type==4){output$legende1<-renderText("Corpus : personnalisé")}
     if(input$doc_type == 3 & input$theme_presse == 1){
