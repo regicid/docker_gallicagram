@@ -1803,7 +1803,7 @@ contempo<-function(input){
       if(length(b)==0L){b=0}
       tableau[nrow(tableau)+1,] = NA
       tableau[nrow(tableau),]<-c(as.character(y),a,b,mot,url)
-      progress$inc(7/as.integer(to-from), detail = str_c(""))
+      progress$inc(7/(as.integer(to-from)*length(mots)), detail = str_c(""))
       
       
     }
