@@ -132,6 +132,7 @@ Plot <- function(data,input){
     }
     if(input$histogramme==T){
       if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ", tableau$count)}
+      else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date," : ", tableau$count)}
       else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ", tableau$count)}
       y <- list(title = "Nombre d'occurrences dans\nle corpus",titlefont = 41)
       plot = plot_ly(tableau, x=~date,y=~count,text=~hovers,color =~mot,type='bar', hoverinfo="text",customdata=tableau$url)}
@@ -729,109 +730,13 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   progress <- shiny::Progress$new()
   on.exit(progress$close())
   progress$set(message = "Patience...", value = 0)
-  if(doc_type==1 & resolution=="Année"){
-    base=read.csv("base_presse_annees.csv")
-  } else  if(doc_type==1 & resolution=="Mois"){
-    base=read.csv("base_presse_mois.csv")
-  } else if(doc_type==2){
-    base=read.csv("base_livres_annees.csv")
-  }else  if(doc_type==6 & resolution=="Année"){
-    base=read.csv("base_presse_annees_europeana_de.csv")
-  }else  if(doc_type==6 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_europeana_de.csv")
-  }else  if(doc_type==7 & resolution=="Année"){
-    base=read.csv("base_presse_annees_europeana_nl.csv")
-  }else  if(doc_type==7 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_europeana_nl.csv")
-  }else  if(doc_type==8 & resolution=="Année"){
-    base=read.csv("base_presse_annees_bna_en.csv")
-  }else  if(doc_type==8 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_bna_en.csv")
-  }else  if(doc_type==11 & resolution=="Année"){
-    base=read.csv("base_presse_annees_bne_es.csv")
-  }else  if(doc_type==11 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_bne_es.csv")
-  }else  if(doc_type==13 & resolution=="Année"){
-    base=read.csv("base_presse_annees_kbr_fr.csv")
-  }else  if(doc_type==13 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_kbr_fr.csv")
-  }else  if(doc_type==14 & resolution=="Année"){
-    base=read.csv("base_presse_annees_kbr_nl.csv")
-  }else  if(doc_type==14 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_kbr_nl.csv")
-  }else  if(doc_type==15 & resolution=="Année"){
-    base=read.csv("base_presse_annees_e-newspaperarchives_fr.csv")
-  }else  if(doc_type==15 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_e-newspaperarchives_fr.csv")
-  }else  if(doc_type==16 & resolution=="Année"){
-    base=read.csv("base_presse_annees_e-newspaperarchives_de.csv")
-  }else  if(doc_type==16 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_e-newspaperarchives_de.csv")
-  }else  if(doc_type==17 & resolution=="Année"){
-    base=read.csv("base_presse_annees_lectura_fr.csv")
-  }else  if(doc_type==17 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_lectura_fr.csv")
-  }else  if(doc_type==18 & resolution=="Année"){
-    base=read.csv("base_presse_annees_limedia_fr.csv")
-  }else  if(doc_type==18 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_limedia_fr.csv")
-  }else  if(doc_type==19 & resolution=="Année"){
-    base=read.csv("base_presse_annees_memonum_fr.csv")
-  }else  if(doc_type==19 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_memonum_fr.csv")
-  }else  if(doc_type==20 & resolution=="Année"){
-    base=read.csv("base_presse_annees_communpatrimoine_fr.csv")
-  }else  if(doc_type==20 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_communpatrimoine_fr.csv")
-  }else  if(doc_type==21 & resolution=="Année"){
-    base=read.csv("base_presse_annees_yroise_fr.csv")
-  }else  if(doc_type==21 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_yroise_fr.csv")
-  }else  if(doc_type==22 & resolution=="Année"){
-    base=read.csv("base_presse_annees_pireneas_fr.csv")
-  }else  if(doc_type==22 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_pireneas_fr.csv")
-  }else  if(doc_type==23 & resolution=="Année"){
-    base=read.csv("base_presse_annees_rosalis_fr.csv")
-  }else  if(doc_type==23 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_rosalis_fr.csv")
-  }else  if(doc_type==24 & resolution=="Année"){
-    base=read.csv("base_presse_annees_bdn_fr.csv")
-  }else  if(doc_type==24 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_bdn_fr.csv")
-  }else  if(doc_type==25 & resolution=="Année"){
-    base=read.csv("base_presse_annees_rfnum_fr.csv")
-  }else  if(doc_type==25 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_rfnum_fr.csv")
-  }else  if(doc_type==26 & resolution=="Année"){
-    base=read.csv("base_presse_annees_numistral_fr.csv")
-  }else  if(doc_type==26 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_numistral_fr.csv")
-  }else  if(doc_type==27 & resolution=="Année"){
-    base=read.csv("base_presse_annees_bn-r_fr.csv")
-  }else  if(doc_type==27 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_bn-r_fr.csv")
-  }else  if(doc_type==28 & resolution=="Année"){
-    base=read.csv("base_presse_annees_banq_fr.csv")
-  }else  if(doc_type==28 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_banq_fr.csv")
-  }else  if(doc_type==29 & resolution=="Année"){
-    base=read.csv("base_presse_annees_anno_de.csv")
-  }else  if(doc_type==29 & resolution=="Mois"){
-    base=read.csv("base_presse_mois_anno_de.csv")
-  }
-  
-  
   
   if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29){
     if(se=="windows"){system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
       rD <- rsDriver(browser = "firefox", port = 4444L)
       remDr <- rD[["client"]]}
-    #if(se=="linux"){system("kill -9 $(lsof -t -i:4444)", intern=FALSE, ignore.stdout=FALSE)}
-    #if(se=="linux"){rD <- rsDriver(browser = "firefox", port = 4444L)}
     if(se=="linux"){remDr<-remoteDriver$new(remoteServerAddr = "172.19.0.2", port = 4444L, browserName = "firefox")
     remDr$open()}
-    #remDr <- rD[["client"]]
   }
   
   
@@ -1442,11 +1347,6 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             b<-str_extract(ngram_base,"[:digit:]+")
           }
         
-         
-          # if(resolution=="Mois"& (doc_type==1 | doc_type==6 | doc_type==7 | doc_type==8 | doc_type==11 | doc_type==13 | doc_type==14 | doc_type==15 | doc_type==16 | doc_type==17 | doc_type==18 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26 | doc_type==27 | doc_type==28 | doc_type==29)){
-          #   date=str_c(y,"/",z)
-          #   b<-as.integer(base$base[base$date==date])}
-          # else if (resolution=="Année" & (doc_type==1 | doc_type==6 | doc_type==7 | doc_type==8 | doc_type==11 | doc_type==13 | doc_type==14 | doc_type==15 | doc_type==16 | doc_type==17 | doc_type==18 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26 | doc_type==27 | doc_type==28 | doc_type==29)){b<-as.integer(base$base[base$date==y])}
           if(length(b)==0L){b=0}
           tableau[nrow(tableau)+1,] = NA
           date=y
@@ -1818,7 +1718,7 @@ contempo<-function(input){
   tableau$resolution<-input$resolution
   if(input$doc_type==30){tableau$corpus="presse_lemonde"
   tableau$search_mode<-"article"}
-  if(input$doc_type==30){tableau$corpus="presse_lefigaro"
+  if(input$doc_type==31){tableau$corpus="presse_lefigaro"
   tableau$search_mode<-"article"}
   
   memoire<<-bind_rows(tableau,memoire)
@@ -2082,8 +1982,7 @@ shinyServer(function(input, output,session){
   }
   
   observeEvent(input$do,{
-    # datasetInput <- reactive({
-    #   data$tableau})
+
     if ((input$doc_type==1 & input$search_mode==1) |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
     else if(input$doc_type==4){
@@ -2120,7 +2019,6 @@ shinyServer(function(input, output,session){
     }
     else if((input$doc_type==1 & input$search_mode==3) | (input$doc_type==2 & input$search_mode==3)){
       nb_mots<-length(unique(df[["tableau"]]$mot))
-      #output$legende2<-renderText(str_c("Nombre de n-grammes dans la base : ",as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende2<-NULL
       output$legende3<-renderText(str_c("Nombre d'occurrences trouvées : ", as.character(sum(df[["tableau"]]$count))))
     }
