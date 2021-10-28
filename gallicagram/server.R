@@ -583,7 +583,7 @@ ngramize<-function(input){
       if(input$doc_type==1){
         if(nb<=5){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_presse.db")
-          if(nb==1){gram<-"monogram"
+          if(nb==1){gram<-"gram"
           if(input$resolution=="Année"){
             base<-read.csv("base_presse_annees_gallica_monogrammes.csv")}
           if(input$resolution=="Mois"){
