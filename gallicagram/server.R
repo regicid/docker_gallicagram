@@ -741,7 +741,9 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   
   
   for (i in from:to){
+    incr_mot=0
     for(mot in mots){
+      incr_mot=incr_mot+1
       mot2 = str_replace_all(mot," ","%20")
       mot2=URLencode(mot2)
       mot1=""
@@ -866,8 +868,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
               a<-a+as.integer(str_extract(str_extract(ngram,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+"))
               url_base <- str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)%20sortby%20dc.date")
+              
+              if(incr_mot==1){
               ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
               b<-b+as.integer(str_extract(str_extract(ngram_base,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+"))
+              }
               if(k==1){url1<-url}
             }
             a<-as.character(a)
@@ -1045,21 +1050,31 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               url_base<-str_c("https://anno.onb.ac.at/anno-suche#searchMode=complex&language=ger&dateMode=date&dateFrom=01.01.",y,"&dateTo=31.12.",y,"&from=1")
             }
           }
+          if(doc_type == 32){
+            if (resolution=="Année"){
+              url<-str_c("https://www.cairn.info/resultats_recherche.php?src1=Tx&word1=",mot1,"&exact1=1&operator1=AND&src2=Year&from2=",y,"&to2=",y,"&operator2=AND&src3=TypePub&word3=1&searchTermAccess=all&nparams=3&submitAdvForm=Chercher")
+              url_base<-str_c("https://www.cairn.info/resultats_recherche.php?src1=Tx&word1=le&exact1=1&operator1=AND&src2=Year&from2=",y,"&to2=",y,"&operator2=AND&src3=TypePub&word3=1&searchTermAccess=all&nparams=3&submitAdvForm=Chercher")
+              }
+          }
 
           
           if(doc_type == 1 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
             ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
             a<-str_extract(str_extract(ngram,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
-            ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
-            b<-str_extract(str_extract(ngram_base,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
+            if(incr_mot==1){
+              ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
+              b<-str_extract(str_extract(ngram_base,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
+            }
           }
           if(doc_type == 6 | doc_type == 7){
             ngram<-as.character(read_html(RETRY("GET",url,times = 6)))
             ngram<-str_replace_all(ngram,"[:punct:]","")
             a<-str_extract(str_extract(ngram,"totalResults[:digit:]+"),"[:digit:]+")
-            ngram_base<-as.character(read_html(url_base))
-            ngram_base<-str_remove_all(ngram_base,",")
-            b<-str_extract(str_extract(ngram_base,"Résultats: [:digit:]+"),"[:digit:]+")
+            if(incr_mot==1){
+              ngram_base<-as.character(read_html(url_base))
+              ngram_base<-str_remove_all(ngram_base,",")
+              b<-str_extract(str_extract(ngram_base,"Résultats: [:digit:]+"),"[:digit:]+")
+            }
             url<-str_c("https://classic.europeana.eu/portal/fr/collections/newspapers?q=%22",mot1,"%22",or,"&f%5BMEDIA%5D%5B%5D=true&f%5BTYPE%5D%5B%5D=TEXT&f%5BLANGUAGE%5D%5B%5D=",langue,"&f%5Bapi%5D%5B%5D=collection&range%5Bproxy_dcterms_issued%5D%5Bbegin%5D=",beginning,"&range%5Bproxy_dcterms_issued%5D%5Bend%5D=",end)}
           if(doc_type == 8){
             ngram<-as.character(read_html(RETRY("GET",url,times = 6)))
@@ -1071,16 +1086,17 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_remove_all(ngram,"<")
             ngram<-str_remove_all(ngram,">")
             a<-sum(as.integer(ngram))
-            
-            ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
-            ngram_base<-str_remove_all(ngram_base,"[:space:]")
-            ngram_base<-str_extract(ngram_base,"Date--.+Newspapers--")
-            ngram_base<-str_extract(ngram_base,'list-group-item"title.+')
-            ngram_base<-str_remove_all(ngram_base,",")
-            ngram_base<-str_c(unlist(str_extract_all(ngram_base,">[:digit:]+<")))
-            ngram_base<-str_remove_all(ngram_base,"<")
-            ngram_base<-str_remove_all(ngram_base,">")
-            b<-sum(as.integer(ngram_base))
+            if(incr_mot==1){
+              ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
+              ngram_base<-str_remove_all(ngram_base,"[:space:]")
+              ngram_base<-str_extract(ngram_base,"Date--.+Newspapers--")
+              ngram_base<-str_extract(ngram_base,'list-group-item"title.+')
+              ngram_base<-str_remove_all(ngram_base,",")
+              ngram_base<-str_c(unlist(str_extract_all(ngram_base,">[:digit:]+<")))
+              ngram_base<-str_remove_all(ngram_base,"<")
+              ngram_base<-str_remove_all(ngram_base,">")
+              b<-sum(as.integer(ngram_base))
+            }
           }
           if(doc_type == 11){
             ngram<-as.character(read_html(RETRY("GET",url,times = 6)))
@@ -1089,12 +1105,14 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_remove_all(ngram,"<strong>")
             a<-str_extract(str_extract(ngram,"Results[:digit:]+"),"[:digit:]+")
             if (is.na(a)){a<-str_extract(str_extract(ngram,"Résultats[:digit:]+"),"[:digit:]+")}
-            ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
-            ngram_base<-str_remove_all(ngram_base,"[:punct:]")
-            ngram_base<-str_remove_all(ngram_base,"[:space:]")
-            ngram_base<-str_remove_all(ngram_base,"<strong>")
-            b<-str_extract(str_extract(ngram_base,"Results[:digit:]+"),"[:digit:]+")
-            if (is.na(b)){b<-str_extract(str_extract(ngram_base,"Résultats[:digit:]+"),"[:digit:]+")}
+            if(incr_mot==1){
+              ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
+              ngram_base<-str_remove_all(ngram_base,"[:punct:]")
+              ngram_base<-str_remove_all(ngram_base,"[:space:]")
+              ngram_base<-str_remove_all(ngram_base,"<strong>")
+              b<-str_extract(str_extract(ngram_base,"Results[:digit:]+"),"[:digit:]+")
+              if (is.na(b)){b<-str_extract(str_extract(ngram_base,"Résultats[:digit:]+"),"[:digit:]+")}
+            }
           }
           if(doc_type == 13 | doc_type == 14){
             remDr$navigate(url)
@@ -1105,10 +1123,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             a<-as.integer(str_extract(ngram,"[:digit:]+"))
             remDr$navigate(url_base)
             Sys.sleep(2) # give the page time to fully load
-            ngram_base <- remDr$getPageSource()[[1]]
-            ngram_base<-str_extract(ngram_base,"foundnumber.+")
-            ngram_base<-str_remove_all(ngram_base,"[:punct:]")
-            b<-as.integer(str_extract(ngram_base,"[:digit:]+"))
+            if(incr_mot==1){
+              ngram_base <- remDr$getPageSource()[[1]]
+              ngram_base<-str_extract(ngram_base,"foundnumber.+")
+              ngram_base<-str_remove_all(ngram_base,"[:punct:]")
+              b<-as.integer(str_extract(ngram_base,"[:digit:]+"))
+            }
           }
           if(doc_type == 15 | doc_type == 16){
             ngram<-as.character(read_html(RETRY("GET",url,times = 6)))
@@ -1116,27 +1136,33 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_extract(ngram,"Résultats 1 - 20 de  .+")
             ngram<-str_remove(ngram,"Résultats 1 - 20 de  ")
             a<-str_extract(ngram,"[:digit:]+")
-            ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
-            ngram_base<-str_remove_all(ngram_base,",")
-            ngram_base<-str_extract(ngram_base,"Résultats 1 - 20 de  .+")
-            ngram_base<-str_remove(ngram_base,"Résultats 1 - 20 de  ")
-            b<-str_extract(ngram_base,"[:digit:]+")
+            if(incr_mot==1){
+              ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
+              ngram_base<-str_remove_all(ngram_base,",")
+              ngram_base<-str_extract(ngram_base,"Résultats 1 - 20 de  .+")
+              ngram_base<-str_remove(ngram_base,"Résultats 1 - 20 de  ")
+              b<-str_extract(ngram_base,"[:digit:]+")
+            }
           }
           if(doc_type == 17){
             ngram<-as.character(read_html(RETRY("GET",url,times = 6)))
             ngram<-str_extract(ngram,"width:100px.+")
             ngram<-str_remove(ngram,"width:100px")
             a<-str_extract(ngram,"[:digit:]+")
-            ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
-            ngram_base<-str_extract(ngram_base,"width:100px.+")
-            ngram_base<-str_remove(ngram_base,"width:100px")
-            b<-str_extract(ngram_base,"[:digit:]+")
+            if(incr_mot==1){
+              ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
+              ngram_base<-str_extract(ngram_base,"width:100px.+")
+              ngram_base<-str_remove(ngram_base,"width:100px")
+              b<-str_extract(ngram_base,"[:digit:]+")
+            }
           }
           if(doc_type == 18){
             ngram<-read_html(RETRY("GET",url,times = 6))
             a<-str_extract(html_text(html_node(ngram,".col-milieu")),"[:digit:]+")
-            ngram_base<-read_html(RETRY("GET",url_base,times = 6))
-            b<-str_extract(html_text(html_node(ngram_base,".col-milieu")),"[:digit:]+")
+            if(incr_mot==1){
+              ngram_base<-read_html(RETRY("GET",url_base,times = 6))
+              b<-str_extract(html_text(html_node(ngram_base,".col-milieu")),"[:digit:]+")
+            }
           }
           if(doc_type == 19){
             remDr$navigate(url)
@@ -1148,31 +1174,37 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_extract(ngram,"Résultats1à[:digit:]+sur[:digit:]+")
             a<-str_remove(ngram,"Résultats1à[:digit:]+sur")
             remDr$navigate(url_base)
-            Sys.sleep(2) # give the page time to fully load
-            ngram_base <- remDr$getPageSource()[[1]]
-            ngram_base<-str_remove_all(ngram_base,"[:space:]")
-            ngram_base<-str_remove_all(ngram_base,"<span>")
-            ngram_base<-str_remove_all(ngram_base,"</span>")
-            ngram_base<-str_extract(ngram_base,"Résultats1à[:digit:]+sur[:digit:]+")
-            b<-str_remove(ngram_base,"Résultats1à[:digit:]+sur")
+            if(incr_mot==1){
+              Sys.sleep(2) # give the page time to fully load
+              ngram_base <- remDr$getPageSource()[[1]]
+              ngram_base<-str_remove_all(ngram_base,"[:space:]")
+              ngram_base<-str_remove_all(ngram_base,"<span>")
+              ngram_base<-str_remove_all(ngram_base,"</span>")
+              ngram_base<-str_extract(ngram_base,"Résultats1à[:digit:]+sur[:digit:]+")
+              b<-str_remove(ngram_base,"Résultats1à[:digit:]+sur")
+            }
           }
           if(doc_type ==26){
             ngram<-read_html(url)
             ngram<-html_text(html_node(ngram,"head > title:nth-child(3)"))
             ngram<- str_remove_all(ngram,"[:space:]")
             a<-str_extract(ngram,"[:digit:]+")
-            ngram_base<-read_html(url_base)
-            ngram_base<-html_text(html_node(ngram_base,"head > title:nth-child(3)"))
-            ngram_base<- str_remove_all(ngram_base,"[:space:]")
-            b<-str_extract(ngram_base,"[:digit:]+")
+            if(incr_mot==1){
+              ngram_base<-read_html(url_base)
+              ngram_base<-html_text(html_node(ngram_base,"head > title:nth-child(3)"))
+              ngram_base<- str_remove_all(ngram_base,"[:space:]")
+              b<-str_extract(ngram_base,"[:digit:]+")
+            }
           }
           if(doc_type ==27){
             ngram<-as.character(read_html(url))
             ngram<-str_extract(ngram,"Résultats de la recherche.+")
             a<-str_extract(ngram,"[:digit:]+")
-            ngram_base<-as.character(read_html(url_base))
-            ngram_base<-str_extract(ngram_base,"Résultats de la recherche.+")
-            b<-str_extract(ngram_base,"[:digit:]+")
+            if(incr_mot==1){
+              ngram_base<-as.character(read_html(url_base))
+              ngram_base<-str_extract(ngram_base,"Résultats de la recherche.+")
+              b<-str_extract(ngram_base,"[:digit:]+")
+            }
           }
           if(doc_type ==28){
               if(resolution=="Mois"){
@@ -1222,37 +1254,39 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
               webElem$clickElement()
               
-              remDr$navigate(url_base)
-              Sys.sleep(2)
-              webElem <- remDr$findElement(using = 'css selector',"#debutAnnee") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              webElem$sendKeysToElement(list(as.character(y)))
-              webElem <- remDr$findElement(using = 'css selector',"#debutMois") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              webElem$sendKeysToElement(list(as.character(z)))
-              webElem <- remDr$findElement(using = 'css selector',"#debutJour") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              webElem$sendKeysToElement(list("01"))
-              webElem <- remDr$findElement(using = 'css selector',"#finAnnee") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              webElem$sendKeysToElement(list(as.character(y)))
-              webElem <- remDr$findElement(using = 'css selector',"#finMois") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              webElem$sendKeysToElement(list(as.character(z)))
-              webElem <- remDr$findElement(using = 'css selector',"#finJour") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              webElem$sendKeysToElement(list(as.character(end_of_month[j])))
-              webElem <- remDr$findElement(using = 'css selector',"#submit") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              Sys.sleep(2)
-              page <- read_html(remDr$getPageSource()[[1]])
-              b<-html_text(html_node(page,".chapoNbResultat"))
-              b<-str_extract(b,"[:digit:]+")
-              webElem <- remDr$findElement(using = 'css selector',"#dateInterval")
-              webElem$clickElement()
-              Sys.sleep(1)
-              webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
-              webElem$clickElement()
+              if(incr_mot==1){
+                remDr$navigate(url_base)
+                Sys.sleep(2)
+                webElem <- remDr$findElement(using = 'css selector',"#debutAnnee") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                webElem$sendKeysToElement(list(as.character(y)))
+                webElem <- remDr$findElement(using = 'css selector',"#debutMois") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                webElem$sendKeysToElement(list(as.character(z)))
+                webElem <- remDr$findElement(using = 'css selector',"#debutJour") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                webElem$sendKeysToElement(list("01"))
+                webElem <- remDr$findElement(using = 'css selector',"#finAnnee") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                webElem$sendKeysToElement(list(as.character(y)))
+                webElem <- remDr$findElement(using = 'css selector',"#finMois") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                webElem$sendKeysToElement(list(as.character(z)))
+                webElem <- remDr$findElement(using = 'css selector',"#finJour") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                webElem$sendKeysToElement(list(as.character(end_of_month[j])))
+                webElem <- remDr$findElement(using = 'css selector',"#submit") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                Sys.sleep(2)
+                page <- read_html(remDr$getPageSource()[[1]])
+                b<-html_text(html_node(page,".chapoNbResultat"))
+                b<-str_extract(b,"[:digit:]+")
+                webElem <- remDr$findElement(using = 'css selector',"#dateInterval")
+                webElem$clickElement()
+                Sys.sleep(1)
+                webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
+                webElem$clickElement()
+              }
             }
             
             
@@ -1297,37 +1331,39 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
               webElem$clickElement()
               
-              remDr$navigate(url_base)
-              Sys.sleep(2)
-              webElem <- remDr$findElement(using = 'css selector',"#debutAnnee") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              webElem$sendKeysToElement(list(as.character(y)))
-              webElem <- remDr$findElement(using = 'css selector',"#debutMois") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              webElem$sendKeysToElement(list("01"))
-              webElem <- remDr$findElement(using = 'css selector',"#debutJour") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              webElem$sendKeysToElement(list("01"))
-              webElem <- remDr$findElement(using = 'css selector',"#finAnnee") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              webElem$sendKeysToElement(list(as.character(y)))
-              webElem <- remDr$findElement(using = 'css selector',"#finMois") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              webElem$sendKeysToElement(list("12"))
-              webElem <- remDr$findElement(using = 'css selector',"#finJour") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              webElem$sendKeysToElement(list("31"))
-              webElem <- remDr$findElement(using = 'css selector',"#submit") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
-              Sys.sleep(2)
-              page <- read_html(remDr$getPageSource()[[1]])
-              b<-html_text(html_node(page,".chapoNbResultat"))
-              b<-str_extract(b,"[:digit:]+")
-              webElem <- remDr$findElement(using = 'css selector',"#dateInterval")
-              webElem$clickElement()
-              Sys.sleep(1)
-              webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
-              webElem$clickElement()
+              if(incr_mot==1){
+                remDr$navigate(url_base)
+                Sys.sleep(2)
+                webElem <- remDr$findElement(using = 'css selector',"#debutAnnee") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                webElem$sendKeysToElement(list(as.character(y)))
+                webElem <- remDr$findElement(using = 'css selector',"#debutMois") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                webElem$sendKeysToElement(list("01"))
+                webElem <- remDr$findElement(using = 'css selector',"#debutJour") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                webElem$sendKeysToElement(list("01"))
+                webElem <- remDr$findElement(using = 'css selector',"#finAnnee") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                webElem$sendKeysToElement(list(as.character(y)))
+                webElem <- remDr$findElement(using = 'css selector',"#finMois") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                webElem$sendKeysToElement(list("12"))
+                webElem <- remDr$findElement(using = 'css selector',"#finJour") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                webElem$sendKeysToElement(list("31"))
+                webElem <- remDr$findElement(using = 'css selector',"#submit") #on accepte les cookies
+                webElem$clickElement() #le clic pour accepter les cookies du coup
+                Sys.sleep(2)
+                page <- read_html(remDr$getPageSource()[[1]])
+                b<-html_text(html_node(page,".chapoNbResultat"))
+                b<-str_extract(b,"[:digit:]+")
+                webElem <- remDr$findElement(using = 'css selector',"#dateInterval")
+                webElem$clickElement()
+                Sys.sleep(1)
+                webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
+                webElem$clickElement()
+              }
             }
           }
           if(doc_type==29){
@@ -1339,12 +1375,24 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_extract(ngram,"[:digit:]+ Ergebnisse")
             a<-str_extract(ngram,"[:digit:]+")
             remDr$navigate(url_base)
-            Sys.sleep(2) # give the page time to fully load
-            ngram_base <- remDr$getPageSource()[[1]]
-            ngram_base <- str_extract(ngram_base,".+Ergebnisse")
-            ngram_base<-str_remove_all(ngram_base,"[:punct:]")
-            ngram_base<-str_extract(ngram_base,"[:digit:]+ Ergebnisse")
-            b<-str_extract(ngram_base,"[:digit:]+")
+            if(incr_mot==1){
+              Sys.sleep(2) # give the page time to fully load
+              ngram_base <- remDr$getPageSource()[[1]]
+              ngram_base <- str_extract(ngram_base,".+Ergebnisse")
+              ngram_base<-str_remove_all(ngram_base,"[:punct:]")
+              ngram_base<-str_extract(ngram_base,"[:digit:]+ Ergebnisse")
+              b<-str_extract(ngram_base,"[:digit:]+")
+            }
+          }
+          if(doc_type ==32){
+            ngram<-read_html(RETRY("GET",url,times = 3, add_headers(.headers = c("Host"= "www.cairn.info","User-Agent"="PARIS-SACLAY-Benjamin-Gallicanet"))))
+            a<-html_text(html_node(ngram,".filter-result-list > li:nth-child(1) > b:nth-child(1)"))
+            a<-str_remove_all(a,"[:space:]")
+            if(incr_mot==1){
+              ngram_base<-read_html(RETRY("GET",url_base,times = 3, add_headers(.headers = c("Host"= "www.cairn.info","User-Agent"="PARIS-SACLAY-Benjamin-Gallicanet"))))
+              b<-html_text(html_node(ngram_base,".filter-result-list > li:nth-child(1) > b:nth-child(1)"))
+              b<-str_remove_all(b,"[:space:]")
+            }
           }
         
           if(length(b)==0L){b=0}
@@ -1355,6 +1403,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           progress$inc(1/((to-from+1)*length(I)*length(mots)), detail = paste("Gallicagram ratisse l'an", i))
         }}
       
+      
       if(doc_type==2){
         url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)")
         url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords=")
@@ -1364,14 +1413,18 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           }
         ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
         a<-str_extract(str_extract(ngram,"numberOfRecords>[:digit:]+"),"[:digit:]+")
-        ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
-        b<-str_extract(str_extract(ngram_base,"numberOfRecords>[:digit:]+"),"[:digit:]+")
+        if(incr_mot==1){
+          ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
+          b<-str_extract(str_extract(ngram_base,"numberOfRecords>[:digit:]+"),"[:digit:]+")
+        }
         #b<-as.integer(base$base[base$date==y])
         if(input$dewey!="999"){
           if(str_length(input$dewey)==1){url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20and%20(dewey%20all%20%22",input$dewey,"%22)")}
           if(str_length(input$dewey)>1){url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20and%20(sdewey%20all%20%22",input$dewey,"%22)")}
-          ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
-          b<-str_extract(str_extract(ngram_base,"numberOfRecords>[:digit:]+"),"[:digit:]+")
+          if(incr_mot==1){
+            ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
+            b<-str_extract(str_extract(ngram_base,"numberOfRecords>[:digit:]+"),"[:digit:]+")
+          }
           }
     
         if(length(b)==0L){b=0}
@@ -1646,7 +1699,9 @@ contempo<-function(input){
   
   while(y<to){
     z=y+days(6)
+    incr_mot=0
     for(mot in mots){
+      incr_mot=incr_mot+1
       mot2 = str_replace_all(mot," ","%20")
       mot2=URLencode(mot2)
       mot1=mot2
@@ -1678,14 +1733,14 @@ contempo<-function(input){
           c<-as.integer(c)
           a<-(a-1)*40+c
         }
-        
-        ngram<-read_html(RETRY("GET",url_base,times = 6))
-        ngram<-html_text(html_node(ngram,"#js-body > main > article > section > section.page__float > section.page__content.river.river--rubrique.river--search > section.river__pagination"))
-        ngram<-str_squish(ngram)
-        b<-str_extract(ngram,"([:digit:]+)$")
-        b<-as.integer(b)
-        b=40*b
-        
+        if(incr_mot==1){
+          ngram<-read_html(RETRY("GET",url_base,times = 6))
+          ngram<-html_text(html_node(ngram,"#js-body > main > article > section > section.page__float > section.page__content.river.river--rubrique.river--search > section.river__pagination"))
+          ngram<-str_squish(ngram)
+          b<-str_extract(ngram,"([:digit:]+)$")
+          b<-as.integer(b)
+          b=40*b
+        }
       }
       if(input$doc_type == 31){
         url<-str_c("https://recherche.lefigaro.fr/recherche/",mot1,"/?publication=lefigaro.fr&datemin=",day(y),"-",month(y),"-",year(y),"&datemax=",day(z),"-",month(z),"-",year(z))
@@ -1694,11 +1749,12 @@ contempo<-function(input){
         ngram<-as.character(html_node(ngram,".facettes__nombre"))
         ngram<-str_replace_all(ngram,"[:space:]","")
         a<-str_extract(ngram,"[:digit:]+")
-        ngram_base<-read_html(RETRY("GET",url_base,times = 6))
-        ngram_base<-as.character(html_node(ngram_base,".facettes__nombre"))
-        ngram_base<-str_replace_all(ngram_base,"[:space:]","")
-        b<-str_extract(ngram_base,"[:digit:]+")
-        
+        if(incr_mot==1){
+          ngram_base<-read_html(RETRY("GET",url_base,times = 6))
+          ngram_base<-as.character(html_node(ngram_base,".facettes__nombre"))
+          ngram_base<-str_replace_all(ngram_base,"[:space:]","")
+          b<-str_extract(ngram_base,"[:digit:]+")
+        }        
       }
       if(length(b)==0L){b=0}
       tableau[nrow(tableau)+1,] = NA
@@ -1856,6 +1912,9 @@ shinyServer(function(input, output,session){
     else if(input$language == 1 & input$bibli==4){
       updateSelectInput(session,"doc_type", "Corpus",choices = list("Le Monde"=30, "Le Figaro"=31),selected = 31)
     }
+    else if(input$language == 1 & input$bibli==5){
+      updateSelectInput(session,"doc_type", "Corpus",choices = list("CAIRN"=32),selected = 32)
+    }
     else if(input$language == 2){
       updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse allemande / Europeana" = 6, "Presse austro-hongroise / ANNO"=29, "Presse suisse-allemande / Bibliothèque nationale suisse"=16 , "Livres / Ngram Viewer Allemand" = 9),selected = 6)
     }else if(input$language == 3){
@@ -1880,6 +1939,10 @@ shinyServer(function(input, output,session){
     if( input$doc_type == 30 | input$doc_type == 31){
       updateSelectInput(session,"search_mode",choices = list("Par article" = 4),selected = 4)
       updateRadioButtons(session,"resolution",choices = c("Semaine"),selected = "Semaine",inline = T)
+    }
+    if(input$doc_type == 32){
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
+      updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
     if(input$doc_type == 4){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
@@ -1983,7 +2046,7 @@ shinyServer(function(input, output,session){
   
   observeEvent(input$do,{
 
-    if ((input$doc_type==1 & input$search_mode==1) |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29){
+    if ((input$doc_type==1 & input$search_mode==1) |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
@@ -2012,7 +2075,7 @@ shinyServer(function(input, output,session){
     
     output$plot <- renderPlotly({Plot(df,input)})
     
-    if((input$doc_type==1 & input$search_mode==1) | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29){
+    if((input$doc_type==1 & input$search_mode==1) | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32){
       nb_mots<-length(unique(df[["tableau"]]$mot))
       output$legende2<-renderText(str_c("Documents épluchés : ",as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Résultats trouvés : ", as.character(sum(df[["tableau"]]$count))))
@@ -2071,8 +2134,9 @@ shinyServer(function(input, output,session){
     if(input$doc_type==29){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://anno.onb.ac.at/', target=\'_blank\'> ","anno.onb.ac.at","</a>"),sep = ""))}
     if(input$doc_type==31){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.lefigaro.fr/', target=\'_blank\'> ","lefigaro.fr","</a>"),sep = ""))}
     if(input$doc_type==30){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.lemonde.fr/', target=\'_blank\'> ","lemonde.fr","</a>"),sep = ""))}
+    if(input$doc_type==32){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.cairn.info/', target=\'_blank\'> ","cairn.info","</a>"),sep = ""))}
     
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31){output$legende4=renderText("Langue : français")}
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32){output$legende4=renderText("Langue : français")}
     if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16 |input$doc_type==29){output$legende4=renderText("Langue : allemand")}
     if(input$doc_type==7 | input$doc_type==14){output$legende4=renderText("Langue : néerlandais")}
     if(input$doc_type==8 | input$doc_type==10){output$legende4=renderText("Langue : anglais")}
@@ -2081,6 +2145,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 30 | input$doc_type == 31){output$legende1<-renderText("Corpus : presse")}
     if(input$doc_type==2 | input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){output$legende1<-renderText("Corpus : livres")}
     if(input$doc_type==4){output$legende1<-renderText("Corpus : personnalisé")}
+    if(input$doc_type==32){output$legende1<-renderText("Corpus : scientifique")}
     if(input$doc_type == 3 & input$theme_presse == 1){
       liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
       title<-liste_journaux$title[liste_journaux$ark==input$titres[1]]
