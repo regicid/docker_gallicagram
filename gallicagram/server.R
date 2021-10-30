@@ -562,10 +562,11 @@ ngramize<-function(input){
       mot<-table$ngram[1]
       if(nb>1){for(x in 2:nb){mot<-str_c(mot," ",table$ngram[x])}}
       
-      if(nb>5){z=data.frame(date=from:to, count=0, base=0,ratio=0)
-      next}
+      
       
       if(input$doc_type==2){
+        if(nb>5){z=data.frame(date=from:to, count=0, base=0,ratio=0)
+        next}
         if(nb<=5){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram.db")
           if(nb==1){gram<-"monogram"
@@ -581,7 +582,7 @@ ngramize<-function(input){
         }
       }
       if(input$doc_type==1){
-        if(nb<=5){
+        if(nb<=2){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_presse.db")
           if(nb==1){gram<-"gram"
           if(input$resolution=="Année"){
@@ -593,13 +594,9 @@ ngramize<-function(input){
             base<-read.csv("base_presse_annees_gallica_monogrammes.csv")}
           if(input$resolution=="Mois"){
             base<-read.csv("base_presse_mois_gallica_monogrammes.csv")}}
-	  if(nb==3){gram<-"trigram"
-          base<-read.csv("base_livres_gallica_trigrammes.csv")}
-          if(nb==4){gram<-"tetragram"
-          base<-read.csv("base_livres_gallica_tetragrammes.csv")}
-          if(nb==5){gram<-"pentagram"
-          base<-read.csv("base_livres_gallica_pentagrammes.csv")}
         }
+        if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=0)
+        next}
       }
       if(input$resolution=="Année"){
       base<-base[base$date<=to,]
@@ -645,10 +642,10 @@ ngramize<-function(input){
             for (j in 1:12) {
               if(j<=9){k=str_c(0,j)}
               else{k=j}
-              z=as.data.frame(cbind(str_c(i,"/",k),0))
-              colnames(z)=c("annee","n")
-              z$n<-as.integer(z$n)
-              y=bind_rows(y,z)
+              zz=as.data.frame(cbind(str_c(i,"/",k),0))
+              colnames(zz)=c("annee","n")
+              zz$n<-as.integer(zz$n)
+              y=bind_rows(y,zz)
             }
             
           }
@@ -1051,10 +1048,14 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           if(doc_type == 32){
-            if (resolution=="Année"){
+            if (input$cairn==0){
               url<-str_c("https://www.cairn.info/resultats_recherche.php?src1=Tx&word1=",mot1,"&exact1=1&operator1=AND&src2=Year&from2=",y,"&to2=",y,"&operator2=AND&src3=TypePub&word3=1&searchTermAccess=all&nparams=3&submitAdvForm=Chercher")
               url_base<-str_c("https://www.cairn.info/resultats_recherche.php?src1=Tx&word1=le&exact1=1&operator1=AND&src2=Year&from2=",y,"&to2=",y,"&operator2=AND&src3=TypePub&word3=1&searchTermAccess=all&nparams=3&submitAdvForm=Chercher")
-              }
+            }
+            else{
+              url<-str_c("https://www.cairn.info/resultats_recherche.php?src1=Tx&word1=",mot1,"&exact1=1&operator1=AND&src2=Year&from2=",y,"&to2=",y,"&operator2=AND&src3=TypePub&word3=1&operator3=AND&src4=Disc&word4=",input$cairn,"&operator4=&nparams=4&submitAdvForm=Chercher")
+              url_base<-str_c("https://www.cairn.info/resultats_recherche.php?src1=Tx&word1=le&exact1=1&operator1=AND&src2=Year&from2=",y,"&to2=",y,"&operator2=AND&src3=TypePub&word3=1&operator3=AND&src4=Disc&word4=",input$cairn,"&operator4=&nparams=4&submitAdvForm=Chercher")
+            }
           }
 
           
@@ -1801,10 +1802,10 @@ shinyServer(function(input, output,session){
     if(input$cooccurrences==T & ((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1))){
       output$instructions <- renderUI(HTML(str_c('<ul><li>Utiliser "a*b" pour rechercher a à ',input$prox,' mots maximum de b</li><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>')))
       
-    }else if((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1)|input$doc_type == 5|input$doc_type == 6|input$doc_type == 7|input$doc_type == 8|input$doc_type == 9|input$doc_type == 10|input$doc_type == 11|input$doc_type == 12|input$doc_type == 15|input$doc_type == 16|input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 29){
+    }else if((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1)|(input$doc_type == 1 & input$search_mode == 3)|(input$doc_type == 2 & input$search_mode == 3)|input$doc_type == 5|input$doc_type == 6|input$doc_type == 7|input$doc_type == 8|input$doc_type == 9|input$doc_type == 10|input$doc_type == 11|input$doc_type == 12|input$doc_type == 15|input$doc_type == 16|input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 29){
       output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>'))
       
-    }else if(input$doc_type==13|input$doc_type==14|input$doc_type==17|input$doc_type==18 | input$doc_type == 27 | input$doc_type == 28){
+    }else if(input$doc_type==13|input$doc_type==14|input$doc_type==17|input$doc_type==18 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32){
       output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>'))
     }
     else{output$instructions <- renderUI("")}
