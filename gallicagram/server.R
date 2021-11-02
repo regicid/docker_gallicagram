@@ -1386,6 +1386,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           if(doc_type ==32){
+            print(url)
             ngram<-read_html(RETRY("GET",url,times = 3, add_headers(.headers = c("Host"= "www.cairn.info","User-Agent"="PARIS-SACLAY-Benjamin-Gallicanet"))))
             a<-html_text(html_node(ngram,".filter-result-list > li:nth-child(1) > b:nth-child(1)"))
             a<-str_remove_all(a,"[:space:]")
