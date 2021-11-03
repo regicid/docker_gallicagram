@@ -1797,7 +1797,7 @@ shinyServer(function(input, output,session){
   output$theme<- renderUI({selectizeInput("dewey","Thématique",choices = list("-"="999"))})
   options(warn = -1)
   
-  shinyjs::onclick("advanced",shinyjs::toggle(id = "adPan", anim = TRUE))
+  # shinyjs::onclick("advanced",shinyjs::toggle(id = "adPan", anim = TRUE))
   
   observeEvent(input$doc_type,{observeEvent(input$search_mode,{observeEvent(input$cooccurrences,{observeEvent(input$prox,{
     if(input$cooccurrences==T & ((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1))){

@@ -14,12 +14,12 @@ library(htmltools)
 library(shinyWidgets)
 library(rclipboard)
 library(lubridate)
-library(shinyjs)
+# library(shinyjs)
 
 shinyUI(navbarPage("Gallicagram",
                    tabPanel("Graphique",fluidPage(),
                             tags$head(includeHTML(("google-analytics.html"))),
-                            useShinyjs(),
+                            # useShinyjs(),
                             pageWithSidebar(headerPanel(''),
                                             sidebarPanel(
                                                 div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","Joffre&Pétain&Foch")),
@@ -28,14 +28,14 @@ shinyUI(navbarPage("Gallicagram",
                                                 conditionalPanel(condition="(input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",checkboxInput("cooccurrences", "Explorer les cooccurrences", value = FALSE)),
                                                 div(style = "margin-top: -15px"),
                                                 uiOutput("instructions"),
-                                                materialSwitch(
-                                                  inputId = "advanced",
-                                                  label = "Options avancées", 
-                                                  value = FALSE,
-                                                  status = "primary"
-                                                ),
-                                                hidden(
-                                                div(id="adPan",
+                                                # materialSwitch(
+                                                #   inputId = "advanced",
+                                                #   label = "Options avancées", 
+                                                #   value = FALSE,
+                                                #   status = "primary"
+                                                # ),
+                                                # hidden(
+                                                # div(id="adPan",
                                                 conditionalPanel(condition="input.doc_type == 4",p('Recherche limitée à un seul syntagme')),
                                                 conditionalPanel(condition="(input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==2",p('Recherche limitée à un seul syntagme dans 5 000 documents au maximum')),
                                                 conditionalPanel(condition="((input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==2) || input.doc_type == 4",textOutput("avertissement")),
@@ -51,8 +51,8 @@ shinyUI(navbarPage("Gallicagram",
                                                 div(style="display: inline-block;vertical-align:top;width: 49%;",conditionalPanel(condition="input.doc_type == 32",
                                                                  div(style = "margin-top: -15px"),
                                                                  selectInput("cairn", "Discipline",choices = list("_"=0,"Art" = 70, "Droit" = 2, "Economie, Gestion"=1, "Gégraphie"=30, "Histoire"=3, "Info.-Com."=9, "Intérêt général"=4, "Lettres et linguistique"=5, "Médecine"=139, "Philosophie"=6, "Psychologie"=7,"Santé publique"=141,"Sciences de l'éducation"=8, "Sciences politiques"=10, "Sociologie et société"=11, "Sport et société"=12),selected = 0))),
-                                                div(style = "margin-top: -15px")
-                                                )),
+                                                div(style = "margin-top: -15px"),
+                                                # )),
                                                 conditionalPanel(condition="input.doc_type == 4",fileInput('target_upload','', 
                                                                                                            accept = c(
                                                                                                                'text/csv',
