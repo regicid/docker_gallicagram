@@ -124,10 +124,10 @@ Plot <- function(data,input){
       if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41)}
       }
     if(length(unique(tableau$date))<=20){
-    plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url)
+    plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors="Set1")
     }
     else{
-      plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url)
+      plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors="Set1")
       
     }
     if(input$histogramme==T){
@@ -135,9 +135,9 @@ Plot <- function(data,input){
       else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date," : ", tableau$count)}
       else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ", tableau$count)}
       y <- list(title = "Nombre d'occurrences dans\nle corpus",titlefont = 41)
-      plot = plot_ly(tableau, x=~date,y=~count,text=~hovers,color =~mot,type='bar', hoverinfo="text",customdata=tableau$url)}
+      plot = plot_ly(tableau, x=~date,y=~count,text=~hovers,color =~mot,type='bar', hoverinfo="text",customdata=tableau$url,colors="Set1")}
     plot = layout(plot, yaxis = y, xaxis = x,title = Title)
-    if(length(grep(",",data$mot))==0){plot = layout(plot,showlegend=TRUE,legend = list(orientation = 'h',x=1,xanchor="right"))}
+    if(length(grep(",",data$mot))==0){plot = layout(plot,showlegend=TRUE,legend = list(x = 100, y = -0.1))}
     
     if(input$delta==TRUE){
       mots<-str_split(input$mot,"&")
@@ -146,10 +146,10 @@ Plot <- function(data,input){
       if(data[["resolution"]]=="Mois"){tableau$hovers2 = str_c(str_extract(tableau$date,".......")," : delta = ",round(tableau$delta*100,digits=2),"%")}
       else{tableau$hovers2 = str_c(str_extract(tableau$date,"....")," : delta = ",round(tableau$delta*100,digits=2),"%")}
       if(length(unique(tableau$date))<=20){
-        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text")
+        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",colors="Set1")
       }
       else{
-        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text")
+        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",colors="Set1")
       }
       y <- list(title = "Différence de fréquence\nd'occurrence dans le corpus",titlefont = 41,tickformat = digit_number)
       x <- list(title = "",titlefont = 41)
@@ -162,7 +162,7 @@ Plot <- function(data,input){
       span = 2/width + input$span*(width-2)/(10*width)
       if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": N = ",tableau$base)}
       else{tableau$hovers = str_c(str_extract(tableau$date,"...."),": N = ",tableau$base)}
-      plot1 = plot_ly(tableau, x=~date[tableau$mot==mot[1]],y=~base[tableau$mot==mot[1]],text=~hovers[tableau$mot==mot[1]],type='bar',hoverinfo="text",marker = list(color='rgba(31, 119, 180,1)'))
+      plot1 = plot_ly(tableau, x=~date[tableau$mot==mot[1]],y=~base[tableau$mot==mot[1]],text=~hovers[tableau$mot==mot[1]],type='bar',hoverinfo="text",marker = list(color='rgba(31, 119, 180,1)'),colors="Set1")
       y <- list(title = "",titlefont = 41)
       x <- list(title = "",titlefont = 41)
       plot1 = layout(plot1, yaxis = y, xaxis = x,title = Title,showlegend = FALSE)

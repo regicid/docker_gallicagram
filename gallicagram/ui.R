@@ -14,28 +14,18 @@ library(htmltools)
 library(shinyWidgets)
 library(rclipboard)
 library(lubridate)
-# library(shinyjs)
 
 shinyUI(navbarPage("Gallicagram",
                    tabPanel("Graphique",fluidPage(),
                             tags$head(includeHTML(("google-analytics.html"))),
-                            # useShinyjs(),
-                            pageWithSidebar(headerPanel(''),
-                                            sidebarPanel(
+                            fluidPage(
+                                            column(4,wellPanel(
                                                 div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","Joffre&Pétain&Foch")),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 20%;",conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",numericInput("prox","Distance",20))),
                                                 conditionalPanel(condition="(input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",div(style = "margin-top: -20px")),
                                                 conditionalPanel(condition="(input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",checkboxInput("cooccurrences", "Explorer les cooccurrences", value = FALSE)),
                                                 div(style = "margin-top: -15px"),
                                                 uiOutput("instructions"),
-                                                # materialSwitch(
-                                                #   inputId = "advanced",
-                                                #   label = "Options avancées", 
-                                                #   value = FALSE,
-                                                #   status = "primary"
-                                                # ),
-                                                # hidden(
-                                                # div(id="adPan",
                                                 conditionalPanel(condition="input.doc_type == 4",p('Recherche limitée à un seul syntagme')),
                                                 conditionalPanel(condition="(input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==2",p('Recherche limitée à un seul syntagme dans 5 000 documents au maximum')),
                                                 conditionalPanel(condition="((input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==2) || input.doc_type == 4",textOutput("avertissement")),
@@ -52,7 +42,6 @@ shinyUI(navbarPage("Gallicagram",
                                                                  div(style = "margin-top: -15px"),
                                                                  selectInput("cairn", "Discipline",choices = list("_"=0,"Art" = 70, "Droit" = 2, "Economie, Gestion"=1, "Gégraphie"=30, "Histoire"=3, "Info.-Com."=9, "Intérêt général"=4, "Lettres et linguistique"=5, "Médecine"=139, "Philosophie"=6, "Psychologie"=7,"Santé publique"=141,"Sciences de l'éducation"=8, "Sciences politiques"=10, "Sociologie et société"=11, "Sport et société"=12),selected = 0))),
                                                 div(style = "margin-top: -15px"),
-                                                # )),
                                                 conditionalPanel(condition="input.doc_type == 4",fileInput('target_upload','', 
                                                                                                            accept = c(
                                                                                                                'text/csv',
@@ -71,15 +60,14 @@ shinyUI(navbarPage("Gallicagram",
                                                 conditionalPanel(condition="input.search_mode == 3 || input.doc_type == 1 || (input.doc_type == 3 && input.search_mode == 1) || input.doc_type == 5 || input.doc_type == 6 || input.doc_type == 7 || input.doc_type == 8 || input.doc_type == 9 || input.doc_type == 10 || input.doc_type == 11 || input.doc_type == 12 || input.doc_type == 13 || input.doc_type == 14 || input.doc_type == 15 || input.doc_type == 16 || input.doc_type == 17 || input.doc_type == 18 || input.doc_type == 19 || input.doc_type == 20 || input.doc_type == 21 || input.doc_type == 22 || input.doc_type == 23 || input.doc_type == 24 || input.doc_type == 25 || input.doc_type == 26 || input.doc_type == 27 || input.doc_type == 28 || input.doc_type == 29 || input.doc_type == 30 || input.doc_type == 31 || input.doc_type == 32 || (input.doc_type == 2 && input.search_mode == 1) || (input.doc_type == 4 && output.fileUploaded == 1 && output.avertissement.includes('Modifiez')==false) || ((input.doc_type == 2 || (input.doc_type == 3  && input.titres.length <= 15)) && input.search_mode == 2 && output.avertissement.includes('Modifiez')==false)",actionButton("do","Générer le graphique")),
                                                 p(""),
                                                 sliderInput("span","Lissage de la courbe",min = 0,max = 10,value = 0)
-                                            ),
+                                            )),
                                             
-                                            mainPanel(rclipboardSetup(),
+                                            column(8,rclipboardSetup(),
                                                       div(style="display: inline-block;vertical-align:bottom",dropdownButton(tags$h3("Options avancées"),
                                                                      checkboxInput("barplot", "Afficher la distribution des documents de la base de données ", value = FALSE),
                                                                      checkboxInput("correlation_test", "Afficher les matrices de corrélation", value = FALSE),
                                                                      checkboxInput("delta", "Représenter la différence de fréquence entre les deux premiers termes F(a)-F(b)", value = FALSE),
                                                                      checkboxInput("scale", "Rééchelonner les résultats", value = FALSE),
-                                                                     # checkboxInput("ponderation", "Pondérer les résultats par le volume de la base", value = FALSE),
                                                                      checkboxInput("multicourbes", "Afficher toutes les données de la session dans le graphique", value = FALSE),
                                                                      checkboxInput("loess", "Lissage loess pour afficher des tendances", value = FALSE),
                                                                      checkboxInput("histogramme", "Mode histogramme", value = FALSE),
@@ -89,7 +77,13 @@ shinyUI(navbarPage("Gallicagram",
                                                                      tooltip = tooltipOptions(title = "Afficher les options avancées")
                                                                      )),
                                                       div(style="display: inline-block;vertical-align:top;float:right",rclipButton("clipbtn", "Citer cet outil",clipText = "Gallicagram par Benjamin Azoulay et Benoît de Courson",icon = icon("clipboard"))),
-                                                      plotlyOutput("plot"),
+                                                      plotlyOutput("plot")),
+                                            column(4,
+                                                   div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadData', 'Données')),
+                                                   div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadPlot', 'Graphique interactif')),
+                                                   p(""),
+                                                   h2(textOutput("currentTime"), style="color:white")),
+                                              column(4,
                                                       fluidRow(uiOutput("legende"),align="right"),
                                                       fluidRow(textOutput("legende0"),align="right"),
                                                       fluidRow(textOutput("legende1"),align="right"),
@@ -99,12 +93,9 @@ shinyUI(navbarPage("Gallicagram",
                                                       conditionalPanel(condition="input.correlation_test",p("")),
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(tableOutput("corr"),align="right")),
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(tableOutput("corr2"),align="right")),
-                                                      conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right")),
-                                                      div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadData', 'Télécharger les données')),
-                                                      div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadPlot', 'Télécharger le graphique interactif')),
-                                                      p(""),
-                                                      h2(textOutput("currentTime"), style="color:white")
-                                            ))),
+                                                      conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right"))
+                                                     )
+                                              )),
                    tabPanel("Notice",shiny::includeMarkdown("Notice.md")),
                    tabPanel("Distributions",fluidPage(),
                             pageWithSidebar(headerPanel(''),
