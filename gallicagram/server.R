@@ -2315,7 +2315,7 @@ shinyServer(function(input, output,session){
         paste('Splot_',input$mot,"_",input$beginning,"_",input$end,'.png', sep='')
       },
       content = function(filename) {
-        ggsave(filename,SPlot(data,input))
+        ggsave(filename,SPlot(df,input))
       })
   })
   
