@@ -18,6 +18,7 @@ library(RSQLite)
 library(tidytext)
 library(DBI)
 library(shinybusy)
+library(ggthemes)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -174,6 +175,90 @@ Plot <- function(data,input){
       return(onRender(plot,js))
     }
   
+}
+
+SPlot <- function(data,input){
+  
+  tableau = data[["tableau"]]
+  if(is.null(data[["tableau_page"]])==FALSE){
+    if(input$search_mode==2){
+      tableau = data[["tableau_page"]]
+    }
+    if(input$doc_type==4 & input$search_mode==1){
+      tableau = data[["tableau_volume"]]
+    }
+  }
+  if(input$multicourbes==TRUE){
+    tableau = memoire
+    tableau$mot<-str_c(tableau$mot,"_",tableau$corpus,"_",tableau$search_mode)
+    if(input$resolution=="Mois"){
+      tableau<-tableau[tableau$resolution=="Mois",]
+    }
+    if(input$resolution=="Année"){
+      tableau<-tableau[tableau$resolution=="Année",]
+    }
+  }
+  tableau<-distinct(tableau)
+  
+  if(data[["resolution"]]=="Mois"){
+    tableau$date<-str_c(tableau$date,"/01")
+    tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
+  }
+  if(data[["resolution"]]=="Année"){
+    tableau$date<-str_c(tableau$date,"/01/01")
+    tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
+  }
+  Title = paste("")
+  tableau$loess=tableau$ratio
+  width = length(unique(tableau$date))
+  span = 2/width + input$span*(width-2)/(10*width)
+  
+  
+  if(input$span >0){
+    if(input$loess==F){
+      for(mot in unique(tableau$mot)){
+        z = which(tableau$mot==mot)
+        for(i in 1:length(z)){
+          j = max(i-floor(input$span/2),0)
+          k = i+ceil(input$span/2)
+          pond = tableau$base[z][j:k]
+          tableau$loess[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm = T)
+        }}
+    }
+    if(input$loess==T){
+      for(mot in unique(tableau$mot)){
+        z = which(tableau$mot==mot)
+        x = 1:length(z)
+        tableau$loess[z] = loess(tableau$loess[z]~x,span=span)$fitted
+      }
+    }
+    
+  }
+  
+  tableau$scale<-tableau$loess
+  
+  for(mot in unique(tableau$mot)){
+    z = which(tableau$mot==mot)
+    tableau$scale[z]=scale(tableau$scale[z],center = F,scale = T)
+  }
+  if(input$scale==TRUE |input$multicourbes==TRUE){tableau$loess = tableau$scale}
+  
+  
+  tableau$loess[tableau$loess<0]<-0
+  
+  spline.d=z=data.frame(x=0, y=0, mot="")
+  spline.d<-spline.d[-1,]
+  for(mot in unique(tableau$mot)){
+    z = which(tableau$mot==mot)
+    ma<- bind_cols(spline(tableau$date[z], tableau$loess[z]),mot)
+    spline.d<-rbind(spline.d,ma)
+  }
+  colnames(spline.d)<-c("x","y","mot")
+  
+  plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,linetype=mot,color=mot),size=1.3)+xlab("")+ylab("Fréquence d'occurrence dans\nle corpus")+
+    geom_rangeframe() + theme_tufte()+theme(legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal")
+  
+  return(plot)
 }
 
 message<-function(mot,from,to,doc_type,titres){
@@ -2010,6 +2095,13 @@ shinyServer(function(input, output,session){
     },
     content = function(con) {
       htmlwidgets::saveWidget(as_widget(Plot(data,input)), con)
+    })
+  output$downloadSPlot <- downloadHandler(
+    filename = function() {
+      paste('Splot_',input$mot,"_",input$beginning,"_",input$end,'.png', sep='')
+    },
+    content = function(filename) {
+      ggsave(filename,SPlot(data,input))
     })
   output$data_session <- downloadHandler(
     filename = function() {

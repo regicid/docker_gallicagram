@@ -82,6 +82,7 @@ shinyUI(navbarPage("Gallicagram",
                                                    p(""),
                                                    div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadData', 'Données')),
                                                    div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadPlot', 'Graphique interactif')),
+                                                   div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadSPlot', 'Graphique scientifique')),
                                                    p(""),
                                                    
                                                    h2(textOutput("currentTime"), style="color:white")),
