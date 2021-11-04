@@ -248,14 +248,20 @@ SPlot <- function(data,input){
   
   spline.d=z=data.frame(x=0, y=0, mot="")
   spline.d<-spline.d[-1,]
+  
   for(mot in unique(tableau$mot)){
     z = which(tableau$mot==mot)
-    ma<- bind_cols(spline(tableau$date[z], tableau$loess[z]),mot)
+    d = seq.Date(ymd(tableau$date[1]), ymd(tableau$date[length(tableau$date)]), by = 1)
+    SF<-splinefun(tableau$date[z], tableau$loess[z])
+    ba<-cbind(as.data.frame(d),SF(d))
+    colnames(ba)<-c("x","y")
+    ma<- bind_cols(ba,mot)
     spline.d<-rbind(spline.d,ma)
   }
   colnames(spline.d)<-c("x","y","mot")
+  spline.d$y[spline.d$y<0]<-0
   
-  plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,linetype=mot,color=mot),size=1.3)+xlab("")+ylab("Fréquence d'occurrence dans\nle corpus")+
+  plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,linetype=mot,color=mot),size=1)+xlab("")+ylab("Fréquence d'occurrence dans\nle corpus")+
     geom_rangeframe() + theme_tufte()+theme(legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal")
   
   return(plot)
