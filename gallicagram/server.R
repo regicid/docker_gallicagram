@@ -2310,6 +2310,12 @@ shinyServer(function(input, output,session){
       content = function(con) {
         htmlwidgets::saveWidget(as_widget(Plot(df,input)), con)
       })
+    output$downloadSPlot <- downloadHandler(
+      filename = function() {
+        paste('Splot_',input$mot,"_",input$beginning,"_",input$end,'.png', sep='')
+      },
+      content = function(filename) {
+        ggsave(filename,SPlot(df,input))
   })
   
   output$currentTime <- renderText({
