@@ -262,7 +262,8 @@ SPlot <- function(data,input){
   spline.d$y[spline.d$y<0]<-0
   
   plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,linetype=mot,color=mot),size=1)+xlab("")+ylab("Fréquence d'occurrence dans\nle corpus")+
-    geom_rangeframe() + theme_tufte()+theme(legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal")
+    geom_rangeframe() + theme_tufte()+
+    theme(legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal")
   
   return(plot)
 }
@@ -2107,7 +2108,7 @@ shinyServer(function(input, output,session){
       paste('Splot_',input$mot,"_",input$beginning,"_",input$end,'.png', sep='')
     },
     content = function(filename) {
-      ggsave(filename,SPlot(data,input))
+      ggsave(filename,SPlot(data,input),width = 16, height = 9,units = "cm", dpi=300)
     })
   output$data_session <- downloadHandler(
     filename = function() {
@@ -2321,7 +2322,7 @@ shinyServer(function(input, output,session){
         paste('Splot_',input$mot,"_",input$beginning,"_",input$end,'.png', sep='')
       },
       content = function(filename) {
-        ggsave(filename,SPlot(df,input))
+        ggsave(filename,SPlot(df,input),width = 16, height = 9,units = "cm", dpi=300)
       })
   })
   
