@@ -262,7 +262,7 @@ SPlot <- function(data,input){
   spline.d$y[spline.d$y<0]<-0
   
   plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,linetype=mot,color=mot),size=1)+xlab("")+ylab("Fréquence d'occurrence dans\nle corpus")+
-    geom_rangeframe() + theme_tufte()+
+    geom_rangeframe() + theme_tufte()+ scale_color_brewer(palette = "Set1")+
     theme(legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal")
   
   return(plot)
