@@ -48,6 +48,8 @@ RUN R -e "install.packages(c('lubridate'), repos='https://cloud.r-project.org/')
 
 RUN R -e "install.packages(c('ggthemes'), repos='https://cloud.r-project.org/')"
 
+RUN R -e "install.packages(c('RColorBrewer'), repos='https://cloud.r-project.org/')"
+
 # copy the app to the image
 RUN mkdir /root/gallicagram
 COPY gallicagram /root/gallicagram

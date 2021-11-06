@@ -19,6 +19,7 @@ library(tidytext)
 library(DBI)
 library(shinybusy)
 library(ggthemes)
+library(RColorBrewer)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -47,7 +48,7 @@ Plot <- function(data,input){
   }
   if(input$multicourbes==TRUE){
     tableau = memoire
-    tableau$mot<-str_c(tableau$mot,"_",tableau$corpus,"_",tableau$search_mode)
+    tableau$mot<-str_c(tableau$mot," (",tableau$langue,"/",tableau$bibli,"/",tableau$corpus,"/",tableau$search_mode,")")
     if(input$resolution=="Mois"){
       tableau<-tableau[tableau$resolution=="Mois",]
     }
@@ -56,7 +57,8 @@ Plot <- function(data,input){
     }
   }
   tableau<-distinct(tableau)
-
+  
+  if(data[["resolution"]]=="Semaine"){tableau$date=ymd(tableau$date)}
   if(data[["resolution"]]=="Mois"){
     tableau$date<-str_c(tableau$date,"/01")
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
@@ -112,23 +114,27 @@ Plot <- function(data,input){
     digit_number<-str_c(".",digit_number,"%")
     }
     
+    numGroups <- length(unique(tableau$mot))
+    customPalette <- brewer.pal(numGroups, "Set1")
+    customPalette = customPalette[c(2,1,3:numGroups)]
+    
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
     else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
     else{tableau$hovers = str_c(str_extract(tableau$date,"...."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
-    y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = digit_number)
-    if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41)}
+    y <- list(title = "Fréquence dans le corpus",titlefont = 41,tickformat = digit_number)
+    if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41)}
     x <- list(title = "",titlefont = 41)
     if(input$search_mode==3){
       if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ",round(tableau$ratio*100,digits = 6),"%")}
       else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ",round(tableau$ratio*100,digits = 6),"%")}
-      y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41,tickformat = digit_number)
-      if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence d'occurrence dans\nle corpus",titlefont = 41)}
+      y <- list(title = "Fréquence dans le corpus",titlefont = 41,tickformat = digit_number)
+      if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41)}
       }
     if(length(unique(tableau$date))<=20){
-    plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors="Set1")
+    plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette)
     }
     else{
-      plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors="Set1")
+      plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette)
       
     }
     if(input$histogramme==T){
@@ -136,7 +142,7 @@ Plot <- function(data,input){
       else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date," : ", tableau$count)}
       else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ", tableau$count)}
       y <- list(title = "Nombre d'occurrences dans\nle corpus",titlefont = 41)
-      plot = plot_ly(tableau, x=~date,y=~count,text=~hovers,color =~mot,type='bar', hoverinfo="text",customdata=tableau$url,colors="Set1")}
+      plot = plot_ly(tableau, x=~date,y=~count,text=~hovers,color =~mot,type='bar', hoverinfo="text",customdata=tableau$url,colors=customPalette)}
     plot = layout(plot, yaxis = y, xaxis = x,title = Title)
     if(length(grep(",",data$mot))==0){plot = layout(plot,showlegend=TRUE,legend = list(x = 100, y = -0.1))}
     
@@ -147,10 +153,10 @@ Plot <- function(data,input){
       if(data[["resolution"]]=="Mois"){tableau$hovers2 = str_c(str_extract(tableau$date,".......")," : delta = ",round(tableau$delta*100,digits=2),"%")}
       else{tableau$hovers2 = str_c(str_extract(tableau$date,"....")," : delta = ",round(tableau$delta*100,digits=2),"%")}
       if(length(unique(tableau$date))<=20){
-        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",colors="Set1")
+        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
       }
       else{
-        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",colors="Set1")
+        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
       }
       y <- list(title = "Différence de fréquence\nd'occurrence dans le corpus",titlefont = 41,tickformat = digit_number)
       x <- list(title = "",titlefont = 41)
@@ -163,7 +169,7 @@ Plot <- function(data,input){
       span = 2/width + input$span*(width-2)/(10*width)
       if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": N = ",tableau$base)}
       else{tableau$hovers = str_c(str_extract(tableau$date,"...."),": N = ",tableau$base)}
-      plot1 = plot_ly(tableau, x=~date[tableau$mot==mot[1]],y=~base[tableau$mot==mot[1]],text=~hovers[tableau$mot==mot[1]],type='bar',hoverinfo="text",marker = list(color='rgba(31, 119, 180,1)'),colors="Set1")
+      plot1 = plot_ly(tableau, x=~date[tableau$mot==mot[1]],y=~base[tableau$mot==mot[1]],text=~hovers[tableau$mot==mot[1]],type='bar',hoverinfo="text",marker = list(color='rgba(31, 119, 180,1)'),colors=customPalette)
       y <- list(title = "",titlefont = 41)
       x <- list(title = "",titlefont = 41)
       plot1 = layout(plot1, yaxis = y, xaxis = x,title = Title,showlegend = FALSE)
@@ -190,7 +196,7 @@ SPlot <- function(data,input){
   }
   if(input$multicourbes==TRUE){
     tableau = memoire
-    tableau$mot<-str_c(tableau$mot,"_",tableau$corpus,"_",tableau$search_mode)
+    tableau$mot<-str_c(tableau$mot," (",tableau$langue,"/",tableau$bibli,"/",tableau$corpus,"/",tableau$search_mode,")")
     if(input$resolution=="Mois"){
       tableau<-tableau[tableau$resolution=="Mois",]
     }
@@ -200,6 +206,7 @@ SPlot <- function(data,input){
   }
   tableau<-distinct(tableau)
   
+  if(data[["resolution"]]=="Semaine"){tableau$date=ymd(tableau$date)}
   if(data[["resolution"]]=="Mois"){
     tableau$date<-str_c(tableau$date,"/01")
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
@@ -261,8 +268,13 @@ SPlot <- function(data,input){
   colnames(spline.d)<-c("x","y","mot")
   spline.d$y[spline.d$y<0]<-0
   
-  plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,linetype=mot,color=mot),size=1)+xlab("")+ylab("Fréquence d'occurrence dans\nle corpus")+
-    geom_rangeframe() + theme_tufte()+ scale_color_brewer(palette = "Set1")+
+  numGroups <- length(unique(tableau$mot))
+  customPalette <- brewer.pal(numGroups, "Set1")
+  customPalette = customPalette[c(2,1,3:numGroups)]
+  
+  
+  plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = loess, group=mot),size=1) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,linetype=mot,color=mot),size=.8)+xlab("")+ylab("Fréquence dans le corpus")+
+    geom_rangeframe() + theme_tufte()+ scale_color_manual(values=customPalette)+
     theme(legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal")
   
   return(plot)
@@ -467,13 +479,7 @@ rapport <- function(mot,from,to,doc_type,titres){
       tidyr::spread(var, value) %>% 
       select(-.name)
   }
-  # h=1
-  # tot_df<-h%>%parse_gallica
-  # for (h in 2:nmax) {
-  #   ligne<-h%>%parse_gallica
-  #   tot_df<-bind_rows(tot_df,ligne)
-  #   progress$inc((1/nmax), detail = paste("Traitement des données",as.integer((h/nmax)*100),"%"))
-  # }
+  
   tot_df <- 1:nmax %>% 
   
     parse_gallica %>% 
@@ -610,19 +616,31 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
   
   tableau_page<-select(tableau,date,page_count,page_base,mot,url,ratio_page)
   tableau_page$resolution<-resolution
-  if(doc_type==2){tableau_page$corpus<-"livres_gallica"}
-  if(doc_type == 3){tableau_page$corpus<-"titre_presse_gallica"}
-  if(doc_type==4){tableau_page$corpus<-"perso_gallica"}
-  tableau_page$search_mode<-"page"
-  colnames(tableau_page)<-c("date",	"count",	"base",	"mot",	"url",	"ratio",	"resolution",	"corpus",	"search_mode")
+  if(doc_type==2){tableau_page$corpus="Livres"
+  tableau_page$langue="Français"
+  tableau_page$bibli="Gallica"}
+  if(doc_type == 3){tableau_page$corpus="Titres de presse"
+  tableau_page$langue="Français"
+  tableau_page$bibli="Gallica"}
+  if(doc_type==4){tableau_page$corpus="Corpus personnalisé"
+  tableau_page$langue="Français"
+  tableau_page$bibli="Gallica"}
+  tableau_page$search_mode<-"Page"
+  colnames(tableau_page)<-c("date",	"count",	"base",	"mot",	"url",	"ratio",	"resolution",	"corpus","langue","bibli",	"search_mode")
   
   tableau_volume<-select(tableau,date,count,base,mot,url,ratio)
   tableau_volume$resolution<-resolution
-  if(doc_type==2){tableau_volume$corpus<-"livres_gallica"}
-  if(doc_type == 3){tableau_volume$corpus<-"titre_presse_gallica"}
-  if(doc_type==4){tableau_volume$corpus<-"perso_gallica"}
-  tableau_volume$search_mode<-"volume"
-  colnames(tableau_volume)<-c("date",	"count",	"base",	"mot",	"url",	"ratio",	"resolution",	"corpus",	"search_mode")
+  if(doc_type==2){tableau_volume$corpus="Livres"
+  tableau_volume$langue="Français"
+  tableau_volume$bibli="Gallica"}
+  if(doc_type == 3){tableau_volume$corpus="Titres de presse"
+  tableau_volume$langue="Français"
+  tableau_volume$bibli="Gallica"}
+  if(doc_type==4){tableau_volume$corpus="Corpus personnalisé"
+  tableau_volume$langue="Français"
+  tableau_volume$bibli="Gallica"}
+  tableau_volume$search_mode<-"Document"
+  colnames(tableau_volume)<-c("date",	"count",	"base",	"mot",	"url",	"ratio",	"resolution",	"corpus","langue","bibli",	"search_mode")
 
   if(doc_type==4){memoire<<-bind_rows(tableau_volume,memoire)}
   memoire<<-bind_rows(tableau_page,memoire)
@@ -792,9 +810,14 @@ ngramize<-function(input){
       if(input$resolution=="Année"){z$resolution<-"Année"}
       if(input$resolution=="Mois"){z$resolution<-"Mois"}
       
-      if(input$doc_type==2){z$corpus<-"livres_gallica"}
-      if(input$doc_type==1){z$corpus<-"presse_gallica"}
-      z$search_mode<-"match"
+      if(input$doc_type==2){z$corpus="Livres"
+      z$langue="Français"
+      z$bibli="Gallica"
+      z$search_mode<-"N-gramme"}
+      if(input$doc_type==1){z$corpus="Presse"
+      z$langue="Français"
+      z$bibli="Gallica"
+      z$search_mode<-"N-gramme"}
       
       if(increment==1){tableau=z}
       else{tableau=bind_rows(tableau,z)}
@@ -1591,60 +1614,122 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   format = "%Y"
   if(resolution=="Mois"){format=paste(format,"%m",sep="/")}
   tableau.date = as.Date(as.character(tableau$date),format=format)
-  if(doc_type==1){tableau$corpus="presse_gallica"
-  tableau$search_mode<-"volume"}
-  if(doc_type==2){tableau$corpus="livres_gallica"
-  tableau$search_mode<-"volume"}
-  if(doc_type==5){tableau$corpus="livres_fr_ngram"}
-  if(doc_type == 3){tableau$corpus="titre_presse_gallica"
-  tableau$search_mode<-"volume"}
-  if(doc_type==4){tableau$corpus="perso_gallica"
-  tableau$search_mode<-"volume"}
-  if(doc_type==6){tableau$corpus="presse_de_europeana"
-  tableau$search_mode<-"volume"}
-  if(doc_type==7){tableau$corpus="presse_nl_europeana"
-  tableau$search_mode<-"volume"}
-  if(doc_type==8){tableau$corpus="presse_en_bna"
-  tableau$search_mode<-"article"}
-  if(doc_type==9){tableau$corpus="livres_de_ngram"}
-  if(doc_type==10){tableau$corpus="livres_en_ngram"}
-  if(doc_type==11){tableau$corpus="presse_es_bne"
-  tableau$search_mode<-"page"}
-  if(doc_type==12){tableau$corpus="livres_es_ngram"}
-  if(doc_type==13){tableau$corpus="presse_fr_kbr"
-  tableau$search_mode<-"page"}
-  if(doc_type==14){tableau$corpus="presse_nl_kbr"
-  tableau$search_mode<-"page"}
-  if(doc_type==15){tableau$corpus="presse_fr_bns"
-  tableau$search_mode<-"article"}
-  if(doc_type==16){tableau$corpus="presse_de_bns"
-  tableau$search_mode<-"article"}
-  if(doc_type==17){tableau$corpus="presse_fr_lectura"
-  tableau$search_mode<-"page"}
-  if(doc_type==18){tableau$corpus="presse_fr_limedia"
-  tableau$search_mode<-"volume"}
-  if(doc_type==19){tableau$corpus="presse_fr_memonum"
-  tableau$search_mode<-"volume"}
-  if(doc_type==20){tableau$corpus="presse_fr_communpatrimoine"
-  tableau$search_mode<-"volume"}
-  if(doc_type==21){tableau$corpus="presse_fr_yroise"
-  tableau$search_mode<-"volume"}
-  if(doc_type==22){tableau$corpus="presse_fr_pireneas"
-  tableau$search_mode<-"volume"}
-  if(doc_type==23){tableau$corpus="presse_fr_rosalis"
-  tableau$search_mode<-"volume"}
-  if(doc_type==24){tableau$corpus="presse_fr_bdn"
-  tableau$search_mode<-"volume"}
-  if(doc_type==25){tableau$corpus="presse_fr_rfnum"
-  tableau$search_mode<-"volume"}
-  if(doc_type==26){tableau$corpus="presse_fr_numistral"
-  tableau$search_mode<-"volume"}
-  if(doc_type==27){tableau$corpus="presse_fr_bn-r"
-  tableau$search_mode<-"volume"}
-  if(doc_type==28){tableau$corpus="presse_fr_banq"
-  tableau$search_mode<-"volume"}
-  if(doc_type==29){tableau$corpus="presse_de_anno"
-  tableau$search_mode<-"volume"}
+  if(doc_type==1){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Gallica"
+  tableau$search_mode<-"Document"}
+  if(doc_type==2){tableau$corpus="Livres"
+  tableau$langue="Français"
+  tableau$bibli="Gallica"
+  tableau$search_mode<-"Document"}
+  if(doc_type==5){tableau$corpus="Livres"
+  tableau$langue="Français"
+  tableau$bibli="Ngram Viewer"
+  tableau$search_mode<-"N-gramme"}
+  if(doc_type == 3){tableau$corpus="Titres de presse"
+  tableau$langue="Français"
+  tableau$bibli="Gallica"
+  tableau$search_mode<-"Document"}
+  if(doc_type==4){tableau$corpus="Corpus personnalisé"
+  tableau$langue="Français"
+  tableau$bibli="Gallica"
+  tableau$search_mode<-"Document"}
+  if(doc_type==6){tableau$corpus="Presse"
+  tableau$langue="Allemand"
+  tableau$bibli="Europeana"
+  tableau$search_mode<-"Document"}
+  if(doc_type==7){tableau$corpus="Presse"
+  tableau$langue="Néerlandais"
+  tableau$bibli="Europeana"
+  tableau$search_mode<-"Document"}
+  if(doc_type==8){tableau$corpus="Presse"
+  tableau$langue="Anglais"
+  tableau$bibli="BNA"
+  tableau$search_mode<-"Article"}
+  if(doc_type==9){tableau$corpus="Livres"
+  tableau$langue="Allemand"
+  tableau$bibli="Ngram Viewer"
+  tableau$search_mode<-"N-gramme"}
+  if(doc_type==10){tableau$corpus="Livres"
+  tableau$langue="Anglais"
+  tableau$bibli="Ngram Viewer"
+  tableau$search_mode<-"N-gramme"}
+  if(doc_type==11){tableau$corpus="Presse"
+  tableau$langue="Espagnol"
+  tableau$bibli="BNE"
+  tableau$search_mode<-"Page"}
+  if(doc_type==12){tableau$corpus="Livres"
+  tableau$langue="Espagnol"
+  tableau$bibli="Ngram Viewer"
+  tableau$search_mode<-"N-gramme"}
+  if(doc_type==13){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="KBR"
+  tableau$search_mode<-"Page"}
+  if(doc_type==14){tableau$corpus="Presse"
+  tableau$langue="Néerlandais"
+  tableau$bibli="KBR"
+  tableau$search_mode<-"Page"}
+  if(doc_type==15){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="BNS"
+  tableau$search_mode<-"Article"}
+  if(doc_type==16){tableau$corpus="Presse"
+  tableau$langue="Allemand"
+  tableau$bibli="BNS"
+  tableau$search_mode<-"Article"}
+  if(doc_type==17){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Lectura"
+  tableau$search_mode<-"Page"}
+  if(doc_type==18){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Limédia"
+  tableau$search_mode<-"Document"}
+  if(doc_type==19){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Mémonum"
+  tableau$search_mode<-"Document"}
+  if(doc_type==20){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Commun-Patrimoine"
+  tableau$search_mode<-"Document"}
+  if(doc_type==21){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Yroise"
+  tableau$search_mode<-"Document"}
+  if(doc_type==22){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Pireneas"
+  tableau$search_mode<-"Document"}
+  if(doc_type==23){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Rosalis"
+  tableau$search_mode<-"Document"}
+  if(doc_type==24){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="BDN"
+  tableau$search_mode<-"Document"}
+  if(doc_type==25){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="RFN"
+  tableau$search_mode<-"Document"}
+  if(doc_type==26){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Numistral"
+  tableau$search_mode<-"Document"}
+  if(doc_type==27){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="BN-R"
+  tableau$search_mode<-"Document"}
+  if(doc_type==28){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="BAnQ"
+  tableau$search_mode<-"Document"}
+  if(doc_type==29){tableau$corpus="Presse"
+  tableau$langue="Allemand"
+  tableau$bibli="ANNO"
+  tableau$search_mode<-"Document"}
   
   memoire<<-bind_rows(tableau,memoire)
   data = list(tableau,paste(mots,collapse="&"),resolution)
@@ -1865,10 +1950,14 @@ contempo<-function(input){
   tableau$ratio<-tableau$count/tableau$base
   tableau$ratio[is.na(tableau$ratio)]<-0
   tableau$resolution<-input$resolution
-  if(input$doc_type==30){tableau$corpus="presse_lemonde"
-  tableau$search_mode<-"article"}
-  if(input$doc_type==31){tableau$corpus="presse_lefigaro"
-  tableau$search_mode<-"article"}
+  if(input$doc_type==30){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Le Monde"
+  tableau$search_mode<-"Article"}
+  if(input$doc_type==31){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Le Figaro"
+  tableau$search_mode<-"Article"}
   
   memoire<<-bind_rows(tableau,memoire)
   data = list(tableau,paste(mots,collapse="&"),input$resolution)
