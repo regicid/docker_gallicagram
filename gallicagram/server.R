@@ -273,8 +273,7 @@ SPlot <- function(data,input){
     spline.d<-rbind(spline.d,ma)
   }
   colnames(spline.d)<-c("x","y","mot")
-  spline.d$y[spline.d$y<0]<-0
-  
+
   numGroups=3
   if(length(unique(tableau$mot))>=3){numGroups <- length(unique(tableau$mot))}
   customPalette <- brewer.pal(numGroups, "Set1")
