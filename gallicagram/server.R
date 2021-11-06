@@ -289,11 +289,11 @@ SPlot <- function(data,input){
   
   if(input$scale==TRUE |input$multicourbes==TRUE){plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
      theme_tufte()+ scale_color_manual(values=customPalette)+
-    theme(axis.line.y=element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal")+guides(fill=guide_legend(nrow=3,byrow=TRUE))}
+    theme(axis.line.y=element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=5))+guides(fill=guide_legend(nrow=3,ncol = 3,byrow=TRUE))}
   
   else{plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = ratio, group=mot,color=mot),size=.5, alpha=.5) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("Fréquence dans le corpus")+
     geom_rangeframe() + theme_tufte()+ scale_color_manual(values=customPalette)+
-    theme(legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal")+guides(fill=guide_legend(nrow=3,byrow=TRUE))}
+    theme(legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=5))+guides(fill=guide_legend(nrow=3,ncol = 3,byrow=TRUE))}
   
   return(plot)
 }
@@ -2216,7 +2216,7 @@ shinyServer(function(input, output,session){
       paste('Splot_',input$mot,"_",input$beginning,"_",input$end,'.png', sep='')
     },
     content = function(filename) {
-      ggsave(filename,SPlot(data,input),width = 16, height = 9,units = "cm", dpi=300)
+      ggsave(filename,SPlot(data,input),width = 32, height = 18,units = "cm", dpi=300)
     })
   output$data_session <- downloadHandler(
     filename = function() {
