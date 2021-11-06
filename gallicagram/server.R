@@ -291,9 +291,9 @@ SPlot <- function(data,input){
      theme_tufte()+ scale_color_manual(values=customPalette)+
     theme(axis.line.x = element_line(colour = "black"),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=5))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
   
-  else{plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = ratio, group=mot,color=mot),size=.5, alpha=.5) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("Fréquence dans le corpus")+
+  else{plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = ratio, group=mot,color=mot),size=.5, alpha=.5) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
     geom_rangeframe() + theme_tufte()+ scale_color_manual(values=customPalette)+
-    theme(legend.title= element_blank(),axis.ticks.y = element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=5))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
+    theme(legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=5))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
   
   return(plot)
 }
