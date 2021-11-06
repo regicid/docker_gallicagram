@@ -290,7 +290,9 @@ SPlot <- function(data,input){
   if(input$scale==TRUE |input$multicourbes==TRUE){plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
      theme_tufte()+ scale_color_manual(values=customPalette)+
     theme(axis.line.x = element_line(colour = "black"),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=5))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
-  
+  else if (input$span==0){plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
+    geom_rangeframe() + theme_tufte()+ scale_color_manual(values=customPalette)+
+    theme(legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=5))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
   else{plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = ratio, group=mot,color=mot),size=.5, alpha=.5) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
     geom_rangeframe() + theme_tufte()+ scale_color_manual(values=customPalette)+
     theme(legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=5))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
