@@ -117,10 +117,14 @@ Plot <- function(data,input){
     if(length(unique(tableau$mot))>=3){numGroups <- length(unique(tableau$mot))}
     customPalette <- brewer.pal(numGroups, "Set1")
     customPalette = customPalette[c(2,1,3:numGroups)]
+    if(length(unique(tableau$mot))==1){
+      customPalette <- brewer.pal(numGroups, "Set1")
+      customPalette = customPalette[c(1)]
+    }
     if(length(unique(tableau$mot))==2){
       customPalette <- brewer.pal(numGroups, "Set1")
       customPalette = customPalette[c(2,1)]
-      }
+    }
     
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
     else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
@@ -276,6 +280,10 @@ SPlot <- function(data,input){
   if(length(unique(tableau$mot))>=3){numGroups <- length(unique(tableau$mot))}
   customPalette <- brewer.pal(numGroups, "Set1")
   customPalette = customPalette[c(2,1,3:numGroups)]
+  if(length(unique(tableau$mot))==1){
+    customPalette <- brewer.pal(numGroups, "Set1")
+    customPalette = customPalette[c(1)]
+  }
   if(length(unique(tableau$mot))==2){
     customPalette <- brewer.pal(numGroups, "Set1")
     customPalette = customPalette[c(2,1)]
