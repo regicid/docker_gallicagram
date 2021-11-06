@@ -117,6 +117,10 @@ Plot <- function(data,input){
     if(length(unique(tableau$mot))>=3){numGroups <- length(unique(tableau$mot))}
     customPalette <- brewer.pal(numGroups, "Set1")
     customPalette = customPalette[c(2,1,3:numGroups)]
+    if(length(unique(tableau$mot))==2){
+      customPalette <- brewer.pal(numGroups, "Set1")
+      customPalette = customPalette[c(2,1)]
+      }
     
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
     else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
@@ -272,7 +276,10 @@ SPlot <- function(data,input){
   if(length(unique(tableau$mot))>=3){numGroups <- length(unique(tableau$mot))}
   customPalette <- brewer.pal(numGroups, "Set1")
   customPalette = customPalette[c(2,1,3:numGroups)]
-  if(length(unique(tableau$mot))==2){customPalette = customPalette[c(2,1)]}
+  if(length(unique(tableau$mot))==2){
+    customPalette <- brewer.pal(numGroups, "Set1")
+    customPalette = customPalette[c(2,1)]
+  }
   
   plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = loess, group=mot,color=mot),size=.5, alpha=.5) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,linetype=mot,color=mot),size=.8)+xlab("")+ylab("Fréquence dans le corpus")+
     geom_rangeframe() + theme_tufte()+ scale_color_manual(values=customPalette)+
