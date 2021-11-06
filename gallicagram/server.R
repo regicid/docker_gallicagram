@@ -287,7 +287,7 @@ SPlot <- function(data,input){
     customPalette = customPalette[c(2,1)]
   }
   
-  if(input$scale==TRUE |input$multicourbes==TRUE){plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab()+
+  if(input$scale==TRUE |input$multicourbes==TRUE){plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
     geom_rangeframe() + theme_tufte()+ scale_color_manual(values=customPalette)+
     theme(axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal")}
   
