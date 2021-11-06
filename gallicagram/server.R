@@ -259,8 +259,7 @@ SPlot <- function(data,input){
   if(input$scale==TRUE |input$multicourbes==TRUE){tableau$loess = tableau$scale}
   
   
-  tableau$loess[tableau$loess<0]<-0
-  
+
   spline.d=z=data.frame(x=0, y=0, mot="")
   spline.d<-spline.d[-1,]
   
