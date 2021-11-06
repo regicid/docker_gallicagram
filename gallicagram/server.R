@@ -119,7 +119,7 @@ Plot <- function(data,input){
     customPalette = customPalette[c(2,1,3:numGroups)]
     if(length(unique(tableau$mot))==1){
       customPalette <- brewer.pal(numGroups, "Set1")
-      customPalette = customPalette[c(1)]
+      customPalette = customPalette[c(2)]
     }
     if(length(unique(tableau$mot))==2){
       customPalette <- brewer.pal(numGroups, "Set1")
@@ -282,7 +282,7 @@ SPlot <- function(data,input){
   customPalette = customPalette[c(2,1,3:numGroups)]
   if(length(unique(tableau$mot))==1){
     customPalette <- brewer.pal(numGroups, "Set1")
-    customPalette = customPalette[c(1)]
+    customPalette = customPalette[c(2)]
   }
   if(length(unique(tableau$mot))==2){
     customPalette <- brewer.pal(numGroups, "Set1")
