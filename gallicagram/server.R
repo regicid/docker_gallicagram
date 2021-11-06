@@ -273,7 +273,7 @@ SPlot <- function(data,input){
   customPalette = customPalette[c(2,1,3:numGroups)]
   
   
-  plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = loess, group=mot),size=1) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,linetype=mot,color=mot),size=.8)+xlab("")+ylab("Fréquence dans le corpus")+
+  plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = loess, group=mot,color=mot),size=1) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,linetype=mot,color=mot),size=.8)+xlab("")+ylab("Fréquence dans le corpus")+
     geom_rangeframe() + theme_tufte()+ scale_color_manual(values=customPalette)+
     theme(legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal")
   
