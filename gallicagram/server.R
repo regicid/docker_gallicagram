@@ -289,13 +289,13 @@ SPlot <- function(data,input){
   
   if(input$scale==TRUE |input$multicourbes==TRUE){plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
      theme_tufte()+ scale_color_manual(values=customPalette)+
-    theme(axis.line.x = element_line(colour = "black"),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=5))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
+    theme(axis.line.x = element_line(colour = "black"),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=6))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
   else if (input$span==0){plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
     theme_tufte()+ scale_color_manual(values=customPalette)+
-    theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=5))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
+    theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
   else{plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = ratio, group=mot,color=mot),size=.5, alpha=.5) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
     theme_tufte()+ scale_color_manual(values=customPalette)+
-    theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=5))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
+    theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
   
   return(plot)
 }
@@ -2133,7 +2133,7 @@ shinyServer(function(input, output,session){
   
   observeEvent(input$doc_type,{
     if(input$doc_type == 2){
-      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2,"Par n-gramme"=3),selected = 1)
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2,"Par n-gramme"=3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
     if( input$doc_type == 1 ){
@@ -2218,7 +2218,7 @@ shinyServer(function(input, output,session){
       paste('Splot_',input$mot,"_",input$beginning,"_",input$end,'.png', sep='')
     },
     content = function(filename) {
-      ggsave(filename,SPlot(data,input),width = 16, height = 9,units = "cm", dpi=300)
+      ggsave(filename,SPlot(data,input),width = 12, height = 8,units = "cm", dpi=400)
     })
   output$data_session <- downloadHandler(
     filename = function() {
@@ -2437,7 +2437,7 @@ shinyServer(function(input, output,session){
         paste('Splot_',input$mot,"_",input$beginning,"_",input$end,'.png', sep='')
       },
       content = function(filename) {
-        ggsave(filename,SPlot(df,input),width = 16, height = 9,units = "cm", dpi=300)
+        ggsave(filename,SPlot(df,input),width = 12, height = 8,units = "cm", dpi=400)
       })
   })
   
