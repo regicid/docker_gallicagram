@@ -287,6 +287,12 @@ SPlot <- function(data,input){
     customPalette = customPalette[c(2,1)]
   }
   
+  if(input$histogramme==T){
+    plot=ggplot(data=tableau, aes(x = date, y = count, group=mot,fill=mot))+geom_bar(stat="identity", color="black", position=position_dodge())+xlab("")+ylab("")+
+      theme_tufte()+ scale_fill_manual(values=customPalette)+
+      theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+  }
+  else{
   if(input$scale==TRUE |input$multicourbes==TRUE){plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
      theme_tufte()+ scale_color_manual(values=customPalette)+
     theme(axis.line.x = element_line(colour = "black"),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=6))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
@@ -296,7 +302,7 @@ SPlot <- function(data,input){
   else{plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = ratio, group=mot,color=mot),size=.5, alpha=.5) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
     theme_tufte()+ scale_color_manual(values=customPalette)+
     theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
-  
+  }
   return(plot)
 }
 
