@@ -288,7 +288,7 @@ SPlot <- function(data,input){
   }
   
   if(input$histogramme==T){
-    plot=ggplot(data=tableau, aes(x = date, y = count, group=mot,fill=mot))+geom_bar(stat="identity", color="black", position=position_dodge())+xlab("")+ylab("")+
+    plot=ggplot(data=tableau, aes(x = date, y = count, group=mot,fill=mot))+geom_bar(stat="identity",position=position_dodge())+xlab("")+ylab("")+
       theme_tufte()+ scale_fill_manual(values=customPalette)+
       theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8))+guides(color=guide_legend(nrow=2, byrow=TRUE))
   }
