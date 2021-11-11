@@ -68,6 +68,14 @@ Plot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   
+  tableau$scale<-tableau$ratio
+  
+  for(mot in unique(tableau$mot)){
+    z = which(tableau$mot==mot)
+    tableau$scale[z]=scale(tableau$scale[z],center = F,scale = T)
+  }
+  if(input$scale==TRUE |input$multicourbes==TRUE){tableau$ratio = tableau$scale}
+  
   if(input$delta==T | input$fraction==T){
     mots<-str_split(input$mot,"&")
     x = 1:sum(tableau$mot==unlist(mots)[1])
@@ -107,13 +115,7 @@ Plot <- function(data,input){
       
     }
     
-    tableau$scale<-tableau$loess
     
-    for(mot in unique(tableau$mot)){
-      z = which(tableau$mot==mot)
-      tableau$scale[z]=scale(tableau$scale[z],center = F,scale = T)
-    }
-    if(input$scale==TRUE |input$multicourbes==TRUE){tableau$loess = tableau$scale}
     
     
     tableau$loess[tableau$loess<0]<-0
@@ -250,6 +252,14 @@ SPlot <- function(data,input){
   }
   Title = paste("")
   
+  tableau$scale<-tableau$ratio
+  
+  for(mot in unique(tableau$mot)){
+    z = which(tableau$mot==mot)
+    tableau$scale[z]=scale(tableau$scale[z],center = F,scale = T)
+  }
+  if(input$scale==TRUE |input$multicourbes==TRUE){tableau$ratio = tableau$scale}
+  
   if(input$delta==T | input$fraction==T){
     mots<-str_split(input$mot,"&")
     x = 1:sum(tableau$mot==unlist(mots)[1])
@@ -291,13 +301,7 @@ SPlot <- function(data,input){
     
   }
   
-  tableau$scale<-tableau$loess
   
-  for(mot in unique(tableau$mot)){
-    z = which(tableau$mot==mot)
-    tableau$scale[z]=scale(tableau$scale[z],center = F,scale = T)
-  }
-  if(input$scale==TRUE |input$multicourbes==TRUE){tableau$loess = tableau$scale}
   
 
   
