@@ -1841,6 +1841,18 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$langue="Allemand"
   tableau$bibli="ANNO"
   tableau$search_mode<-"Document"}
+  if(doc_type==32){tableau$corpus="Scientifique"
+  tableau$langue="Français"
+  tableau$bibli="Cairn"
+  tableau$search_mode<-"Document"}
+  if(doc_type==33){tableau$corpus="Scientifique"
+  tableau$langue="Français"
+  tableau$bibli="Theses.fr"
+  tableau$search_mode<-"Document"}
+  if(doc_type==34){tableau$corpus="Scientifique"
+  tableau$langue="Français"
+  tableau$bibli="HAL-SHS"
+  tableau$search_mode<-"Document"}
   
   memoire<<-bind_rows(tableau,memoire)
   data = list(tableau,paste(mots,collapse="&"),resolution)
