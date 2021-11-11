@@ -67,6 +67,19 @@ Plot <- function(data,input){
     tableau$date<-str_c(tableau$date,"/01/01")
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
+  
+  if(input$delta==T | input$fraction==T){
+    mots<-str_split(input$mot,"&")
+    x = 1:sum(tableau$mot==unlist(mots)[1])
+    if(input$delta==T){
+      tableau$ratio[tableau$mot==unlist(mots)[1]]<-tableau$ratio[tableau$mot==unlist(mots)[1]]-tableau$ratio[tableau$mot==unlist(mots)[2]]
+    }
+    if(input$fraction==T){
+      tableau$ratio[tableau$mot==unlist(mots)[1]]<-tableau$ratio[tableau$mot==unlist(mots)[1]]/tableau$ratio[tableau$mot==unlist(mots)[2]]
+    }
+    tableau<-tableau[tableau$mot==unlist(mots)[1],]
+  }
+  
     Title = paste("")
     tableau$loess=tableau$ratio
     width = length(unique(tableau$date))
@@ -155,16 +168,13 @@ Plot <- function(data,input){
     if(length(grep(",",data$mot))==0){plot = layout(plot,showlegend=TRUE,legend = list(x = 100, y = -0.1))}
     
     if(input$delta==TRUE){
-      mots<-str_split(input$mot,"&")
-      x = 1:sum(tableau$mot==unlist(mots)[1])
-      tableau$delta[tableau$mot==unlist(mots)[1]]<-loess((tableau$ratio[tableau$mot==unlist(mots)[1]]-tableau$ratio[tableau$mot==unlist(mots)[2]]~x),span=span)$fitted
-      if(data[["resolution"]]=="Mois"){tableau$hovers2 = str_c(str_extract(tableau$date,".......")," : delta = ",round(tableau$delta*100,digits=2),"%")}
-      else{tableau$hovers2 = str_c(str_extract(tableau$date,"....")," : delta = ",round(tableau$delta*100,digits=2),"%")}
+      if(data[["resolution"]]=="Mois"){tableau$hovers2 = str_c(str_extract(tableau$date,".......")," : delta = ",round(tableau$loess*100,digits=2),"%")}
+      else{tableau$hovers2 = str_c(str_extract(tableau$date,"....")," : delta = ",round(tableau$loess*100,digits=2),"%")}
       if(length(unique(tableau$date))<=20){
-        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
+        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~loess,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
       }
       else{
-        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
+        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~loess,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
       }
       y <- list(title = "",titlefont = 41,tickformat = digit_number)
       x <- list(title = "",titlefont = 41)
@@ -173,16 +183,13 @@ Plot <- function(data,input){
       plot = layout(plot, yaxis = y, xaxis = x,title = Title)
     }
     if(input$fraction==TRUE){
-      mots<-str_split(input$mot,"&")
-      x = 1:sum(tableau$mot==unlist(mots)[1])
-      tableau$delta[tableau$mot==unlist(mots)[1]]<-loess((tableau$ratio[tableau$mot==unlist(mots)[1]]/tableau$ratio[tableau$mot==unlist(mots)[2]]~x),span=span)$fitted
-      if(data[["resolution"]]=="Mois"){tableau$hovers2 = str_c(str_extract(tableau$date,".......")," : delta = ",round(tableau$delta*100,digits=2),"%")}
-      else{tableau$hovers2 = str_c(str_extract(tableau$date,"....")," : delta = ",round(tableau$delta*100,digits=2),"%")}
+      if(data[["resolution"]]=="Mois"){tableau$hovers2 = str_c(str_extract(tableau$date,".......")," : delta = ",round(tableau$loess*100,digits=2),"%")}
+      else{tableau$hovers2 = str_c(str_extract(tableau$date,"....")," : delta = ",round(tableau$loess*100,digits=2),"%")}
       if(length(unique(tableau$date))<=20){
-        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
+        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~loess,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
       }
       else{
-        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
+        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~loess,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
       }
       y <- list(title = "",titlefont = 41)
       x <- list(title = "",titlefont = 41)
@@ -242,6 +249,22 @@ SPlot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   Title = paste("")
+  
+  if(input$delta==T | input$fraction==T){
+    mots<-str_split(input$mot,"&")
+    x = 1:sum(tableau$mot==unlist(mots)[1])
+    if(input$delta==T){
+      tableau$ratio[tableau$mot==unlist(mots)[1]]<-tableau$ratio[tableau$mot==unlist(mots)[1]]-tableau$ratio[tableau$mot==unlist(mots)[2]]
+      Title = paste("Freq(",unlist(mots)[1],") - Freq(",unlist(mots)[2],")")
+    }
+    if(input$fraction==T){
+      tableau$ratio[tableau$mot==unlist(mots)[1]]<-tableau$ratio[tableau$mot==unlist(mots)[1]]/tableau$ratio[tableau$mot==unlist(mots)[2]]
+      Title = paste("Freq(",unlist(mots)[1],") / Freq(",unlist(mots)[2],")")
+    }
+    tableau<-tableau[tableau$mot==unlist(mots)[1],]
+  }
+  
+  
   tableau$loess=tableau$ratio
   width = length(unique(tableau$date))
   span = 2/width + input$span*(width-2)/(10*width)
@@ -276,21 +299,7 @@ SPlot <- function(data,input){
   }
   if(input$scale==TRUE |input$multicourbes==TRUE){tableau$loess = tableau$scale}
   
-  
-  if(input$delta==TRUE){
-    mots<-str_split(input$mot,"&")
-    x = 1:sum(tableau$mot==unlist(mots)[1])
-    tableau$loess[tableau$mot==unlist(mots)[1]]<-loess((tableau$ratio[tableau$mot==unlist(mots)[1]]-tableau$ratio[tableau$mot==unlist(mots)[2]]~x),span=span)$fitted
-    tableau<-filter(tableau,mot==unlist(mots)[[1]])
-    Title = paste("Freq(",unlist(mots)[1],") - Freq(",unlist(mots)[2],")")
-  }
-  if(input$fraction==TRUE){
-    mots<-str_split(input$mot,"&")
-    x = 1:sum(tableau$mot==unlist(mots)[1])
-    tableau$loess[tableau$mot==unlist(mots)[1]]<-loess((tableau$ratio[tableau$mot==unlist(mots)[1]]/tableau$ratio[tableau$mot==unlist(mots)[2]]~x),span=span)$fitted
-    tableau<-filter(tableau,mot==unlist(mots)[[1]])
-    Title = paste("Freq(",unlist(mots)[1],") / Freq(",unlist(mots)[2],")")
-  }
+
   
 
   spline.d=z=data.frame(x=0, y=0, mot="")
@@ -1676,7 +1685,6 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     rm(rD)
     gc()
     system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)}
-    #if(se=="linux"){system("kill -9 $(lsof -t -i:4444)", intern=FALSE, ignore.stdout=FALSE)}
   }
   
   tableau$count<-as.integer(tableau$count)
