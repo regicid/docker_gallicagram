@@ -166,9 +166,27 @@ Plot <- function(data,input){
       else{
         plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
       }
-      y <- list(title = "Différence de fréquence\nd'occurrence dans le corpus",titlefont = 41,tickformat = digit_number)
+      y <- list(title = "",titlefont = 41,tickformat = digit_number)
       x <- list(title = "",titlefont = 41)
       Title = paste("Freq(",unlist(mots)[1],") – Freq(",unlist(mots)[2],")")
+      Title=str_remove_all(Title," ")
+      plot = layout(plot, yaxis = y, xaxis = x,title = Title)
+    }
+    if(input$fraction==TRUE){
+      mots<-str_split(input$mot,"&")
+      x = 1:sum(tableau$mot==unlist(mots)[1])
+      tableau$delta[tableau$mot==unlist(mots)[1]]<-loess((tableau$ratio[tableau$mot==unlist(mots)[1]]/tableau$ratio[tableau$mot==unlist(mots)[2]]~x),span=span)$fitted
+      if(data[["resolution"]]=="Mois"){tableau$hovers2 = str_c(str_extract(tableau$date,".......")," : delta = ",round(tableau$delta*100,digits=2),"%")}
+      else{tableau$hovers2 = str_c(str_extract(tableau$date,"....")," : delta = ",round(tableau$delta*100,digits=2),"%")}
+      if(length(unique(tableau$date))<=20){
+        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
+      }
+      else{
+        plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~delta,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
+      }
+      y <- list(title = "",titlefont = 41)
+      x <- list(title = "",titlefont = 41)
+      Title = paste("Freq(",unlist(mots)[1],") / Freq(",unlist(mots)[2],")")
       Title=str_remove_all(Title," ")
       plot = layout(plot, yaxis = y, xaxis = x,title = Title)
     }
@@ -259,6 +277,21 @@ SPlot <- function(data,input){
   if(input$scale==TRUE |input$multicourbes==TRUE){tableau$loess = tableau$scale}
   
   
+  if(input$delta==TRUE){
+    mots<-str_split(input$mot,"&")
+    x = 1:sum(tableau$mot==unlist(mots)[1])
+    tableau$loess[tableau$mot==unlist(mots)[1]]<-loess((tableau$ratio[tableau$mot==unlist(mots)[1]]-tableau$ratio[tableau$mot==unlist(mots)[2]]~x),span=span)$fitted
+    tableau<-filter(tableau,mot==unlist(mots)[[1]])
+    Title = paste("Freq(",unlist(mots)[1],") - Freq(",unlist(mots)[2],")")
+  }
+  if(input$fraction==TRUE){
+    mots<-str_split(input$mot,"&")
+    x = 1:sum(tableau$mot==unlist(mots)[1])
+    tableau$loess[tableau$mot==unlist(mots)[1]]<-loess((tableau$ratio[tableau$mot==unlist(mots)[1]]/tableau$ratio[tableau$mot==unlist(mots)[2]]~x),span=span)$fitted
+    tableau<-filter(tableau,mot==unlist(mots)[[1]])
+    Title = paste("Freq(",unlist(mots)[1],") / Freq(",unlist(mots)[2],")")
+  }
+  
 
   spline.d=z=data.frame(x=0, y=0, mot="")
   spline.d<-spline.d[-1,]
@@ -302,6 +335,12 @@ SPlot <- function(data,input){
   else{plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = ratio, group=mot,color=mot),size=.5, alpha=.5) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
     theme_tufte()+ scale_color_manual(values=customPalette)+
     theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
+  }
+  
+  if(input$fraction==TRUE | input$delta==TRUE){
+    plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = ratio, group=mot,color=mot),size=.5, alpha=.5) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
+      theme_tufte()+ scale_color_manual(labels=Title,values = customPalette)+
+      theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8))+guides(color=guide_legend(nrow=2, byrow=TRUE))
   }
   return(plot)
 }
