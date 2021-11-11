@@ -355,6 +355,11 @@ SPlot <- function(data,input){
       theme_tufte()+ scale_color_manual(labels=Title,values = customPalette)+
       theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8))+guides(color=guide_legend(nrow=2, byrow=TRUE))
   }
+  if((input$fraction==TRUE | input$delta==TRUE) & input$scale==T){
+    plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
+      theme_tufte()+ scale_color_manual(labels=Title,values = customPalette)+
+      theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+  }
   return(plot)
 }
 
