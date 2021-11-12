@@ -20,6 +20,7 @@ library(DBI)
 library(shinybusy)
 library(ggthemes)
 library(RColorBrewer)
+library(cowplot)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -2374,7 +2375,7 @@ shinyServer(function(input, output,session){
       paste('Splot_',input$mot,"_",input$beginning,"_",input$end,'.png', sep='')
     },
     content = function(filename) {
-      ggsave(filename,SPlot(data,input),width = 12, height = 8,units = "cm", dpi=400)
+      save_plot(filename,SPlot(data,input))
     })
   output$data_session <- downloadHandler(
     filename = function() {
@@ -2596,7 +2597,7 @@ shinyServer(function(input, output,session){
         paste('Splot_',input$mot,"_",input$beginning,"_",input$end,'.png', sep='')
       },
       content = function(filename) {
-        ggsave(filename,SPlot(df,input),width = 12, height = 8,units = "cm", dpi=400)
+        save_plot(filename,SPlot(df,input))
       })
   })
   
