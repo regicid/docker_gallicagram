@@ -1042,7 +1042,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             iterations<-ceiling(length(liste_titres)/longueur_max)
             reste=iterations*longueur_max-length(liste_titres)
             a=0
-            b=0
+            if(incr_mot==1){b=0}
             for (k in 1:iterations) {
               if(k==iterations){titres<-liste_titres[((k-1)*longueur_max+1):(k*longueur_max-reste)]}
               else{titres<-liste_titres[((k-1)*longueur_max+1):(k*longueur_max)]}
