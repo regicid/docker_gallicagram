@@ -938,7 +938,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     if(se=="windows"){system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
       rD <- rsDriver(browser = "firefox", port = 4444L)
       remDr <- rD[["client"]]}
-    if(se=="linux"){remDr<-remoteDriver$new(remoteServerAddr = "172.19.0.2", port = 4444L, browserName = "firefox")
+    if(se=="linux"){remDr<-remoteDriver$new(remoteServerAddr = "172.19.0.1", port = 4444L, browserName = "firefox")
     remDr$open()}
   }
   
