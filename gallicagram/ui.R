@@ -15,7 +15,9 @@ library(shinyWidgets)
 library(rclipboard)
 library(lubridate)
 
-shinyUI(navbarPage("Gallicagram",
+shinyUI(fluidPage(
+  
+  navbarPage(title=div(img(src="Logo.png")),
                    tabPanel("Graphique",fluidPage(),
                             tags$head(includeHTML(("google-analytics.html"))),
                             fluidPage(
@@ -173,4 +175,4 @@ shinyUI(navbarPage("Gallicagram",
                               )),
                    tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicapresse' target='_blank'>Gallicapresse</a>")),
                    tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicanet' target='_blank'>Gallicanet</a>"))
-))
+)))
