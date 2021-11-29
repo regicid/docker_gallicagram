@@ -1293,6 +1293,16 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               url_base<-str_c("https://trove.nla.gov.au/search/advanced/category/newspapers?keyword=a&l-advArtType=newspapers&l-advArtType=gazette&date.from=",y,"-01-01&date.to=",y,"-12-31")
             }
           }
+          if(doc_type == 36){
+            if (input$isidore=="_"){
+              url<-str_c("https://api.isidore.science/resource/search?q=%22",mot1,"%22&date=",y,"&replies=1")
+              url_base<-str_c("https://api.isidore.science/resource/search?date=",y,"&replies=1")
+            }
+            else{
+              url<-str_c("https://api.isidore.science/resource/search?q=%22",mot1,"%22&date=",y,"&replies=1&discipline=http%3A%2F%2Faurehal.archives-ouvertes.fr%2Fsubject%2Fshs.",input$isidore)
+              url_base<-str_c("https://api.isidore.science/resource/search?date=",y,"&replies=1&discipline=http%3A%2F%2Faurehal.archives-ouvertes.fr%2Fsubject%2Fshs.",input$isidore)
+            }
+          }
 
           
           if(doc_type == 1 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
@@ -1679,6 +1689,27 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               b<-str_remove_all(b,"résultats")
             }
           }
+          if(doc_type ==36){
+            ngram<-read_html(RETRY("GET",url,times = 3))
+            ngram<-as.character(ngram)
+            ngram<-str_extract(ngram,"items.+")
+            ngram<-str_remove_all(ngram,"[:space:]")
+            ngram<-str_remove_all(ngram,"[:punct:]")
+            ngram<-str_remove_all(ngram,"items=")
+            a<-str_extract(ngram,"[:digit:]+")
+            if(incr_mot==1){
+              ngram_base<-read_html(RETRY("GET",url_base,times = 3))
+              ngram_base<-as.character(ngram_base)
+              ngram_base<-str_extract(ngram_base,"items.+")
+              ngram_base<-str_remove_all(ngram_base,"[:space:]")
+              ngram_base<-str_remove_all(ngram_base,"[:punct:]")
+              ngram_base<-str_remove_all(ngram_base,"items=")
+              b<-str_extract(ngram_base,"[:digit:]+")
+            }
+            if (input$isidore=="_"){
+            url<-str_c("https://isidore.science/s?q=%22",mot1,"%22&date=",y)}
+            else{url<-str_c("https://isidore.science/s?q=%22",mot1,"%22&date=",y,"&discipline=http%3A%2F%2Faurehal.archives-ouvertes.fr%2Fsubject%2Fshs.",input$isidore)}
+          }
           
           
           if(length(b)==0L){b=0}
@@ -1915,6 +1946,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$langue="Anglais"
   tableau$bibli="Trove"
   tableau$search_mode<-"Article"}
+  if(doc_type==36){tableau$corpus="Scientifique"
+  tableau$langue="Français"
+  tableau$bibli="Isidore"
+  tableau$search_mode<-"Document"}
   
   memoire<<-bind_rows(tableau,memoire)
   data = list(tableau,paste(mots,collapse="&"),resolution)
@@ -2281,7 +2316,7 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"doc_type", "Corpus",choices = list("Le Monde"=30, "Le Figaro"=31),selected = 31)
     }
     else if(input$language == 1 & input$bibli==5){
-      updateSelectInput(session,"doc_type", "Corpus",choices = list("Cairn.info"=32,"Theses.fr"=33,"HAL-SHS"=34),selected = 32)
+      updateSelectInput(session,"doc_type", "Corpus",choices = list("Isidore"=36,"Cairn.info"=32,"Theses.fr"=33,"HAL-SHS"=34),selected = 36)
     }
     else if(input$language == 2){
       updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse allemande / Europeana" = 6, "Presse austro-hongroise / ANNO"=29, "Presse suisse-allemande / Bibliothèque nationale suisse"=16 , "Livres / Ngram Viewer Allemand" = 9),selected = 6)
@@ -2308,7 +2343,7 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par article" = 4),selected = 4)
       updateRadioButtons(session,"resolution",choices = c("Semaine"),selected = "Semaine",inline = T)
     }
-    if(input$doc_type == 32 | input$doc_type == 33 | input$doc_type == 34){
+    if(input$doc_type == 32 | input$doc_type == 33 | input$doc_type == 34 | input$doc_type == 36){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
@@ -2426,7 +2461,7 @@ shinyServer(function(input, output,session){
       }
     
 
-    if ((input$doc_type==1 & input$search_mode==1) |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 35){
+    if ((input$doc_type==1 & input$search_mode==1) |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 35| input$doc_type == 36){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
@@ -2455,7 +2490,7 @@ shinyServer(function(input, output,session){
     
     output$plot <- renderPlotly({Plot(df,input)})
     
-    if((input$doc_type==1 & input$search_mode==1) | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34){
+    if((input$doc_type==1 & input$search_mode==1) | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){
       nb_mots<-length(unique(df[["tableau"]]$mot))
       output$legende2<-renderText(str_c("Documents épluchés : ",as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Résultats trouvés : ", as.character(sum(df[["tableau"]]$count))))
@@ -2518,8 +2553,9 @@ shinyServer(function(input, output,session){
     if(input$doc_type==33){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.theses.fr/', target=\'_blank\'> ","theses.fr","</a>"),sep = ""))}
     if(input$doc_type==34){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://halshs.archives-ouvertes.fr/', target=\'_blank\'> ","halshs.archives-ouvertes.fr","</a>"),sep = ""))}
     if(input$doc_type==35){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://trove.nla.gov.au/', target=\'_blank\'> ","trove.nla.gov.au","</a>"),sep = ""))}
+    if(input$doc_type==36){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://isidore.science/', target=\'_blank\'> ","isidore.science","</a>"),sep = ""))}
     
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34){output$legende4=renderText("Langue : français")}
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){output$legende4=renderText("Langue : français")}
     if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16 |input$doc_type==29){output$legende4=renderText("Langue : allemand")}
     if(input$doc_type==7 | input$doc_type==14){output$legende4=renderText("Langue : néerlandais")}
     if(input$doc_type==8 | input$doc_type==10| input$doc_type==35){output$legende4=renderText("Langue : anglais")}
@@ -2528,7 +2564,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 30 | input$doc_type == 31| input$doc_type==35){output$legende1<-renderText("Corpus : presse")}
     if(input$doc_type==2 | input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){output$legende1<-renderText("Corpus : livres")}
     if(input$doc_type==4){output$legende1<-renderText("Corpus : personnalisé")}
-    if(input$doc_type==32| input$doc_type == 33| input$doc_type == 34){output$legende1<-renderText("Corpus : scientifique")}
+    if(input$doc_type==32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){output$legende1<-renderText("Corpus : scientifique")}
     if(input$doc_type == 3 & input$theme_presse == 1){
       liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
       title<-liste_journaux$title[liste_journaux$ark==input$titres[1]]
