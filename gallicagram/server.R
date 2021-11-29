@@ -934,7 +934,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   on.exit(progress$close())
   progress$set(message = "Patience...", value = 0)
   
-  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29| doc_type==35){
+  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29){
     if(se=="windows"){system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
       rD <- rsDriver(browser = "firefox", port = 4444L)
       remDr <- rD[["client"]]}
@@ -1285,12 +1285,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               if(nchar(z)<2){z<-str_c("0",z)}
               beginning = str_c(y,"-",z,"-01")
               end = str_c(y,"-",z,"-",end_of_month[j])
-              url<-str_c("https://trove.nla.gov.au/search/advanced/category/newspapers?keyword=",mot1,"&l-advArtType=newspapers&l-advArtType=gazette&date.from=",beginning,"&date.to=",end)
-              url_base<-str_c("https://trove.nla.gov.au/search/advanced/category/newspapers?keyword=a&l-advArtType=newspapers&l-advArtType=gazette&date.from=",beginning,"&date.to=",end)
+              url<-str_c("https://api.trove.nla.gov.au/v2/result?key=aiffua8e6gnjlpoi&zone=newspaper&q=%22",mot1,"%22%20date[",y,"-",z,"-01%20TO%20",y,"-",z,"-",end_of_month[j],"]&n=1")
+              url_base<-str_c("https://api.trove.nla.gov.au/v2/result?key=aiffua8e6gnjlpoi&zone=newspaper&q=date[",y,"-",z,"-01%20TO%20",y,"-",z,"-",end_of_month[j],"]&n=1")
             }
             if (resolution=="Année"){
-              url<-str_c("https://trove.nla.gov.au/search/advanced/category/newspapers?keyword=",mot1,"&l-advArtType=newspapers&l-advArtType=gazette&date.from=",y,"-01-01&date.to=",y,"-12-31")
-              url_base<-str_c("https://trove.nla.gov.au/search/advanced/category/newspapers?keyword=a&l-advArtType=newspapers&l-advArtType=gazette&date.from=",y,"-01-01&date.to=",y,"-12-31")
+              url<-str_c("https://api.trove.nla.gov.au/v2/result?key=aiffua8e6gnjlpoi&zone=newspaper&q=%22",mot1,"%22%20date[",y,"%20TO%20",y,"]&n=1")
+              url_base<-str_c("https://api.trove.nla.gov.au/v2/result?key=aiffua8e6gnjlpoi&zone=newspaper&q=date[",y,"%20TO%20",y,"]&n=1")
             }
           }
           if(doc_type == 36){
@@ -1658,22 +1658,24 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           if(doc_type ==35){
-            remDr$open()
-            remDr$navigate(url)
-            ngram <- read_html(remDr$getPageSource()[[1]])
-            a<-html_text(html_node(ngram,"body > div > div.content > div:nth-child(4) > div.container > div:nth-child(4) > div.results-container.col > section > div.d-flex.result-header.justify-content-between > div > span"))
-            a<-str_remove_all(a,"[:space:]")
-            a<-str_extract(a,"[:digit:]+")
-            remDr$close()
+            ngram<-read_html(RETRY("GET",url,times = 3))
+            ngram<-as.character(ngram)
+            ngram<-str_extract(ngram,"total.+")
+            ngram<-str_remove_all(ngram,"[:space:]")
+            ngram<-str_remove_all(ngram,"[:punct:]")
+            ngram<-str_remove_all(ngram,"total")
+            a<-str_extract(ngram,"[:digit:]+")
             if(incr_mot==1){
-              remDr$open()
-              remDr$navigate(url_base)
-              ngram_base <- read_html(remDr$getPageSource()[[1]])
-              b<-html_text(html_node(ngram_base,"body > div > div.content > div:nth-child(4) > div.container > div:nth-child(4) > div.results-container.col > section > div.d-flex.result-header.justify-content-between > div > span"))
-              b<-str_remove_all(b,"[:space:]")
-              b<-str_extract(b,"[:digit:]+")
-              remDr$close()
+              ngram_base<-read_html(RETRY("GET",url_base,times = 3))
+              ngram_base<-as.character(ngram_base)
+              ngram_base<-str_extract(ngram_base,"total.+")
+              ngram_base<-str_remove_all(ngram_base,"[:space:]")
+              ngram_base<-str_remove_all(ngram_base,"[:punct:]")
+              ngram_base<-str_remove_all(ngram_base,"total")
+              b<-str_extract(ngram_base,"[:digit:]+")
             }
+            if(input$resolution=="Année"){url=str_c("https://trove.nla.gov.au/search/advanced/category/newspapers?keyword=",mot1,"&l-advArtType=newspapers&date.from=",y,"-01-01&date.to=",y,"-12-31")}
+            if(input$resolution=="Mois"){url=str_c("https://trove.nla.gov.au/search/advanced/category/newspapers?keyword=",mot1,"&l-advArtType=newspapers&date.from=",y,"-",z,"-01&date.to=",y,"-",z,"-",end_of_month[j])}
           }
           if(doc_type ==34){
             ngram<-read_html(RETRY("GET",url,times = 3))
