@@ -832,7 +832,7 @@ ngramize<-function(input){
           w$annee<-str_c(w$annee,"/",w$mois)
           w<-w[,-3]
         }
-        
+        dbDisconnect(con)
 
         if(input$resolution=="Année"){
           y=data.frame(annee=from:to, n=0)
