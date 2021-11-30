@@ -22,7 +22,6 @@ library(ggthemes)
 library(RColorBrewer)
 library(cowplot)
 library(leaflet)
-library(mapview)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
