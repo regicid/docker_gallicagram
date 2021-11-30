@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     libssh2-1-dev \
     libssl1.1 \
     libxml2-dev \
+    libgdal-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # system library dependency for the gallicagram app
