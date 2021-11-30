@@ -21,6 +21,8 @@ library(shinybusy)
 library(ggthemes)
 library(RColorBrewer)
 library(cowplot)
+library(leaflet)
+library(mapview)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -2187,6 +2189,124 @@ contempo<-function(input){
   return(data)
 }
 
+
+cartographie<-function(input){
+  from=min(input$cartoRange)
+  to=max(input$cartoRange)
+  from=str_replace_all(from,"-","/")
+  to=str_replace_all(to,"-","/")
+  mot=as.character(input$cartoMot)
+  fra <- readRDS("gadm36_FRA_2_sf.rds")
+  villes<-read.csv("villes.csv",encoding = "UTF-8",sep=",")
+  
+  fra$count<-0
+  fra$base<-0
+  fra$CC_2<-as.integer(fra$CC_2)
+  
+  progress <- shiny::Progress$new()
+  on.exit(progress$close())
+  progress$set(message = "Patience...", value = 0)
+  
+  mot2 = str_replace_all(mot," ","%20")
+  mot2=URLencode(mot2)
+  mot1=""
+  
+
+  or<-""
+  or_end<-""
+  if(str_detect(mot2,"[+]")){
+    mots_or = str_split(mot2,"[+]")[[1]]
+    or1<-NA
+    or1_end<-NA
+    
+    if(str_detect(mots_or[1],"[*]")){
+      mots_co = str_split(mots_or[1],"[*]")[[1]]
+      mot1<-str_c("(%20text%20adj%20%22",mots_co[1],"%22%20%20prox/unit=word/distance=",prox,"%20%22",mots_co[2],"%22)")
+    }
+    if(str_detect(mots_or[1],"[*]")==F){
+      mot1<-str_c("(%20text%20adj%20%22",mots_or[1],"%22%20)")
+    }
+    
+    for (j in 2:length(mots_or)) {
+        if(str_detect(mots_or[j],"[*]")==F){
+          or1[j]<-str_c("or%20(%20text%20adj%20%22",mots_or[j],"%22%20)")
+          if(mot1==""){mot1<-str_c("(%20text%20adj%20%22",mots_or[1],"%22%20)")}
+        }
+        else{
+          mots_co = str_split(mots_or[j],"[*]")[[1]]
+          or1[j]<-str_c("%20or%20(%20text%20adj%20%22",mots_co[1],"%22%20%20prox/unit=word/distance=",prox,"%20%22",mots_co[2],"%22)")
+        }
+      
+      or<-str_c(or,or1[j])
+      or_end<-str_c(or_end,or1_end[j])
+      
+    }
+  }
+  else{mot1=str_c("%20text%20adj%20%22",mot2,"%22%20")}
+  
+  for (i in 1:length(fra$CC_2)) {
+    v<-NA
+    v<-villes[villes$Code_postal==i,]
+    if(length(v$Code_postal)==0){next}
+    if(length(v$Code_postal)==1){
+      url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(notice%20all%20%22",v$Nom_commune[1],"%22%20)%20and%20(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",from,"%22%20and%20gallicapublication_date%3C=%22",to,"%22)")
+      url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(notice%20all%20%22",v$Nom_commune[1],"%22%20)%20and%20(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",from,"%22%20and%20gallicapublication_date%3C=%22",to,"%22)&suggest=10&keywords=")
+    }
+    if(length(v$Code_postal)>=2){
+      chain<-str_c("notice%20all%20%22",v$Nom_commune[1],"%22%20")
+      for(j in 2:length(v$Code_postal)){
+        chain<-str_c(chain,"or%20notice%20all%20%22",v$Nom_commune[j],"%22%20")
+      }
+      chain<-str_c("(",chain,")%20and%20")
+      chain<-str_replace_all(chain," ","%20")
+      
+      url<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=",chain,"(dc.language%20all%20%22fre%22)%20and%20(",mot1,or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",from,"%22%20and%20gallicapublication_date%3C=%22",to,"%22)")
+      url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=",chain,"(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",from,"%22%20and%20gallicapublication_date%3C=%22",to,"%22)&suggest=10&keywords=")
+    }
+    ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
+    a<-str_extract(str_extract(ngram,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
+    ngram_base<-as.character(read_xml(RETRY("GET",url_base,times = 6)))
+    b<-str_extract(str_extract(ngram_base,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
+
+    
+    fra$count[fra$CC_2==i]<-a
+    fra$base[fra$CC_2==i]<-b
+    progress$inc(1/length(fra$CC_2), detail = paste("Gallicagram fouille le département ", fra$CC_2[i]))
+  }
+  fra$count<-as.integer(fra$count)
+  fra$base<-as.integer(fra$base)
+  fra$count[is.na(fra$count)]<-0
+  fra$base[is.na(fra$base)]<-0
+  fra$val=fra$count/fra$base
+  fra$val=100*fra$val
+  fra$val[is.na(fra$val)]<-0
+  
+  return(fra)
+}
+
+cartoPlot<-function(input,fra){
+  pal <- colorNumeric(
+    palette = "YlOrRd",
+    domain = fra$val
+  )
+  labels <- sprintf("<strong>%s</strong><br/>%g",fra$NAME_2, fra$val) %>% lapply(htmltools::HTML)
+  
+  leaflet(fra) %>% addProviderTiles(providers$Esri.WorldGrayCanvas)%>%
+    setView( lat=46, lng=2 , zoom=5) %>%
+    addPolygons( data=fra, fill=T, fillColor = ~pal(fra$val), fillOpacity = 1,color = "white",
+                 dashArray = "3", stroke=F,label=labels,
+                 labelOptions = labelOptions(
+                   style = list("font-weight" = "normal", padding = "3px 8px"),
+                   textsize = "15px",
+                   direction = "auto"))%>%
+    addLegend("bottomright", pal = pal, values = ~val,
+              title = "",
+              labFormat = labelFormat(suffix = "%"),
+              opacity = 1
+    )
+}
+
+
 options(shiny.maxRequestSize = 100*1024^2)
 
 shinyServer(function(input, output,session){
@@ -2455,6 +2575,32 @@ shinyServer(function(input, output,session){
     blabla$Total<-as.integer(blabla$Total)
     output$total_table_bis<-renderTable({blabla})
   }
+  observeEvent(input$cartoButton,{
+    fra<-cartographie(input)
+    output$carto<-renderLeaflet({cartoPlot(input,fra)})
+    
+    output$downloadCarto <- downloadHandler(
+      filename = function() {
+        paste('carte_', min(input$dateRange),"_",max(input$dateRange),"_",input$cartoMot, '.html', sep='')
+      },
+      content = function(con) {
+        htmlwidgets::saveWidget(as_widget(cartoPlot(input,fra)), con)
+      })
+    
+  })
+  
+  fru <- readRDS("gadm36_FRA_2_sf.rds")
+  fri<-read.csv("cartoInit.csv",fileEncoding = "UTF-8",sep=",")
+  fru$val=fri$val
+  output$carto<-renderLeaflet({cartoPlot(input,fru)})
+  output$downloadCarto <- downloadHandler(
+    filename = function() {
+      paste('carte_', min(input$dateRange),"_",max(input$dateRange),"_",input$cartoMot, '.html', sep='')
+    },
+    content = function(con) {
+      htmlwidgets::saveWidget(as_widget(cartoPlot(input,fru)), con)
+    })
+  
   
   observeEvent(input$do,{
     if(counter==0){

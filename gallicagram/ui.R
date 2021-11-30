@@ -14,6 +14,8 @@ library(htmltools)
 library(shinyWidgets)
 library(rclipboard)
 library(lubridate)
+library(leaflet)
+
 
 shinyUI(fluidPage(
   
@@ -118,7 +120,25 @@ shinyUI(fluidPage(
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right"))
                                                      )
                                               )),
+                   tabPanel("Cartographie",
+                            column(4,wellPanel(
+                              textInput("cartoMot","Recherche dans Gallica/presse","Général Boulanger"),
+                              div(style = "margin-top: -15px"),
+                              dateRangeInput('cartoRange',
+                                             label = '\n',
+                                             start = as.Date.character("1885-01-01"), end = as.Date.character("1890-01-01"),
+                                             separator="à", startview = "decade"),
+                              actionButton("cartoButton","Générer la carte")
+                            )),
+                            column(8,
+                                   fluidRow(leafletOutput("carto")),
+                                   fluidRow(
+                                     div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadCarto', 'Carte interactive'))
+                                     )
+                                   )
+                            ),
                    tabPanel("Notice",shiny::includeMarkdown("Notice.md")),
+                   navbarMenu("Distributions",
                    tabPanel("Distributions",fluidPage(),
                             pageWithSidebar(headerPanel(''),
                                             sidebarPanel(
@@ -166,7 +186,7 @@ shinyUI(fluidPage(
                                                 p("")
                                             )
                             )
-                   ),
+                   )),
                    tabPanel("Tutoriel",
                             fluidPage(
                               h3("Tutoriel et Séminaire de présentation"),
