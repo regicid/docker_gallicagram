@@ -2322,7 +2322,8 @@ cartoGramme<-function(fra,titre){
   fra$val<-fra$val/100
   st_crs(fra)
   fra<-st_transform(fra,crs = 2154)
-  plot<-cartogram_cont(fra, "base", itermax = 8)
+#  plot<-cartogram_cont(fra, "base", itermax = 5,prepare="adjust",threshold = 0.3)
+  plot<-cartogram_dorling(fra, "base", itermax = 5)
   plot=ggplot(data = plot) + geom_sf(aes(fill = val))+
     scale_fill_gradient(low = "white", high = "red", labels = percent)+
     theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
