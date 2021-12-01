@@ -2306,13 +2306,13 @@ cartoPlot<-function(input,fra){
     )
 }
 
-cartogramme<-function(input,fra){
+cartogramme<-function(fra,titre){
   fra$val<-fra$val/100
   plot=ggplot(data = fra) + geom_sf(aes(fill = val))+
     scale_fill_gradient(low = "white", high = "red", labels = percent)+
     theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
                           axis.ticks.y = element_blank(),axis.text.y = element_blank(),
-                          line = element_blank(),legend.title = element_blank())
+                          line = element_blank())+ labs(fill = titre)
   return(plot)
 }
 
@@ -2587,7 +2587,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$cartoButton,{
     fra<-cartographie(input)
     output$carto<-renderLeaflet({cartoPlot(input,fra)})
-    cartog<-cartogramme(input,fra)
+    cartog<-cartogramme(fra,input$cartoMot)
     
     output$downloadCarto <- downloadHandler(
       filename = function() {
@@ -2610,7 +2610,7 @@ shinyServer(function(input, output,session){
   fri<-read.csv("cartoInit.csv",fileEncoding = "UTF-8",sep=",")
   fru$val=fri$val
   output$carto<-renderLeaflet({cartoPlot(input,fru)})
-  cartog<-cartogramme(input,fru)
+  cartog<-cartogramme(fru,"Général Boulanger")
   output$downloadCarto <- downloadHandler(
     filename = function() {
       paste('carte_', min(input$dateRange),"_",max(input$dateRange),"_",input$cartoMot, '.html', sep='')
