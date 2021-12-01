@@ -22,6 +22,7 @@ library(ggthemes)
 library(RColorBrewer)
 library(cowplot)
 library(leaflet)
+library(scales)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -2305,6 +2306,15 @@ cartoPlot<-function(input,fra){
     )
 }
 
+cartogramme<-function(input,fra){
+  fra$val<-fra$val/100
+  plot=ggplot(data = fra) + geom_sf(aes(fill = val))+
+    scale_fill_gradient(low = "white", high = "red", labels = percent)+
+    theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
+                          axis.ticks.y = element_blank(),axis.text.y = element_blank(),
+                          line = element_blank(),legend.title = element_blank())
+  return(plot)
+}
 
 options(shiny.maxRequestSize = 100*1024^2)
 
@@ -2577,6 +2587,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$cartoButton,{
     fra<-cartographie(input)
     output$carto<-renderLeaflet({cartoPlot(input,fra)})
+    cartog<-cartogramme(input,fra)
     
     output$downloadCarto <- downloadHandler(
       filename = function() {
@@ -2585,6 +2596,13 @@ shinyServer(function(input, output,session){
       content = function(con) {
         htmlwidgets::saveWidget(as_widget(cartoPlot(input,fra)), con)
       })
+    output$cartoPng <- downloadHandler(
+      filename = function() {
+        paste('carto_',input$cartoMot,"_",input$beginning,"_",input$end,'.png', sep='')
+      },
+      content = function(filename) {
+        save_plot(filename,cartog)
+      })
     
   })
   
@@ -2592,6 +2610,7 @@ shinyServer(function(input, output,session){
   fri<-read.csv("cartoInit.csv",fileEncoding = "UTF-8",sep=",")
   fru$val=fri$val
   output$carto<-renderLeaflet({cartoPlot(input,fru)})
+  cartog<-cartogramme(input,fru)
   output$downloadCarto <- downloadHandler(
     filename = function() {
       paste('carte_', min(input$dateRange),"_",max(input$dateRange),"_",input$cartoMot, '.html', sep='')
@@ -2599,7 +2618,13 @@ shinyServer(function(input, output,session){
     content = function(con) {
       htmlwidgets::saveWidget(as_widget(cartoPlot(input,fru)), con)
     })
-  
+  output$cartoPng <- downloadHandler(
+    filename = function() {
+      paste('carto_',input$cartoMot,"_",input$beginning,"_",input$end,'.png', sep='')
+    },
+    content = function(filename) {
+      save_plot(filename,cartog)
+    })
   
   observeEvent(input$do,{
     if(counter==0){

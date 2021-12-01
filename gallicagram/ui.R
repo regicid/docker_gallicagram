@@ -133,7 +133,8 @@ shinyUI(fluidPage(
                             column(8,
                                    fluidRow(leafletOutput("carto")),
                                    fluidRow(
-                                     div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadCarto', 'Carte interactive'))
+                                     div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadCarto', 'Carte interactive')),
+                                     div(style="display: inline-block;vertical-align:bottom",downloadButton('cartoPng', 'Carte .png'))
                                      )
                                    )
                             ),
