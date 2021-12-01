@@ -23,6 +23,8 @@ library(RColorBrewer)
 library(cowplot)
 library(leaflet)
 library(scales)
+library(cartogram)
+library(sf)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -2289,7 +2291,7 @@ cartoPlot<-function(input,fra){
     palette = "YlOrRd",
     domain = fra$val
   )
-  labels <- sprintf("<strong>%s</strong><br/>%g",fra$NAME_2, fra$val) %>% lapply(htmltools::HTML)
+  labels <- sprintf("<strong>%s</strong><br/>%s",fra$NAME_2, str_c(fra$count,"/",fra$base,"=",round(fra$val,1),"%")) %>% lapply(htmltools::HTML)
   
   leaflet(fra) %>% addProviderTiles(providers$Esri.WorldGrayCanvas)%>%
     setView( lat=46, lng=2 , zoom=5) %>%
@@ -2306,9 +2308,22 @@ cartoPlot<-function(input,fra){
     )
 }
 
-cartogramme<-function(fra,titre){
+cartoPicture<-function(fra,titre){
   fra$val<-fra$val/100
   plot=ggplot(data = fra) + geom_sf(aes(fill = val))+
+    scale_fill_gradient(low = "white", high = "red", labels = percent)+
+    theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
+                          axis.ticks.y = element_blank(),axis.text.y = element_blank(),
+                          line = element_blank())+ labs(fill = titre)
+  return(plot)
+}
+
+cartoGramme<-function(fra,titre){
+  fra$val<-fra$val/100
+  st_crs(fra)
+  fra<-st_transform(fra,crs = 2154)
+  plot<-cartogram_cont(fra, "base", itermax = 8)
+  plot=ggplot(data = plot) + geom_sf(aes(fill = val))+
     scale_fill_gradient(low = "white", high = "red", labels = percent)+
     theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
                           axis.ticks.y = element_blank(),axis.text.y = element_blank(),
@@ -2587,18 +2602,26 @@ shinyServer(function(input, output,session){
   observeEvent(input$cartoButton,{
     fra<-cartographie(input)
     output$carto<-renderLeaflet({cartoPlot(input,fra)})
-    cartog<-cartogramme(fra,input$cartoMot)
+    cartog<-cartoPicture(fra,input$cartoMot)
+    car<-cartoGramme(fra,input$cartoMot)
     
+    output$cartogramme<-downloadHandler(
+      filename = function() {
+        paste('cartogramme_',input$cartoMot,"_",min(input$cartoRange),"_",max(input$cartoRange),'.png', sep='')
+      },
+      content = function(filename) {
+        save_plot(filename,car)
+      })
     output$downloadCarto <- downloadHandler(
       filename = function() {
-        paste('carte_', min(input$dateRange),"_",max(input$dateRange),"_",input$cartoMot, '.html', sep='')
+        paste('carte_', min(input$cartoRange),"_",max(input$cartoRange),"_",input$cartoMot, '.html', sep='')
       },
       content = function(con) {
         htmlwidgets::saveWidget(as_widget(cartoPlot(input,fra)), con)
       })
     output$cartoPng <- downloadHandler(
       filename = function() {
-        paste('carto_',input$cartoMot,"_",input$beginning,"_",input$end,'.png', sep='')
+        paste('carto_',input$cartoMot,"_",min(input$cartoRange),"_",max(input$cartoRange),'.png', sep='')
       },
       content = function(filename) {
         save_plot(filename,cartog)
@@ -2609,8 +2632,19 @@ shinyServer(function(input, output,session){
   fru <- readRDS("gadm36_FRA_2_sf.rds")
   fri<-read.csv("cartoInit.csv",fileEncoding = "UTF-8",sep=",")
   fru$val=fri$val
+  fru$count=fri$count
+  fru$base=fri$base
   output$carto<-renderLeaflet({cartoPlot(input,fru)})
-  cartog<-cartogramme(fru,"Général Boulanger")
+  
+  
+  
+  output$cartogramme<-downloadHandler(
+    filename = function() {
+      paste('cartogramme_',input$cartoMot,"_",min(input$cartoRange),"_",max(input$cartoRange),'.png', sep='')
+    },
+    content = function(filename) {
+      save_plot(filename,cartoGramme(fru,"Général Boulanger"))
+    })
   output$downloadCarto <- downloadHandler(
     filename = function() {
       paste('carte_', min(input$dateRange),"_",max(input$dateRange),"_",input$cartoMot, '.html', sep='')
@@ -2620,10 +2654,10 @@ shinyServer(function(input, output,session){
     })
   output$cartoPng <- downloadHandler(
     filename = function() {
-      paste('carto_',input$cartoMot,"_",input$beginning,"_",input$end,'.png', sep='')
+      paste('carto_',input$cartoMot,"_",min(input$cartoRange),"_",max(input$cartoRange),'.png', sep='')
     },
     content = function(filename) {
-      save_plot(filename,cartog)
+      save_plot(filename,cartoPicture(fru,"Général Boulanger"))
     })
   
   observeEvent(input$do,{
