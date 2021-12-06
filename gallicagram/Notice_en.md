@@ -11,10 +11,10 @@
 ### Search options
 - In certain libraries (in particular Gallica), you can use Gallicagram in several search modes. 
 - there are 4 different search modes:
-        - by document (volume). For each period, we count how many documents feature at least one occurrence.
-        - by page. For each period, we count how many pages feature at least one occurrence
-        - by article (for contemporary press). For each period, we count how many articles feature at least one occurrence. 
-        - by n-gram (match). For each period, we count the exact number of occurrences in the corpus (only available for the press and books full corpuses).
+	- by document (volume). For each period, we count how many documents feature at least one occurrence.
+	- by page. For each period, we count how many pages feature at least one occurrence
+	- by article (for contemporary press). For each period, we count how many articles feature at least one occurrence. 
+	- by n-gram (match). For each period, we count the exact number of occurrences in the corpus (only available for the press and books full corpuses).
 - You can select a corpus, and chronological boundaries
 - For some corpuses (in particular for the press corpuses), you can choose to display the results per month, instead of year
 - For each search mode and corpus, Gallicagram also measures the total of documents among which the search is made. 
@@ -29,17 +29,18 @@
 
 ### Visualization options
 - The plots are interactive, you can:
-        - isolate some search by clicking on the legends on the color that you can to make disappear (or double clicking one a curve if you only want to display this one)
-        - zoom over parts of the graphic by selectioning a frame
+	
+	- isolate some search by clicking on the legends on the color that you can to make disappear (or double clicking one a curve if you only want to display this one)
+	- zoom over parts of the graphic by selectioning a frame
 	- see the precise values by passing your mouse over a point of the plot
-        - display the distribution of documents over time (advanced options)
-        - display all the search of your session (advanced options). This is especially useful if you want to compare the series coming from different libraries or different languages.
-        - display in the library website the documents where the algorithm found occurrences for a precise period, by clicking on the corresponding plot point.
-        - perform a z-score transformation to compare series which are on different orders of magnitude
-        - smooth the series (moving average by default, but loess is available in the advanced options)
-        - display the difference or the ratio of the two first series
-        - display a correlation matrix of the different series
-        - download the graph and the data (csv). The graph is available in two forms: an interactive format (.html), identical to the one displayed in the website, and a prettier format (“Scientific graph”), in a static fomat (.png).
+	- display the distribution of documents over time (advanced options)
+	- display all the search of your session (advanced options). This is especially useful if you want to compare the series coming from different libraries or different languages.
+	- display in the library website the documents where the algorithm found occurrences for a precise period, by clicking on the corresponding plot point.
+	- perform a z-score transformation to compare series which are on different orders of magnitude
+	- smooth the series (moving average by default, but loess is available in the advanced options)
+	- display the difference or the ratio of the two first series
+	- display a correlation matrix of the different series
+	- download the graph and the data (csv). The graph is available in two forms: an interactive format (.html), identical to the one displayed in the website, and a prettier format (“Scientific graph”), in a static fomat (.png).
 
 ### Computations
  - For each period, the algorithm measures the frequency of occurrence of the syntagms. To do so, we make a ratio between the number of occurrences and the volume of data for this period (the number of words in “By “ngram” mode, the number of documents in “By document” mode, etc.). In other words:
