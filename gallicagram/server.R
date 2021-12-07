@@ -787,20 +787,15 @@ ngramize<-function(input){
         }
       }
       if(input$doc_type==1){
-        if(nb<=2){
+        if(nb<=3){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_presse.db")
-          if(nb==1){gram<-"gram"
+          gram<-"gram"
           if(input$resolution=="Année"){
             base<-read.csv("base_presse_annees_gallica_monogrammes.csv")}
           if(input$resolution=="Mois"){
-            base<-read.csv("base_presse_mois_gallica_monogrammes.csv")}}
-          if(nb==2){gram<-"gram"
-          if(input$resolution=="Année"){
-            base<-read.csv("base_presse_annees_gallica_monogrammes.csv")}
-          if(input$resolution=="Mois"){
-            base<-read.csv("base_presse_mois_gallica_monogrammes.csv")}}
+            base<-read.csv("base_presse_mois_gallica_monogrammes.csv")}
         }
-        if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=0)
+        if(nb>3){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
       if(input$resolution=="Année"){
@@ -1695,7 +1690,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               b<-str_remove_all(b,"résultats")
             }
           }
-          if(doc_type ==36){
+          if(doc_type ==36){tryCatch(
+            {
             ngram<-read_html(RETRY("GET",url,times = 3))
             ngram<-as.character(ngram)
             ngram<-str_extract(ngram,"items.+")
@@ -1715,7 +1711,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             if (input$isidore=="_"){
             url<-str_c("https://isidore.science/s?q=%22",mot1,"%22&date=",y)}
             else{url<-str_c("https://isidore.science/s?q=%22",mot1,"%22&date=",y,"&discipline=http%3A%2F%2Faurehal.archives-ouvertes.fr%2Fsubject%2Fshs.",input$isidore)}
-          }
+            },error=function(cond){message(cond)}
+            )
+            
+            }
           
           
           if(length(b)==0L){b=0}
