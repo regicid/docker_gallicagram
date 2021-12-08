@@ -2628,6 +2628,7 @@ shinyServer(function(input, output,session){
       })
     
   })
+
   
   fru <- readRDS("gadm36_FRA_2_sf.rds")
   fri<-read.csv("cartoInit.csv",fileEncoding = "UTF-8",sep=",")

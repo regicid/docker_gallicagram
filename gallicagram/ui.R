@@ -96,7 +96,8 @@ shinyUI(fluidPage(
                                                                      icon = icon("sliders"), width = "300px",
                                                                      tooltip = tooltipOptions(title = "Afficher les options avancées")
                                                                      )),
-                                                      div(style="display: inline-block;vertical-align:top;float:right",rclipButton("clipbtn", "Citer cet outil",clipText = "Gallicagram par Benjamin Azoulay et Benoît de Courson",icon = icon("clipboard"))),
+                                                      div(style="display: inline-block;vertical-align:top;float:right",rclipButton("clipbtn", "Citation",clipText = "Azoulay, B., & de Courson, B. (n.d.). Gallicagram : un outil de lexicométrie pour la recherche. Retrieved from osf.io/preprints/socarxiv/84bf3",icon = icon("clipboard"))),
+                                                      div(style="display: inline-block;vertical-align:top;float:right",actionButton("link", "Article scientifique",onclick ="window.open('https://osf.io/preprints/socarxiv/84bf3/', '_blank')")),
                                                       plotlyOutput("plot")),
                                             column(4,
                                                    sliderInput("span","Lissage de la courbe",min = 0,max = 10,value = 0),

@@ -53,4 +53,4 @@ $$ ratio_i=\frac{count_i}{base_i} =\frac{x_i}{N_i} $$
 - Finally, Gallicagram plots these values with the frequency on the y-axis and the dates on the x-axis. It also draws a spline linking these points.
 
 ### Use precautions
-- You can find more informations in the associated research article (forthcoming).
+- You can find more informations in the <a href="https://osf.io/preprints/socarxiv/84bf3/" target="_blank">associated research article</a>.

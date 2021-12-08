@@ -54,4 +54,4 @@ $$ ratio_i=\frac{count_i}{base_i} =\frac{x_i}{N_i} $$
 - Le graphique présente cette fréquence en ordonnées et le temps en abscisses selon l’échelle sélectionnée. La courbe qu’il affiche relie les points calculés par l’ordinateur.
 
 ### Conception et précautions d'usage
-- Toutes les informations nécessaires à la bonne utilisation de Gallicagram sont indiquées dans l'article de recherche associé à ce logiciel.
+- Toutes les informations nécessaires à la bonne utilisation de Gallicagram sont indiquées dans <a href="https://osf.io/preprints/socarxiv/84bf3/" target="_blank">l'article de recherche associé à ce logiciel</a>.
