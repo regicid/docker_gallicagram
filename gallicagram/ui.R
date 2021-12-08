@@ -199,7 +199,7 @@ shinyUI(fluidPage(
                               h3("Présentation de Gallicagram"),
                               fluidRow(uiOutput("pdfview"))
                               )),
-             navbarMenu("Langue",tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicagram_en' target='_blank'>English</a>"))),
+             navbarMenu("Langue",tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicagram_en' target='_blank'>English version</a>"))),
                    tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicapresse' target='_blank'>Gallicapresse</a>")),
                    tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicanet' target='_blank'>Gallicanet</a>"))
 )))
