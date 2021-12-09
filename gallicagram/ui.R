@@ -22,6 +22,7 @@ shinyUI(fluidPage(
   navbarPage(title=div(img(src="Logo.png")),
                    tabPanel("Graphique",fluidPage(),
                             tags$head(includeHTML(("google-analytics.html"))),
+                            tags$head(includeHTML(("messenger.html"))),
                             fluidPage(
                                             column(4,wellPanel(
                                                 div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","Joffre&Pétain&Foch")),
