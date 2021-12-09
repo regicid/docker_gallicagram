@@ -15,6 +15,7 @@ library(shinyWidgets)
 library(rclipboard)
 library(lubridate)
 library(leaflet)
+library(shinyjs)
 
 
 shinyUI(fluidPage(
@@ -22,7 +23,7 @@ shinyUI(fluidPage(
   navbarPage(title=div(img(src="Logo.png")),
                    tabPanel("Graphique",fluidPage(),
                             tags$head(includeHTML(("google-analytics.html"))),
-                            fluidPage(tags$script(src = "messenger.js"),
+                            fluidPage(useShinyjs(),tags$script(src = "messenger.js"),
                                             column(4,wellPanel(
                                                 div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","Joffre&Pétain&Foch")),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 20%;",conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",numericInput("prox","Distance",20))),
