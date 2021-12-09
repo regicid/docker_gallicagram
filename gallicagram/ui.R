@@ -22,7 +22,7 @@ shinyUI(fluidPage(
   navbarPage(title=div(img(src="Logo.png")),
                    tabPanel("Graphique",fluidPage(),
                             tags$head(includeHTML(("google-analytics.html"))),
-                            fluidPage(
+                            fluidPage(tags$script(src = "messenger.js"),
                                             column(4,wellPanel(
                                                 div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","Joffre&Pétain&Foch")),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 20%;",conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",numericInput("prox","Distance",20))),
@@ -118,8 +118,7 @@ shinyUI(fluidPage(
                                                       conditionalPanel(condition="input.correlation_test",p("")),
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(tableOutput("corr"),align="right")),
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(tableOutput("corr2"),align="right")),
-                                                      conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right")),
-                                                     tags$script(src = "messenger.js")
+                                                      conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right"))
                                                      )
                                               )),
                    tabPanel("Cartographie",
