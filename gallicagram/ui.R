@@ -118,8 +118,7 @@ shinyUI(fluidPage(
                                                       conditionalPanel(condition="input.correlation_test",p("")),
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(tableOutput("corr"),align="right")),
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(tableOutput("corr2"),align="right")),
-                                                      conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right")),
-                                                     includeHTML("messenger.html")
+                                                      conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right"))
                                                      )
                                               )),
                    tabPanel("Cartographie",
