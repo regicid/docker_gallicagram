@@ -2310,21 +2310,22 @@ cartoPlot<-function(input,fra){
 cartoPicture<-function(fra,titre){
   fra$val<-fra$val/100
   plot=ggplot(data = fra) + geom_sf(aes(fill = val))+
-    scale_fill_gradient(low = "white", high = "red", labels = percent)+
+    scale_fill_gradient2(low = "yellow",mid="red", high = "purple", midpoint = .5, labels = percent)+
     theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
                           axis.ticks.y = element_blank(),axis.text.y = element_blank(),
                           line = element_blank())+ labs(fill = titre)
   return(plot)
 }
 
-cartoGramme<-function(fra,titre){
+cartoGramme<-function(fra,titre,from,to){
   fra$val<-fra$val/100
   st_crs(fra)
   fra<-st_transform(fra,crs = 2154)
+  titre=str_c(titre,"\n",from," - ",to)
 #  plot<-cartogram_cont(fra, "base", itermax = 5,prepare="adjust",threshold = 0.3)
   plot<-cartogram_dorling(fra, "base", itermax = 5)
   plot=ggplot(data = plot) + geom_sf(aes(fill = val))+
-    scale_fill_gradient(low = "white", high = "red", labels = percent)+
+    scale_fill_gradient2(low = "yellow",mid="red", high = "purple", midpoint = .5, labels = percent)+
     theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
                           axis.ticks.y = element_blank(),axis.text.y = element_blank(),
                           line = element_blank())+ labs(fill = titre)
@@ -2603,7 +2604,7 @@ shinyServer(function(input, output,session){
     fra<-cartographie(input)
     output$carto<-renderLeaflet({cartoPlot(input,fra)})
     cartog<-cartoPicture(fra,input$cartoMot)
-    car<-cartoGramme(fra,input$cartoMot)
+    car<-cartoGramme(fra,input$cartoMot,min(input$cartoRange),max(input$cartoRange))
     
     output$cartogramme<-downloadHandler(
       filename = function() {
@@ -2644,7 +2645,7 @@ shinyServer(function(input, output,session){
       paste('cartogramme_',input$cartoMot,"_",min(input$cartoRange),"_",max(input$cartoRange),'.png', sep='')
     },
     content = function(filename) {
-      save_plot(filename,cartoGramme(fru,"Général Boulanger"))
+      save_plot(filename,cartoGramme(fru,"Général Boulanger","1885-01-01","1890-01-01"))
     })
   output$downloadCarto <- downloadHandler(
     filename = function() {
