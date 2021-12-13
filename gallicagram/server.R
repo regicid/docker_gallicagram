@@ -2606,6 +2606,8 @@ shinyServer(function(input, output,session){
     cartog<-cartoPicture(fra,input$cartoMot)
     car<-cartoGramme(fra,input$cartoMot,min(input$cartoRange),max(input$cartoRange))
     
+    output$carto2<-renderPlotly({ggplotly(car)})
+    
     output$cartogramme<-downloadHandler(
       filename = function() {
         paste('cartogramme_',input$cartoMot,"_",min(input$cartoRange),"_",max(input$cartoRange),'.png', sep='')
@@ -2637,8 +2639,7 @@ shinyServer(function(input, output,session){
   fru$count=fri$count
   fru$base=fri$base
   output$carto<-renderLeaflet({cartoPlot(input,fru)})
-  
-  
+  output$carto2<-renderPlotly({ggplotly(cartoGramme(fru,"Général Boulanger","1885-01-01","1890-01-01"))})
   
   output$cartogramme<-downloadHandler(
     filename = function() {

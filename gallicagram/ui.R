@@ -22,7 +22,6 @@ shinyUI(fluidPage(
   navbarPage(title=div(img(src="Logo.png")),
                    tabPanel("Graphique",fluidPage(),
                             tags$head(includeHTML(("google-analytics.html"))),
-                            tags$head(includeHTML(("messenger.html"))),
                             fluidPage(
                                             column(4,wellPanel(
                                                 div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","Joffre&Pétain&Foch")),
@@ -97,6 +96,8 @@ shinyUI(fluidPage(
                                                                      icon = icon("sliders"), width = "300px",
                                                                      tooltip = tooltipOptions(title = "Afficher les options avancées")
                                                                      )),
+                                                      div(style="display: inline-block;vertical-align:top;float:right",actionButton("twitter",label = img (src="twitter.png", width="15", height="15"),onclick ="window.open('https://twitter.com/gallicagram', '_blank')")),
+                                                      div(style="display: inline-block;vertical-align:top;float:right",actionButton("fb",label = img (src="facebook.png", width="15", height="15"),onclick ="window.open('https://www.facebook.com/gallicagram', '_blank')")),
                                                       div(style="display: inline-block;vertical-align:top;float:right",rclipButton("clipbtn", "Citation",clipText = "Azoulay, B., & de Courson, B. (2021, December 8). Gallicagram : un outil de lexicométrie pour la recherche. https://doi.org/10.31235/osf.io/84bf3",icon = icon("clipboard"))),
                                                       div(style="display: inline-block;vertical-align:top;float:right",actionButton("link", "Article de recherche",onclick ="window.open('https://osf.io/preprints/socarxiv/84bf3/', '_blank')")),
                                                       plotlyOutput("plot")),
@@ -138,7 +139,8 @@ shinyUI(fluidPage(
                                      div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadCarto', 'Carte interactive')),
                                      div(style="display: inline-block;vertical-align:bottom",downloadButton('cartoPng', 'Carte .png')),
                                      div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png'))
-                                     )
+                                     ),
+                                   fluidRow(plotlyOutput("carto2"))
                                    )
                             ),
                    tabPanel("Notice",shiny::includeMarkdown("Notice.md")),
