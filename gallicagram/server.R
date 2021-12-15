@@ -2307,28 +2307,41 @@ cartoPlot<-function(input,fra){
     )
 }
 
-cartoPicture<-function(fra,titre){
+cartoPicture<-function(fra,titre,from,to,colorscale){
   fra$val<-fra$val/100
-  plot=ggplot(data = fra) + geom_sf(aes(fill = val))+
+  titre=str_c(titre,"\n",from," - ",to)
+  if(colorscale==F){plot=ggplot(data = fra) + geom_sf(aes(fill = val))+
+    scale_fill_gradient2(low = "white", high = "red", labels = percent)+
+    theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
+                          axis.ticks.y = element_blank(),axis.text.y = element_blank(),
+                          line = element_blank())+ labs(fill = titre)}
+  if(colorscale==T){plot=ggplot(data = fra) + geom_sf(aes(fill = val))+
     scale_fill_gradient2(low = "yellow",mid="red", high = "purple", midpoint = .5, labels = percent)+
     theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
                           axis.ticks.y = element_blank(),axis.text.y = element_blank(),
-                          line = element_blank())+ labs(fill = titre)
+                          line = element_blank())+ labs(fill = titre)}
+  
   return(plot)
 }
 
-cartoGramme<-function(fra,titre,from,to){
+cartoGramme<-function(fra,titre,from,to,colorscale){
   fra$val<-fra$val/100
   st_crs(fra)
   fra<-st_transform(fra,crs = 2154)
   titre=str_c(titre,"\n",from," - ",to)
 #  plot<-cartogram_cont(fra, "base", itermax = 5,prepare="adjust",threshold = 0.3)
   plot<-cartogram_dorling(fra, "base", itermax = 5)
-  plot=ggplot(data = plot) + geom_sf(aes(fill = val))+
+  if(colorscale==F){plot=ggplot(data = plot) + geom_sf(aes(fill = val))+
+    scale_fill_gradient2(low = "white", high = "red", labels = percent)+
+    theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
+                          axis.ticks.y = element_blank(),axis.text.y = element_blank(),
+                          line = element_blank())+ labs(fill = titre)}
+  if(colorscale==T){plot=ggplot(data = plot) + geom_sf(aes(fill = val))+
     scale_fill_gradient2(low = "yellow",mid="red", high = "purple", midpoint = .5, labels = percent)+
     theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
                           axis.ticks.y = element_blank(),axis.text.y = element_blank(),
-                          line = element_blank())+ labs(fill = titre)
+                          line = element_blank())+ labs(fill = titre)}
+  
   return(plot)
 }
 
@@ -2601,10 +2614,11 @@ shinyServer(function(input, output,session){
     output$total_table_bis<-renderTable({blabla})
   }
   observeEvent(input$cartoButton,{
-    fra<-cartographie(input)
+    fra<<-cartographie(input)
+    iscarto<<-T
     output$carto<-renderLeaflet({cartoPlot(input,fra)})
-    cartog<-cartoPicture(fra,input$cartoMot)
-    car<-cartoGramme(fra,input$cartoMot,min(input$cartoRange),max(input$cartoRange))
+    cartog<-cartoPicture(fra,input$cartoMot,min(input$cartoRange),max(input$cartoRange),input$colorscale)
+    car<-cartoGramme(fra,input$cartoMot,min(input$cartoRange),max(input$cartoRange),input$colorscale)
     
     output$carto2<-renderPlotly({ggplotly(car)})
     
@@ -2632,21 +2646,62 @@ shinyServer(function(input, output,session){
     
   })
 
-  
+  iscarto<<-F
   fru <- readRDS("gadm36_FRA_2_sf.rds")
   fri<-read.csv("cartoInit.csv",fileEncoding = "UTF-8",sep=",")
   fru$val=fri$val
   fru$count=fri$count
   fru$base=fri$base
   output$carto<-renderLeaflet({cartoPlot(input,fru)})
-  output$carto2<-renderPlotly({ggplotly(cartoGramme(fru,"Général Boulanger","1885-01-01","1890-01-01"))})
+  output$carto2<-renderPlotly({ggplotly(cartoGramme(fru,"Général Boulanger","1885-01-01","1890-01-01",F))})
+  
+  observeEvent(input$colorscale,{
+    if(iscarto==F){
+      output$carto2<-renderPlotly({ggplotly(cartoGramme(fru,"Général Boulanger","1885-01-01","1890-01-01",input$colorscale))})
+      output$cartogramme<-downloadHandler(
+        filename = function() {
+          paste('cartogramme_',input$cartoMot,"_",min(input$cartoRange),"_",max(input$cartoRange),'.png', sep='')
+        },
+        content = function(filename) {
+          save_plot(filename,cartoGramme(fru,"Général Boulanger","1885-01-01","1890-01-01",input$colorscale))
+        })
+      output$cartoPng <- downloadHandler(
+        filename = function() {
+          paste('carto_',input$cartoMot,"_",min(input$cartoRange),"_",max(input$cartoRange),'.png', sep='')
+        },
+        content = function(filename) {
+          save_plot(filename,cartoPicture(fru,"Général Boulanger","1885-01-01","1890-01-01",input$colorscale))
+        })
+      }
+    else{
+      car<-cartoGramme(fra,input$cartoMot,min(input$cartoRange),max(input$cartoRange),input$colorscale)
+      
+      output$carto2<-renderPlotly({ggplotly(car)})
+      
+      output$cartogramme<-downloadHandler(
+        filename = function() {
+          paste('cartogramme_',input$cartoMot,"_",min(input$cartoRange),"_",max(input$cartoRange),'.png', sep='')
+        },
+        content = function(filename) {
+          save_plot(filename,car)
+        })
+      output$cartoPng <- downloadHandler(
+        filename = function() {
+          paste('carto_',input$cartoMot,"_",min(input$cartoRange),"_",max(input$cartoRange),'.png', sep='')
+        },
+        content = function(filename) {
+          save_plot(filename,cartog)
+        })
+    }
+    
+  })
   
   output$cartogramme<-downloadHandler(
     filename = function() {
       paste('cartogramme_',input$cartoMot,"_",min(input$cartoRange),"_",max(input$cartoRange),'.png', sep='')
     },
     content = function(filename) {
-      save_plot(filename,cartoGramme(fru,"Général Boulanger","1885-01-01","1890-01-01"))
+      save_plot(filename,cartoGramme(fru,"Général Boulanger","1885-01-01","1890-01-01",F))
     })
   output$downloadCarto <- downloadHandler(
     filename = function() {
@@ -2660,7 +2715,7 @@ shinyServer(function(input, output,session){
       paste('carto_',input$cartoMot,"_",min(input$cartoRange),"_",max(input$cartoRange),'.png', sep='')
     },
     content = function(filename) {
-      save_plot(filename,cartoPicture(fru,"Général Boulanger"))
+      save_plot(filename,cartoPicture(fru,"Général Boulanger","1885-01-01","1890-01-01",F))
     })
   
   observeEvent(input$do,{
