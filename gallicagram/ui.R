@@ -26,12 +26,15 @@ shinyUI(fluidPage(
                                             column(4,wellPanel(
                                                 div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","Joffre&Pétain&Foch")),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 20%;",
-                                                    conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",numericInput("prox","Distance",20)),
-                                                    conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3 && input.jocker == 1",numericInput("stpw","StopW",500))
+                                                    conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",numericInput("prox","Distance",20))
                                                     ),
                                                 conditionalPanel(condition="(input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",div(style = "margin-top: -20px")),
                                                 conditionalPanel(condition="(input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",checkboxInput("cooccurrences", "Explorer les cooccurrences", value = FALSE)),
+                                                
+                                                div(style="display: inline-block;vertical-align:bottom;width: 38%;",conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3 && input.jocker == 1",numericInput("stpw","Mots vides ignorés",500))),
+                                                div(style="display: inline-block;vertical-align:bottom;width: 39%;",conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3 && input.jocker == 1",numericInput("nbJocker","Nombre de jockers",5))),
                                                 conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3",div(style = "margin-top: -20px")),
+                                                conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3 && input.jocker == 0",div(style = "margin-top: -20px")),
                                                 conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3",checkboxInput("jocker", "Mode jocker", value = FALSE)),
                                                 div(style = "margin-top: -15px"),
                                                 uiOutput("instructions"),
