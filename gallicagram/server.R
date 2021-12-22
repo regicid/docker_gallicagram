@@ -745,6 +745,10 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
   return(data)
 }
 
+# jokerize<-function(input,mot){
+#   
+# }
+
 ngramize<-function(input){
   
   show_modal_spinner()
@@ -761,6 +765,8 @@ ngramize<-function(input){
       
       increment2<-1
       for(mot in mots2){
+      
+      #if(str_detect(mot,"_")&input$joker==T){jokerize(input,mot)}
       
       table<-unnest_tokens(as.data.frame(mot),ngram,mot, token = "ngrams", n = 1)
       nb<-length(table$ngram)
