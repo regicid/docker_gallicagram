@@ -71,7 +71,7 @@ shinyUI(fluidPage(
                                                                                                            ),buttonLabel='Importer', placeholder='un rapport de recherche')),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 49%;",conditionalPanel(condition = "input.doc_type != 30 && input.doc_type != 31",numericInput("beginning","Début",1914))),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 49%;",conditionalPanel(condition = "input.doc_type != 30 && input.doc_type != 31",numericInput("end","Fin",1920))),
-                                                conditionalPanel(condition = "input.doc_type == 30 || input.doc_type == 31",div(style = "margin-top: -60px")),
+                                                conditionalPanel(condition = "input.doc_type == 30 || input.doc_type == 31",div(style = "margin-top: -15px")),
                                                 conditionalPanel(condition = "input.doc_type == 30 || input.doc_type == 31", dateRangeInput('dateRange',
                                                                                                                                 label = '\n',
                                                                                                                                 start = as.Date.character("2021-01-01"), end = as.character(Sys.Date()),
