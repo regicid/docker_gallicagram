@@ -933,6 +933,12 @@ ngramize<-function(input){
 
 get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,prox){
   if(doc_type==6 | doc_type==7){mot <- iconv(mot, from="UTF-8",to="ASCII//TRANSLIT//IGNORE")}
+  if(input$doc_type==30|input$doc_type==31){
+    from=min(input$dateRange)
+    to=max(input$dateRange)
+    from=as.integer(str_extract(from,"...."))
+    to=as.integer(str_extract(to,"...."))
+    }
   mots = str_split(mot,"&")[[1]]
   tableau<-as.data.frame(matrix(nrow=0,ncol=5),stringsAsFactors = FALSE)
   progress <- shiny::Progress$new()
@@ -1308,7 +1314,35 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               url_base<-str_c("https://api.isidore.science/resource/search?date=",y,"&replies=1&discipline=http%3A%2F%2Faurehal.archives-ouvertes.fr%2Fsubject%2Fshs.",input$isidore)
             }
           }
-
+          if(doc_type == 30){
+            if(resolution=="Mois"){
+              z = as.character(j)
+              if(nchar(z)<2){z<-str_c("0",z)}
+              beginning = str_c(y,"-",z,"-01")
+              end = str_c(y,"-",z,"-",end_of_month[j])
+              url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F",z,"%2F",y,"&end_at=",end_of_month[j],"%2F",z,"%2F",y,"&search_sort=date_asc")
+              url_base<-str_c("https://www.lemonde.fr/recherche/?search_keywords=le&start_at=01%2F",z,"%2F",y,"&end_at=",end_of_month[j],"%2F",z,"%2F",y,"&search_sort=date_asc")
+            }
+            if (resolution=="Année"){
+              url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F01%2F",y,"&end_at=31%2F12%2F",y,"&search_sort=date_asc")
+              url_base<-str_c("https://www.lemonde.fr/recherche/?search_keywords=le&start_at=01%2F01%2F",y,"&end_at=31%2F12%2F",y,"&search_sort=date_asc")
+            }
+          }
+          if(doc_type == 31){
+            if(resolution=="Mois"){
+              z = as.character(j)
+              if(nchar(z)<2){z<-str_c("0",z)}
+              beginning = str_c(y,"-",z,"-01")
+              end = str_c(y,"-",z,"-",end_of_month[j])
+              url<-str_c("https://recherche.lefigaro.fr/recherche/",mot1,"/?publication=lefigaro.fr&datemin=01-",z,"-",y,"&datemax=",end_of_month[j],"-",z,"-",y)
+              url_base<-str_c("https://recherche.lefigaro.fr/recherche/_/?publication=lefigaro.fr&datemin=01-",z,"-",y,"&datemax=",end_of_month[j],"-",z,"-",y)
+            }
+            if (resolution=="Année"){
+              url<-str_c("https://recherche.lefigaro.fr/recherche/",mot1,"/?publication=lefigaro.fr&datemin=01-01-",y,"&datemax=31-12-",y)
+              url_base<-str_c("https://recherche.lefigaro.fr/recherche/_/?publication=lefigaro.fr&datemin=01-01-",y,"&datemax=31-12-",y)
+            }
+          }
+          
           
           if(doc_type == 1 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
             ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
@@ -1720,7 +1754,54 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             },error=function(cond){message(cond)}
             )
             
+          }
+          
+          if(input$doc_type == 30){
+            
+            page<-read_html(RETRY("GET",url,times = 6))
+            ngram<-page
+            ngram<-html_text(html_node(ngram,"#js-body > main > article > section > section.page__float > section.page__content.river.river--rubrique.river--search > section.river__pagination"))
+            ngram<-str_squish(ngram)
+            a<-str_extract(ngram,"([:digit:]+)$")
+            
+            if(is.na(a)){
+              ngram<-page
+              ngram<-html_node(ngram,"#js-body > main > article > section > section.page__float > section.page__content.river.river--rubrique.river--search > section.js-river-search")
+              ngram<-as.character(ngram)
+              a<-str_count(ngram,"teaser teaser--inline-picture")
             }
+            else{
+              url<-str_c(url,"&page=",a)
+              page<-read_html(RETRY("GET",url,times = 6))
+              ngram<-page
+              ngram<-html_node(ngram,"#js-body > main > article > section > section.page__float > section.page__content.river.river--rubrique.river--search > section.js-river-search")
+              ngram<-as.character(ngram)
+              c<-str_count(ngram,"teaser teaser--inline-picture")
+              a<-as.integer(a)
+              c<-as.integer(c)
+              a<-(a-1)*40+c
+            }
+            if(incr_mot==1){
+              ngram<-read_html(RETRY("GET",url_base,times = 6))
+              ngram<-html_text(html_node(ngram,"#js-body > main > article > section > section.page__float > section.page__content.river.river--rubrique.river--search > section.river__pagination"))
+              ngram<-str_squish(ngram)
+              b<-str_extract(ngram,"([:digit:]+)$")
+              b<-as.integer(b)
+              b=40*b
+            }
+          }
+          if(input$doc_type == 31){
+            ngram<-read_html(RETRY("GET",url,times = 6))
+            ngram<-as.character(html_node(ngram,".facettes__nombre"))
+            ngram<-str_replace_all(ngram,"[:space:]","")
+            a<-str_extract(ngram,"[:digit:]+")
+            if(incr_mot==1){
+              ngram_base<-read_html(RETRY("GET",url_base,times = 6))
+              ngram_base<-as.character(html_node(ngram_base,".facettes__nombre"))
+              ngram_base<-str_replace_all(ngram_base,"[:space:]","")
+              b<-str_extract(ngram_base,"[:digit:]+")
+            }        
+          }
           
           
           if(length(b)==0L){b=0}
@@ -1941,6 +2022,14 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$langue="Allemand"
   tableau$bibli="ANNO"
   tableau$search_mode<-"Document"}
+  if(doc_type==30){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Le Monde"
+  tableau$search_mode<-"Article"}
+  if(doc_type==31){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Le Figaro"
+  tableau$search_mode<-"Article"}
   if(doc_type==32){tableau$corpus="Scientifique"
   tableau$langue="Français"
   tableau$bibli="Cairn"
@@ -2510,7 +2599,7 @@ shinyServer(function(input, output,session){
     }
     if( input$doc_type == 30 | input$doc_type == 31){
       updateSelectInput(session,"search_mode",choices = list("Par article" = 4),selected = 4)
-      updateRadioButtons(session,"resolution",choices = c("Semaine"),selected = "Semaine",inline = T)
+      updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Semaine",inline = T)
     }
     if(input$doc_type == 32 | input$doc_type == 33 | input$doc_type == 34 | input$doc_type == 36){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
@@ -2734,7 +2823,7 @@ shinyServer(function(input, output,session){
       }
     
 
-    if ((input$doc_type==1 & input$search_mode==1) |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 35| input$doc_type == 36){
+    if ((input$doc_type==1 & input$search_mode==1) |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 35| input$doc_type == 36|((input$doc_type==30 | input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) ){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
@@ -2757,7 +2846,7 @@ shinyServer(function(input, output,session){
     else if(input$search_mode==3){
       df=ngramize(input)
     }
-    else if(input$doc_type==30 | input$doc_type==31){
+    else if((input$doc_type==30 | input$doc_type==31)&input$resolution=="Semaine"){
       df=contempo(input)
     }
     
