@@ -694,8 +694,8 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
       beginning<-str_replace_all(tableau$date[j],"-","/")
       end<-str_replace_all(tableau$date[j],"-","/")
       if(resolution=="Années"){
-        beginning=str_c(beginning,"/01")
-        end=str_c(end,"/12")}
+        beginning=str_c(beginning,"/01/01")
+        end=str_c(end,"/12/31")}
       tableau$url[j]<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=20&page=1&collapsing=false&exactSearch=true&query=(dc.relation%20any%20%22",ark1,"%22",ark3,")%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(text%20adj%20%22",mot,"%22%20)%20and%20(gallicapublication_date%3E=%22",beginning,"/01%22%20and%20gallicapublication_date%3C=%22",end,"/31%22)sortby%20dc.date%20")}
     if(doc_type==4){tableau$url[j]<-"https://gallica.bnf.fr/"}
   }
