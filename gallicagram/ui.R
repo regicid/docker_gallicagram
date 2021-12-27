@@ -39,6 +39,14 @@ $(document).on('shiny:sessioninitialized', function(event) {
   Shiny.onInputChange('myBrowser', navigator.sayswho); 
 });
 "
+mobileDetect <- function(inputId, value = 0) {
+  tagList(
+    singleton(tags$head(tags$script(src = "mobile.js"))),
+    tags$input(id = inputId,
+               class = "mobile-element",
+               type = "hidden")
+  )
+}
 
 shinyUI(fluidPage(
   tags$head(includeHTML(("google-analytics.html"))),
@@ -48,6 +56,7 @@ shinyUI(fluidPage(
   tags$head(
     tags$script(HTML(je))
   ),
+  mobileDetect('isMobile'),
   navbarPage(title=div(img(src="Logo.png")),
                    tabPanel("Graphique",fluidPage(),
                             fluidPage(
