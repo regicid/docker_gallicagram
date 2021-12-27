@@ -2440,12 +2440,6 @@ cartoGramme<-function(fra,titre,from,to,colorscale){
 options(shiny.maxRequestSize = 100*1024^2)
 
 shinyServer(function(input, output,session){
-  observeEvent(input$os_version,{
-    print(input$os_version)
-  })
-  observeEvent(input$myBrowser,{
-    print(input$myBrowser)
-  })
   observeEvent(input$isMobile,{
     print(input$isMobile)
   })

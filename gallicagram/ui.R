@@ -16,29 +16,7 @@ library(rclipboard)
 library(lubridate)
 library(leaflet)
 
-je <- "
-// execute the code after the shiny session has started
-$(document).on('shiny:sessioninitialized', function(event) {
-  // browser detection from https://stackoverflow.com/a/5918791/8099834
-  navigator.sayswho= (function(){
-    var ua= navigator.userAgent, tem, 
-    M= ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\\/))\\/?\\s*(\\d+)/i) || [];
-    if(/trident/i.test(M[1])){
-        tem=  /\\brv[ :]+(\\d+)/g.exec(ua) || [];
-        return 'IE '+(tem[1] || '');
-    }
-    if(M[1]=== 'Chrome'){
-        tem= ua.match(/\\b(OPR|Edge)\\/(\\d+)/);
-        if(tem!= null) return tem.slice(1).join(' ').replace('OPR', 'Opera');
-    }
-    M= M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
-    if((tem= ua.match(/version\\/(\\d+)/i))!= null) M.splice(1, 1, tem[1]);
-    return M.join(' ');
-  })(); 
-  // pass browser info from JS to R
-  Shiny.onInputChange('myBrowser', navigator.sayswho); 
-});
-"
+
 mobileDetect <- function(inputId, value = 0) {
   tagList(
     singleton(tags$head(tags$script(src = "mobile.js"))),
@@ -51,11 +29,6 @@ mobileDetect <- function(inputId, value = 0) {
 shinyUI(fluidPage(
   tags$head(includeHTML(("google-analytics.html"))),
   tags$head(includeHTML(("google-search.html"))),
-  tags$script("$(document).on('shiny:sessioninitialized', function(event) {
-                Shiny.onInputChange('os_version',  window.navigator.platform);});"),
-  tags$head(
-    tags$script(HTML(je))
-  ),
   mobileDetect('isMobile'),
   navbarPage(title=div(img(src="Logo.png")),
                    tabPanel("Graphique",fluidPage(),
