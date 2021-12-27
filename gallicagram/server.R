@@ -2443,6 +2443,9 @@ shinyServer(function(input, output,session){
   observeEvent(input$os_version,{
     print(input$os_version)
   })
+  observeEvent(input$myBrowser,{
+    print(input$myBrowser)
+  })
   
   data=list(read.csv("exemple.csv",encoding = "UTF-8"),"Joffre&Pétain&Foch","Années")
   names(data)=c("tableau","mot","resolution")
