@@ -2440,6 +2440,10 @@ cartoGramme<-function(fra,titre,from,to,colorscale){
 options(shiny.maxRequestSize = 100*1024^2)
 
 shinyServer(function(input, output,session){
+  observeEvent(input$os_version,{
+    print(input$os_version)
+  })
+  
   data=list(read.csv("exemple.csv",encoding = "UTF-8"),"Joffre&Pétain&Foch","Années")
   names(data)=c("tableau","mot","resolution")
   memoire<<-read.csv("exemple.csv",encoding="UTF-8")

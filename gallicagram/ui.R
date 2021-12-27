@@ -20,6 +20,8 @@ library(leaflet)
 shinyUI(fluidPage(
   tags$head(includeHTML(("google-analytics.html"))),
   tags$head(includeHTML(("google-search.html"))),
+  tags$script("$(document).on('shiny:sessioninitialized', function(event) {
+                Shiny.onInputChange('os_version',  window.navigator.platform);});"),
   
   navbarPage(title=div(img(src="Logo.png")),
                    tabPanel("Graphique",fluidPage(),
