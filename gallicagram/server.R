@@ -2920,7 +2920,6 @@ shinyServer(function(input, output,session){
         }
         nouvrequette=m
         print(nouvrequette)
-        updateTextInput(session,"mot","Recherche",nouvrequette)
         df=ngramize(input,nouvrequette)
       }
       else if(input$joker==F){df=ngramize(input)}
