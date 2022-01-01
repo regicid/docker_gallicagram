@@ -2911,12 +2911,10 @@ shinyServer(function(input, output,session){
     else if(input$search_mode==3){
       if(input$joker==T){
         jokertable<-jokerize(input)
-        nouvrequette<-paste(jokertable$gram,sep = "&")
+        nouvrequette<-paste(unlist(jokertable$gram),sep = "&")
         print(nouvrequette)
         updateTextInput(session,"mot","Recherche",nouvrequette)
-        nouvrequette<-str_replace_all(input$mot,",","&")
-        updateTextInput(session,"mot","Recherche",nouvrequette)
-        Sys.sleep(.1)
+        input$mot<-nouvrequette
         }
       df=ngramize(input)
     }
