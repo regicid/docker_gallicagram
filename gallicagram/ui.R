@@ -42,7 +42,7 @@ shinyUI(fluidPage(
                                                 conditionalPanel(condition="(input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",checkboxInput("cooccurrences", "Explorer les cooccurrences", value = FALSE)),
                                                 
                                                 conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3 && input.joker == 1",
-                                                                 # div(style="display: inline-block;vertical-align:bottom;width: 38%;",numericInput("stpw","Mots vides ignorés",500)),
+                                                                 div(style="display: inline-block;vertical-align:bottom;width: 38%;",numericInput("stpw","Mots vides ignorés",500)),
                                                                  div(style="display: inline-block;vertical-align:bottom;width: 39%;",numericInput("nbJoker","Nombre de jokers",5))
                                                                  ),
                                                 conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3",div(style = "margin-top: -20px")),

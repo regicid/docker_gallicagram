@@ -795,10 +795,13 @@ jokerize<-function(input){
   con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
   
   
-  query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where ',gram,' match "^',mot,'") group by ',gram,' order by tot desc limit ',input$nbJoker,';'))
+  query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where ',gram,' match "^',mot,'") group by ',gram,' order by tot desc limit ',input$nbJoker+input$stpw,';'))
   w = dbFetch(query)
-  print(w)
+  stpw = read.csv("stopwords.csv",nrows=input$stpw,row.names=1,stringsAsFactors=F)
+  z = unlist(w[gram]) %in% paste(mot,stpw$monogram)
+  print(w[!z,][1:input$nbJoker,])
   
+
   dbDisconnect(con)
   
   
