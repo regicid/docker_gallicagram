@@ -812,14 +812,13 @@ jokerize<-function(input){
   
 }
 
-ngramize<-function(input,nouvrequette){
+ngramize<-function(input){
   
   show_modal_spinner()
   
   from<-input$beginning
   to<-input$end
-  if(input$joker==F){mots = str_split(input$mot,"&")[[1]]}
-  if(input$joker==T){mots = str_split(nouvrequette,"&")[[1]]}
+  mots = str_split(input$mot,"&")[[1]]
   
   increment<-1
     
@@ -2913,9 +2912,10 @@ shinyServer(function(input, output,session){
       if(input$joker==T){
         jokertable<-jokerize(input)
         nouvrequette<-paste(jokertable$gram,sep = "&")
-        df=ngramize(input,nouvrequette)
-      }
-      else{df=ngramize(input)}
+        print(nouvrequette)
+        updateTextInput(session,"mot","Recherche",nouvrequette)
+        }
+      df=ngramize(input)
     }
     else if((input$doc_type==30 | input$doc_type==31)&input$resolution=="Semaine"){
       df=contempo(input)
