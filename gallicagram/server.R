@@ -985,7 +985,7 @@ ngramize<-function(input,nouvrequette){
   tableau$date<-as.character(tableau$date)
   memoire<<-bind_rows(tableau,memoire)
   if(input$joker==F){data = list(tableau,paste(input$mot,collapse="&"),input$resolution)}
-  if(input$joker==F){data = list(tableau,paste(nouvrequette,collapse="&"),input$resolution)}
+  if(input$joker==T){data = list(tableau,paste(nouvrequette,collapse="&"),input$resolution)}
   names(data) = c("tableau","mot","resolution")
   
   remove_modal_spinner()
@@ -2920,6 +2920,7 @@ shinyServer(function(input, output,session){
         }
         nouvrequette=m
         print(nouvrequette)
+        updateTextInput(session,"mot","Recherche",nouvrequette)
         df=ngramize(input,nouvrequette)
       }
       else if(input$joker==F){df=ngramize(input)}
