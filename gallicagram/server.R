@@ -812,13 +812,14 @@ jokerize<-function(input){
   
 }
 
-ngramize<-function(input){
+ngramize<-function(input,nouvrequette){
   
   show_modal_spinner()
   
   from<-input$beginning
   to<-input$end
-  mots = str_split(input$mot,"&")[[1]]
+  if(input$joker==F){mots = str_split(input$mot,"&")[[1]]}
+  if(input$joker==T){mots = str_split(nouvrequette,"&")[[1]]}
   
   increment<-1
     
@@ -983,7 +984,8 @@ ngramize<-function(input){
   }
   tableau$date<-as.character(tableau$date)
   memoire<<-bind_rows(tableau,memoire)
-  data = list(tableau,paste(input$mot,collapse="&"),input$resolution)
+  if(input$joker==F){data = list(tableau,paste(input$mot,collapse="&"),input$resolution)}
+  if(input$joker==F){data = list(tableau,paste(nouvrequette,collapse="&"),input$resolution)}
   names(data) = c("tableau","mot","resolution")
   
   remove_modal_spinner()
@@ -2912,11 +2914,12 @@ shinyServer(function(input, output,session){
       if(input$joker==T){
         jokertable<-jokerize(input)
         nouvrequette<-paste(unlist(jokertable$gram),sep = "&")
+        nouvrequette=paste(nouvrequette,sep = "&")
         print(nouvrequette)
         updateTextInput(session,"mot","Recherche",nouvrequette)
-        input$mot<-nouvrequette
-        }
-      df=ngramize(input)
+        df=ngramize(input,nouvrequette)
+      }
+      else if(input$joker==F){df=ngramize(input)}
     }
     else if((input$doc_type==30 | input$doc_type==31)&input$resolution=="Semaine"){
       df=contempo(input)
