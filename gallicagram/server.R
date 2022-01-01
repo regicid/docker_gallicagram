@@ -2913,8 +2913,12 @@ shinyServer(function(input, output,session){
     else if(input$search_mode==3){
       if(input$joker==T){
         jokertable<-jokerize(input)
-        nouvrequette<-paste(as.character(jokertable$gram),sep = "&")
-        nouvrequette=paste(nouvrequette,sep = "&")
+        l<-as.character(jokertable$gram)
+        m=l[1]
+        for (h in 2:length(l)) {
+          m<-str_c(m,"&",l[h])
+        }
+        nouvrequette=m
         print(nouvrequette)
         updateTextInput(session,"mot","Recherche",nouvrequette)
         df=ngramize(input,nouvrequette)
