@@ -2914,6 +2914,9 @@ shinyServer(function(input, output,session){
         nouvrequette<-paste(jokertable$gram,sep = "&")
         print(nouvrequette)
         updateTextInput(session,"mot","Recherche",nouvrequette)
+        nouvrequette<-str_replace_all(input$mot,",","&")
+        updateTextInput(session,"mot","Recherche",nouvrequette)
+        Sys.sleep(.1)
         }
       df=ngramize(input)
     }
