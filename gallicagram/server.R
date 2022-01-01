@@ -745,9 +745,67 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
   return(data)
 }
 
-# jokerize<-function(input,mot){
-#   
-# }
+jokerize<-function(input){
+  
+  show_modal_spinner()
+  
+  mot<-str_remove_all(input$mot,"&.+")
+  mot<-str_remove_all(mot,"[+].+")
+  mot<-str_remove_all(mot,"[+]")
+  mot<-str_remove_all(mot,"&")
+  
+  if(str_detect(mot,"_.+")){pos<-"avant"}
+  else if (str_detect(mot,".+_")){pos<-"apres"}
+  
+  mot<-str_remove_all(mot,"_")
+  
+  table<-unnest_tokens(as.data.frame(mot),ngram,mot, token = "ngrams", n = 1)
+  nb<-length(table$ngram)
+  mot<-table$ngram[1]
+  if(nb>1){for(x in 2:nb){mot<-str_c(mot," ",table$ngram[x])}}
+  
+  if(input$doc_type==2){
+    if(nb>4){next}
+    if(nb<=4){
+      ngram_file<-str_c("/mnt/persistent/",nb,"gram.db")
+      if(nb==1){gram<-"bigram"
+      base<-read.csv("base_livres_gallica_monogrammes.csv")}
+      if(nb==2){gram<-"trigram"
+      base<-read.csv("base_livres_gallica_bigrammes.csv")}
+      if(nb==3){gram<-"tetragram"
+      base<-read.csv("base_livres_gallica_trigrammes.csv")}
+      if(nb==4){gram<-"pentagram"
+      base<-read.csv("base_livres_gallica_tetragrammes.csv")}
+    }
+  }
+  if(input$doc_type==1){
+    if(nb<=2){
+      ngram_file<-str_c("/mnt/persistent/",nb+1,"gram_presse.db")
+      gram<-"gram"
+      if(input$resolution=="Année"){
+        base<-read.csv("base_presse_annees_gallica_monogrammes.csv")}
+      if(input$resolution=="Mois"){
+        base<-read.csv("base_presse_mois_gallica_monogrammes.csv")}
+    }
+    if(nb>2){next}
+  }
+  
+  
+  
+  con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
+  
+  
+  query = dbSendQuery(con,str_c("select sum(n) as tot ",gram," from full_text WHERE ",gram," MATCH '^",mot,"' group by ",gram," order by tot desc limit ",input$nbJoker))
+  w = dbFetch(query)
+  print(w)
+  
+  dbDisconnect(con)
+  
+  
+  
+  remove_modal_spinner()
+  
+}
 
 ngramize<-function(input){
   
@@ -766,8 +824,7 @@ ngramize<-function(input){
       increment2<-1
       for(mot in mots2){
       
-      #if(str_detect(mot,"_")&input$joker==T){jokerize(input,mot)}
-      
+
       table<-unnest_tokens(as.data.frame(mot),ngram,mot, token = "ngrams", n = 1)
       nb<-length(table$ngram)
       mot<-table$ngram[1]
@@ -2457,13 +2514,13 @@ shinyServer(function(input, output,session){
   
 
   observeEvent(input$doc_type,{observeEvent(input$search_mode,{observeEvent(input$cooccurrences,{observeEvent(input$prox,{
-    # observeEvent(input$joker,{
+    observeEvent(input$joker,{
     if(input$cooccurrences==T & ((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1))){
       output$instructions <- renderUI(HTML(str_c('<ul><li>Utiliser "a*b" pour rechercher a à ',input$prox,' mots maximum de b</li><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>')))
       
-    # }else if(input$joker==T & ((input$doc_type == 1 & input$search_mode == 3)|(input$doc_type == 2 & input$search_mode == 3))){
-    #   output$instructions <- renderUI(HTML(str_c('<ul><li>Utiliser "a_" pour rechercher les n+1 grammes contenant a. "Napoléon_" renvoie code Napoléon, Napoléon Ier, Napoléon III, etc. </li><li>Indiquer le nombre de mots vides (stop words) à éliminer de la recherche</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>')))
-    #   
+    }else if(input$joker==T & ((input$doc_type == 1 & input$search_mode == 3)|(input$doc_type == 2 & input$search_mode == 3))){
+      output$instructions <- renderUI(HTML(str_c('<ul><li>Utiliser "a_" pour rechercher les n+1 grammes contenant a. "Napoléon_" renvoie code Napoléon, Napoléon Ier, Napoléon III, etc. </li><li>Indiquer le nombre de mots vides (stop words) à éliminer de la recherche</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>')))
+
     }else if((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1)|(input$doc_type == 1 & input$search_mode == 3)|(input$doc_type == 2 & input$search_mode == 3)|input$doc_type == 5|input$doc_type == 6|input$doc_type == 7|input$doc_type == 8|input$doc_type == 9|input$doc_type == 10|input$doc_type == 11|input$doc_type == 12|input$doc_type == 15|input$doc_type == 16|input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 29){
       output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>'))
       
@@ -2471,7 +2528,7 @@ shinyServer(function(input, output,session){
       output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>'))
     }
     else{output$instructions <- renderUI("")}
-    # })
+    })
     })})})})
   
     
@@ -2847,6 +2904,7 @@ shinyServer(function(input, output,session){
       df=page_search(input$mot,input$beginning,input$end,input$resolution,df,input$doc_type,input$search_mode,input$titres)
     }
     else if(input$search_mode==3){
+      if(input$joker==T){jokerize(input)}
       df=ngramize(input)
     }
     else if((input$doc_type==30 | input$doc_type==31)&input$resolution=="Semaine"){
