@@ -799,7 +799,8 @@ jokerize<-function(input){
   w = dbFetch(query)
   stpw = read.csv("stopwords.csv",nrows=input$stpw,row.names=1,stringsAsFactors=F)
   z = unlist(w[gram]) %in% paste(mot,stpw$monogram)
-  print(w[!z,][1:input$nbJoker,])
+  
+  jokertable<-w[!z,][1:input$nbJoker,]
   
 
   dbDisconnect(con)
@@ -807,16 +808,18 @@ jokerize<-function(input){
   
   
   remove_modal_spinner()
+  render(jokertable)
   
 }
 
-ngramize<-function(input){
+ngramize<-function(input,nouvrequette){
   
   show_modal_spinner()
   
   from<-input$beginning
   to<-input$end
-  mots = str_split(input$mot,"&")[[1]]
+  if(input$joker==F){mots = str_split(input$mot,"&")[[1]]}
+  if(input$joker==T){mots = str_split(nouvrequette,"&")[[1]]}
   
   increment<-1
     
@@ -2907,8 +2910,12 @@ shinyServer(function(input, output,session){
       df=page_search(input$mot,input$beginning,input$end,input$resolution,df,input$doc_type,input$search_mode,input$titres)
     }
     else if(input$search_mode==3){
-      if(input$joker==T){jokerize(input)}
-      df=ngramize(input)
+      if(input$joker==T){
+        jokertable<-jokerize(input)
+        nouvrequette<-paste(jokertable$gram,sep = "&")
+        df=ngramize(input,nouvrequette)
+      }
+      else{df=ngramize(input)}
     }
     else if((input$doc_type==30 | input$doc_type==31)&input$resolution=="Semaine"){
       df=contempo(input)
