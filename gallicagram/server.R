@@ -38,7 +38,7 @@ window.open(url);
 });
 }"
 
-se="windows"
+se="linux"
 
 Plot <- function(data,input){
 
