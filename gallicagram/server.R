@@ -780,13 +780,14 @@ jokerize<-function(input){
     if(nb>4){next}
     if(nb<=4){
       ngram_file<-str_c("/mnt/persistent/",nb,"gram.db")
-      if(nb==1){gram<-"bigram"
+      gram="gram"
+      if(nb==1){
       base<-read.csv("base_livres_gallica_monogrammes.csv")}
-      if(nb==2){gram<-"trigram"
+      if(nb==2){
       base<-read.csv("base_livres_gallica_bigrammes.csv")}
-      if(nb==3){gram<-"tetragram"
+      if(nb==3){
       base<-read.csv("base_livres_gallica_trigrammes.csv")}
-      if(nb==4){gram<-"pentagram"
+      if(nb==4){
       base<-read.csv("base_livres_gallica_tetragrammes.csv")}
     }
   }
