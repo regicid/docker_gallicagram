@@ -73,6 +73,18 @@ Plot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   
+  if(input$histoJoker==T & (input$doc_type==1 | input$doc_type==3) & input$search_mode==3){
+    
+    total<-select(tableau,count,mot)
+    total<-total%>%group_by(mot)%>%summarise_all(sum)
+    if(input$doc_type==1){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
+    if(input$doc_type==2){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
+    print(total$url)
+    plot<-plot_ly(x=~total$count,y=reorder(total$mot,total$count),type="bar")
+    plot<-layout(plot,xaxis=list(title="Nombre d'occurrences dans le corpus"))
+    return(onRender(plot,js))
+  }
+  
   tableau$scale<-tableau$ratio
   
   for(mot in unique(tableau$mot)){
@@ -220,6 +232,7 @@ Plot <- function(data,input){
       plot=layout(plot)
       return(onRender(plot,js))
     }
+    
   
 }
 
@@ -1965,7 +1978,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$url = str_replace(tableau$url,"maximumRecords=1","maximumRecords=25")
   
   if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29| doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40){
-    remDr$close()
+    remDr$quit()
     if(se=="windows"){
     rD$server$stop()
     rm(rD)
