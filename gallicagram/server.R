@@ -798,7 +798,7 @@ jokerize<-function(input){
     query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where ',gram," match '^",'"',mot,'"',"') group by ",gram,' order by tot desc limit ',20+input$nbJoker+input$stpw,';'))
   }
   if(pos=="avant"){
-    query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where ',gram,' match "',mot,'") group by ',gram,' order by tot desc limit ',1000+input$nbJoker+input$stpw,';'))
+    query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where ',gram," match '",'"',mot,'"', "') group by ",gram,' order by tot desc limit ',1000+input$nbJoker+input$stpw,';'))
   }
   w = dbFetch(query)
   dbDisconnect(con)
@@ -816,9 +816,7 @@ jokerize<-function(input){
     z = unlist(w[gram]) %in% paste(stpw$monogram,mot)
     jokertable<-w[!z,]
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot))==F,]
-    print(jokertable)
     jokertable<-jokertable[1:input$nbJoker,]
-    print(jokertable)
     }
   
   remove_modal_spinner()
