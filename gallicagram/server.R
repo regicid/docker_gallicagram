@@ -73,7 +73,7 @@ Plot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   
-  if(input$histoJoker==T & (input$doc_type==1 | input$doc_type==3) & input$search_mode==3){
+  if(input$joker==T & input$histoJoker==T & (input$doc_type==1 | input$doc_type==3) & input$search_mode==3){
     
     total<-select(tableau,count,mot)
     total<-total%>%group_by(mot)%>%summarise_all(sum)
@@ -2987,7 +2987,6 @@ shinyServer(function(input, output,session){
           m<-str_c(m,"&",l[h])
         }
         nouvrequette=m
-        updateTextInput(session,"mot","Recherche",nouvrequette)
         df=ngramize(input,nouvrequette)
       }
       else if(input$joker==F){df=ngramize(input)}

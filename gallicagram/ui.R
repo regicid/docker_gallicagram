@@ -123,7 +123,7 @@ shinyUI(fluidPage(
                                                       div(style="display: inline-block;vertical-align:top;float:right",actionButton("link", "Article de recherche",onclick ="window.open('https://osf.io/preprints/socarxiv/84bf3/', '_blank')")),
                                                       plotlyOutput("plot")),
                                             column(4,
-                                                   conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3 && input.joker == 1",switchInput(inputId = "histoJoker",size = "mini",label = "Histogramme")),
+                                                   conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3 && input.joker == 1",switchInput(inputId = "histoJoker",size = "mini",label = "Totaux",value=T)),
                                                    sliderInput("span","Lissage de la courbe",min = 0,max = 10,value = 0),
                                                    p(""),
                                                    div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadData', 'Données')),
