@@ -795,7 +795,7 @@ jokerize<-function(input){
   con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
   
   if(pos=="apres"){
-    query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where ',gram," match '^",'"',mot,'"',"') group by ",gram,' order by tot desc limit ',input$nbJoker+input$stpw,';'))
+    query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where ',gram," match '^",'"',mot,'"',"') group by ",gram,' order by tot desc limit ',20+input$nbJoker+input$stpw,';'))
   }
   if(pos=="avant"){
     query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where ',gram,' match "',mot,'") group by ',gram,' order by tot desc limit ',1000+input$nbJoker+input$stpw,';'))
@@ -808,10 +808,13 @@ jokerize<-function(input){
   
   if(pos=="apres"){
     z = unlist(w[gram]) %in% paste(mot,stpw$monogram)
-    jokertable<-w[!z,][1:input$nbJoker,]
+    jokertable<-w[!z,]
+    jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot)),]
+    jokertable<-jokertable[1:input$nbJoker,]
     }
   if(pos=="avant"){
-    z = unlist(w[gram]) %in% paste(mot,stpw$monogram)
+    z = unlist(w[gram]) %in% paste(stpw$monogram,mot)
+    print(z)
     jokertable<-w[!z,]
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot))==F,]
     jokertable<-jokertable[1:input$nbJoker,]
