@@ -805,10 +805,14 @@ jokerize<-function(input){
   dbDisconnect(con)
   
   stpw = read.csv("stopwords.csv",nrows=input$stpw,row.names=1,stringsAsFactors=F)
-  z = unlist(w[gram]) %in% paste(mot,stpw$monogram)
   
-  if(pos=="apres"){jokertable<-w[!z,][1:input$nbJoker,]}
+  
+  if(pos=="apres"){
+    z = unlist(w[gram]) %in% paste(mot,stpw$monogram)
+    jokertable<-w[!z,][1:input$nbJoker,]
+    }
   if(pos=="avant"){
+    z = unlist(w[gram]) %in% paste(stpw$monogram,mot)
     jokertable<-w[!z,]
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot))==F,]
     jokertable<-jokertable[1:input$nbJoker,]
