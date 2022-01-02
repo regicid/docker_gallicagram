@@ -38,7 +38,7 @@ window.open(url);
 });
 }"
 
-se="linux"
+se="windows"
 
 Plot <- function(data,input){
 
@@ -1022,7 +1022,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   on.exit(progress$close())
   progress$set(message = "Patience...", value = 0)
   
-  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29){
+  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29 | doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40){
     if(se=="windows"){system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
       rD <- rsDriver(browser = "firefox", port = 4444L)
       remDr <- rD[["client"]]}
@@ -1421,6 +1421,25 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               url_base<-str_c("https://recherche.lefigaro.fr/recherche/_/?publication=lefigaro.fr&datemin=01-01-",y,"&datemax=31-12-",y)
             }
           }
+      if(doc_type==37|doc_type==38|doc_type==39|doc_type==40){
+        if(doc_type==37){country="us"}
+        if(doc_type==38){country="ca"}
+        if(doc_type==39){country="gb"}
+        if(doc_type==40){country="au"}
+        if(resolution=="Mois"){
+          z = as.character(j)
+          if(nchar(z)<2){z<-str_c("0",z)}
+          beginning = str_c(y,"-",z,"-01")
+          end = str_c(y,"-",z,"-",end_of_month[j])
+          url=str_c("https://www.newspapers.com/search/#query=%22",mot1,"%22&p_country=",country,"&ymd-start=",beginning,"&ymd-end=",end)
+          url_base=str_c("https://www.newspapers.com/search/#p_country=",country,"&dr_year=",beginning,"&ymd-end=",end)
+        }
+        if (resolution=="Année"){
+        url=str_c("https://www.newspapers.com/search/#query=%22",mot1,"%22&p_country=",country,"&dr_year=",y,"-",y)
+        url_base=str_c("https://www.newspapers.com/search/#p_country=",country,"&dr_year=",y,"-",y)
+        }
+      }
+      
           
           
           if(doc_type == 1 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
@@ -1488,9 +1507,9 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_extract(ngram,"foundnumber.+")
             ngram<-str_remove_all(ngram,"[:punct:]")
             a<-as.integer(str_extract(ngram,"[:digit:]+"))
-            remDr$navigate(url_base)
-            Sys.sleep(2) # give the page time to fully load
             if(incr_mot==1){
+              remDr$navigate(url_base)
+              Sys.sleep(2) # give the page time to fully load
               ngram_base <- remDr$getPageSource()[[1]]
               ngram_base<-str_extract(ngram_base,"foundnumber.+")
               ngram_base<-str_remove_all(ngram_base,"[:punct:]")
@@ -1540,8 +1559,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_remove_all(ngram,"</span>")
             ngram<-str_extract(ngram,"Résultats1à[:digit:]+sur[:digit:]+")
             a<-str_remove(ngram,"Résultats1à[:digit:]+sur")
-            remDr$navigate(url_base)
             if(incr_mot==1){
+              remDr$navigate(url_base)
               Sys.sleep(2) # give the page time to fully load
               ngram_base <- remDr$getPageSource()[[1]]
               ngram_base<-str_remove_all(ngram_base,"[:space:]")
@@ -1741,8 +1760,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_remove_all(ngram,"[:punct:]")
             ngram<-str_extract(ngram,"[:digit:]+ Ergebnisse")
             a<-str_extract(ngram,"[:digit:]+")
-            remDr$navigate(url_base)
             if(incr_mot==1){
+              remDr$navigate(url_base)
               Sys.sleep(2) # give the page time to fully load
               ngram_base <- remDr$getPageSource()[[1]]
               ngram_base <- str_extract(ngram_base,".+Ergebnisse")
@@ -1904,6 +1923,26 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
             
           }
+          if(doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40){
+            remDr$navigate("https://www.google.fr/")
+            remDr$navigate(url)
+            Sys.sleep(2) # give the page time to fully load
+            ngram <- remDr$getPageSource()[[1]]
+            ngram=read_html(ngram)
+            ngram <- html_node(ngram,"#root > div > div > div > div.order-1.order-md-2.col-12.col-lg-8 > h1 > span.text-secondary2")
+            ngram<-html_text(ngram)
+            a<-str_remove_all(ngram,"[:punct:]")
+            if(incr_mot==1){
+              remDr$navigate("https://www.google.fr/")
+              remDr$navigate(url_base)
+              Sys.sleep(2) # give the page time to fully load
+              ngram <- remDr$getPageSource()[[1]]
+              ngram=read_html(ngram)
+              ngram <- html_node(ngram,"#root > div > div > div > div.order-1.order-md-2.col-12.col-lg-8 > h1 > span.text-secondary2")
+              ngram<-html_text(ngram)
+              b<-str_remove_all(ngram,"[:punct:]")
+            }
+          }
           
           
           if(length(b)==0L){b=0}
@@ -1925,7 +1964,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$url = str_replace(tableau$url,"SRU","services/engine/search/sru")
   tableau$url = str_replace(tableau$url,"maximumRecords=1","maximumRecords=25")
   
-  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29){
+  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29| doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40){
     remDr$close()
     if(se=="windows"){
     rD$server$stop()
@@ -2124,6 +2163,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$langue="Français"
   tableau$bibli="Isidore"
   tableau$search_mode<-"Document"}
+  if(doc_type==36){tableau$corpus="Presse"
+  tableau$langue="Anglais"
+  tableau$bibli="Newspapers.com"
+  tableau$search_mode<-"Page"}
   
   memoire<<-bind_rows(tableau,memoire)
   data = list(tableau,paste(mots,collapse="&"),resolution)
@@ -2903,7 +2946,7 @@ shinyServer(function(input, output,session){
       }
     
 
-    if ((input$doc_type==1 & input$search_mode==1) |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 35| input$doc_type == 36|((input$doc_type==30 | input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) ){
+    if ((input$doc_type==1 & input$search_mode==1) |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 35| input$doc_type == 36| input$doc_type == 37| input$doc_type == 38| input$doc_type == 39| input$doc_type == 40|((input$doc_type==30 | input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) ){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
