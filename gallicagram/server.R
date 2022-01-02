@@ -756,8 +756,7 @@ jokerize<-function(input){
   
   if(str_detect(mot,"_.+")){pos<-"avant"}
   else if (str_detect(mot,".+_")){pos<-"apres"}
-  print(pos)
-  
+
   mot<-str_remove_all(mot,"_")
   
   table<-unnest_tokens(as.data.frame(mot),ngram,mot, token = "ngrams", n = 1)
@@ -812,7 +811,7 @@ jokerize<-function(input){
     jokertable<-w[!z,][1:input$nbJoker,]
     }
   if(pos=="avant"){
-    z = unlist(w[gram]) %in% paste(stpw$monogram,mot)
+    z = unlist(w[gram]) %in% paste(mot,stpw$monogram)
     jokertable<-w[!z,]
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot))==F,]
     jokertable<-jokertable[1:input$nbJoker,]
@@ -2931,7 +2930,6 @@ shinyServer(function(input, output,session){
           m<-str_c(m,"&",l[h])
         }
         nouvrequette=m
-        print(nouvrequette)
         updateTextInput(session,"mot","Recherche",nouvrequette)
         df=ngramize(input,nouvrequette)
       }
