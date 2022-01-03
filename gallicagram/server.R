@@ -1949,7 +1949,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             if(incr_mot==1){
               remDr$navigate("https://www.google.fr/")
               remDr$navigate(url_base)
-              Sys.sleep(2) # give the page time to fully load
+              Sys.sleep(2.5) # give the page time to fully load
               ngram <- remDr$getPageSource()[[1]]
               ngram=read_html(ngram)
               ngram <- html_node(ngram,"#root > div > div > div > div.order-1.order-md-2.col-12.col-lg-8 > h1 > span.text-secondary2")
