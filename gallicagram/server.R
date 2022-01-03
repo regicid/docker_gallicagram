@@ -781,13 +781,13 @@ jokerize<-function(input){
     if(nb<=4){
       ngram_file<-str_c("/mnt/persistent/",nb+1,"gram.db")
       if(nb==1){gram<-"bigram"
-      base<-read.csv("base_livres_gallica_monogrammes.csv")}
-      if(nb==2){gram<-"trigram"
       base<-read.csv("base_livres_gallica_bigrammes.csv")}
-      if(nb==3){gram<-"tetragram"
+      if(nb==2){gram<-"trigram"
       base<-read.csv("base_livres_gallica_trigrammes.csv")}
-      if(nb==4){gram<-"pentagram"
+      if(nb==3){gram<-"tetragram"
       base<-read.csv("base_livres_gallica_tetragrammes.csv")}
+      if(nb==4){gram<-"pentagram"
+      base<-read.csv("base_livres_gallica_pentagrammes.csv")}
     }
   }
   if(input$doc_type==1){
