@@ -780,14 +780,13 @@ jokerize<-function(input){
     if(nb>4){next}
     if(nb<=4){
       ngram_file<-str_c("/mnt/persistent/",nb,"gram.db")
-      gram="gram"
-      if(nb==1){
+      if(nb==1){gram<-"bigram"
       base<-read.csv("base_livres_gallica_monogrammes.csv")}
-      if(nb==2){
+      if(nb==2){gram<-"trigram"
       base<-read.csv("base_livres_gallica_bigrammes.csv")}
-      if(nb==3){
+      if(nb==3){gram<-"tetragram"
       base<-read.csv("base_livres_gallica_trigrammes.csv")}
-      if(nb==4){
+      if(nb==4){gram<-"pentagram"
       base<-read.csv("base_livres_gallica_tetragrammes.csv")}
     }
   }
@@ -808,10 +807,10 @@ jokerize<-function(input){
   con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
   
   if(pos=="apres"){
-    query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where ',gram," match '^",'"',mot,'"',"') group by ",gram,' order by tot desc limit ',20+input$nbJoker+input$stpw,';'))
+    query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where gram'," match '^",'"',mot,'"',"') group by ",gram,' order by tot desc limit ',20+input$nbJoker+input$stpw,';'))
   }
   if(pos=="avant"){
-    query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where ',gram," match '",'"',mot,'"', "') group by ",gram,' order by tot desc limit ',1000+input$nbJoker+input$stpw,';'))
+    query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where gram'," match '",'"',mot,'"', "') group by ",gram,' order by tot desc limit ',1000+input$nbJoker+input$stpw,';'))
   }
   w = dbFetch(query)
   dbDisconnect(con)
