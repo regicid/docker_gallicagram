@@ -779,7 +779,7 @@ jokerize<-function(input){
   if(input$doc_type==2){
     if(nb>4){next}
     if(nb<=4){
-      ngram_file<-str_c("/mnt/persistent/",nb,"gram.db")
+      ngram_file<-str_c("/mnt/persistent/",nb+1,"gram.db")
       if(nb==1){gram<-"bigram"
       base<-read.csv("base_livres_gallica_monogrammes.csv")}
       if(nb==2){gram<-"trigram"
