@@ -2982,6 +2982,7 @@ shinyServer(function(input, output,session){
     else if(input$search_mode==3){
       if(input$joker==T){
         jokertable<-jokerize(input)
+        print(jokertable)
         l<-as.character(jokertable$gram)
         m=l[1]
         for (h in 2:length(l)) {
