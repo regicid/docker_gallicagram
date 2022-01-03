@@ -65,6 +65,10 @@ RUN R -e "install.packages(c('scales'), repos='https://cloud.r-project.org/')"
 
 RUN R -e "install.packages(c('cartogram'), repos='https://cloud.r-project.org/')"
 
+RUN R -e "install.packages(c('devtools'), repos='https://cloud.r-project.org/')"
+
+RUN R -e "devtools::install_github('aoles/shinyURL')"
+
 # copy the app to the image
 RUN mkdir /root/gallicagram
 COPY gallicagram /root/gallicagram

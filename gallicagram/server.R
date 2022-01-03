@@ -73,7 +73,7 @@ Plot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   
-  if(input$joker==T & input$histoJoker==T & (input$doc_type==1 | input$doc_type==3) & input$search_mode==3){
+  if(input$joker==T & input$histoJoker==T & (input$doc_type==1 | input$doc_type==2) & input$search_mode==3){
     
     total<-select(tableau,count,mot)
     total<-total%>%group_by(mot)%>%summarise_all(sum)
@@ -2575,6 +2575,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$isMobile,{
     print(input$isMobile)
   })
+  # shinyURL.server(session)
   
   data=list(read.csv("exemple.csv",encoding = "UTF-8"),"Joffre&Pétain&Foch","Années")
   names(data)=c("tableau","mot","resolution")

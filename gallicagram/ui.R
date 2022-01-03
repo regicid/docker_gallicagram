@@ -15,6 +15,7 @@ library(shinyWidgets)
 library(rclipboard)
 library(lubridate)
 library(leaflet)
+#library(shinyURL)
 
 
 mobileDetect <- function(inputId, value = 0) {
@@ -111,6 +112,8 @@ shinyUI(fluidPage(
                                                                      checkboxInput("histogramme", "Mode histogramme", value = FALSE),
                                                                      div(style = "margin-top: -15px"),
                                                                      checkboxInput("spline", "Spline dans le graphe scientifique", value = TRUE),
+                                                                     # div(style = "margin-top: -15px"),
+                                                                     # shinyURL.ui(),
                                                                      div(style = "margin-top: -15px"),
                                                                      downloadButton("data_session","Données de la session"),
                                                                      circle = TRUE, status = "default",
