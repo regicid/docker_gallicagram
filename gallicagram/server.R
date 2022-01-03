@@ -817,7 +817,7 @@ jokerize<-function(input){
   
   stpw = read.csv("stopwords.csv",nrows=input$stpw,row.names=1,stringsAsFactors=F)
   
-  gram<-"gram"
+  print(w)
   
   if(pos=="apres"){
     z = unlist(w[gram]) %in% paste(mot,stpw$monogram)
