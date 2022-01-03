@@ -2988,6 +2988,7 @@ shinyServer(function(input, output,session){
           m<-str_c(m,"&",l[h])
         }
         nouvrequette=m
+        print(nouvrequette)
         df=ngramize(input,nouvrequette)
       }
       else if(input$joker==F){df=ngramize(input)}
