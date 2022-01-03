@@ -767,7 +767,7 @@ jokerize<-function(input){
   mot<-str_remove_all(mot,"&")
   
   if(str_detect(mot,"_.+")){pos<-"avant"}
-  else if (str_detect(mot,".+_")){pos<-"apres"}
+  else{pos<-"apres"}
 
   mot<-str_remove_all(mot,"_")
   
