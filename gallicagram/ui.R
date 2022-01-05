@@ -16,7 +16,7 @@ library(rclipboard)
 library(lubridate)
 library(leaflet)
 #library(shinyURL)
-
+library(shinyjs)
 
 mobileDetect <- function(inputId, value = 0) {
   tagList(
@@ -29,12 +29,13 @@ mobileDetect <- function(inputId, value = 0) {
 
 shinyUI(fluidPage(
   tags$head(includeHTML(("google-analytics.html"))),
-  tags$head(includeHTML(("google-search.html"))),
   mobileDetect('isMobile'),
-  navbarPage(title=div(img(src="Logo.png")),
+  useShinyjs(),
+  navbarPage(id="#navbar",title=div(img(src="Logo.png")),collapsible=TRUE,
                    tabPanel("Graphique",fluidPage(),
                             fluidPage(
-                                            column(4,wellPanel(
+                              div(id="Sidebar",column(4,wellPanel(
+                                div(style="display: inline-block;vertical-align:top;",id="menumob2",actionButton("showSidebar2", "",icon = icon("bars"))),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","Joffre&Pétain&Foch")),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 20%;",
                                                     conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",numericInput("prox","Distance",20))
@@ -91,10 +92,11 @@ shinyUI(fluidPage(
                                                 div(style="display: inline-block;vertical-align:top;width: 49%;",conditionalPanel(condition="input.doc_type == 2 && input.search_mode==1",uiOutput("theme"))),
                                                 conditionalPanel(condition="input.search_mode == 3 || input.doc_type == 1 || (input.doc_type == 3 && input.search_mode == 1) || input.doc_type == 5 || input.doc_type == 6 || input.doc_type == 7 || input.doc_type == 8 || input.doc_type == 9 || input.doc_type == 10 || input.doc_type == 11 || input.doc_type == 12 || input.doc_type == 13 || input.doc_type == 14 || input.doc_type == 15 || input.doc_type == 16 || input.doc_type == 17 || input.doc_type == 18 || input.doc_type == 19 || input.doc_type == 20 || input.doc_type == 21 || input.doc_type == 22 || input.doc_type == 23 || input.doc_type == 24 || input.doc_type == 25 || input.doc_type == 26 || input.doc_type == 27 || input.doc_type == 28 || input.doc_type == 29 || input.doc_type == 30 || input.doc_type == 31 || input.doc_type == 32 ||input.doc_type == 33 ||input.doc_type == 34 ||input.doc_type == 35 ||input.doc_type == 36 ||input.doc_type == 37 ||input.doc_type == 38 ||input.doc_type == 39 ||input.doc_type == 40 || (input.doc_type == 2 && input.search_mode == 1) || (input.doc_type == 4 && output.fileUploaded == 1 && output.avertissement.includes('Modifiez')==false) || ((input.doc_type == 2 || (input.doc_type == 3  && input.titres.length <= 15)) && input.search_mode == 2 && output.avertissement.includes('Modifiez')==false)",actionButton("do","Générer le graphique"))
                                                 
-                                            )),
+                                            ))),
                                             
-                                            column(8,rclipboardSetup(),
-                                                      div(style="display: inline-block;vertical-align:bottom",dropdownButton(tags$h3("Options avancées"),
+                                            div(column(8,rclipboardSetup(),
+                                                      div(id="menumob",style="display: inline-block;vertical-align:middle;",actionButton("showSidebar", "",icon = icon("bars"))),
+                                                      div(style="display: inline-block;vertical-align:middle;",dropdownButton(tags$h3("Options avancées"),
                                                                      checkboxInput("barplot", "Distribution des documents de la base de données ", value = FALSE),
                                                                      div(style = "margin-top: -15px"),
                                                                      checkboxInput("correlation_test", "Matrices de corrélation", value = FALSE),
@@ -120,12 +122,12 @@ shinyUI(fluidPage(
                                                                      icon = icon("sliders"), width = "300px",
                                                                      tooltip = tooltipOptions(title = "Afficher les options avancées")
                                                                      )),
-                                                      div(style="display: inline-block;vertical-align:top;float:right",actionButton("twitter",label = img (src="twitter.png", width="15", height="15"),onclick ="window.open('https://twitter.com/gallicagram', '_blank')")),
-                                                      div(style="display: inline-block;vertical-align:top;float:right",actionButton("fb",label = img (src="facebook.png", width="15", height="15"),onclick ="window.open('https://www.facebook.com/gallicagram', '_blank')")),
-                                                      div(style="display: inline-block;vertical-align:top;float:right",rclipButton("clipbtn", "Citation",clipText = "Azoulay, B., & de Courson, B. (2021, December 8). Gallicagram : un outil de lexicométrie pour la recherche. https://doi.org/10.31235/osf.io/84bf3",icon = icon("clipboard"))),
-                                                      div(style="display: inline-block;vertical-align:top;float:right",actionButton("link", "Article de recherche",onclick ="window.open('https://osf.io/preprints/socarxiv/84bf3/', '_blank')")),
-                                                      plotlyOutput("plot")),
-                                            column(4,
+                                                      div(style="display: inline-block;vertical-align:middle;float:right",actionButton("twitter",label = img (src="twitter.png", width="15", height="15"),onclick ="window.open('https://twitter.com/gallicagram', '_blank')")),
+                                                      div(style="display: inline-block;vertical-align:middle;float:right",actionButton("fb",label = img (src="facebook.png", width="15", height="15"),onclick ="window.open('https://www.facebook.com/gallicagram', '_blank')")),
+                                                      div(id="clip",style="display: inline-block;vertical-align:middle;float:right",rclipButton("clipbtn", "Citation",clipText = "Azoulay, B., & de Courson, B. (2021, December 8). Gallicagram : un outil de lexicométrie pour la recherche. https://doi.org/10.31235/osf.io/84bf3",icon = icon("clipboard"))),
+                                                      div(style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Article de recherche",onclick ="window.open('https://osf.io/preprints/socarxiv/84bf3/', '_blank')")),
+                                                      plotlyOutput("plot"))),
+                                            div(column(4,
                                                    conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3 && input.joker == 1",switchInput(inputId = "histoJoker",size = "mini",label = "Dynamique",value=F)),
                                                    sliderInput("span","Lissage de la courbe",min = 0,max = 10,value = 0),
                                                    p(""),
@@ -134,8 +136,8 @@ shinyUI(fluidPage(
                                                    div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadSPlot', 'Graphique scientifique')),
                                                    p(""),
                                                    
-                                                   h2(textOutput("currentTime"), style="color:white")),
-                                              column(4,
+                                                   h6(textOutput("currentTime"), style="color:white"))),
+                              div(id="leg",column(4,
                                                       fluidRow(uiOutput("legende"),align="right"),
                                                       fluidRow(textOutput("legende0"),align="right"),
                                                       fluidRow(textOutput("legende1"),align="right"),
@@ -146,7 +148,7 @@ shinyUI(fluidPage(
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(tableOutput("corr"),align="right")),
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(tableOutput("corr2"),align="right")),
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right"))
-                                                     )
+                                                     ))
                                               )),
                    tabPanel("Cartographie",
                             column(4,wellPanel(
@@ -229,6 +231,6 @@ shinyUI(fluidPage(
                               fluidRow(uiOutput("pdfview"))
                               )),
              navbarMenu("Langue",tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicagram_en' target='_blank'>English version</a>"))),
-                   tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicapresse' target='_blank'>Gallicapresse</a>")),
-                   tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicanet' target='_blank'>Gallicanet</a>"))
+             tabPanel(value="Gallicapresse",title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicapresse' target='_blank'>Gallicapresse</a>")),
+             tabPanel(value="Gallicanet",title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicanet' target='_blank'>Gallicanet</a>"))
 )))

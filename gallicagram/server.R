@@ -183,7 +183,8 @@ Plot <- function(data,input){
       y <- list(title = "Nombre d'occurrences dans\nle corpus",titlefont = 41)
       plot = plot_ly(tableau, x=~date,y=~count,text=~hovers,color =~mot,type='bar', hoverinfo="text",customdata=tableau$url,colors=customPalette)}
     plot = layout(plot, yaxis = y, xaxis = x,title = Title)
-    if(length(grep(",",data$mot))==0){plot = layout(plot,showlegend=TRUE,legend = list(x = 100, y = -0.1))}
+    if(length(grep(",",data$mot))==0 & input$isMobile==F){plot = layout(plot,showlegend=TRUE,legend = list(x = 100, y = -0.1))}
+    if(length(grep(",",data$mot))==0 & input$isMobile==T){plot = layout(plot,showlegend=TRUE,legend = list(orientation = 'h',y=-0.1))}
     
     if(input$delta==TRUE){
       if(data[["resolution"]]=="Mois"){tableau$hovers2 = str_c(str_extract(tableau$date,".......")," : delta = ",round(tableau$loess*100,digits=2),"%")}
@@ -2576,8 +2577,27 @@ options(shiny.maxRequestSize = 100*1024^2)
 shinyServer(function(input, output,session){
   observeEvent(input$isMobile,{
     print(input$isMobile)
+    if(input$isMobile==T){
+      shinyjs::hide(id="Sidebar",anim = T)
+      shinyjs::hide(id="leg")
+      shinyjs::hide(id="clip")
+    }
+    if(input$isMobile==F){
+      shinyjs::hide(id="menumob")
+      shinyjs::hide(id="menumob2")
+    }
+  })
+  
+  observeEvent(input$showSidebar, {
+    shinyjs::toggle(id = "Sidebar",anim = T)
+  })
+  observeEvent(input$showSidebar2, {
+    shinyjs::toggle(id = "Sidebar",anim = T)
   })
   # shinyURL.server(session)
+  
+  hideTab("#navbar","Gallicapresse")
+  hideTab("#navbar","Gallicanet")
   
   data=list(read.csv("exemple.csv",encoding = "UTF-8"),"Joffre&Pétain&Foch","Années")
   names(data)=c("tableau","mot","resolution")
