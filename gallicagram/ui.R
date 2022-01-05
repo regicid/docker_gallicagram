@@ -27,13 +27,12 @@ mobileDetect <- function(inputId, value = 0) {
   )
 }
 
-shinyUI(fluidPage(
+shinyUI(bootstrapPage(
   tags$head(includeHTML(("google-analytics.html"))),
   mobileDetect('isMobile'),
   useShinyjs(),
   navbarPage(id="#navbar",title=div(img(src="Logo.png")),collapsible=TRUE,
-                   tabPanel("Graphique",fluidPage(),
-                            fluidPage(
+                   tabPanel("Graphique",
                               div(id="Sidebar",column(4,wellPanel(
                                 div(style="display: inline-block;vertical-align:top;",id="menumob2",actionButton("showSidebar2", "",icon = icon("bars"))),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","Joffre&Pétain&Foch")),
@@ -149,7 +148,7 @@ shinyUI(fluidPage(
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(tableOutput("corr2"),align="right")),
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right"))
                                                      ))
-                                              )),
+                                              ),
                    tabPanel("Cartographie",
                             column(4,wellPanel(
                               textInput("cartoMot","Recherche dans Gallica/presse","Général Boulanger"),
