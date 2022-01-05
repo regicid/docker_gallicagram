@@ -354,36 +354,36 @@ SPlot <- function(data,input){
   if(input$histogramme==T){
     plot=ggplot(data=tableau, aes(x = date, y = count, group=mot,fill=mot))+geom_bar(stat="identity",position=position_dodge())+xlab("")+ylab("")+
       theme_tufte()+ scale_fill_manual(values=customPalette)+
-      theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.size = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.size = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
   }
   else{
     if(input$scale==TRUE |input$multicourbes==TRUE){
       plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
         theme_tufte()+ scale_color_manual(values=customPalette)+
-        theme(axis.line.x = element_line(colour = "black"),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=6),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+        theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=6),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
       }
   else if (input$span==0){
     if (input$spline==T){plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
       theme_tufte()+ scale_color_manual(values=customPalette)+
-      theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
     else{plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(aes(color=mot),size=.7)+xlab("")+ylab("")+
       theme_tufte()+ scale_color_manual(values=customPalette)+
-      theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
     }
   else{plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = ratio, group=mot,color=mot),size=.5, alpha=.5) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
     theme_tufte()+ scale_color_manual(values=customPalette)+
-    theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
+    theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
   }
   
   if(input$fraction==TRUE | input$delta==TRUE){
     plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
       theme_tufte()+ scale_color_manual(labels=Title,values = customPalette)+
-      theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
   }
   if((input$fraction==TRUE | input$delta==TRUE) & input$scale==T){
     plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
       theme_tufte()+ scale_color_manual(labels=Title,values = customPalette)+
-      theme(axis.line.x = element_line(colour = "black"),axis.line.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
   }
   return(plot)
 }
@@ -2539,12 +2539,12 @@ cartoPicture<-function(fra,titre,from,to,colorscale){
   titre=str_c(titre,"\n",from," - ",to)
   if(colorscale==F){plot=ggplot(data = fra) + geom_sf(aes(fill = val))+
     scale_fill_gradient2(low = "white", high = "red", labels = percent)+
-    theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
+    theme_classic()+theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.ticks.x = element_blank(),axis.text.x = element_blank(),
                           axis.ticks.y = element_blank(),axis.text.y = element_blank(),
                           line = element_blank())+ labs(fill = titre)}
   if(colorscale==T){plot=ggplot(data = fra) + geom_sf(aes(fill = val))+
     scale_fill_gradient2(low = "yellow",mid="red", high = "purple", midpoint = .5, labels = percent)+
-    theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
+    theme_classic()+theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.ticks.x = element_blank(),axis.text.x = element_blank(),
                           axis.ticks.y = element_blank(),axis.text.y = element_blank(),
                           line = element_blank())+ labs(fill = titre)}
   
@@ -2560,12 +2560,12 @@ cartoGramme<-function(fra,titre,from,to,colorscale){
   plot<-cartogram_dorling(fra, "base", itermax = 5)
   if(colorscale==F){plot=ggplot(data = plot) + geom_sf(aes(fill = val))+
     scale_fill_gradient2(low = "white", high = "red", labels = percent)+
-    theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
+    theme_classic()+theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.ticks.x = element_blank(),axis.text.x = element_blank(),
                           axis.ticks.y = element_blank(),axis.text.y = element_blank(),
                           line = element_blank())+ labs(fill = titre)}
   if(colorscale==T){plot=ggplot(data = plot) + geom_sf(aes(fill = val))+
     scale_fill_gradient2(low = "yellow",mid="red", high = "purple", midpoint = .5, labels = percent)+
-    theme_classic()+theme(axis.ticks.x = element_blank(),axis.text.x = element_blank(),
+    theme_classic()+theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.ticks.x = element_blank(),axis.text.x = element_blank(),
                           axis.ticks.y = element_blank(),axis.text.y = element_blank(),
                           line = element_blank())+ labs(fill = titre)}
   
