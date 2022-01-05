@@ -2581,6 +2581,7 @@ shinyServer(function(input, output,session){
       shinyjs::hide(id="Sidebar",anim = T)
       shinyjs::hide(id="leg")
       shinyjs::hide(id="clip")
+      shinyjs::hide(id="article")
     }
     if(input$isMobile==F){
       shinyjs::hide(id="menumob")
