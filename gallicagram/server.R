@@ -824,6 +824,7 @@ jokerize<-function(input){
   stpw$monogram<-iconv(stpw$monogram,from="UTF-8",to="ASCII//TRANSLIT")
   mot<-iconv(mot,from="UTF-8",to="ASCII//TRANSLIT")
   jokertable<-w
+  jokertable<-jokertable[str_detect(jokertable$gram,"&")==F,]
 
   if(pos=="apres"){
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot)),]
