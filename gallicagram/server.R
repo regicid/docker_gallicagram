@@ -3022,7 +3022,7 @@ shinyServer(function(input, output,session){
         l<-as.character(jokertable$gram)
         print(l)
         m=l[1]
-        if(length(m)>1){
+        if(length(unlist(m))>1){
         for (h in 2:length(l)) {
           m<-str_c(m,"&",l[h])
         }}
