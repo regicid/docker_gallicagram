@@ -822,6 +822,7 @@ jokerize<-function(input){
   gram<-"gram"
   w$gram<-iconv(w$gram,from="UTF-8",to="ASCII//TRANSLIT")
   stpw$monogram<-iconv(stpw$monogram,from="UTF-8",to="ASCII//TRANSLIT")
+  mot<-iconv(mot,from="UTF-8",to="ASCII//TRANSLIT")
   print(w)
   
   if(pos=="apres"){
