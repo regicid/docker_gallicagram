@@ -851,6 +851,7 @@ jokerize<-function(input){
     jokertable$gram<-mot
     jokertable$tot<-0
   }
+  jokertable<-jokertable[is.na(jokertable$tot)==F,]
   
   remove_modal_spinner()
   
