@@ -834,7 +834,6 @@ jokerize<-function(input){
     jokertable<-jokertable[!z,]
     print(jokertable)
     jokertable<-jokertable[1:input$nbJoker,]
-    print(jokertable)
     }
   if(pos=="avant"){
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot))==F,]
@@ -844,14 +843,14 @@ jokerize<-function(input){
     jokertable<-jokertable[!z,]
     print(jokertable)
     jokertable<-jokertable[1:input$nbJoker,]
-    print(jokertable)
     }
-  if(is.na(jokertable$tot[1])){
-    jokertable<-jokertable[1,]
-    jokertable$gram<-mot
-    jokertable$tot<-0
+  if(length(jokertable$tot)){
+    jokertable$gram[1]<-mot
+    jokertable$tot[1]<-0
   }
   jokertable<-jokertable[is.na(jokertable$tot)==F,]
+  
+  print(jokertable)
   
   remove_modal_spinner()
   
