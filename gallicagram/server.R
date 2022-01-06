@@ -823,20 +823,18 @@ jokerize<-function(input){
   w$gram<-iconv(w$gram,from="UTF-8",to="ASCII//TRANSLIT")
   stpw$monogram<-iconv(stpw$monogram,from="UTF-8",to="ASCII//TRANSLIT")
   mot<-iconv(mot,from="UTF-8",to="ASCII//TRANSLIT")
-  print(w)
-  
+  jokertable<-w
+
   if(pos=="apres"){
-    z = unlist(w[gram]) %in% paste(mot,stpw$monogram)
-    jokertable<-w[!z,]
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot)),]
+    z = unlist(jokertable[gram]) %in% paste(mot,stpw$monogram)
+    jokertable<-jokertable[!z,]
     jokertable<-jokertable[1:input$nbJoker,]
     }
   if(pos=="avant"){
-    print(paste(stpw$monogram,mot))
-    z = unlist(w[gram]) %in% paste(stpw$monogram,mot)
-    print(z)
-    jokertable<-w[!z,]
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot))==F,]
+    z = unlist(jokertable[gram]) %in% paste(stpw$monogram,mot)
+    jokertable<-jokertable[!z,]
     jokertable<-jokertable[1:input$nbJoker,]
     }
   
