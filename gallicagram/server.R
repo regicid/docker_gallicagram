@@ -3028,9 +3028,10 @@ shinyServer(function(input, output,session){
         jokertable<-jokerize(input)
         l<-as.character(jokertable$gram)
         m=l[1]
+        if(length(m)>1){
         for (h in 2:length(l)) {
           m<-str_c(m,"&",l[h])
-        }
+        }}
         nouvrequette=m
         df=ngramize(input,nouvrequette)
       }
