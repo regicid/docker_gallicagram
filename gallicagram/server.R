@@ -820,9 +820,7 @@ jokerize<-function(input){
   
   colnames(w)<-c("tot","gram")
   gram<-"gram"
-  w$gram<-iconv(w$gram,from="UTF-8",to="ASCII//TRANSLIT")
-  stpw$monogram<-iconv(stpw$monogram,from="UTF-8",to="ASCII//TRANSLIT")
-  mot<-iconv(mot,from="UTF-8",to="ASCII//TRANSLIT")
+  
   jokertable<-w
   jokertable<-jokertable[str_detect(jokertable$gram,"&")==F,]
 
