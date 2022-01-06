@@ -828,7 +828,9 @@ jokerize<-function(input){
     jokertable<-jokertable[1:input$nbJoker,]
     }
   if(pos=="avant"){
+    print(paste(stpw$monogram,mot))
     z = unlist(w[gram]) %in% paste(stpw$monogram,mot)
+    print(z)
     jokertable<-w[!z,]
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot))==F,]
     jokertable<-jokertable[1:input$nbJoker,]
@@ -2602,6 +2604,7 @@ shinyServer(function(input, output,session){
   
   hideTab("#navbar","Gallicapresse")
   hideTab("#navbar","Gallicanet")
+  hideTab("#navbar","English version")
   
   data=list(read.csv("exemple.csv",encoding = "UTF-8"),"Joffre&Pétain&Foch","Années")
   names(data)=c("tableau","mot","resolution")
