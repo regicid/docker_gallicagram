@@ -844,9 +844,8 @@ jokerize<-function(input){
     print(jokertable)
     jokertable<-jokertable[1:input$nbJoker,]
     }
-  if(length(jokertable$tot)){
-    jokertable$gram[1]<-mot
-    jokertable$tot[1]<-0
+  if(length(jokertable$tot)==0){
+    jokertable<-data.frame(tot=0,gram=mot)
   }
   jokertable<-jokertable[is.na(jokertable$tot)==F,]
   
