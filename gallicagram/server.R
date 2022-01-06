@@ -833,9 +833,13 @@ jokerize<-function(input){
     }
   if(pos=="avant"){
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot))==F,]
+    print(jokertable)
+    paste(stpw$monogram,mot)
     z = unlist(jokertable[gram]) %in% paste(stpw$monogram,mot)
     jokertable<-jokertable[!z,]
+    print(jokertable)
     jokertable<-jokertable[1:input$nbJoker,]
+    print(jokertable)
     }
   
   remove_modal_spinner()
