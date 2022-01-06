@@ -823,25 +823,17 @@ jokerize<-function(input){
   
   jokertable<-w
   jokertable<-jokertable[str_detect(jokertable$gram,"&")==F,]
-  
 
   if(pos=="apres"){
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot)),]
-    jokertable<-jokertable[str_detect(iconv(jokertable[gram],from="UTF-8",to="ASCII//TRANSLIT"),str_c("^",iconv(mot,from="UTF-8",to="ASCII//TRANSLIT"))),]
     z = unlist(jokertable[gram]) %in% paste(mot,stpw$monogram)
-    jokertable<-jokertable[!z,]
-    
-    z = unlist(iconv(jokertable[gram],from="UTF-8",to="ASCII//TRANSLIT")) %in% paste(iconv(mot,from="UTF-8",to="ASCII//TRANSLIT"),stpw$monogram)
     jokertable<-jokertable[!z,]
     jokertable<-jokertable[1:input$nbJoker,]
     }
   if(pos=="avant"){
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot))==F,]
-    jokertable<-jokertable[str_detect(iconv(jokertable[gram],from="UTF-8",to="ASCII//TRANSLIT"),str_c("^",iconv(mot,from="UTF-8",to="ASCII//TRANSLIT")))==F,]
     paste(stpw$monogram,mot)
     z = unlist(jokertable[gram]) %in% paste(stpw$monogram,mot)
-    jokertable<-jokertable[!z,]
-    z = unlist(iconv(jokertable[gram],from="UTF-8",to="ASCII//TRANSLIT")) %in% paste(stpw$monogram,iconv(mot,from="UTF-8",to="ASCII//TRANSLIT"))
     jokertable<-jokertable[!z,]
     jokertable<-jokertable[1:input$nbJoker,]
     }
