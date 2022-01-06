@@ -846,6 +846,11 @@ jokerize<-function(input){
     jokertable<-jokertable[1:input$nbJoker,]
     print(jokertable)
     }
+  if(is.na(jokertable$tot[1])){
+    jokertable<-jokertable[1,]
+    jokertable$gram<-mot
+    jokertable$tot<-0
+  }
   
   remove_modal_spinner()
   
