@@ -820,6 +820,9 @@ jokerize<-function(input){
   
   colnames(w)<-c("tot","gram")
   gram<-"gram"
+  w$gram<-iconv(w$gram,from="UTF-8",to="ASCII//TRANSLIT")
+  stpw$monogram<-iconv(stpw$monogram,from="UTF-8",to="ASCII//TRANSLIT")
+  print(w)
   
   if(pos=="apres"){
     z = unlist(w[gram]) %in% paste(mot,stpw$monogram)
