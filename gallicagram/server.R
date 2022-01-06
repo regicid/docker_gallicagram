@@ -828,20 +828,15 @@ jokerize<-function(input){
 
   if(pos=="apres"){
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot)),]
-    print(jokertable)
-    print(paste(mot,stpw$monogram))
     z = unlist(jokertable[gram]) %in% paste(mot,stpw$monogram)
     jokertable<-jokertable[!z,]
-    print(jokertable)
     jokertable<-jokertable[1:input$nbJoker,]
     }
   if(pos=="avant"){
     jokertable<-jokertable[str_detect(jokertable$gram,str_c("^",mot))==F,]
-    print(jokertable)
     paste(stpw$monogram,mot)
     z = unlist(jokertable[gram]) %in% paste(stpw$monogram,mot)
     jokertable<-jokertable[!z,]
-    print(jokertable)
     jokertable<-jokertable[1:input$nbJoker,]
     }
   if(is.na(jokertable$tot[1])){
@@ -849,8 +844,7 @@ jokerize<-function(input){
   }
   jokertable<-jokertable[is.na(jokertable$tot)==F,]
   
-  print(jokertable)
-  
+
   remove_modal_spinner()
   
   return(jokertable)
@@ -2593,7 +2587,6 @@ options(shiny.maxRequestSize = 100*1024^2)
 
 shinyServer(function(input, output,session){
   observeEvent(input$isMobile,{
-    print(input$isMobile)
     if(input$isMobile==T){
       shinyjs::hide(id="Sidebar",anim = T)
       shinyjs::hide(id="leg")
@@ -3027,12 +3020,14 @@ shinyServer(function(input, output,session){
       if(input$joker==T){
         jokertable<-jokerize(input)
         l<-as.character(jokertable$gram)
+        print(l)
         m=l[1]
         if(length(m)>1){
         for (h in 2:length(l)) {
           m<-str_c(m,"&",l[h])
         }}
         nouvrequette=m
+        print(nouvrequette)
         df=ngramize(input,nouvrequette)
       }
       else if(input$joker==F){df=ngramize(input)}
