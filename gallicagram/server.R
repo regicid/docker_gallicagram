@@ -1852,29 +1852,40 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               b<-str_remove_all(b,"résultats")
             }
           }
-          if(doc_type ==36){tryCatch(
-            {
-            ngram<-read_html(RETRY("GET",url,times = 3))
+          if(doc_type ==36){
+            ngram<-tryCatch(
+              {ngram<-read_html(url)},error=function(cond){
+              print("error")
+                return(0)}
+            )
+            if(class(ngram)=="numeric"){a=0}
+            else{
             ngram<-as.character(ngram)
             ngram<-str_extract(ngram,"items.+")
             ngram<-str_remove_all(ngram,"[:space:]")
             ngram<-str_remove_all(ngram,"[:punct:]")
             ngram<-str_remove_all(ngram,"items=")
-            a<-str_extract(ngram,"[:digit:]+")
+            a<-str_extract(ngram,"[:digit:]+")}
             if(incr_mot==1){
-              ngram_base<-read_html(RETRY("GET",url_base,times = 3))
+              ngram_base<-tryCatch(
+                {ngram_base<-read_html(url_base)},error=function(cond){
+                print("error")
+                  return(0)}
+              )
+              if(class(ngram_base)=="numeric"){b=0}
+              else{
+              
               ngram_base<-as.character(ngram_base)
               ngram_base<-str_extract(ngram_base,"items.+")
               ngram_base<-str_remove_all(ngram_base,"[:space:]")
               ngram_base<-str_remove_all(ngram_base,"[:punct:]")
               ngram_base<-str_remove_all(ngram_base,"items=")
-              b<-str_extract(ngram_base,"[:digit:]+")
+              b<-str_extract(ngram_base,"[:digit:]+")}
             }
             if (input$isidore=="_"){
             url<-str_c("https://isidore.science/s?q=%22",mot1,"%22&date=",y)}
             else{url<-str_c("https://isidore.science/s?q=%22",mot1,"%22&date=",y,"&discipline=http%3A%2F%2Faurehal.archives-ouvertes.fr%2Fsubject%2Fshs.",input$isidore)}
-            },error=function(cond){message(cond)}
-            )
+            
             
           }
           
