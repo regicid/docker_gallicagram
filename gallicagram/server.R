@@ -160,14 +160,14 @@ Plot <- function(data,input){
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
     else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
     else{tableau$hovers = str_c(str_extract(tableau$date,"...."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
-    y <- list(title = "Fréquence dans le corpus",titlefont = 41,tickformat = digit_number)
-    if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41)}
-    x <- list(title = "",titlefont = 41)
+    y <- list(title = "Fréquence dans le corpus",titlefont = 41,tickformat = digit_number,spikecolor="grey")
+    if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41,spikecolor="grey")}
+    x <- list(title = "",titlefont = 41,spikecolor="grey")
     if(input$search_mode==3){
       if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ",round(tableau$ratio*100,digits = 6),"%")}
       else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ",round(tableau$ratio*100,digits = 6),"%")}
-      y <- list(title = "Fréquence dans le corpus",titlefont = 41,tickformat = digit_number)
-      if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41)}
+      y <- list(title = "Fréquence dans le corpus",titlefont = 41,tickformat = digit_number,spikecolor="grey")
+      if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41,spikecolor="grey")}
       }
     if(length(unique(tableau$date))<=20){
     plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette)
@@ -180,7 +180,7 @@ Plot <- function(data,input){
       if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ", tableau$count)}
       else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date," : ", tableau$count)}
       else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ", tableau$count)}
-      y <- list(title = "Nombre d'occurrences dans\nle corpus",titlefont = 41)
+      y <- list(title = "Nombre d'occurrences dans\nle corpus",titlefont = 41,spikecolor="grey")
       plot = plot_ly(tableau, x=~date,y=~count,text=~hovers,color =~mot,type='bar', hoverinfo="text",customdata=tableau$url,colors=customPalette)}
     plot = layout(plot, yaxis = y, xaxis = x,title = Title)
     if(length(grep(",",data$mot))==0 & input$isMobile==F){plot = layout(plot,showlegend=TRUE,legend = list(x = 100, y = -0.1))}
@@ -195,8 +195,8 @@ Plot <- function(data,input){
       else{
         plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~loess,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
       }
-      y <- list(title = "",titlefont = 41,tickformat = digit_number)
-      x <- list(title = "",titlefont = 41)
+      y <- list(title = "",titlefont = 41,tickformat = digit_number,spikecolor="grey")
+      x <- list(title = "",titlefont = 41,spikecolor="grey")
       Title = paste("Freq(",unlist(mots)[1],") – Freq(",unlist(mots)[2],")")
       Title=str_remove_all(Title," ")
       plot = layout(plot, yaxis = y, xaxis = x,title = Title)
@@ -210,8 +210,8 @@ Plot <- function(data,input){
       else{
         plot = plot_ly(filter(tableau,mot==unlist(mots)[[1]]), x=~date,y=~loess,text=~hovers2,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",colors=customPalette)
       }
-      y <- list(title = "",titlefont = 41)
-      x <- list(title = "",titlefont = 41)
+      y <- list(title = "",titlefont = 41,spikecolor="grey")
+      x <- list(title = "",titlefont = 41,spikecolor="grey")
       Title = paste("Freq(",unlist(mots)[1],") / Freq(",unlist(mots)[2],")")
       Title=str_remove_all(Title," ")
       plot = layout(plot, yaxis = y, xaxis = x,title = Title)
@@ -222,7 +222,7 @@ Plot <- function(data,input){
       if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": N = ",tableau$base)}
       else{tableau$hovers = str_c(str_extract(tableau$date,"...."),": N = ",tableau$base)}
       plot1 = plot_ly(tableau, x=~date[tableau$mot==mot[1]],y=~base[tableau$mot==mot[1]],text=~hovers[tableau$mot==mot[1]],type='bar',hoverinfo="text",marker = list(color='rgba(31, 119, 180,1)'),colors=customPalette)
-      y <- list(title = "",titlefont = 41)
+      y <- list(title = "",titlefont = 41,spikecolor="grey")
       x <- list(title = "",titlefont = 41)
       plot1 = layout(plot1, yaxis = y, xaxis = x,title = Title,showlegend = FALSE)
       plot= plot%>%add_lines()
