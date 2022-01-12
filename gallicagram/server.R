@@ -352,145 +352,147 @@ SPlot <- function(data,input){
   }
   
   
-  ###
-  legende0=("Affichage : Gallicagram par Benjamin Azoulay et Benoît de Courson")
-  if((input$doc_type==1 & input$search_mode==1) | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){
-    nb_mots<-length(unique(data[["tableau"]]$mot))
-    legende2<-(str_c("Documents épluchés : ",as.character(sum(data[["tableau"]]$base)/nb_mots)))
-    legende3<-(str_c("Résultats trouvés : ", as.character(sum(data[["tableau"]]$count))))
-  }
-  else if((input$doc_type==1 & input$search_mode==3) | (input$doc_type==2 & input$search_mode==3)){
-    nb_mots<-length(unique(data[["tableau"]]$mot))
-    legende2<-NULL
-    legende3<-(str_c("Nombre d'occurrences trouvées : ", as.character(sum(data[["tableau"]]$count))))
-  }
-  else if(input$doc_type==4 & input$search_mode==1){
-    nb_mots<-length(unique(data[["tableau_volume"]]$mot))
-    legende2<-(str_c("Documents épluchées : ", as.character(sum(data[["tableau_volume"]]$base)/nb_mots)))
-    legende3<-(str_c("Résultats trouvés : ", as.character(sum(data[["tableau_volume"]]$count))))
-  }
-  else if (input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){
-    legende2<-NULL
-    legende3<-NULL
-  }
-  else if (input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==17 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40) {
-    nb_mots<-length(unique(data[["tableau"]]$mot))
-    legende2<-(str_c("Pages épluchées : ", as.character(sum(data[["tableau"]]$base)/nb_mots)))
-    legende3<-(str_c("Pages correspondant à la recherche : ", as.character(sum(data[["tableau"]]$count))))
-  }
-  else if (input$doc_type==8 | input$doc_type==15 | input$doc_type==16 | input$doc_type==30 | input$doc_type==31| input$doc_type == 35) {
-    nb_mots<-length(unique(data[["tableau"]]$mot))
-    legende2<-(str_c("Articles épluchés : ", as.character(sum(data[["tableau"]]$base)/nb_mots)))
-    legende3<-(str_c("Articles correspondant à la recherche : ", as.character(sum(data[["tableau"]]$count))))
-  }
-  
-  else {
-    nb_mots<-length(unique(data[["tableau_page"]]$mot))
-    legende2<-(str_c("Pages épluchées : ", as.character(sum(data[["tableau_page"]]$base)/nb_mots)))
-    legende3<-(str_c("Pages correspondant à la recherche : ", as.character(sum(data[["tableau_page"]]$count))))
-  }
-  
-  if(input$doc_type==1 | input$doc_type==2 | (input$doc_type == 3 & input$theme_presse==1) | input$doc_type==4){legende=str_c("Source : ","gallica.bnf.fr")}
-  if(input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){legende=str_c("Source : ","books.google.com/ngrams")}
-  if(input$doc_type==6 | input$doc_type==7){legende=str_c("Source : ","europeana.eu")}
-  if(input$doc_type==8){legende=str_c("Source : ","britishnewspaperarchive.co.uk")}
-  if(input$doc_type==11){legende=str_c("Source : ","hemerotecadigital.bne.es")}
-  if(input$doc_type==13 | input$doc_type==14){legende=str_c("Source : ","belgicapress.be")}
-  if(input$doc_type==15 | input$doc_type==16){legende=str_c("Source : ","e-newspaperarchives.ch")}
-  if(input$doc_type==17){legende=str_c("Source : ","lectura.plus/Presse")}
-  if(input$doc_type==18){legende=str_c("Source : ","kiosque.limedia.fr")}
-  if(input$doc_type==19){legende=str_c("Source : ","memonum-mediatheques.montpellier3m.fr")}
-  if(input$doc_type==20){legende=str_c("Source : ","communpatrimoine.fr")}
-  if(input$doc_type==21){legende=str_c("Source : ","yroise.biblio.brest.fr")}
-  if(input$doc_type==22){legende=str_c("Source : ","pireneas.fr")}
-  if(input$doc_type==23){legende=str_c("Source : ","rosalis.bibliotheque.toulouse.fr")}
-  if(input$doc_type==24){legende=str_c("Source : ","bibliotheque-numerique.diplomatie.gouv.fr")}
-  if(input$doc_type==25){legende=str_c("Source : ","rfnum-bibliotheque.org")}
-  if(input$doc_type==26){legende=str_c("Source : ","numistral.fr")}
-  if(input$doc_type==27){legende=str_c("Source : ","bn-r.fr")}
-  if(input$doc_type==28){legende=str_c("Source : ","banq.qc.ca")}
-  if(input$doc_type == 3 & input$theme_presse != 1){legende=str_c("Source : ","gallica.bnf.fr")}
-  if(input$doc_type==29){legende=str_c("Source : ","anno.onb.ac.at")}
-  if(input$doc_type==31){legende=str_c("Source : ","lefigaro.fr")}
-  if(input$doc_type==30){legende=str_c("Source : ","lemonde.fr")}
-  if(input$doc_type==32){legende=str_c("Source : ","cairn.info")}
-  if(input$doc_type==33){legende=str_c("Source : ","theses.fr")}
-  if(input$doc_type==34){legende=str_c("Source : ","halshs.archives-ouvertes.fr")}
-  if(input$doc_type==35){legende=str_c("Source : ","trove.nla.gov.au")}
-  if(input$doc_type==36){legende=str_c("Source : ","isidore.science")}
-  if(input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40){legende=str_c("Source : ","newspapers.com")}
-  
-  if(input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){legende4=("Langue : français")}
-  if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16 |input$doc_type==29){legende4=("Langue : allemand")}
-  if(input$doc_type==7 | input$doc_type==14){legende4=("Langue : néerlandais")}
-  if(input$doc_type==8 | input$doc_type==10| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40){legende4=("Langue : anglais")}
-  if(input$doc_type==11 | input$doc_type==12){legende4=("Langue : espagnol")}
-  
-  if(input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 30 | input$doc_type == 31| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40){legende1<-("Corpus : presse")}
-  if(input$doc_type==2 | input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){legende1<-("Corpus : livres")}
-  if(input$doc_type==4){legende1<-("Corpus : personnalisé")}
-  if(input$doc_type==32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){legende1<-("Corpus : scientifique")}
-  if(input$doc_type == 3 & input$theme_presse == 1){
-    liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
-    title<-liste_journaux$title[liste_journaux$ark==input$titres[1]]
-    title=str_c("Corpus : ",title)
-    if(length(input$titres)>=2){
-      for (i in 2:length(input$titres)) {
-        title<-str_c(title," + ",liste_journaux$title[liste_journaux$ark==input$titres[i]])
-      }}
-    legende1<-str_c(title)
-  }
-  if(input$doc_type == 3 & as.integer(input$theme_presse>=2) & as.integer(input$theme_presse<=50)){
-    liste_themes<-read.csv("liste_themes.csv",encoding="UTF-8")
-    title<-liste_themes$titre[as.character(liste_themes$num)==as.character(input$theme_presse)]
-    legende1<-(str_c("Corpus : ",title))
-  }
-  if(input$doc_type == 3 & as.integer(input$theme_presse>=51)){
-    liste_departements<-read.csv("liste_departements.csv",encoding="UTF-8")
-    title<-liste_departements$titre[as.character(liste_departements$num)==as.character(input$theme_presse)]
-    legende1<-(str_c("Corpus : ",title))
-  }
-  legende=str_c(legende,"\n")
-  legende0=str_c(legende0,"\n")
-  legende1=str_c(legende1,"\n")
-  legende2=str_c(legende2,"\n")
-  legende4=str_c(legende4,"\n")
-  leg=str_c(legende,legende0,legende1,legende4,legende2,legende3)
-  ###
+  # ###
+  # legende0=("Affichage : Gallicagram par Benjamin Azoulay et Benoît de Courson")
+  # if((input$doc_type==1 & input$search_mode==1) | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){
+  #   nb_mots<-length(unique(data[["tableau"]]$mot))
+  #   legende2<-(str_c("Documents épluchés : ",as.character(sum(data[["tableau"]]$base)/nb_mots)))
+  #   legende3<-(str_c("Résultats trouvés : ", as.character(sum(data[["tableau"]]$count))))
+  # }
+  # else if((input$doc_type==1 & input$search_mode==3) | (input$doc_type==2 & input$search_mode==3)){
+  #   nb_mots<-length(unique(data[["tableau"]]$mot))
+  #   legende2<-NULL
+  #   legende3<-(str_c("Nombre d'occurrences trouvées : ", as.character(sum(data[["tableau"]]$count))))
+  # }
+  # else if(input$doc_type==4 & input$search_mode==1){
+  #   nb_mots<-length(unique(data[["tableau_volume"]]$mot))
+  #   legende2<-(str_c("Documents épluchées : ", as.character(sum(data[["tableau_volume"]]$base)/nb_mots)))
+  #   legende3<-(str_c("Résultats trouvés : ", as.character(sum(data[["tableau_volume"]]$count))))
+  # }
+  # else if (input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){
+  #   legende2<-NULL
+  #   legende3<-NULL
+  # }
+  # else if (input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==17 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40) {
+  #   nb_mots<-length(unique(data[["tableau"]]$mot))
+  #   legende2<-(str_c("Pages épluchées : ", as.character(sum(data[["tableau"]]$base)/nb_mots)))
+  #   legende3<-(str_c("Pages correspondant à la recherche : ", as.character(sum(data[["tableau"]]$count))))
+  # }
+  # else if (input$doc_type==8 | input$doc_type==15 | input$doc_type==16 | input$doc_type==30 | input$doc_type==31| input$doc_type == 35) {
+  #   nb_mots<-length(unique(data[["tableau"]]$mot))
+  #   legende2<-(str_c("Articles épluchés : ", as.character(sum(data[["tableau"]]$base)/nb_mots)))
+  #   legende3<-(str_c("Articles correspondant à la recherche : ", as.character(sum(data[["tableau"]]$count))))
+  # }
+  # 
+  # else {
+  #   nb_mots<-length(unique(data[["tableau_page"]]$mot))
+  #   legende2<-(str_c("Pages épluchées : ", as.character(sum(data[["tableau_page"]]$base)/nb_mots)))
+  #   legende3<-(str_c("Pages correspondant à la recherche : ", as.character(sum(data[["tableau_page"]]$count))))
+  # }
+  # 
+  # if(input$doc_type==1 | input$doc_type==2 | (input$doc_type == 3 & input$theme_presse==1) | input$doc_type==4){legende=str_c("Source : ","gallica.bnf.fr")}
+  # if(input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){legende=str_c("Source : ","books.google.com/ngrams")}
+  # if(input$doc_type==6 | input$doc_type==7){legende=str_c("Source : ","europeana.eu")}
+  # if(input$doc_type==8){legende=str_c("Source : ","britishnewspaperarchive.co.uk")}
+  # if(input$doc_type==11){legende=str_c("Source : ","hemerotecadigital.bne.es")}
+  # if(input$doc_type==13 | input$doc_type==14){legende=str_c("Source : ","belgicapress.be")}
+  # if(input$doc_type==15 | input$doc_type==16){legende=str_c("Source : ","e-newspaperarchives.ch")}
+  # if(input$doc_type==17){legende=str_c("Source : ","lectura.plus/Presse")}
+  # if(input$doc_type==18){legende=str_c("Source : ","kiosque.limedia.fr")}
+  # if(input$doc_type==19){legende=str_c("Source : ","memonum-mediatheques.montpellier3m.fr")}
+  # if(input$doc_type==20){legende=str_c("Source : ","communpatrimoine.fr")}
+  # if(input$doc_type==21){legende=str_c("Source : ","yroise.biblio.brest.fr")}
+  # if(input$doc_type==22){legende=str_c("Source : ","pireneas.fr")}
+  # if(input$doc_type==23){legende=str_c("Source : ","rosalis.bibliotheque.toulouse.fr")}
+  # if(input$doc_type==24){legende=str_c("Source : ","bibliotheque-numerique.diplomatie.gouv.fr")}
+  # if(input$doc_type==25){legende=str_c("Source : ","rfnum-bibliotheque.org")}
+  # if(input$doc_type==26){legende=str_c("Source : ","numistral.fr")}
+  # if(input$doc_type==27){legende=str_c("Source : ","bn-r.fr")}
+  # if(input$doc_type==28){legende=str_c("Source : ","banq.qc.ca")}
+  # if(input$doc_type == 3 & input$theme_presse != 1){legende=str_c("Source : ","gallica.bnf.fr")}
+  # if(input$doc_type==29){legende=str_c("Source : ","anno.onb.ac.at")}
+  # if(input$doc_type==31){legende=str_c("Source : ","lefigaro.fr")}
+  # if(input$doc_type==30){legende=str_c("Source : ","lemonde.fr")}
+  # if(input$doc_type==32){legende=str_c("Source : ","cairn.info")}
+  # if(input$doc_type==33){legende=str_c("Source : ","theses.fr")}
+  # if(input$doc_type==34){legende=str_c("Source : ","halshs.archives-ouvertes.fr")}
+  # if(input$doc_type==35){legende=str_c("Source : ","trove.nla.gov.au")}
+  # if(input$doc_type==36){legende=str_c("Source : ","isidore.science")}
+  # if(input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40){legende=str_c("Source : ","newspapers.com")}
+  # 
+  # if(input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){legende4=("Langue : français")}
+  # if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16 |input$doc_type==29){legende4=("Langue : allemand")}
+  # if(input$doc_type==7 | input$doc_type==14){legende4=("Langue : néerlandais")}
+  # if(input$doc_type==8 | input$doc_type==10| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40){legende4=("Langue : anglais")}
+  # if(input$doc_type==11 | input$doc_type==12){legende4=("Langue : espagnol")}
+  # 
+  # if(input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 30 | input$doc_type == 31| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40){legende1<-("Corpus : presse")}
+  # if(input$doc_type==2 | input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){legende1<-("Corpus : livres")}
+  # if(input$doc_type==4){legende1<-("Corpus : personnalisé")}
+  # if(input$doc_type==32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){legende1<-("Corpus : scientifique")}
+  # if(input$doc_type == 3 & input$theme_presse == 1){
+  #   liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
+  #   title<-liste_journaux$title[liste_journaux$ark==input$titres[1]]
+  #   title=str_c("Corpus : ",title)
+  #   if(length(input$titres)>=2){
+  #     for (i in 2:length(input$titres)) {
+  #       title<-str_c(title," + ",liste_journaux$title[liste_journaux$ark==input$titres[i]])
+  #     }}
+  #   legende1<-str_c(title)
+  # }
+  # if(input$doc_type == 3 & as.integer(input$theme_presse>=2) & as.integer(input$theme_presse<=50)){
+  #   liste_themes<-read.csv("liste_themes.csv",encoding="UTF-8")
+  #   title<-liste_themes$titre[as.character(liste_themes$num)==as.character(input$theme_presse)]
+  #   legende1<-(str_c("Corpus : ",title))
+  # }
+  # if(input$doc_type == 3 & as.integer(input$theme_presse>=51)){
+  #   liste_departements<-read.csv("liste_departements.csv",encoding="UTF-8")
+  #   title<-liste_departements$titre[as.character(liste_departements$num)==as.character(input$theme_presse)]
+  #   legende1<-(str_c("Corpus : ",title))
+  # }
+  # legende=str_c(legende,"\n")
+  # legende0=str_c(legende0,"\n")
+  # legende1=str_c(legende1,"\n")
+  # legende2=str_c(legende2,"\n")
+  # legende4=str_c(legende4,"\n")
+  # leg=str_c(legende,legende0,legende1,legende4,legende2,legende3)
+  # #labs(caption=leg)
+  # #plot.caption = element_text(size = 6, face = "italic")
+  # ###
   
   if(input$histogramme==T){
     plot=ggplot(data=tableau, aes(x = date, y = count, group=mot,fill=mot))+geom_bar(stat="identity",position=position_dodge())+xlab("")+ylab("")+
-      theme_tufte()+ scale_fill_manual(values=customPalette)+labs(caption=leg)+
-      theme(plot.caption = element_text(size = 6, face = "italic"),plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.size = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+      theme_tufte()+ scale_fill_manual(values=customPalette)+
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.size = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
   }
   else{
     if(input$scale==TRUE |input$multicourbes==TRUE){
       plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
-        theme_tufte()+ scale_color_manual(values=customPalette)+labs(caption=leg)+
-        theme(plot.caption = element_text(size = 6, face = "italic"),plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=6),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+        theme_tufte()+ scale_color_manual(values=customPalette)+
+        theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=6),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
       }
   else if (input$span==0){
     if (input$spline==T){plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
-      theme_tufte()+ scale_color_manual(values=customPalette)+labs(caption=leg)+
-      theme(plot.caption = element_text(size = 6, face = "italic"),plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
+      theme_tufte()+ scale_color_manual(values=customPalette)+
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
     else{plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(aes(color=mot),size=.7)+xlab("")+ylab("")+
-      theme_tufte()+ scale_color_manual(values=customPalette)+labs(caption=leg)+
-      theme(plot.caption = element_text(size = 6, face = "italic"),plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
+      theme_tufte()+ scale_color_manual(values=customPalette)+
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
     }
   else{plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_point(data=tableau, aes(x = date, y = ratio, group=mot,color=mot),size=.5, alpha=.5) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
-    theme_tufte()+ scale_color_manual(values=customPalette)+labs(caption=leg)+
-    theme(plot.caption = element_text(size = 6, face = "italic"),plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
+    theme_tufte()+ scale_color_manual(values=customPalette)+
+    theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
   }
   
   if(input$fraction==TRUE | input$delta==TRUE){
     plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
-      theme_tufte()+ scale_color_manual(labels=Title,values = customPalette)+labs(caption=leg)+
-      theme(plot.caption = element_text(size = 6, face = "italic"),plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+      theme_tufte()+ scale_color_manual(labels=Title,values = customPalette)+
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
   }
   if((input$fraction==TRUE | input$delta==TRUE) & input$scale==T){
     plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
-      theme_tufte()+ scale_color_manual(labels=Title,values = customPalette)+labs(caption=leg)+
-      theme(plot.caption = element_text(size = 6, face = "italic"),plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+      theme_tufte()+ scale_color_manual(labels=Title,values = customPalette)+
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
   }
   return(plot)
 }
