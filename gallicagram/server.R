@@ -2201,12 +2201,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           if(nchar(z)<2){z<-str_c("0",z)}
           beginning = str_c(y,"-",z,"-01")
           end = str_c(y,"-",z,"-",end_of_month[j])
-          url<-str_c("https://chroniclingamerica.loc.gov/search/pages/results/?state=&dateFilterType=range&date1=",z,"%2F01%2F",y,"&date2=",z,"%2F",end_of_month[j],"%2F",y,"&language=eng&ortext=&andtext=&phrasetext=",mot1,"&proxtext=&proxdistance=5&rows=1&searchType=advanced&sort=date")
-          url_base<-str_c("https://chroniclingamerica.loc.gov/search/pages/results/?state=&dateFilterType=range&date1=",z,"%2F01%2F",y,"&date2=",z,"%2F",end_of_month[j],"%2F",y,"&language=eng&ortext=&andtext=&proxtext=&proxdistance=5&rows=1&searchType=advanced&sort=date")
+          url<-str_c("https://chroniclingamerica.loc.gov/search/pages/results/?state=&dateFilterType=range&date1=",z,"%2F01%2F",y,"&date2=",z,"%2F",end_of_month[j],"%2F",y,"&language=eng&ortext=&andtext=&phrasetext=",mot1,"&proxtext=&proxdistance=5&rows=100&searchType=advanced&sort=date")
+          url_base<-str_c("https://chroniclingamerica.loc.gov/search/pages/results/?state=&dateFilterType=range&date1=",z,"%2F01%2F",y,"&date2=",z,"%2F",end_of_month[j],"%2F",y,"&language=eng&ortext=&andtext=&proxtext=&proxdistance=5&rows=100&searchType=advanced&sort=date")
         }
         if (resolution=="Année"){
-          url<-str_c("https://chroniclingamerica.loc.gov/search/pages/results/?state=&dateFilterType=range&date1=01%2F01%2F",y,"&date2=12%2F31%2F",y,"&language=eng&ortext=&andtext=&phrasetext=",mot1,"&proxtext=&proxdistance=5&rows=1&searchType=advanced&sort=date")
-          url_base<-str_c("https://chroniclingamerica.loc.gov/search/pages/results/?state=&dateFilterType=range&date1=01%2F01%2F",y,"&date2=12%2F31%2F",y,"&language=eng&ortext=&andtext=&proxtext=&proxdistance=5&rows=1&searchType=advanced&sort=date")
+          url<-str_c("https://chroniclingamerica.loc.gov/search/pages/results/?state=&dateFilterType=range&date1=01%2F01%2F",y,"&date2=12%2F31%2F",y,"&language=eng&ortext=&andtext=&phrasetext=",mot1,"&proxtext=&proxdistance=5&rows=100&searchType=advanced&sort=date")
+          url_base<-str_c("https://chroniclingamerica.loc.gov/search/pages/results/?state=&dateFilterType=range&date1=01%2F01%2F",y,"&date2=12%2F31%2F",y,"&language=eng&ortext=&andtext=&proxtext=&proxdistance=5&rows=100&searchType=advanced&sort=date")
         }
       }
       
