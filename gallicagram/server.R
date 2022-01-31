@@ -1509,12 +1509,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               if(nchar(z)<2){z<-str_c("0",z)}
               beginning = str_c(y,"-",z,"-01")
               end = str_c(y,"-",z,"-",end_of_month[j])
-              url<-str_c("https://api.trove.nla.gov.au/v2/result?key=aiffua8e6gnjlpoi&zone=newspaper&q=%22",mot1,"%22%20date[",y,"-",z,"-01%20TO%20",y,"-",z,"-",end_of_month[j],"]&n=1")
-              url_base<-str_c("https://api.trove.nla.gov.au/v2/result?key=aiffua8e6gnjlpoi&zone=newspaper&q=date[",y,"-",z,"-01%20TO%20",y,"-",z,"-",end_of_month[j],"]&n=1")
+              url<-str_c("https://api.trove.nla.gov.au/v2/result?key=p1746d1fbge6qp59&zone=newspaper&q=%22",mot1,"%22%20date:[",y,"-",z,"-01T00:00:00Z%20TO%20",y,"-",z,"-",end_of_month[j],"T23:59:00Z]&n=1")
+              url_base<-str_c("https://api.trove.nla.gov.au/v2/result?key=p1746d1fbge6qp59&zone=newspaper&q=%20date:[",y,"-",z,"-01T00:00:00Z%20TO%20",y,"-",z,"-",end_of_month[j],"T23:59:00Z]&n=1")
             }
             if (resolution=="Année"){
-              url<-str_c("https://api.trove.nla.gov.au/v2/result?key=aiffua8e6gnjlpoi&zone=newspaper&q=%22",mot1,"%22%20date[",y,"%20TO%20",y,"]&n=1")
-              url_base<-str_c("https://api.trove.nla.gov.au/v2/result?key=aiffua8e6gnjlpoi&zone=newspaper&q=date[",y,"%20TO%20",y,"]&n=1")
+              url<-str_c("https://api.trove.nla.gov.au/v2/result?key=aiffua8e6gnjlpoi&zone=newspaper&q=%22",mot1,"%22%20date:[",y,"%20TO%20",y,"]&n=1")
+              url_base<-str_c("https://api.trove.nla.gov.au/v2/result?key=aiffua8e6gnjlpoi&zone=newspaper&q=date:[",y,"%20TO%20",y,"]&n=1")
             }
           }
           if(doc_type == 36){
