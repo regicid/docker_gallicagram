@@ -1034,9 +1034,12 @@ ngramize<-function(input,nouvrequette){
           base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
           base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
           if(input$resolution=="Année"){
-            base<-base%>%group_by(annee)%>%summarise(n = sum(n))}
+            base<-base%>%group_by(annee)%>%summarise(n = sum(n))
+            colnames(base)<-c("date","base")}
           if(input$resolution=="Mois"){
-            base<-base%>%group_by(annee,mois)%>%summarise(n = sum(n))}
+            base<-base%>%group_by(annee,mois)%>%summarise(n = sum(n))
+            base<-cbind(str_c(base$annee,"/",base$mois),base$n)
+            colnames(base)<-c("date","base")}
         }
         if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
