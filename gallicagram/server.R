@@ -964,6 +964,18 @@ ngramize<-function(input,nouvrequette){
   
   from<-input$beginning
   to<-input$end
+  
+  if(input$doc_type==30){
+    from=min(input$dateRange)
+    to<-max(input$dateRange)
+    if(input$scale=="Année"){from<-str_extract(from,"....")
+    to<-str_extract(to,"....")}
+    if(input$scale=="Mois"){from<-str_extract(from,".......")
+    to<-str_extract(to,".......")}
+    if(input$scale=="Jour"){from<-str_extract(from,".......")
+    to<-str_extract(to,"..........")}
+  }
+  
   if(input$joker==F){mots = str_split(input$mot,"&")[[1]]}
   if(input$joker==T){mots = str_split(nouvrequette,"&")[[1]]}
   
@@ -1013,6 +1025,23 @@ ngramize<-function(input,nouvrequette){
         if(nb>3){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
+      
+      if(input$doc_type==30){
+        if(nb<=2){
+          ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
+          gram<-"gram"
+          base<-read.csv("lemonde1.csv")
+          base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
+          base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
+          if(input$resolution=="Année"){
+            base<-base%>%group_by(annee)%>%summarise(n = sum(n))}
+          if(input$resolution=="Mois"){
+            base<-base%>%group_by(annee,mois)%>%summarise(n = sum(n))}
+        }
+        if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=0)
+        next}
+      }
+      
       if(input$resolution=="Année"){
       base<-base[base$date<=to,]
       base<-base[base$date>=from,]
@@ -1042,6 +1071,23 @@ ngramize<-function(input,nouvrequette){
           w = dbFetch(query)
           w<-w[,-2]
 	  w$n = as.integer(w$n)
+          for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}}
+          w$annee<-str_c(w$annee,"/",w$mois)
+          w<-w[,-3]
+        }
+        if(input$doc_type==30 & input$resolution=="Année"){
+          q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
+          query = dbSendQuery(con,q)
+          w = dbFetch(query)
+          w = group_by(w,annee) %>% summarise(n = sum(as.integer(n)))
+          w$annee = as.integer(w$annee)
+        }
+        if(input$doc_type==30 & input$resolution=="Mois"){
+          q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
+          query = dbSendQuery(con,q)
+          w = dbFetch(query)
+          w<-w[,-2]
+          w$n = as.integer(w$n)
           for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}}
           w$annee<-str_c(w$annee,"/",w$mois)
           w<-w[,-3]
@@ -1112,6 +1158,12 @@ ngramize<-function(input,nouvrequette){
       if(input$doc_type==1 & input$resolution=="Mois"){
         z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"/01%22%20and%20gallicapublication_date%3C=%22",z$date,"/31%22)&suggest=10&keywords=",mot1,or_end)
       }
+      if(input$doc_type==30 & input$resolution=="Année"){
+        z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F01%2F",z$date,"&end_at=31%2F12%2F",z$date,"&search_sort=date_asc")
+      }
+      if(input$doc_type==30 & input$resolution=="Mois"){
+        z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F",str_extract(z$date,"...."),"%2F",str_extract(z$date,"...."),"&end_at=31%2F",str_extract(z$date,"...."),"%2F",str_extract(z$date,"...."),"&search_sort=date_asc")
+      }
       if(input$resolution=="Année"){z$resolution<-"Année"}
       if(input$resolution=="Mois"){z$resolution<-"Mois"}
       
@@ -1122,6 +1174,10 @@ ngramize<-function(input,nouvrequette){
       if(input$doc_type==1){z$corpus="Presse"
       z$langue="Français"
       z$bibli="Gallica"
+      z$search_mode<-"N-gramme"}
+      if(input$doc_type==30){z$corpus="Presse"
+      z$langue="Français"
+      z$bibli="Le Monde"
       z$search_mode<-"N-gramme"}
       
       if(increment==1){tableau=z}
@@ -1991,10 +2047,36 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           if(doc_type ==36){
+            print(url)
             ngram<-tryCatch(
               {ngram<-read_html(url)},error=function(cond){
-              print("error")
-                return(0)}
+                ngram<-tryCatch(
+                  {ngram<-read_html(url)},error=function(cond){
+                    ngram<-tryCatch(
+                      {ngram<-read_html(url)},error=function(cond){
+                        ngram<-tryCatch(
+                          {ngram<-read_html(url)},error=function(cond){
+                            ngram<-tryCatch(
+                              {ngram<-read_html(url)},error=function(cond){
+                                ngram<-tryCatch(
+                                  {ngram<-read_html(url)},error=function(cond){
+                                    ngram<-tryCatch(
+                                      {ngram<-read_html(url)},error=function(cond){
+                                        print("error")
+                                        return(0)
+                                      }
+                                    )
+                                  }
+                                )
+                              }
+                            )
+                          }
+                        )
+                      }
+                    )
+                  }
+                )
+                }
             )
             if(class(ngram)=="numeric"){a=0}
             else{
@@ -2007,8 +2089,33 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             if(incr_mot==1){
               ngram_base<-tryCatch(
                 {ngram_base<-read_html(url_base)},error=function(cond){
-                print("error")
-                  return(0)}
+                  ngram_base<-tryCatch(
+                    {ngram_base<-read_html(url_base)},error=function(cond){
+                      ngram_base<-tryCatch(
+                        {ngram_base<-read_html(url_base)},error=function(cond){
+                          ngram_base<-tryCatch(
+                            {ngram_base<-read_html(url_base)},error=function(cond){
+                              ngram_base<-tryCatch(
+                                {ngram_base<-read_html(url_base)},error=function(cond){
+                                  ngram_base<-tryCatch(
+                                    {ngram_base<-read_html(url_base)},error=function(cond){
+                                      ngram_base<-tryCatch(
+                                        {ngram_base<-read_html(url_base)},error=function(cond){
+                                          print("error")
+                                          return(0)
+                                        }
+                                      )
+                                    }
+                                  )
+                                }
+                              )
+                            }
+                          )
+                        }
+                      )
+                    }
+                  )
+                  }
               )
               if(class(ngram_base)=="numeric"){b=0}
               else{
@@ -3041,9 +3148,13 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
-    if( input$doc_type == 30 | input$doc_type == 31){
+    if( input$doc_type == 31){
       updateSelectInput(session,"search_mode",choices = list("Par article" = 4),selected = 4)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Semaine",inline = T)
+    }
+    if( input$doc_type == 30 ){
+      updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 4),selected = 4)
+      updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine","Jour"),selected = "Mois",inline = T)
     }
     if(input$doc_type == 32 | input$doc_type == 33 | input$doc_type == 34 | input$doc_type == 36 | input$doc_type == 41){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
@@ -3271,7 +3382,7 @@ shinyServer(function(input, output,session){
         input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | 
         input$doc_type == 21 | input$doc_type == 22 | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | 
         input$doc_type == 32 | input$doc_type == 33 | input$doc_type == 34 | input$doc_type == 35 | input$doc_type == 36 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | 
-        input$doc_type == 41 | input$doc_type == 42 | input$doc_type == 43 | ((input$doc_type==30 | input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) ){
+        input$doc_type == 41 | input$doc_type == 42 | input$doc_type == 43 | ((input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) ){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
@@ -3308,7 +3419,7 @@ shinyServer(function(input, output,session){
       }
       else if(input$joker==F){df=ngramize(input)}
     }
-    else if((input$doc_type==30 | input$doc_type==31)&input$resolution=="Semaine"){
+    else if((input$doc_type==31)&input$resolution=="Semaine"){
       df=contempo(input)
     }
     
