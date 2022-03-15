@@ -975,6 +975,8 @@ ngramize<-function(input,nouvrequette){
     to<-substr(to,0,7)}
     to<-str_replace_all(to,"-","/")
     from<-str_replace_all(from,"-","/")
+    print(from)
+    print(to)
   }
   
   
@@ -1043,7 +1045,7 @@ ngramize<-function(input,nouvrequette){
             base<-cbind(str_c(base$annee,"/",base$mois),base$n)
             colnames(base)<-c("date","base")}
           if(input$resolution=="Jours"){
-            base<-base%>%group_by(annee,mois,jour)%>%summarise(n = sum(n))
+            
             base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
             colnames(base)<-c("date","base")}
         }
