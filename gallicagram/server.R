@@ -1042,6 +1042,10 @@ ngramize<-function(input,nouvrequette){
             base<-base%>%group_by(annee,mois)%>%summarise(n = sum(n))
             base<-cbind(str_c(base$annee,"/",base$mois),base$n)
             colnames(base)<-c("date","base")}
+          if(input$resolution=="Jours"){
+            base<-base%>%group_by(annee,mois,jour)%>%summarise(n = sum(n))
+            base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
+            colnames(base)<-c("date","base")}
         }
         if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
@@ -1056,7 +1060,7 @@ ngramize<-function(input,nouvrequette){
         base<-base[base$date>=str_c(from,"/01"),]
       }
       
-      if(input$resolution=="Mois" & input$doc_type==30){
+      if((input$resolution=="Mois" | input$resolution=="Jour") & input$doc_type==30){
         base<-base[base[,"date"]<=to,]
         base<-base[base[,"date"]>=from,]
       }
@@ -1181,8 +1185,12 @@ ngramize<-function(input,nouvrequette){
     if(input$doc_type==30 & input$resolution=="Mois"){
       z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F",str_extract(z$date,"..$"),"%2F",str_extract(z$date,"...."),"&end_at=31%2F",str_extract(z$date,"..$"),"%2F",str_extract(z$date,"...."),"&search_sort=date_asc")
     }
+    if(input$doc_type==30 & input$resolution=="Jour"){
+      z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&end_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&search_sort=date_asc")
+    }
     if(input$resolution=="Année"){z$resolution<-"Année"}
     if(input$resolution=="Mois"){z$resolution<-"Mois"}
+    if(input$resolution=="Jour"){z$resolution<-"Jour"}
     
     if(input$doc_type==2){z$corpus="Livres"
     z$langue="Français"
