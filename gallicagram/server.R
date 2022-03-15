@@ -1141,6 +1141,10 @@ ngramize<-function(input,nouvrequette){
         }
         y<-y[-1,]
       }
+      if(input$resolution=="Jour"){
+        y=data.frame(annee=seq(as.Date(from),as.Date(to),by="day"), n=0)
+        y$annee<-str_replace_all(y$annee,"-","/")
+      }
       w=left_join(y,w,by="annee")
       w<-w[,-2]
       w<-w[,-3]
