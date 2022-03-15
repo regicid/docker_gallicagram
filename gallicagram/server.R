@@ -1042,11 +1042,10 @@ ngramize<-function(input,nouvrequette){
             base<-base%>%group_by(annee,mois)%>%summarise(n = sum(n))
             base<-cbind(str_c(base$annee,"/",base$mois),base$n)
             colnames(base)<-c("date","base")}
-          if(input$resolution=="Jours"){
-            print(2)
+          if(input$resolution=="Jour"){
             base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
             colnames(base)<-c("date","base")}
-          print(3)
+          print(base)
         }
         if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
