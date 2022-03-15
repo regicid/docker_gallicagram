@@ -975,8 +975,6 @@ ngramize<-function(input,nouvrequette){
     to<-substr(to,0,7)}
     to<-str_replace_all(to,"-","/")
     from<-str_replace_all(from,"-","/")
-    print(from)
-    print(to)
   }
   
   
@@ -1029,7 +1027,7 @@ ngramize<-function(input,nouvrequette){
         if(nb>3){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
-      
+      print(1)
       if(input$doc_type==30){
         if(nb<=2){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
@@ -1045,9 +1043,10 @@ ngramize<-function(input,nouvrequette){
             base<-cbind(str_c(base$annee,"/",base$mois),base$n)
             colnames(base)<-c("date","base")}
           if(input$resolution=="Jours"){
-            
+            print(2)
             base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
             colnames(base)<-c("date","base")}
+          print(3)
         }
         if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
@@ -1065,6 +1064,7 @@ ngramize<-function(input,nouvrequette){
       if((input$resolution=="Mois" | input$resolution=="Jour") & input$doc_type==30){
         base<-base[base[,"date"]<=to,]
         base<-base[base[,"date"]>=from,]
+        print(4)
       }
       
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
