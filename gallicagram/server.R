@@ -1107,6 +1107,19 @@ ngramize<-function(input,nouvrequette){
         w$annee<-str_c(w$annee,"/",w$mois)
         w<-w[,-3]
       }
+      if(input$doc_type==30 & input$resolution=="Jour"){
+        q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',str_split(from,"/")[[1]][1]," AND ",str_split(to,"/")[[1]][1] ,' AND ',gram,'="',mot,'"')
+        print(q)
+        query = dbSendQuery(con,q)
+        w = dbFetch(query)
+        w<-w[,-2]
+        w$n = as.integer(w$n)
+        for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}
+          if(str_length(w$jour[i])==1){w$jour[i]<-str_c("0",w$jour[i])}}
+        w$annee<-str_c(w$annee,"/",w$mois,"/",w$jour)
+        w<-w[,-3]
+      }
+      print(w)
       dbDisconnect(con)
       
       if(input$resolution=="Année"){
