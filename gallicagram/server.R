@@ -1118,6 +1118,7 @@ ngramize<-function(input,nouvrequette){
           if(str_length(w$jour[i])==1){w$jour[i]<-str_c("0",w$jour[i])}}
         w$annee<-str_c(w$annee,"/",w$mois,"/",w$jour)
         w<-w[,-3]
+        w<-w[,-3]
       }
       print(w)
       dbDisconnect(con)
