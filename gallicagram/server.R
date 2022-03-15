@@ -1127,19 +1127,9 @@ ngramize<-function(input,nouvrequette){
         y=data.frame(annee=from:to, n=0)
       }
       if(input$resolution=="Mois"){
-        y=data.frame(annee="AAAA/MM", n=0)
-        for (i in str_split(from,"/")[[1]][1]:str_split(to,"/")[[1]][1]) {
-          for (j in 1:12) {
-            if(j<=9){k=str_c(0,j)}
-            else{k=j}
-            zz=as.data.frame(cbind(str_c(i,"/",k),0))
-            colnames(zz)=c("annee","n")
-            zz$n<-as.integer(zz$n)
-            y=bind_rows(y,zz)
-          }
-          
-        }
-        y<-y[-1,]
+        y=data.frame(annee=seq(as.Date(from),as.Date(to),by="month"), n=0)
+        y$annee<-str_replace_all(y$annee,"-","/")
+        y$annee<-str_extract(y$annee,".......")
       }
       if(input$resolution=="Jour"){
         y=data.frame(annee=seq(as.Date(from),as.Date(to),by="day"), n=0)
