@@ -3393,6 +3393,7 @@ shinyServer(function(input, output,session){
     })
   
   observeEvent(input$do,{
+    print(input$mot)
     if(counter==0){
       memoire<<-memoire[0,]
       counter<<-1
