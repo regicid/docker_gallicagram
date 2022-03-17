@@ -1023,7 +1023,7 @@ ngramize<-function(input,nouvrequette){
         if(nb>3){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
-
+print(0)
       if(input$doc_type==30){
         if(nb<=2){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
@@ -1045,7 +1045,7 @@ ngramize<-function(input,nouvrequette){
         if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
-      
+      print(base)
       if(input$resolution=="Année"){
         base<-base[base$date<=to,]
         base<-base[base$date>=from,]
