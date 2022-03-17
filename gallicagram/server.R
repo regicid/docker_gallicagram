@@ -1023,7 +1023,7 @@ ngramize<-function(input,nouvrequette){
         if(nb>3){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
-print(0)
+
       if(input$doc_type==30){
         if(nb<=2){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
@@ -1045,8 +1045,8 @@ print(0)
         if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
-      print(base)
-      print("---------")
+
+      base<-as.data.frame(base)
       if(input$resolution=="Année"){
         base<-base[base$date<=to,]
         base<-base[base$date>=from,]
@@ -1060,7 +1060,6 @@ print(0)
         base<-base[base[,"date"]<=to,]
         base<-base[base[,"date"]>=from,]
       }
-      print(base)
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
       
       if(input$doc_type==2){
@@ -1076,38 +1075,17 @@ print(0)
       }
       if((input$doc_type==1 | input$doc_type==30) & input$resolution=="Mois"){
         q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
-        print(q)
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        print(w)
         w<-w[,-2]
         w$n = as.integer(w$n)
         for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}}
         w$annee<-str_c(w$annee,"/",w$mois)
         w<-w[,-3]
       }
-      # if(input$doc_type==30 & input$resolution=="Année"){
-      #   q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
-      #   print(q)
-      #   query = dbSendQuery(con,q)
-      #   w = dbFetch(query)
-      #   w = group_by(w,annee) %>% summarise(n = sum(as.integer(n)))
-      #   w$annee = as.integer(w$annee)
-      # }
-      # if(input$doc_type==30 & input$resolution=="Mois"){
-      #   q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',str_split(from,"/")[[1]][1]," AND ",str_split(to,"/")[[1]][1] ,' AND ',gram,'="',mot,'"')
-      #   print(q)
-      #   query = dbSendQuery(con,q)
-      #   w = dbFetch(query)
-      #   w<-w[,-2]
-      #   w$n = as.integer(w$n)
-      #   for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}}
-      #   w$annee<-str_c(w$annee,"/",w$mois)
-      #   w<-w[,-3]
-      # }
+      
       if(input$doc_type==30 & input$resolution=="Jour"){
         q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',str_split(from,"/")[[1]][1]," AND ",str_split(to,"/")[[1]][1] ,' AND ',gram,'="',mot,'"')
-        print(q)
         query = dbSendQuery(con,q)
         w = dbFetch(query)
         w<-w[,-2]
@@ -1118,7 +1096,6 @@ print(0)
         w<-w[,-3]
         w<-w[,-3]
       }
-      print(w)
       dbDisconnect(con)
       
       if(input$resolution=="Année"){
@@ -1151,7 +1128,6 @@ print(0)
       w<-w%>%group_by(date)%>%summarise(count = sum(count))
       
       w = left_join(w,as.data.frame(base),by="date")
-      print(w)
       w$base<-as.numeric(w$base)
       w$ratio=w$count/w$base
       w$ratio[is.na(w$ratio)]<-0
@@ -1166,8 +1142,7 @@ print(0)
       }
       increment2=increment2+1
     }
-    print(w)
-    
+
     z$ratio[is.na(z$ratio)]<-0
     z$ratio[is.infinite(z$ratio)]<-0
     z$mot<-mot1
