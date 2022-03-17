@@ -69,7 +69,6 @@ Plot <- function(data,input){
   }
   tableau<-distinct(tableau)
   
-  print(data[["resolution"]])
   if(data[["resolution"]]=="Semaine" | data[["resolution"]]=="Jour"){tableau$date=ymd(tableau$date)}
   if(data[["resolution"]]=="Mois"){
     tableau$date<-str_c(tableau$date,"/01")
