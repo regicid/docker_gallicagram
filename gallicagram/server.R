@@ -60,9 +60,16 @@ Plot <- function(data,input){
     if(input$resolution=="Année"){
       tableau<-tableau[tableau$resolution=="Année",]
     }
+    if(input$resolution=="Jour"){
+      tableau<-tableau[tableau$resolution=="Jour",]
+    }
+    if(input$resolution=="Semaine"){
+      tableau<-tableau[tableau$resolution=="Semaine",]
+    }
   }
   tableau<-distinct(tableau)
   
+  print(data[["resolution"]])
   if(data[["resolution"]]=="Semaine" | data[["resolution"]]=="Jour"){tableau$date=ymd(tableau$date)}
   if(data[["resolution"]]=="Mois"){
     tableau$date<-str_c(tableau$date,"/01")
