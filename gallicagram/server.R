@@ -63,7 +63,7 @@ Plot <- function(data,input){
   }
   tableau<-distinct(tableau)
   
-  if(data[["resolution"]]=="Semaine"){tableau$date=ymd(tableau$date)}
+  if(data[["resolution"]]=="Semaine" | data[["resolution"]]=="Jour"){tableau$date=ymd(tableau$date)}
   if(data[["resolution"]]=="Mois"){
     tableau$date<-str_c(tableau$date,"/01")
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
@@ -158,7 +158,7 @@ Plot <- function(data,input){
   }
   
   if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
-  else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
+  else if(data[["resolution"]]=="Semaine" | data[["resolution"]]=="Jour"){tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
   else{tableau$hovers = str_c(str_extract(tableau$date,"...."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
   y <- list(title = "Fréquence dans le corpus",titlefont = 41,tickformat = digit_number,spikecolor="grey")
   if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41,spikecolor="grey")}
@@ -178,7 +178,7 @@ Plot <- function(data,input){
   }
   if(input$histogramme==T){
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ", tableau$count)}
-    else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date," : ", tableau$count)}
+    else if(data[["resolution"]]=="Semaine" | data[["resolution"]]=="Jour"){tableau$hovers = str_c(tableau$date," : ", tableau$count)}
     else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ", tableau$count)}
     y <- list(title = "Nombre d'occurrences dans\nle corpus",titlefont = 41,spikecolor="grey")
     plot = plot_ly(tableau, x=~date,y=~count,text=~hovers,color =~mot,type='bar', hoverinfo="text",customdata=tableau$url,colors=customPalette)}
