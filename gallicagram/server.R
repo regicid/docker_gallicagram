@@ -1068,15 +1068,15 @@ ngramize<-function(input,nouvrequette){
       }
       if((input$doc_type==1 | input$doc_type==30) & input$resolution=="Année"){
         q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
-        # q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'group by annee"')
         query = dbSendQuery(con,q)
         w = dbFetch(query)
         w = group_by(w,annee) %>% summarise(n = sum(as.integer(n)))
         w$annee = as.integer(w$annee)
       }
       if((input$doc_type==1 | input$doc_type==30) & input$resolution=="Mois"){
-        q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
-        # q=str_c('SELECT sum(n),annee,mois FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'group by annee,mois"')
+        # q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
+        q=str_c('SELECT sum(n),annee,mois FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee,mois')
+        print(q)
         query = dbSendQuery(con,q)
         w = dbFetch(query)
         print(w)
