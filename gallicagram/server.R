@@ -1058,9 +1058,8 @@ ngramize<-function(input,nouvrequette){
       if(input$resolution=="Jour"){
         base<-base[base[,"date"]<=to,]
         base<-base[base[,"date"]>=from,]
-        print(base)
       }
-      
+      print(base)
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
       
       if(input$doc_type==2){
@@ -1076,8 +1075,10 @@ ngramize<-function(input,nouvrequette){
       }
       if((input$doc_type==1 | input$doc_type==30) & input$resolution=="Mois"){
         q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
+        print(q)
         query = dbSendQuery(con,q)
         w = dbFetch(query)
+        print(w)
         w<-w[,-2]
         w$n = as.integer(w$n)
         for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}}
