@@ -1071,6 +1071,7 @@ ngramize<-function(input,nouvrequette){
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
         query = dbSendQuery(con,q)
         w = dbFetch(query)
+        print(w)
         colnames(w)<-c("n","annee")
         w = group_by(w,annee) %>% summarise(n = sum(as.integer(n)))
         w$annee = as.integer(w$annee)
@@ -1080,6 +1081,7 @@ ngramize<-function(input,nouvrequette){
         q=str_c('SELECT sum(n),annee,mois FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee,mois')
         query = dbSendQuery(con,q)
         w = dbFetch(query)
+        print(w)
         w<-w[,-2]
         colnames(w)<-c("n","annee","mois")
         w$n = as.integer(w$n)
