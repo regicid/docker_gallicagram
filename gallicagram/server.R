@@ -966,13 +966,9 @@ ngramize<-function(input,nouvrequette){
   to<-input$end
   
   
-  if(input$doc_type=="30"){
+  if(input$resolution=="Jour"){
     from=min(input$dateRange)
     to<-max(input$dateRange)
-    if(input$resolution=="Année"){from<-substr(from,0,4)
-    to<-substr(to,0,4)}
-    if(input$resolution=="Mois"){from<-substr(from,0,7)
-    to<-substr(to,0,7)}
     to<-str_replace_all(to,"-","/")
     from<-str_replace_all(from,"-","/")
   }
@@ -1054,12 +1050,12 @@ ngramize<-function(input,nouvrequette){
         base<-base[base$date<=to,]
         base<-base[base$date>=from,]
       }
-      if(input$resolution=="Mois" & input$doc_type!=30){
+      if(input$resolution=="Mois"){
         base<-base[base$date<=str_c(to,"/12"),]
         base<-base[base$date>=str_c(from,"/01"),]
       }
       
-      if((input$resolution=="Mois" | input$resolution=="Jour") & input$doc_type==30){
+      if(input$resolution=="Jour"){
         base<-base[base[,"date"]<=to,]
         base<-base[base[,"date"]>=from,]
         print(base)
@@ -3162,7 +3158,7 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse Auvergne-Rhône-Alpes / Lectura"=17, "Presse du sillon lorrain / Limedia"=18, "Presse méridionale / Mémonum"=19, "Presse de Saint-Denis / Commun-Patrimoine"=20, "Presse de Brest / Yroise"=21, "Presse des Pyrénées / Pireneas"=22, "Presse toulousaine / Rosalis"=23, "Presse diplomatique / Bibliothèque diplomatique numérique"=24, "Presse francophone / RFN"=25, "Presse alsacienne / Numistral"=26, "Presse de Roubaix / BN-R"=27),selected = 17)
       }
       else if(input$language == 1 & input$bibli==4){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Le Monde"=30, "Le Figaro"=31),selected = 31)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Le Monde"=30, "Le Figaro"=31),selected = 30)
       }
       else if(input$language == 1 & input$bibli==5){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Isidore"=36,"Cairn.info"=32,"Theses.fr"=33,"HAL-SHS"=34),selected = 36)
@@ -3197,7 +3193,7 @@ shinyServer(function(input, output,session){
     }
     if( input$doc_type == 30 ){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
-      updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine","Jour"),selected = "Mois",inline = T)
+      updateRadioButtons(session,"resolution",choices = c("Année","Mois","Jour"),selected = "Mois",inline = T)
     }
     if(input$doc_type == 32 | input$doc_type == 33 | input$doc_type == 34 | input$doc_type == 36 | input$doc_type == 41){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
