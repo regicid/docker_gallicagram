@@ -256,10 +256,16 @@ SPlot <- function(data,input){
     if(input$resolution=="Année"){
       tableau<-tableau[tableau$resolution=="Année",]
     }
+    if(input$resolution=="Semaine"){
+      tableau<-tableau[tableau$resolution=="Semaine",]
+    }
+    if(input$resolution=="Jour"){
+      tableau<-tableau[tableau$resolution=="Jour",]
+    }
   }
   tableau<-distinct(tableau)
   
-  if(data[["resolution"]]=="Semaine"){tableau$date=ymd(tableau$date)}
+  if(data[["resolution"]]=="Semaine" | data[["resolution"]]=="Jour"){tableau$date=ymd(tableau$date)}
   if(data[["resolution"]]=="Mois"){
     tableau$date<-str_c(tableau$date,"/01")
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
