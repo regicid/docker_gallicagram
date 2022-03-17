@@ -1071,7 +1071,6 @@ ngramize<-function(input,nouvrequette){
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        print(w)
         colnames(w)<-c("n","annee")
         w = group_by(w,annee) %>% summarise(n = sum(as.integer(n)))
         w$annee = as.integer(w$annee)
@@ -1081,9 +1080,7 @@ ngramize<-function(input,nouvrequette){
         q=str_c('SELECT sum(n),annee,mois FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee,mois')
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        print(w)
         colnames(w)<-c("n","annee","mois")
-        print(w)
         w$n = as.integer(w$n)
         for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}}
         w$annee<-str_c(w$annee,"/",w$mois)
@@ -1102,7 +1099,7 @@ ngramize<-function(input,nouvrequette){
         w<-w[,-3]
         w<-w[,-3]
       }
-      print(w)
+
       dbDisconnect(con)
       
       if(input$resolution=="Année"){
@@ -1128,13 +1125,13 @@ ngramize<-function(input,nouvrequette){
         y$annee<-str_replace_all(y$annee,"-","/")
       }
       w=left_join(y,w,by="annee")
-      print(w)
+
       w<-w[,-2]
       w<-w[,-3]
       colnames(w)=c("date","count")
       w$count[is.na(w$count)]<-0
       w<-w%>%group_by(date)%>%summarise(count = sum(count))
-      print(w)
+
       w = left_join(w,as.data.frame(base),by="date")
       w$base<-as.numeric(w$base)
       w$ratio=w$count/w$base
