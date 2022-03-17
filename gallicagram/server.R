@@ -1046,6 +1046,7 @@ print(0)
         next}
       }
       print(base)
+      print("---------")
       if(input$resolution=="Année"){
         base<-base[base$date<=to,]
         base<-base[base$date>=from,]
