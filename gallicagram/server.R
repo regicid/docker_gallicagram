@@ -1082,8 +1082,8 @@ ngramize<-function(input,nouvrequette){
         query = dbSendQuery(con,q)
         w = dbFetch(query)
         print(w)
-        w<-w[,-2]
         colnames(w)<-c("n","annee","mois")
+        print(w)
         w$n = as.integer(w$n)
         for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}}
         w$annee<-str_c(w$annee,"/",w$mois)
