@@ -3454,6 +3454,8 @@ shinyServer(function(input, output,session){
       df=page_search(input$mot,input$beginning,input$end,input$resolution,df,input$doc_type,input$search_mode,input$titres)
     }
     else if(input$search_mode==3){
+      gallicagram=0
+      nouvrequette=NA
       if(input$joker==T){
         jokertable<-jokerize(input)
         l<-as.character(jokertable$gram)
@@ -3464,11 +3466,10 @@ shinyServer(function(input, output,session){
             m<-str_c(m,"&",l[h])
           }}
         nouvrequette=m
-        df=ngramize(input,nouvrequette)
+        df=ngramize(input,nouvrequette,gallicagram)
       }
-      else if(input$joker==F & input$doc_type!=0){df=ngramize(input)}
+      else if(input$joker==F & input$doc_type!=0){df=ngramize(input,nouvrequette,gallicagram)}
       else if(input$joker==F & input$doc_type==0){
-        nouvrequette=NA
         gallicagram=1
         df1=ngramize(input,nouvrequette,gallicagram)
         gallicagram=2
