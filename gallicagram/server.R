@@ -227,6 +227,7 @@ Plot <- function(data,input){
     width = nrow(tableau)
     span = 2/width + input$span*(width-2)/(10*width)
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": N = ",tableau$base)}
+    if(data[["resolution"]]=="Semaine" | data[["resolution"]]=="Jour"){tableau$hovers = str_c(tableau$date,": N = ",tableau$base)}
     else{tableau$hovers = str_c(str_extract(tableau$date,"...."),": N = ",tableau$base)}
     plot1 = plot_ly(tableau, x=~date[tableau$mot==mot[1]],y=~base[tableau$mot==mot[1]],text=~hovers[tableau$mot==mot[1]],type='bar',hoverinfo="text",marker = list(color='rgba(31, 119, 180,1)'),colors=customPalette)
     y <- list(title = "",titlefont = 41,spikecolor="grey")
