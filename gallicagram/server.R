@@ -2636,6 +2636,7 @@ prepare_correlation<-function(df){
 #########
 prepare_memoire<-function(from,to,resolution){
   df<-memoire
+  print(df)
   df<-distinct(df)
   if(resolution=="Mois"){
     from=str_c(from,"/01")
@@ -2666,6 +2667,7 @@ prepare_memoire<-function(from,to,resolution){
     colnames(df)=mots
     df_liste[i]<-list(df)
   }
+  print(df_liste)
   return(df_liste)
 }
 #########
