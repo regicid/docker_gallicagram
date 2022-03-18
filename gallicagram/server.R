@@ -2655,7 +2655,7 @@ prepare_memoire<-function(from,to,resolution){
   
   for (i in 1:length(df_liste)) {
     df<-as.data.frame(df_liste[i])
-    df$mot<-str_c(df$mot,"_",df$search_mode,"_",df$corpus,"_",df$resolution)
+    df$mot<-str_c(df$mot,"_",df$search_mode,"_",df$corpus,"_",df$resolution,"_",df$bibli)
     df<-select(df,date,ratio,mot)
     mots<-unlist(unique(df$mot))
     a<-df$ratio[df$mot==mots[1]]
