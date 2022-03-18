@@ -2681,7 +2681,7 @@ correlation_matrix <- function(df, corr,
   mots = colnames(df)
   # check arguments
   stopifnot({
-    is.numeric(digits
+    is.numeric(digits)
                digits >= 0
                use %in% c("all", "upper", "lower")
                is.logical(replace_diagonal)
