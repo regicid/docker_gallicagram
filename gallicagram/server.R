@@ -982,7 +982,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
   if(gallicagram==1 & to>1950){to=1950}
   if(gallicagram==1 & from<1789){from=1789}
   if(gallicagram==2 & to>2022){to=2022}
-  if(gallicagram==2 & from<1951){from=1951}
+  if(gallicagram==2 & from<1945){from=1945}
   
   if(input$resolution=="Jour"){
     from=min(input$dateRange)
@@ -1041,7 +1041,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
         if(nb>3){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
-
+      
       if(input$doc_type==30 | gallicagram==2){
         if(nb<=2){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
@@ -1063,7 +1063,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
         if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
-
+      
       base<-as.data.frame(base)
       if(input$resolution=="Année"){
         base<-base[base$date<=to,]
@@ -1117,7 +1117,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
         w<-w[,-3]
         w<-w[,-3]
       }
-
+      
       dbDisconnect(con)
       
       if(input$resolution=="Année"){
@@ -1143,13 +1143,13 @@ ngramize<-function(input,nouvrequette,gallicagram){
         y$annee<-str_replace_all(y$annee,"-","/")
       }
       w=left_join(y,w,by="annee")
-
+      
       w<-w[,-2]
       w<-w[,-3]
       colnames(w)=c("date","count")
       w$count[is.na(w$count)]<-0
       w<-w%>%group_by(date)%>%summarise(count = sum(count))
-
+      
       w = left_join(w,as.data.frame(base),by="date")
       w$base<-as.numeric(w$base)
       w$ratio=w$count/w$base
@@ -1165,7 +1165,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
       }
       increment2=increment2+1
     }
-
+    
     z$ratio[is.na(z$ratio)]<-0
     z$ratio[is.infinite(z$ratio)]<-0
     z$mot<-mot1
@@ -1228,7 +1228,8 @@ ngramize<-function(input,nouvrequette,gallicagram){
     increment=increment+1
   }
   tableau$date<-as.character(tableau$date)
-  memoire<<-bind_rows(tableau,memoire)
+  if(input$doc_type!=0){memoire<<-bind_rows(tableau,memoire)}
+  
   if(input$joker==F){data = list(tableau,paste(input$mot,collapse="&"),input$resolution)}
   if(input$joker==T){data = list(tableau,paste(nouvrequette,collapse="&"),input$resolution)}
   names(data) = c("tableau","mot","resolution")
@@ -2680,69 +2681,69 @@ correlation_matrix <- function(df, corr,
   mots = colnames(df)
   # check arguments
   stopifnot({
-    is.numeric(digits)
-    digits >= 0
-    use %in% c("all", "upper", "lower")
-    is.logical(replace_diagonal)
-    is.logical(show_significance)
-    is.character(replacement)
+    is.numeric(digits
+               digits >= 0
+               use %in% c("all", "upper", "lower")
+               is.logical(replace_diagonal)
+               is.logical(show_significance)
+               is.character(replacement)
   })
-  # we need the Hmisc package for this
-  require(Hmisc)
-  
-  # retain only numeric and boolean columns
-  isNumericOrBoolean = vapply(df, function(x) is.numeric(x) | is.logical(x), logical(1))
-  if (sum(!isNumericOrBoolean) > 0) {
-    cat('Dropping non-numeric/-boolean column(s):', paste(names(isNumericOrBoolean)[!isNumericOrBoolean], collapse = ', '), '\n\n')
-  }
-  df = df[isNumericOrBoolean]
-  
-  # transform input data frame to matrix
-  x <- as.matrix(df)
-  
-  # run correlation analysis using Hmisc package
-  correlation_matrix <- Hmisc::rcorr(x, type = )
-  R <- correlation_matrix$r # Matrix of correlation coeficients
-  p <- correlation_matrix$P # Matrix of p-value 
-  
-  R[is.nan(R)]<-0
-  R[is.na(R)]<-0
-  p[is.nan(p)]<-1
-  p[is.na(p)]<-1
-  # transform correlations to specific character format
-  Rformatted = formatC(R, format = 'f', digits = digits, decimal.mark = decimal.mark)
-  
-  # if there are any negative numbers, we want to put a space before the positives to align all
-  if (sum(R < 0) > 0) {
-    Rformatted = ifelse(R > 0, paste0(' ', Rformatted), Rformatted)
-  }
-  
-  # add significance levels if desired
-  if (show_significance) {
-    # define notions for significance levels; spacing is important.
-    stars <- ifelse(is.na(p), "   ", ifelse(p < .001, "***", ifelse(p < .01, "** ", ifelse(p < .05, "*  ", "   "))))
-    Rformatted = paste0(Rformatted, stars)
-  }
-  # build a new matrix that includes the formatted correlations and their significance stars
-  Rnew <- matrix(Rformatted, ncol = ncol(x))
-  rownames(Rnew) <- colnames(x)
-  colnames(Rnew) <- paste(colnames(x), "", sep =" ")
-  
-  # replace undesired values
-  if (use == 'upper') {
-    Rnew[lower.tri(Rnew, diag = replace_diagonal)] <- replacement
-  } else if (use == 'lower') {
-    Rnew[upper.tri(Rnew, diag = replace_diagonal)] <- replacement
-  } else if (replace_diagonal) {
-    diag(Rnew) <- replacement
-  }
-  if(corr=="corr1" & length(mots)>=3)
-  {Rnew<-Rnew[-length(mots),]
-  Rnew<-Rnew[,-1]}
-  if(corr=="corr2" & nrow(Rnew)>=3)
-  {Rnew<-Rnew[-nrow(Rnew),]
-  Rnew<-Rnew[,-1]}
-  return(Rnew)
+    # we need the Hmisc package for this
+    require(Hmisc)
+    
+    # retain only numeric and boolean columns
+    isNumericOrBoolean = vapply(df, function(x) is.numeric(x) | is.logical(x), logical(1))
+    if (sum(!isNumericOrBoolean) > 0) {
+      cat('Dropping non-numeric/-boolean column(s):', paste(names(isNumericOrBoolean)[!isNumericOrBoolean], collapse = ', '), '\n\n')
+    }
+    df = df[isNumericOrBoolean]
+    
+    # transform input data frame to matrix
+    x <- as.matrix(df)
+    
+    # run correlation analysis using Hmisc package
+    correlation_matrix <- Hmisc::rcorr(x, type = )
+    R <- correlation_matrix$r # Matrix of correlation coeficients
+    p <- correlation_matrix$P # Matrix of p-value 
+    
+    R[is.nan(R)]<-0
+    R[is.na(R)]<-0
+    p[is.nan(p)]<-1
+    p[is.na(p)]<-1
+    # transform correlations to specific character format
+    Rformatted = formatC(R, format = 'f', digits = digits, decimal.mark = decimal.mark)
+    
+    # if there are any negative numbers, we want to put a space before the positives to align all
+    if (sum(R < 0) > 0) {
+      Rformatted = ifelse(R > 0, paste0(' ', Rformatted), Rformatted)
+    }
+    
+    # add significance levels if desired
+    if (show_significance) {
+      # define notions for significance levels; spacing is important.
+      stars <- ifelse(is.na(p), "   ", ifelse(p < .001, "***", ifelse(p < .01, "** ", ifelse(p < .05, "*  ", "   "))))
+      Rformatted = paste0(Rformatted, stars)
+    }
+    # build a new matrix that includes the formatted correlations and their significance stars
+    Rnew <- matrix(Rformatted, ncol = ncol(x))
+    rownames(Rnew) <- colnames(x)
+    colnames(Rnew) <- paste(colnames(x), "", sep =" ")
+    
+    # replace undesired values
+    if (use == 'upper') {
+      Rnew[lower.tri(Rnew, diag = replace_diagonal)] <- replacement
+    } else if (use == 'lower') {
+      Rnew[upper.tri(Rnew, diag = replace_diagonal)] <- replacement
+    } else if (replace_diagonal) {
+      diag(Rnew) <- replacement
+    }
+    if(corr=="corr1" & length(mots)>=3)
+    {Rnew<-Rnew[-length(mots),]
+    Rnew<-Rnew[,-1]}
+    if(corr=="corr2" & nrow(Rnew)>=3)
+    {Rnew<-Rnew[-nrow(Rnew),]
+    Rnew<-Rnew[,-1]}
+    return(Rnew)
 }
 
 contempo<-function(input){
@@ -3470,14 +3471,19 @@ shinyServer(function(input, output,session){
       }
       else if(input$joker==F & input$doc_type!=0){df=ngramize(input,nouvrequette,gallicagram)}
       else if(input$joker==F & input$doc_type==0){
-        gallicagram=1
-        df1=ngramize(input,nouvrequette,gallicagram)
-        gallicagram=2
-        df2=ngramize(input,nouvrequette,gallicagram)
-        tableau = bind_rows(df1[["tableau"]],df2[["tableau"]])
-        df = list(tableau,paste(input$mot,collapse="&"),input$resolution)
-        names(df) = c("tableau","mot","resolution")
+        df = list()
+        factor = vector()
+        for(i in 1:2){
+          df[[i]] = ngramize(input,nouvrequette,i)
+          z = (df[[i]][["tableau"]]$date < 1951) * (df[[i]][["tableau"]]$date>1945)
+          factor[i] = mean(df[[i]][["tableau"]]$ratio[z],na.rm=TRUE)
         }
+        zz = df[[2]][["tableau"]]$date>1950
+        if(!is.na(factor[1] > 0) & !is.na(factor[2])){if(factor[1] > 0 & factor[2] > 0){df[[1]][["tableau"]]$ratio = df[[1]][["tableau"]]$ratio*factor[2]/factor[1]}}
+        df[[1]][["tableau"]] = bind_rows(df[[1]][["tableau"]],df[[2]][["tableau"]][zz,])
+        df = df[[1]]
+        memoire<<-bind_rows(df[["tableau"]],memoire)
+      }
     }
     else if((input$doc_type==31)&input$resolution=="Semaine"){
       df=contempo(input)
