@@ -2677,9 +2677,8 @@ correlation_matrix <- function(df, corr,
                                show_significance = TRUE, 
                                replace_diagonal = TRUE, 
                                replacement = ""){
-  print(corr)
+  print(df)
   mots = colnames(df)
-  print(mots)
   # check arguments
   stopifnot({
     is.numeric(digits)
