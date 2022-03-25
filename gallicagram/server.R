@@ -1630,12 +1630,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           }
           if(doc_type == 36){
             if (input$isidore=="_"){
-              url<-str_c("https://api.isidore.science/resource/search?q=%22",mot1,"%22&date=",y,"&replies=1")
-              url_base<-str_c("https://api.isidore.science/resource/search?date=",y,"&replies=1")
+              url<-str_c("https://api.isidore.science/resource/search?q=%22",mot1,"%22&date=",y,"&replies=0")
+              url_base<-str_c("https://api.isidore.science/resource/search?date=",y,"&replies=0")
             }
             else{
-              url<-str_c("https://api.isidore.science/resource/search?q=%22",mot1,"%22&date=",y,"&replies=1&discipline=http%3A%2F%2Faurehal.archives-ouvertes.fr%2Fsubject%2Fshs.",input$isidore)
-              url_base<-str_c("https://api.isidore.science/resource/search?date=",y,"&replies=1&discipline=http%3A%2F%2Faurehal.archives-ouvertes.fr%2Fsubject%2Fshs.",input$isidore)
+              url<-str_c("https://api.isidore.science/resource/search?q=%22",mot1,"%22&date=",y,"&replies=0&discipline=http%3A%2F%2Faurehal.archives-ouvertes.fr%2Fsubject%2Fshs.",input$isidore)
+              url_base<-str_c("https://api.isidore.science/resource/search?date=",y,"&replies=0&discipline=http%3A%2F%2Faurehal.archives-ouvertes.fr%2Fsubject%2Fshs.",input$isidore)
             }
           }
           if(doc_type == 30){
