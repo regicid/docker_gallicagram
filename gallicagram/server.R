@@ -3595,6 +3595,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type==42){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://chroniclingamerica.loc.gov/', target=\'_blank\'> ","chroniclingamerica.loc.gov","</a>"),sep = ""))}
     if(input$doc_type==43){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.deutsche-digitale-bibliothek.de/', target=\'_blank\'> ","deutsche-digitale-bibliothek.de","</a>"),sep = ""))}
     if(input$doc_type==0){output$legende=renderText("gallica.bnf.fr et lemonde.fr")}
+    if(input$doc_type==43){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://trends.google.fr//', target=\'_blank\'> ","trends.google.fr","</a>"),sep = ""))}
     
     if(input$doc_type==0 | input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 41){output$legende4=renderText("Langue : français")}
     if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16 |input$doc_type==29|input$doc_type==43){output$legende4=renderText("Langue : allemand")}
@@ -3607,6 +3608,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type==4){output$legende1<-renderText("Corpus : personnalisé")}
     if(input$doc_type==32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){output$legende1<-renderText("Corpus : scientifique")}
     if(input$doc_type==41){output$legende1<-renderText("Corpus : audiovisuel")}
+    if(input$doc_type==44){output$legende1<-renderText("Corpus : web")}
     if(input$doc_type == 3 & input$theme_presse == 1){
       liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
       title<-liste_journaux$title[liste_journaux$ark==input$titres[1]]
