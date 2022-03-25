@@ -25,6 +25,7 @@ library(leaflet)
 library(scales)
 library(cartogram)
 library(sf)
+library(gtrendsR)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -1265,6 +1266,13 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   
   if(doc_type==41){remDr$navigate("http://inatheque.ina.fr/")}
   
+  if(doc_type==44){
+    if(from<2004){from=2004}
+    if(from>2022){from=2004}
+    if(to>2022){to=2022}
+    if(to<2004){to=2022}
+  }
+  
   
   for (i in from:to){
     ###
@@ -1278,7 +1286,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     if(resolution=="Mois"){I=1:12} #Pour faire ensuite une boucle sur les mois
     
     
-    if(doc_type !=5 & doc_type !=9 & doc_type !=10 & doc_type !=12){
+    if(doc_type !=5 & doc_type !=9 & doc_type !=10 & doc_type !=12 & doc_type !=44){
       for(j in I){
         if(resolution=="Mois"){
           z = as.character(j)
@@ -2448,10 +2456,28 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     tableau$base[is.na(tableau$base)]<-0
   }
   
+  if(doc_type==44){
+    if(to==2022){to=as.character(Sys.Date())}
+    else{to=str_c(to,"-12-31")}
+    from=str_c(from,"-01-01")
+    print(from)
+    print(to)
+    a<-gtrends(keyword = mots,geo = "FR",time = str_c(from," ",to), onlyInterest = T)
+    a<-a$interest_over_time
+    a<-as.data.frame(a)
+    a$date<-as.character(a$date)
+    tableau<-cbind(a$date,a$hits,a$keyword)
+    tableau<-as.data.frame(tableau)
+    colnames(tableau)<-c("date","count","mot")
+    tableau$base=100
+    tableau$count<-as.integer(tableau$count)
+    is.na(tableau$count)<-0
+    tableau$ratio=tableau$count/tableau$base
+    tableau$url="https://trends.google.fr/trends/"
+    tableau$date<-str_replace_all(tableau$date,"-","/")
+  }
+  
   tableau$resolution<-resolution
-  format = "%Y"
-  if(resolution=="Mois"){format=paste(format,"%m",sep="/")}
-  tableau.date = as.Date(as.character(tableau$date),format=format)
   if(doc_type==1){tableau$corpus="Presse"
   tableau$langue="Français"
   tableau$bibli="Gallica"
@@ -2612,6 +2638,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$langue="Allemand"
   tableau$bibli="DDB"
   tableau$search_mode<-"Document"}
+  if(doc_type==44){tableau$corpus="Web"
+  tableau$langue="Français"
+  tableau$bibli="Google Trends"
+  tableau$search_mode<-"gtrends"}
+  
+  print(tableau)
   
   memoire<<-bind_rows(tableau,memoire)
   data = list(tableau,paste(mots,collapse="&"),resolution)
@@ -3159,7 +3191,7 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse française / Gallica" = 1,"Recherche par titre de presse / Gallica" = 3, "Livres / Gallica" = 2, "Corpus personnalisé / Gallica"=4),selected = 1)
       }
       else if(input$language == 1 & input$bibli==2){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15, "Presse wallonne / KBR"=13, "Presse québécoise / BAnQ"=28, "Livres / Ngram Viewer - Google Books" = 5),selected = 5)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15, "Presse wallonne / KBR"=13, "Presse québécoise / BAnQ"=28, "Livres / Ngram Viewer - Google Books" = 5, "Google Trends / France"=44),selected = 5)
       }
       else if(input$language == 1 & input$bibli==3){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse Auvergne-Rhône-Alpes / Lectura"=17, "Presse du sillon lorrain / Limedia"=18, "Presse méridionale / Mémonum"=19, "Presse de Saint-Denis / Commun-Patrimoine"=20, "Presse de Brest / Yroise"=21, "Presse des Pyrénées / Pireneas"=22, "Presse toulousaine / Rosalis"=23, "Presse diplomatique / Bibliothèque diplomatique numérique"=24, "Presse francophone / RFN"=25, "Presse alsacienne / Numistral"=26, "Presse de Roubaix / BN-R"=27),selected = 17)
@@ -3225,6 +3257,10 @@ shinyServer(function(input, output,session){
     if(input$doc_type == 11){
       updateSelectInput(session,"search_mode",choices = list("Par page" = 2),selected = 2)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
+    }
+    if(input$doc_type == 44){
+      updateSelectInput(session,"search_mode",choices = list("gtrends" = 5),selected = 5)
+      updateRadioButtons(session,"resolution",choices = c("Semaine"),selected = "Semaine",inline = T)
     }
     if(input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 17 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42){
       updateSelectInput(session,"search_mode",choices = list("Par page" = 2),selected = 2)
@@ -3433,7 +3469,7 @@ shinyServer(function(input, output,session){
         input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | 
         input$doc_type == 21 | input$doc_type == 22 | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | 
         input$doc_type == 32 | input$doc_type == 33 | input$doc_type == 34 | input$doc_type == 35 | input$doc_type == 36 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | 
-        input$doc_type == 41 | input$doc_type == 42 | input$doc_type == 43 | ((input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) ){
+        input$doc_type == 41 | input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 44 | ((input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) ){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
@@ -3505,7 +3541,7 @@ shinyServer(function(input, output,session){
       output$legende2<-renderText(str_c("Documents épluchées : ", as.character(sum(df[["tableau_volume"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Résultats trouvés : ", as.character(sum(df[["tableau_volume"]]$count))))
     }
-    else if (input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){
+    else if (input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12| input$doc_type==44){
       output$legende2<-NULL
       output$legende3<-NULL
     }
