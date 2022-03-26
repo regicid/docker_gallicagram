@@ -2465,8 +2465,6 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     if(to==2022){to=as.character(Sys.Date())}
     else{to=str_c(to,"-12-31")}
     from=str_c(from,"-01-01")
-    print(from)
-    print(to)
     a<-gtrends(keyword = mots,geo = "FR",time = str_c(from," ",to), onlyInterest = T)
     a<-a$interest_over_time
     a<-as.data.frame(a)
@@ -2476,9 +2474,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     colnames(tableau)<-c("date","count","mot")
     tableau$base=100
     tableau$count<-as.integer(tableau$count)
-    is.na(tableau$count)<-0
+    tableau$count[is.na(tableau$count)]<-0
     tableau$ratio=tableau$count/tableau$base
     tableau$url="https://trends.google.fr/trends/"
+    #tableau$url<-str_c("https://www.google.fr/search?q=%22",mot1,"%22&source=lnt&tbs=cdr%3A1%2Ccd_min%3A",substr(tableau$date,6,7),"%2F",substr(tableau$date,9,10),"%2F",str_extract(tableau$date,"...."),"%2Ccd_max%3A",substr(tableau$date,6,7),"%2F",substr(tableau$date,9,10),"%2F",str_extract(tableau$date,"...."),"&tbm=")
     tableau$date<-str_replace_all(tableau$date,"-","/")
   }
   
@@ -2648,8 +2647,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$bibli="Google Trends"
   tableau$search_mode<-"gtrends"}
   
-  print(tableau)
-  
+
   memoire<<-bind_rows(tableau,memoire)
   data = list(tableau,paste(mots,collapse="&"),resolution)
   names(data) = c("tableau","mot","resolution")
