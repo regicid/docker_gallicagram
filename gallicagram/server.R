@@ -1201,10 +1201,12 @@ ngramize<-function(input,nouvrequette,gallicagram){
     if((input$doc_type==30 | gallicagram==2) & input$resolution=="Mois"){
       z$url<-str_c("https://www.google.fr/search?q=inurl%3Alemonde.fr+%22",mot1,"%22&source=lnt&tbs=cdr%3A1%2Ccd_min%3A",str_extract(z$date,"..$"),"%2F01%2F",str_extract(z$date,"...."),"%2Ccd_max%3A",str_extract(z$date,"..$"),"%2F31%2F",str_extract(z$date,"...."),"&tbm=")
       #z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F",str_extract(z$date,"..$"),"%2F",str_extract(z$date,"...."),"&end_at=31%2F",str_extract(z$date,"..$"),"%2F",str_extract(z$date,"...."),"&search_sort=date_asc")
+      z<-z[z$date<="2022/02"]
     }
     if(input$doc_type==30 & input$resolution=="Jour"){
       z$url<-str_c("https://www.google.fr/search?q=inurl%3Alemonde.fr+%22",mot1,"%22&source=lnt&tbs=cdr%3A1%2Ccd_min%3A",substr(z$date,6,7),"%2F",substr(z$date,9,10),"%2F",str_extract(z$date,"...."),"%2Ccd_max%3A",substr(z$date,6,7),"%2F",substr(z$date,9,10),"%2F",str_extract(z$date,"...."),"&tbm=")
       #z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&end_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&search_sort=date_asc")
+      z<-z[z$date<="2022/02/2022"]
     }
     if(input$resolution=="Année"){z$resolution<-"Année"}
     if(input$resolution=="Mois"){z$resolution<-"Mois"}
