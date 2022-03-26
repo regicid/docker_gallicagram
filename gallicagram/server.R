@@ -1185,6 +1185,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
         or_end<-str_c(or_end,or1_end[j])
       }
       mot1<-mots_or[1]} else{mot1=mot2}
+    print(z)
     if(input$doc_type==2){
       z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"%22%20and%20gallicapublication_date%3C=%22",z$date,"%22)&suggest=10&keywords=",mot1,or_end)
     }
