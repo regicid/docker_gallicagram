@@ -1047,7 +1047,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
         if(nb<=3){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
           gram<-"gram"
-          base<-read.csv("lemonde1.csv")
+          base<-read.csv(str_c("lemonde",nb,".csv"))
           base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
           base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
           if(input$resolution=="Année"){
