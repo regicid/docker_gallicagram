@@ -1103,6 +1103,9 @@ ngramize<-function(input,nouvrequette,gallicagram){
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
+        if(input$doc_type==30 & nb==1){
+          w<-w[,-2]
+        }
         colnames(w)<-c("n","annee","mois")
         w$n = as.integer(w$n)
         for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}}
