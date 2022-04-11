@@ -1094,9 +1094,10 @@ ngramize<-function(input,nouvrequette,gallicagram){
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        print(w)
         if(input$doc_type==30 & (nb==1 | nb==2)){
           w<-w[,-2]
+          w<-w[,-3]
+          print(w)
         }
         colnames(w)<-c("n","annee")
         w = group_by(w,annee) %>% summarise(n = sum(as.integer(n)))
