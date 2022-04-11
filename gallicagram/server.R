@@ -1094,6 +1094,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
+        print(w)
         if(input$doc_type==30 & (nb==1 | nb==2)){
           w<-w[,-2]
         }
