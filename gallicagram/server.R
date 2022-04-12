@@ -1088,13 +1088,13 @@ ngramize<-function(input,nouvrequette,gallicagram){
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0) & input$resolution=="Année"){
         #q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
-        if(input$doc_type==30 & (nb==1 | nb==2)){
+        if(input$doc_type==30){
           q=str_c('SELECT * FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
           print(q)
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        if(input$doc_type==30 & (nb==1 | nb==2)){
+        if(input$doc_type==30){
           w<-w[,-2]
           w<-w[,-3]
           print(w)
@@ -1106,13 +1106,13 @@ ngramize<-function(input,nouvrequette,gallicagram){
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0) & input$resolution=="Mois"){
         # q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee,mois FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee,mois')
-        if(input$doc_type==30 & (nb==1 | nb==2)){
+        if(input$doc_type==30){
           q=str_c('SELECT * FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
           print(q)
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        if(input$doc_type==30 & (nb==1 | nb==2)){
+        if(input$doc_type==30){
           w<-w[,-2]
         }
         colnames(w)<-c("n","annee","mois")
