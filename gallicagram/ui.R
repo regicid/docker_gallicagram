@@ -118,6 +118,7 @@ shinyUI(bootstrapPage(
                                                                      # div(style = "margin-top: -15px"),
                                                                      # shinyURL.ui(),
                                                                      div(style = "margin-top: -15px"),
+                                                                     actionButton("lemmatiseur","Lemmatiseur"),
                                                                      downloadButton("data_session","Données de la session"),
                                                                      circle = TRUE, status = "default",
                                                                      icon = icon("sliders"), width = "300px",

@@ -3161,6 +3161,16 @@ shinyServer(function(input, output,session){
     }
   })})
   
+  observeEvent(input$lemmatiseur, {
+    if(exists("lemme_table")==F){lemme_table<-read.csv("morphalou.csv",encoding="UTF-8")}
+    lem<-lemme_table$lemme[lemme_table$flexion==input$mot]
+    lem=unique(lem)
+    flex<-lemme_table$flexion[lemme_table$lemme==lem]
+    flex=unique(flex)
+    flex<-paste(unlist(flex),collapse = "+")
+    updateTextInput(session,"mot","Recherche",value = flex)
+  })
+  
   observeEvent(input$doc_type,{observeEvent(input$theme_presse,{
     if(input$doc_type == 3)
     {  
