@@ -26,6 +26,7 @@ library(scales)
 library(cartogram)
 library(sf)
 library(gtrendsR)
+library(timetk)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
