@@ -62,16 +62,13 @@ Plot <- function(data,input){
     if(input$resolution=="Année"){
       tableau<-tableau[tableau$resolution=="Année",]
     }
-    if(input$resolution=="Jour"){
-      tableau<-tableau[tableau$resolution=="Jour",]
-    }
     if(input$resolution=="Semaine"){
       tableau<-tableau[tableau$resolution=="Semaine",]
     }
   }
   tableau<-distinct(tableau)
   
-  if(data[["resolution"]]=="Semaine" | data[["resolution"]]=="Jour"){tableau$date=ymd(tableau$date)}
+  if(data[["resolution"]]=="Semaine"){tableau$date=ymd(tableau$date)}
   if(data[["resolution"]]=="Mois"){
     tableau$date<-str_c(tableau$date,"/01")
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
@@ -166,14 +163,14 @@ Plot <- function(data,input){
   }
   
   if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
-  else if(data[["resolution"]]=="Semaine" | data[["resolution"]]=="Jour"){tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
+  else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
   else{tableau$hovers = str_c(str_extract(tableau$date,"...."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
   y <- list(title = "Fréquence dans le corpus",titlefont = 41,tickformat = digit_number,spikecolor="grey")
   if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41,spikecolor="grey")}
   x <- list(title = "",titlefont = 41,spikecolor="grey")
   if(input$search_mode==3){
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ",round(tableau$ratio*100,digits = 6),"%")}
-    else if(data[["resolution"]]=="Jour"){tableau$hovers = str_c(tableau$date," : ",round(tableau$ratio*100,digits = 6),"%")}
+    else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date," : ",round(tableau$ratio*100,digits = 6),"%")}
     else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ",round(tableau$ratio*100,digits = 6),"%")}
     y <- list(title = "Fréquence dans le corpus",titlefont = 41,tickformat = digit_number,spikecolor="grey")
     if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41,spikecolor="grey")}
@@ -187,7 +184,7 @@ Plot <- function(data,input){
   }
   if(input$histogramme==T){
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ", tableau$count)}
-    else if(data[["resolution"]]=="Semaine" | data[["resolution"]]=="Jour"){tableau$hovers = str_c(tableau$date," : ", tableau$count)}
+    else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date," : ", tableau$count)}
     else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ", tableau$count)}
     y <- list(title = "Nombre d'occurrences dans\nle corpus",titlefont = 41,spikecolor="grey")
     plot = plot_ly(tableau, x=~date,y=~count,text=~hovers,color =~mot,type='bar', hoverinfo="text",customdata=tableau$url,colors=customPalette)}
@@ -229,7 +226,7 @@ Plot <- function(data,input){
     width = nrow(tableau)
     span = 2/width + input$span*(width-2)/(10*width)
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": N = ",tableau$base)}
-    if(data[["resolution"]]=="Semaine" | data[["resolution"]]=="Jour"){tableau$hovers = str_c(tableau$date,": N = ",tableau$base)}
+    if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date,": N = ",tableau$base)}
     else{tableau$hovers = str_c(str_extract(tableau$date,"...."),": N = ",tableau$base)}
     plot1 = plot_ly(tableau, x=~date[tableau$mot==mot[1]],y=~base[tableau$mot==mot[1]],text=~hovers[tableau$mot==mot[1]],type='bar',hoverinfo="text",marker = list(color='rgba(31, 119, 180,1)'),colors=customPalette)
     y <- list(title = "",titlefont = 41,spikecolor="grey")
@@ -269,13 +266,10 @@ SPlot <- function(data,input){
     if(input$resolution=="Semaine"){
       tableau<-tableau[tableau$resolution=="Semaine",]
     }
-    if(input$resolution=="Jour"){
-      tableau<-tableau[tableau$resolution=="Jour",]
-    }
   }
   tableau<-distinct(tableau)
   
-  if(data[["resolution"]]=="Semaine" | data[["resolution"]]=="Jour"){tableau$date=ymd(tableau$date)}
+  if(data[["resolution"]]=="Semaine"){tableau$date=ymd(tableau$date)}
   if(data[["resolution"]]=="Mois"){
     tableau$date<-str_c(tableau$date,"/01")
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
@@ -986,7 +980,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
   if(gallicagram==2 & to>2022){to=2022}
   if(gallicagram==2 & from<1945){from=1945}
   
-  if(input$resolution=="Jour"){
+  if(input$resolution=="Semaine"){
     from=min(input$dateRange)
     to<-max(input$dateRange)
     to<-str_replace_all(to,"-","/")
@@ -1058,7 +1052,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
             base<-base%>%group_by(annee,mois)%>%summarise(n = sum(n))
             base<-cbind(str_c(base$annee,"/",base$mois),base$n)
             colnames(base)<-c("date","base")}
-          if(input$resolution=="Jour"){
+          if(input$resolution=="Semaine"){
             base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
             colnames(base)<-c("date","base")}
         }
@@ -1076,7 +1070,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
         base<-base[base$date>=str_c(from,"/01"),]
       }
       
-      if(input$resolution=="Jour"){
+      if(input$resolution=="Semaine"){
         base<-base[base[,"date"]<=to,]
         base<-base[base[,"date"]>=from,]
       }
@@ -1123,7 +1117,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
         w<-w[,-3]
       }
       
-      if(input$doc_type==30 & input$resolution=="Jour"){
+      if(input$doc_type==30 & input$resolution=="Semaine"){
         q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',str_split(from,"/")[[1]][1]," AND ",str_split(to,"/")[[1]][1] ,' AND ',gram,'="',mot,'"')
         query = dbSendQuery(con,q)
         w = dbFetch(query)
@@ -1156,7 +1150,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
         }
         y<-y[-1,]
       }
-      if(input$resolution=="Jour"){
+      if(input$resolution=="Semaine"){
         y=data.frame(annee=seq(as.Date(from),as.Date(to),by="day"), n=0)
         y$annee<-str_replace_all(y$annee,"-","/")
       }
@@ -1170,7 +1164,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
       
       w = left_join(w,as.data.frame(base),by="date")
       w$base<-as.numeric(w$base)
-      if(input$resolution=="Jour"){
+      if(input$resolution=="Semaine"){
         w$date<-as.Date(w$date)
         w<-w%>%
           summarise_by_time(
@@ -1231,14 +1225,14 @@ ngramize<-function(input,nouvrequette,gallicagram){
       z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F",str_extract(z$date,"..$"),"%2F",str_extract(z$date,"...."),"&end_at=31%2F",str_extract(z$date,"..$"),"%2F",str_extract(z$date,"...."),"&search_sort=date_asc")
       z<-z[z$date<="2022/02",]
     }
-    if(input$doc_type==30 & input$resolution=="Jour"){
+    if(input$doc_type==30 & input$resolution=="Semaine"){
       #z$url<-str_c("https://www.google.fr/search?q=inurl%3Alemonde.fr+%22",mot1,"%22&source=lnt&tbs=cdr%3A1%2Ccd_min%3A",substr(z$date,6,7),"%2F",substr(z$date,9,10),"%2F",str_extract(z$date,"...."),"%2Ccd_max%3A",substr(z$date,6,7),"%2F",substr(z$date,9,10),"%2F",str_extract(z$date,"...."),"&tbm=")
       z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&end_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&search_sort=date_asc")
       z<-z[z$date<="2022/02/2022",]
     }
     if(input$resolution=="Année"){z$resolution<-"Année"}
     if(input$resolution=="Mois"){z$resolution<-"Mois"}
-    if(input$resolution=="Jour"){z$resolution<-"Jour"}
+    if(input$resolution=="Semaine"){z$resolution<-"Semaine"}
     
     if(input$doc_type==2){z$corpus="Livres"
     z$langue="Français"
@@ -3269,11 +3263,11 @@ shinyServer(function(input, output,session){
     }
     if( input$doc_type == 31){
       updateSelectInput(session,"search_mode",choices = list("Par article" = 4),selected = 4)
-      updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Semaine",inline = T)
+      updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Mois",inline = T)
     }
     if( input$doc_type == 30 ){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
-      updateRadioButtons(session,"resolution",choices = c("Année","Mois","Jour"),selected = "Mois",inline = T)
+      updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Mois",inline = T)
     }
     if( input$doc_type == 0 ){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
