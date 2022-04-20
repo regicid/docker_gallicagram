@@ -31,7 +31,7 @@ library(timetk)
 httr::set_config(config(ssl_verifypeer = 0L))
 
 
-js <<- "
+js <- "
 function(el, x) {
 el.on('plotly_click', function(d) {
 var point = d.points[0];
@@ -3077,7 +3077,6 @@ shinyServer(function(input, output,session){
       shinyjs::hide(id="leg")
       shinyjs::hide(id="clip")
       shinyjs::hide(id="article")
-      js<<-"function(el, x) {}"
       observeEvent(input$do, {
         shinyjs::hide(id = "Sidebar")
       })
