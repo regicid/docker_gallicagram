@@ -1179,7 +1179,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
             count  = sum(count),
             base=sum(base)
           )
-        w$annee<-str_replace_all(w$annee,"-","/")
+        w$date<-str_replace_all(w$date,"-","/")
       }
       w$ratio=w$count/w$base
       w$ratio[is.na(w$ratio)]<-0
