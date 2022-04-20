@@ -1169,6 +1169,17 @@ ngramize<-function(input,nouvrequette,gallicagram){
       
       w = left_join(w,as.data.frame(base),by="date")
       w$base<-as.numeric(w$base)
+      if(input$resolution=="Jour"){
+        w$date<-as.Date(w$date)
+        w%>%
+          summarise_by_time(
+            .date_var = date,
+            .by       = "week",
+            count  = sum(count),
+            base=sum(base)
+          )
+        w$annee<-str_replace_all(w$annee,"-","/")
+      }
       w$ratio=w$count/w$base
       w$ratio[is.na(w$ratio)]<-0
       w$ratio[is.infinite(w$ratio)]<-0
