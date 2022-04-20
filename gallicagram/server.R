@@ -1172,7 +1172,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
       w$base<-as.numeric(w$base)
       if(input$resolution=="Jour"){
         w$date<-as.Date(w$date)
-        w%>%
+        w<-w%>%
           summarise_by_time(
             .date_var = date,
             .by       = "week",
