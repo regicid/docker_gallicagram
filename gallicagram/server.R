@@ -1749,11 +1749,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               if(nchar(z)<2){z<-str_c("0",z)}
               beginning = str_c(y,z,"01")
               end = str_c(y,z,end_of_month[j])
-              url<-str_c("https://api.musixmatch.com/ws/1.1/track.search?apikey=2795af8d7036855a62070800dc64131d&format=json&callback=jsonp&q_lyrics=",mot1,"&s_track_release_date=asc&f_lyrics_language=",lang,"&page=1&f_track_release_group_first_release_date_min=",beginning,"&f_track_release_group_first_release_date_max=",end)
-              url_base<-str_c("https://api.musixmatch.com/ws/1.1/track.search?apikey=2795af8d7036855a62070800dc64131d&format=json&callback=jsonp&q_lyrics=&s_track_release_date=asc&f_lyrics_language=",lang,"&page=1&f_track_release_group_first_release_date_min=",beginning,"&f_track_release_group_first_release_date_max=",end)
+              url<-str_c("https://api.musixmatch.com/ws/1.1/track.search?apikey=f126b582c17d10329daf15284bc0543f&format=json&callback=jsonp&q_lyrics=",mot1,"&s_track_release_date=asc&f_lyrics_language=",lang,"&page=1&f_track_release_group_first_release_date_min=",beginning,"&f_track_release_group_first_release_date_max=",end)
+              url_base<-str_c("https://api.musixmatch.com/ws/1.1/track.search?apikey=f126b582c17d10329daf15284bc0543f&format=json&callback=jsonp&q_lyrics=&s_track_release_date=asc&f_lyrics_language=",lang,"&page=1&f_track_release_group_first_release_date_min=",beginning,"&f_track_release_group_first_release_date_max=",end)
             }
-            if(resolution=="Année"){url<-str_c("https://api.musixmatch.com/ws/1.1/track.search?apikey=2795af8d7036855a62070800dc64131d&format=json&callback=jsonp&q_lyrics=",mot1,"&s_track_release_date=asc&f_lyrics_language=",lang,"&page=1&f_track_release_group_first_release_date_min=",y,"0101&f_track_release_group_first_release_date_max=",y,"1231")
-            url_base<-str_c("https://api.musixmatch.com/ws/1.1/track.search?apikey=2795af8d7036855a62070800dc64131d&format=json&callback=jsonp&q_lyrics=&s_track_release_date=asc&f_lyrics_language=",lang,"&page=1&f_track_release_group_first_release_date_min=",y,"0101&f_track_release_group_first_release_date_max=",y,"1231")
+            if(resolution=="Année"){url<-str_c("https://api.musixmatch.com/ws/1.1/track.search?apikey=f126b582c17d10329daf15284bc0543f&format=json&callback=jsonp&q_lyrics=",mot1,"&s_track_release_date=asc&f_lyrics_language=",lang,"&page=1&f_track_release_group_first_release_date_min=",y,"0101&f_track_release_group_first_release_date_max=",y,"1231")
+            url_base<-str_c("https://api.musixmatch.com/ws/1.1/track.search?apikey=f126b582c17d10329daf15284bc0543f&format=json&callback=jsonp&q_lyrics=&s_track_release_date=asc&f_lyrics_language=",lang,"&page=1&f_track_release_group_first_release_date_min=",y,"0101&f_track_release_group_first_release_date_max=",y,"1231")
             }
           }
           
