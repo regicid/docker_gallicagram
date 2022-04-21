@@ -78,6 +78,8 @@ Plot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   
+  tableau$mot[str_length(tableau$mot)>=20]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=20],20,"right"),"...")
+  
   if(input$joker==T & input$histoJoker==F & (input$doc_type==1 | input$doc_type==2) & input$search_mode==3){
     
     total<-select(tableau,count,mot)
