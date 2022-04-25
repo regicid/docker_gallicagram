@@ -1016,16 +1016,12 @@ ngramize<-function(input,nouvrequette,gallicagram){
         next}
         if(nb<=5){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram.db")
-          if(nb==1){gram<-"monogram"
-          base<-read.csv("base_livres_gallica_monogrammes.csv")}
-          if(nb==2){gram<-"bigram"
-          base<-read.csv("base_livres_gallica_bigrammes.csv")}
-          if(nb==3){gram<-"trigram"
-          base<-read.csv("base_livres_gallica_trigrammes.csv")}
-          if(nb==4){gram<-"tetragram"
-          base<-read.csv("base_livres_gallica_tetragrammes.csv")}
-          if(nb==5){gram<-"pentagram"
-          base<-read.csv("base_livres_gallica_pentagrammes.csv")}
+          gram = "gram"
+          if(nb==1){base<-read.csv("base_livres_gallica_monogrammes.csv")}
+          if(nb==2){base<-read.csv("base_livres_gallica_bigrammes.csv")}
+          if(nb==3){base<-read.csv("base_livres_gallica_trigrammes.csv")}
+          if(nb==4){base<-read.csv("base_livres_gallica_tetragrammes.csv")}
+          if(nb==5){base<-read.csv("base_livres_gallica_pentagrammes.csv")}
         }
       }
       if(input$doc_type==1 | gallicagram==1){
