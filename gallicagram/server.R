@@ -1077,6 +1077,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
       
       if(input$doc_type==2){
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
+        print(query)
         w = dbFetch(query)
       }
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0) & input$resolution=="Année"){
