@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y \
     libudunits2-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get upgrade && Y
+RUN apt-get update && apt-get upgrade --yes
 
 # basic shiny functionality
 RUN R -e "install.packages(c('shiny', 'rmarkdown'), repos='https://cloud.r-project.org/')"
