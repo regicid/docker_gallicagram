@@ -26,6 +26,10 @@ RUN apt-get update && apt-get install -y \
     libudunits2-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y \
+    libcurl4-openssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # basic shiny functionality
 RUN R -e "install.packages(c('shiny', 'rmarkdown'), repos='https://cloud.r-project.org/')"
 
@@ -76,8 +80,6 @@ RUN R -e "install.packages(c('gtrendsR'), repos='https://cloud.r-project.org/')"
 RUN R -e "install.packages(c('timetk'), repos='https://cloud.r-project.org/')"
 
 RUN R -e "install.packages(c('jsonlite'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('RCurl'), repos='https://cloud.r-project.org/')"
 
 # copy the app to the image
 RUN mkdir /root/gallicagram

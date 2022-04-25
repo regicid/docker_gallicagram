@@ -28,7 +28,6 @@ library(sf)
 library(gtrendsR)
 library(timetk)
 library(jsonlite)
-library(RCurl)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -1017,12 +1016,16 @@ ngramize<-function(input,nouvrequette,gallicagram){
         next}
         if(nb<=5){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram.db")
-          gram = "gram"
-          if(nb==1){base<-read.csv("base_livres_gallica_monogrammes.csv")}
-          if(nb==2){base<-read.csv("base_livres_gallica_bigrammes.csv")}
-          if(nb==3){base<-read.csv("base_livres_gallica_trigrammes.csv")}
-          if(nb==4){base<-read.csv("base_livres_gallica_tetragrammes.csv")}
-          if(nb==5){base<-read.csv("base_livres_gallica_pentagrammes.csv")}
+          if(nb==1){gram<-"monogram"
+          base<-read.csv("base_livres_gallica_monogrammes.csv")}
+          if(nb==2){gram<-"bigram"
+          base<-read.csv("base_livres_gallica_bigrammes.csv")}
+          if(nb==3){gram<-"trigram"
+          base<-read.csv("base_livres_gallica_trigrammes.csv")}
+          if(nb==4){gram<-"tetragram"
+          base<-read.csv("base_livres_gallica_tetragrammes.csv")}
+          if(nb==5){gram<-"pentagram"
+          base<-read.csv("base_livres_gallica_pentagrammes.csv")}
         }
       }
       if(input$doc_type==1 | gallicagram==1){
@@ -1078,7 +1081,6 @@ ngramize<-function(input,nouvrequette,gallicagram){
       
       if(input$doc_type==2){
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
-        print(query)
         w = dbFetch(query)
       }
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0) & input$resolution=="Année"){
@@ -2558,8 +2560,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     url<-str_c("https://api.mediacloud.org/api/v2/stories_public/count?q=",mot,"&fq=publish_date:%5B",jjj,"T00:00:00.000Z+TO+",kkk,"T00:00:00.000Z%5D&language=",lang,"&split=T&split_period=",res,"&key=b2ef1a99a8fdbb84afafe742fd437c0942703072bb98242ba0eed9b8411e1735")
     url_base<-str_c("https://api.mediacloud.org/api/v2/stories_public/count?q=a&fq=publish_date:%5B",jjj,"T00:00:00.000Z+TO+",kkk,"T00:00:00.000Z%5D&language=",lang,"&split=T&split_period=",res,"&key=b2ef1a99a8fdbb84afafe742fd437c0942703072bb98242ba0eed9b8411e1735")
     print("---")
-    a<-as.data.frame(jsonlite::fromJSON(url))
-    b<-as.data.frame(jsonlite::fromJSON(url_base))
+    a<-as.data.frame(fromJSON(url))
+    b<-as.data.frame(fromJSON(url_base))
     colnames(a)<-c("count","date")
     colnames(b)<-c("base","date")
     
