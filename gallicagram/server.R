@@ -2466,8 +2466,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$url = str_replace(tableau$url,"maximumRecords=1","maximumRecords=25")
   
   if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29| doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40| doc_type==41){
-    print("-----")
     remDr$quit()
+    print("-----")
     if(se=="windows"){
       rD$server$stop()
       rm(rD)
