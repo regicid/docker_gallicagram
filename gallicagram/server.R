@@ -2557,11 +2557,13 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     kkk=str_c(to,"-12-31")}
     if(input$resolution=="Semaine"){res="week"}
     if(input$resolution=="Jour"){res="day"}
+    mot<-str_replace_all(mot,"\\+","%20OR%20")
     
-    url<-str_c("https://api.mediacloud.org/api/v2/stories_public/count?q=%22",mot,"%22&fq=publish_date:%5B",jjj,"T00:00:00.000Z+TO+",kkk,"T00:00:00.000Z%5D&language=",lang,"&split=T&split_period=",res,"&key=b2ef1a99a8fdbb84afafe742fd437c0942703072bb98242ba0eed9b8411e1735")
+    url<-str_c("https://api.mediacloud.org/api/v2/stories_public/count?q=",mot,"&fq=publish_date:%5B",jjj,"T00:00:00.000Z+TO+",kkk,"T00:00:00.000Z%5D&language=",lang,"&split=T&split_period=",res,"&key=b2ef1a99a8fdbb84afafe742fd437c0942703072bb98242ba0eed9b8411e1735")
     url_base<-str_c("https://api.mediacloud.org/api/v2/stories_public/count?q=a&fq=publish_date:%5B",jjj,"T00:00:00.000Z+TO+",kkk,"T00:00:00.000Z%5D&language=",lang,"&split=T&split_period=",res,"&key=b2ef1a99a8fdbb84afafe742fd437c0942703072bb98242ba0eed9b8411e1735")
     url=str_replace(url," ","%20")
     url_base=str_replace(url_base," ","%20")
+    print(url)
     print("---")
     a<-as.data.frame(fromJSON(url))
     b<-as.data.frame(fromJSON(url_base))
@@ -2576,7 +2578,23 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     }
     tableau<-tableau1
     tableau$ratio<-tableau$count/tableau$base
-    tableau$url<-"https://explorer.mediacloud.org/"
+    tableau$url<-""
+    for (i in 1:length(tableau$ratio)) {
+      e<-str_extract(tableau$date[i],".....")
+      f<-str_extract(tableau$date[i],".......")
+      f<-str_remove(f,".....")
+      g<-tableau$date[i]
+      g<-str_remove(g,"........")
+      h<-str_extract(tableau$date[i+1],".....")
+      j<-str_extract(tableau$date[i+1],".......")
+      j<-str_remove(j,".....")
+      k<-tableau$date[i+1]
+      k<-str_remove(k,"........")
+      #tableau$url[i]=str_c("https://www.google.fr/search?q=%22",mot,"%22&tbs=cdr:1,cd_min:",f,"/",g,"/",e,",cd_max:",j,"/",k,"/",h,",lr:lang_1fr&tbm=nws&source=lnt&lr=lang_fr&sa=X&ved=2ahUKEwiEjIKk3uH3AhUHbRoKHTMOBC8QpwV6BAgBEBU&biw=1280&bih=577&dpr=1.5")
+      if(input$resolution=="Année"){tableau$url[i]=str_c("https://www.google.fr/search?q=%22",mot,"%22&tbs=cdr:1,cd_min:01/01/",e,",cd_max:31/12/",e,",lr:lang_1fr&tbm=nws&source=lnt&lr=lang_fr&sa=X&ved=2ahUKEwiEjIKk3uH3AhUHbRoKHTMOBC8QpwV6BAgBEBU&biw=1280&bih=577&dpr=1.5")}
+      if(input$resolution=="Mois"){tableau$url[i]=str_c("https://www.google.fr/search?q=%22",mot,"%22&tbs=cdr:1,cd_min:01/",f,"/",e,",cd_max:01/",j,"/",h,",lr:lang_1fr&tbm=nws&source=lnt&lr=lang_fr&sa=X&ved=2ahUKEwiEjIKk3uH3AhUHbRoKHTMOBC8QpwV6BAgBEBU&biw=1280&bih=577&dpr=1.5")}
+      if(input$resolution=="Semaine"){tableau$url[i]=str_c("https://www.google.fr/search?q=%22",mot,"%22&tbs=cdr:1,cd_min:",g,"/",f,"/",e,",cd_max:",k,"/",j,"/",h,",lr:lang_1fr&tbm=nws&source=lnt&lr=lang_fr&sa=X&ved=2ahUKEwiEjIKk3uH3AhUHbRoKHTMOBC8QpwV6BAgBEBU&biw=1280&bih=577&dpr=1.5")}
+    }
     tableau$date<-str_replace_all(tableau$date,"-","/")
   }
   
@@ -3468,21 +3486,21 @@ shinyServer(function(input, output,session){
   
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste("data_",input$mot,"_",input$beginning,"_",input$end,'.csv', sep='')
+      paste("data_",input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.csv', sep='')
     },
     content = function(con) {
       write.csv(data$tableau, con,row.names = F,fileEncoding = "UTF-8")
     })
   output$downloadPlot <- downloadHandler(
     filename = function() {
-      paste('plot_',input$mot,"_",input$beginning,"_",input$end,'.html', sep='')
+      paste('plot_',input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.html', sep='')
     },
     content = function(con) {
       htmlwidgets::saveWidget(as_widget(Plot(data,input)), con)
     })
   output$downloadSPlot <- downloadHandler(
     filename = function() {
-      paste('Splot_',input$mot,"_",input$beginning,"_",input$end,'.png', sep='')
+      paste('Splot_',input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.png', sep='')
     },
     content = function(filename) {
       save_plot(filename,SPlot(data,input))
