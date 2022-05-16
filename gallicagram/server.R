@@ -3866,14 +3866,14 @@ shinyServer(function(input, output,session){
       })
     output$downloadPlot <- downloadHandler(
       filename = function() {
-        paste('plot_',input$mot,"_",input$beginning,"_",input$end,'.html', sep='')
+        paste('plot_',input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.html', sep='')
       },
       content = function(con) {
         htmlwidgets::saveWidget(as_widget(Plot(df,input)), con)
       })
     output$downloadSPlot <- downloadHandler(
       filename = function() {
-        paste('Splot_',input$mot,"_",input$beginning,"_",input$end,'.png', sep='')
+        paste('Splot_',input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.png', sep='')
       },
       content = function(filename) {
         save_plot(filename,SPlot(df,input))
