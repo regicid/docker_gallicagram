@@ -180,10 +180,11 @@ Plot <- function(data,input){
   }
   if(length(unique(tableau$date))<=20){
     plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette)
+    plot=plot%>%add_ribbons(data=tableau,ymin=~loess-.1,ymax=~loess+.1,color =~mot)
   }
   else{
-    plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette)
-    
+    plot = plot_ly(data=tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette)
+    plot=plot%>%add_ribbons(data=tableau,ymin=~loess-.1,ymax=~loess+.1,color =~mot)
   }
   if(input$histogramme==T){
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ", tableau$count)}
@@ -1286,7 +1287,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   on.exit(progress$close())
   progress$set(message = "Patience...", value = 0)
   
-  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29 | doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40| doc_type==41){
+  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29 | doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40| doc_type==41| doc_type==55){
     if(se=="windows"){system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
       rD <- rsDriver(browser = "firefox", port = 4444L)
       remDr <- rD[["client"]]}
@@ -1759,7 +1760,20 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             url_base<-str_c("https://api.musixmatch.com/ws/1.1/track.search?apikey=f126b582c17d10329daf15284bc0543f&format=json&callback=jsonp&q_lyrics=&s_track_release_date=asc&f_lyrics_language=",lang,"&page=1&page_size=1&f_track_release_group_first_release_date_min=",y,"0101&f_track_release_group_first_release_date_max=",y,"1231","&f_music_genre_id=",genre)
             }
           }
-          
+          if(doc_type == 55){
+            if(resolution=="Mois"){
+              z = as.character(j)
+              if(nchar(z)<2){z<-str_c("0",z)}
+              beginning = str_c(y,"-",z,"-01")
+              end = str_c(y,"-",z,"-",end_of_month[j])
+              url<-str_c("https://lemarin.ouest-france.fr/archives/search/%22",mot1,"%22/92c8b815583ded5ee58155129533fdfe/",beginning,"/",end,"/page")
+              url_base<-str_c("https://lemarin.ouest-france.fr/archives/search/%20/92c8b815583ded5ee58155129533fdfe/",beginning,"/",end,"/page")
+            }
+            if (resolution=="Année"){
+              url<-str_c("https://lemarin.ouest-france.fr/archives/search/%22",mot1,"%22/92c8b815583ded5ee58155129533fdfe/",y,"-01-01/",y,"-12-31/page")
+              url_base<-str_c("https://lemarin.ouest-france.fr/archives/search/%20/92c8b815583ded5ee58155129533fdfe/",y,"-01-01/",y,"-12-31/page")
+            }
+          }
           
           if(doc_type == 1 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
             ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
@@ -2446,6 +2460,23 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           
+          if(doc_type == 55){
+            remDr$navigate(url)
+            ngram <- remDr$getPageSource()[[1]]
+            ngram=read_html(ngram)
+            a<-str_extract(ngram,'Nombre de résultats :.+')
+            a<-str_extract(a,'sur [:digit:]+')
+            a<-str_remove(a,'sur ')
+            if(incr_mot==1){
+              remDr$navigate(url_base)
+              ngram_base <- remDr$getPageSource()[[1]]
+              ngram_base=read_html(ngram_base)
+              b<-str_extract(ngram_base,'Nombre de résultats :.+')
+              b<-str_extract(b,'sur [:digit:]+')
+              b<-str_remove(b,'sur ')
+            }
+          }
+          
           if(length(b)==0L){b=0}
           tableau[nrow(tableau)+1,] = NA
           date=y
@@ -2465,7 +2496,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$url = str_replace(tableau$url,"SRU","services/engine/search/sru")
   tableau$url = str_replace(tableau$url,"maximumRecords=1","maximumRecords=25")
   
-  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29| doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40| doc_type==41){
+  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29| doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40| doc_type==41| doc_type==55){
     remDr$closeServer()
     print("-----")
     if(se=="windows"){
@@ -2812,6 +2843,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$langue="Espagnol"
   tableau$bibli="MediaCloud"
   tableau$search_mode<-"Document"}
+  if(doc_type==54){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="Le Marin"
+  tableau$search_mode<-"Page"}
   
 
   memoire<<-bind_rows(tableau,memoire)
@@ -3376,7 +3411,7 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse Auvergne-Rhône-Alpes / Lectura"=17, "Presse du sillon lorrain / Limedia"=18, "Presse méridionale / Mémonum"=19, "Presse de Saint-Denis / Commun-Patrimoine"=20, "Presse de Brest / Yroise"=21, "Presse des Pyrénées / Pireneas"=22, "Presse toulousaine / Rosalis"=23, "Presse diplomatique / Bibliothèque diplomatique numérique"=24, "Presse francophone / RFN"=25, "Presse alsacienne / Numistral"=26, "Presse de Roubaix / BN-R"=27),selected = 17)
       }
       else if(input$language == 1 & input$bibli==4){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Le Monde"=30, "Le Figaro"=31,"Presse française / MediaCloud"=50),selected = 30)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Le Monde"=30, "Le Figaro"=31,"Presse française / MediaCloud"=50),selected = 30)#Le Marin 55
       }
       else if(input$language == 1 & input$bibli==5){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Isidore"=36,"Cairn.info"=32,"Theses.fr"=33,"HAL-SHS"=34),selected = 36)
@@ -3445,7 +3480,7 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("gtrends" = 5),selected = 5)
       updateRadioButtons(session,"resolution",choices = c("Semaine"),selected = "Semaine",inline = T)
     }
-    if(input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 17 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42){
+    if(input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 17 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42 | input$doc_type == 55){
       updateSelectInput(session,"search_mode",choices = list("Par page" = 2),selected = 2)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
@@ -3658,7 +3693,8 @@ shinyServer(function(input, output,session){
         input$doc_type == 32 | input$doc_type == 33 | input$doc_type == 34 | input$doc_type == 35 | input$doc_type == 36 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | 
         input$doc_type == 41 | input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 44 | ((input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) |
         input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48  | input$doc_type == 49 |
-        input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53  | input$doc_type == 54){
+        input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53  | input$doc_type == 54 |
+        input$doc_type == 55){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
@@ -3734,7 +3770,7 @@ shinyServer(function(input, output,session){
       output$legende2<-NULL
       output$legende3<-NULL
     }
-    else if (input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==17 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40| input$doc_type == 42) {
+    else if (input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==17 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40| input$doc_type == 42| input$doc_type == 55) {
       nb_mots<-length(unique(df[["tableau"]]$mot))
       output$legende2<-renderText(str_c("Pages épluchées : ", as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Pages correspondant à la recherche : ", as.character(sum(df[["tableau"]]$count))))
@@ -3787,14 +3823,15 @@ shinyServer(function(input, output,session){
     if(input$doc_type==44){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://trends.google.fr//', target=\'_blank\'> ","trends.google.fr","</a>"),sep = ""))}
     if(input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48  | input$doc_type == 49){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.musixmatch.com/', target=\'_blank\'> ","musixmatch.com","</a>"),sep = ""))}
     if(input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53  | input$doc_type == 54){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://mediacloud.org/', target=\'_blank\'> ","mediacloud.org","</a>"),sep = ""))}
+    if(input$doc_type==55){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://lemarin.ouest-france.fr/', target=\'_blank\'> ","lemarin.ouest-france.fr","</a>"),sep = ""))}
     
-    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 41| input$doc_type == 44| input$doc_type == 45| input$doc_type == 50){output$legende4=renderText("Langue : français")}
+    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 41| input$doc_type == 44| input$doc_type == 45| input$doc_type == 50| input$doc_type == 55){output$legende4=renderText("Langue : français")}
     if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16 |input$doc_type==29|input$doc_type==43|input$doc_type==47| input$doc_type == 52){output$legende4=renderText("Langue : allemand")}
     if(input$doc_type==7 | input$doc_type==14|input$doc_type==48| input$doc_type == 53){output$legende4=renderText("Langue : néerlandais")}
     if(input$doc_type==8 | input$doc_type==10| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40|input$doc_type==42|input$doc_type==46| input$doc_type == 51){output$legende4=renderText("Langue : anglais")}
     if(input$doc_type==11 | input$doc_type==12|input$doc_type==49| input$doc_type == 54){output$legende4=renderText("Langue : espagnol")}
     
-    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 30 | input$doc_type == 31| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53 | input$doc_type == 54){output$legende1<-renderText("Corpus : presse")}
+    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 30 | input$doc_type == 31| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53 | input$doc_type == 54 | input$doc_type == 55){output$legende1<-renderText("Corpus : presse")}
     if(input$doc_type==2 | input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){output$legende1<-renderText("Corpus : livres")}
     if(input$doc_type==4){output$legende1<-renderText("Corpus : personnalisé")}
     if(input$doc_type==32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){output$legende1<-renderText("Corpus : scientifique")}
