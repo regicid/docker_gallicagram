@@ -178,13 +178,24 @@ Plot <- function(data,input){
     y <- list(title = "Fréquence dans le corpus",titlefont = 41,tickformat = digit_number,spikecolor="grey")
     if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41,spikecolor="grey")}
   }
+  loess = tableau$loess
+  base = tableau$base
+  tableau$ribbon_down = loess-1.96*sqrt(loess*(1-loess)/base)
+  z = which(tableau$ribbon_down<0)
+  tableau$ribbon_down[z] = 0
+  tableau$ribbon_up = loess+1.96*sqrt(loess*(1-loess)/base)
+  z = which(loess==0)
+  tableau$ribbon_up[z] = 3/base[z]
+  print(tableau$ribbon_down)
+  print(tableau$ribbon_up)
   if(length(unique(tableau$date))<=20){
     plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette)
-    plot=plot%>%add_ribbons(data=tableau,ymin=~loess-.1,ymax=~loess+.1,color =~mot)
+    #plot=plot%>%add_trace(y = ~ribbon_up, type = 'scatter', mode = 'lines',color =~mot)
+    #plot=plot%>%add_trace(y = ~ribbon_down, type = 'scatter', mode = 'lines',fill = 'tonexty', fillcolor='rgba(0,100,80,0.2)',color =~mot) 
   }
   else{
     plot = plot_ly(data=tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette)
-    plot=plot%>%add_ribbons(data=tableau,ymin=~loess-.1,ymax=~loess+.1,color =~mot)
+    #plot=plot%>%add_ribbons(data=tableau,ymin=~loess-.1,ymax=~loess+.1,color =~mot)
   }
   if(input$histogramme==T){
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ", tableau$count)}
