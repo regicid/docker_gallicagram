@@ -79,7 +79,7 @@ Plot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   
-  tableau$mot[str_length(tableau$mot)>=20]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=20],20,"right"),"...")
+  tableau$mot[str_length(tableau$mot)>=30]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=30],30,"right"),"...")
   
   if(input$joker==T & input$histoJoker==F & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){
     
@@ -87,6 +87,7 @@ Plot <- function(data,input){
     total<-total%>%group_by(mot)%>%summarise_all(sum)
     if(input$doc_type==1){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
     if(input$doc_type==2){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
+    if(input$doc_type==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=date_asc")}
     plot<-plot_ly(x=~total$count,y=reorder(total$mot,total$count),type="bar",customdata=total$url)
     plot<-layout(plot,xaxis=list(title="Nombre d'occurrences dans le corpus"))
     return(onRender(plot,js))
