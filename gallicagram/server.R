@@ -189,14 +189,21 @@ Plot <- function(data,input){
   print(tableau$ribbon_down)
   print(tableau$ribbon_up)
   if(length(unique(tableau$date))<=20){
-    plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette)
+    plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette,legendgroup=~mot)
+    plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,fillcolor=~mot,line = list(color="#F1F3F8E6"),showlegend=F)
+    plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F)
     #plot=plot%>%add_trace(y = ~ribbon_up, type = 'scatter', mode = 'lines',color =~mot)
     #plot=plot%>%add_trace(y = ~ribbon_down, type = 'scatter', mode = 'lines',fill = 'tonexty', fillcolor='rgba(0,100,80,0.2)',color =~mot) 
   }
   else{
     plot = plot_ly(data=tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette)
     #plot=plot%>%add_ribbons(data=tableau,ymin=~loess-.1,ymax=~loess+.1,color =~mot)
-  }
+    plot=plot%>%add_ribbons(data=tableau,ymin=~ribbon_down,ymax=~ribbon_up,fillcolor =~mot,alpha=.3,showlegend=F,fillcolor=~mot)
+    plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,showlegend=F,fillcolor=~mot,line = list(color="#F1F3F8E6"))
+    plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,showlegend=F)
+  y_max = tableau$ribbon_up[which.max(tableau$loess)]
+  y_min = tableau$ribbon_down[which.min(tableau$loess)]
+  plot = plot %>% layout(yaxis=list(range=c(y_min,y_max)))}
   if(input$histogramme==T){
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ", tableau$count)}
     else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date," : ", tableau$count)}
@@ -910,6 +917,16 @@ jokerize<-function(input){
   nb<-length(table$ngram)
   mot<-table$ngram[1]
   if(nb>1){for(x in 2:nb){mot<-str_c(mot," ",table$ngram[x])}}
+  
+  if(input$doc_type==30){
+    if(nb>2){next}
+    if(nb<=2){
+      ngram_file<-str_c("/mnt/persistent/",nb+1,"gram_lemonde.db")
+      gram<-"gram"
+      if(nb==1){base<-read.csv("lemonde2.csv")}
+      if(nb==2){base<-read.csv("lemonde3.csv")}
+    }
+  }
   
   if(input$doc_type==2){
     if(nb>4){next}

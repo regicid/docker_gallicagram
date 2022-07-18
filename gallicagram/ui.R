@@ -48,7 +48,7 @@ shinyUI(bootstrapPage(
                                                                  ),
                                                 conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3",div(style = "margin-top: -20px")),
                                                 conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3 && input.joker == 0",div(style = "margin-top: -20px")),
-                                                conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2) && input.search_mode == 3",checkboxInput("joker", "Mode joker", value = FALSE)),
+                                                conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2 || input.doc_type==30) && input.search_mode == 3",checkboxInput("joker", "Mode joker", value = FALSE)),
                                                 div(style = "margin-top: -15px"),
                                                 uiOutput("instructions"),
                                                 conditionalPanel(condition="input.doc_type == 4",p('Recherche limitée à un seul syntagme')),
