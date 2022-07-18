@@ -187,8 +187,8 @@ Plot <- function(data,input){
   tableau$ribbon_up = loess+1.96*sqrt(loess*(1-loess)/base)
   z = which(loess==0)
   tableau$ribbon_up[z] = 3/base[z]
-  print(tableau$ribbon_down)
-  print(tableau$ribbon_up)
+  # print(tableau$ribbon_down)
+  # print(tableau$ribbon_up)
   if(length(unique(tableau$date))<=20){
     plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette,legendgroup=~mot)
     plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,fillcolor=~mot,line = list(color="#F1F3F8E6"),showlegend=F)
