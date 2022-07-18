@@ -964,6 +964,7 @@ jokerize<-function(input){
   if(pos=="avant"){
     query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where gram'," match '",'"',mot,'"', "') group by ",gram,' order by tot desc limit ',3000+input$nbJoker+input$stpw))
   }
+  print(query)
   w = dbFetch(query)
   dbDisconnect(con)
   
@@ -1117,14 +1118,14 @@ ngramize<-function(input,nouvrequette,gallicagram){
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
         if(input$doc_type==30){
           q=str_c('SELECT sum(n),gram,annee,mois FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
-          print(q)
+          
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
         if(input$doc_type==30){
           w<-w[,-2]
           w<-w[,-3]
-          print(w)
+          
         }
         colnames(w)<-c("n","annee")
         w = group_by(w,annee) %>% summarise(n = sum(as.integer(n)))
@@ -1135,7 +1136,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
         q=str_c('SELECT sum(n),annee,mois FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee,mois')
         if(input$doc_type==30){
           q=str_c('SELECT * FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
-          print(q)
+          
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
@@ -2190,7 +2191,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           if(doc_type ==36){
-            print(url)
+            
             ngram<-tryCatch(
               {ngram<-read_html(url)},error=function(cond){
                 ngram<-tryCatch(
