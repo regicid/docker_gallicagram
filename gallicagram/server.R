@@ -922,7 +922,7 @@ jokerize<-function(input){
     if(nb>2){next}
     if(nb<=2){
       ngram_file<-str_c("/mnt/persistent/",nb+1,"gram_lemonde.db")
-      gram<-"gram"
+      gram<-"gram_mois"
       if(nb==1){base<-read.csv("lemonde2.csv")}
       if(nb==2){base<-read.csv("lemonde3.csv")}
     }
