@@ -922,7 +922,7 @@ jokerize<-function(input){
     if(nb>2){next}
     if(nb<=2){
       ngram_file<-str_c("/mnt/persistent/",nb+1,"gram_lemonde.db")
-      gram<-"gram_mois"
+      gram<-"gram"
       if(nb==1){base<-read.csv("lemonde2.csv")}
       if(nb==2){base<-read.csv("lemonde3.csv")}
     }
@@ -963,6 +963,15 @@ jokerize<-function(input){
   }
   if(pos=="avant"){
     query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where gram'," match '",'"',mot,'"', "') group by ",gram,' order by tot desc limit ',3000+input$nbJoker+input$stpw))
+  }
+  if(input$doc_type==30)
+  {
+    if(pos=="apres"){
+      query = dbSendQuery(con,str_c('select sum(n) as tot, gram from gram_mois where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where gram'," match '^",'"',mot,'"',"') group by ",gram,' order by tot desc limit ',20+input$nbJoker+input$stpw))
+    }
+    if(pos=="avant"){
+      query = dbSendQuery(con,str_c('select sum(n) as tot, gram from gram_mois where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where gram'," match '",'"',mot,'"', "') group by ",gram,' order by tot desc limit ',3000+input$nbJoker+input$stpw))
+    }
   }
   print(query)
   w = dbFetch(query)
