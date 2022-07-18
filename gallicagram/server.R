@@ -197,11 +197,11 @@ Plot <- function(data,input){
     #plot=plot%>%add_trace(y = ~ribbon_down, type = 'scatter', mode = 'lines',fill = 'tonexty', fillcolor='rgba(0,100,80,0.2)',color =~mot) 
   }
   else{
-    plot = plot_ly(data=tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette)
+    plot = plot_ly(data=tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette,legendgroup=~mot)
     #plot=plot%>%add_ribbons(data=tableau,ymin=~loess-.1,ymax=~loess+.1,color =~mot)
-    plot=plot%>%add_ribbons(data=tableau,ymin=~ribbon_down,ymax=~ribbon_up,fillcolor =~mot,alpha=.3,showlegend=F,fillcolor=~mot)
-    plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,showlegend=F,fillcolor=~mot,line = list(color="#F1F3F8E6"))
-    plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,showlegend=F)
+    #plot=plot%>%add_ribbons(data=tableau,ymin=~ribbon_down,ymax=~ribbon_up,fillcolor =~mot,alpha=.3,showlegend=F,fillcolor=~mot)
+    plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,showlegend=F,fillcolor=~mot,line = list(color="#F1F3F8E6"))
+    plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F)
   y_max = tableau$ribbon_up[which.max(tableau$loess)]
   y_min = tableau$ribbon_down[which.min(tableau$loess)]
   plot = plot %>% layout(yaxis=list(range=c(y_min,y_max)))}
