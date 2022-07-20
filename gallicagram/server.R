@@ -3517,7 +3517,7 @@ shinyServer(function(input, output,session){
     }
     if(input$doc_type == 44){
       updateSelectInput(session,"search_mode",choices = list("gtrends" = 5),selected = 5)
-      updateRadioButtons(session,"resolution",choices = c("Semaine"),selected = "Semaine",inline = T)
+      updateRadioButtons(session,"resolution",choices = c("Mois"),selected = "Mois",inline = T)
     }
     if(input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 17 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42 | input$doc_type == 55){
       updateSelectInput(session,"search_mode",choices = list("Par page" = 2),selected = 2)
