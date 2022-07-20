@@ -3285,6 +3285,7 @@ shinyServer(function(input, output,session){
       shinyjs::hide(id="leg")
       shinyjs::hide(id="clip")
       shinyjs::hide(id="article")
+      shinyjs::hide(id="pyllicagram")
       observeEvent(input$do, {
         shinyjs::hide(id = "Sidebar")
       })
