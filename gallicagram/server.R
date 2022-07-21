@@ -3818,11 +3818,11 @@ shinyServer(function(input, output,session){
         w=cloudify(input)
         print(w)
         set.seed(42)
-        cl<-reactive({ggplot(w, aes(label = mot, size = count)) +
+        cl<-ggplot(w, aes(label = mot, size = count)) +
           geom_text_wordcloud(area_corr = TRUE) +
           scale_size_area(max_size = 24) +
-          theme_minimal()})
-        output$cloud=renderPlot(cl())
+          theme_minimal()
+        output$cloud=renderPlot(cl(()))
       }
       else{
       gallicagram=0
