@@ -3349,7 +3349,7 @@ shinyServer(function(input, output,session){
     shinyjs::toggle(id = "plot",anim = F,condition = input$gallicloud==F)
     shinyjs::toggle(id = "mot",anim = F,condition = input$gallicloud==F)
     shinyjs::toggle(id = "resolution",anim = F,condition = input$gallicloud==F)
-    shinyjs::toggle(id = "avertissement",anim = F,condition = input$gallicloud==F)
+    shinyjs::toggle(id = "mess",anim = F,condition = input$gallicloud==F)
   })
   observeEvent(input$joker, {
     shinyjs::toggle(id = "histoJoker",anim = F,condition = input$joker)
@@ -3820,7 +3820,7 @@ shinyServer(function(input, output,session){
           geom_text_wordcloud(area_corr = TRUE) +
           scale_size_area(max_size = 24) +
           theme_minimal()
-        output$cloud=renderPlot(cl())
+        output$cloud=renderPlot(cl)
       }
       else{
       gallicagram=0
