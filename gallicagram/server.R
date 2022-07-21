@@ -928,12 +928,9 @@ cloudify<-function(input){
   
   
   
-  set.seed(42)
-  plot=ggplot(w, aes(label = mot, size = count)) +
-    geom_text_wordcloud() +
-    theme_minimal()
+  
     remove_modal_spinner()
-    return(plot)
+    return(w)
   
 }
 
@@ -3341,6 +3338,19 @@ shinyServer(function(input, output,session){
   observeEvent(input$showSidebar2, {
     shinyjs::toggle(id = "Sidebar",anim = T)
   })
+  
+  observeEvent(input$correlation_test, {
+    shinyjs::toggle(id = "corr",anim = T,condition = input$correlation_test)
+    shinyjs::toggle(id = "corr2",anim = T,condition = input$correlation_test)
+    shinyjs::toggle(id = "pvalue",anim = T,condition = input$correlation_test)
+  })
+  observeEvent(input$gallicloud, {
+    shinyjs::toggle(id = "cloud",anim = F,condition = input$gallicloud)
+    shinyjs::toggle(id = "plot",anim = F,condition = input$gallicloud==F)
+  })
+  observeEvent(input$joker, {
+    shinyjs::toggle(id = "histoJoker",anim = F,condition = input$joker)
+  })
   # shinyURL.server(session)
   
   hideTab("#navbar","Gallicapresse")
@@ -3795,8 +3805,12 @@ shinyServer(function(input, output,session){
     }
     else if(input$search_mode==3){
       if(input$gallicloud==T){
-        cl=cloudify(input)
-        #output$cloud=renderPlot(cl)
+        w=cloudify(input)
+        set.seed(42)
+        cl=ggplot(w, aes(label = mot, size = count)) +
+          geom_text_wordcloud() +
+          theme_minimal()
+        output$cloud=renderPlot(cl)
       }
       else{
       gallicagram=0
