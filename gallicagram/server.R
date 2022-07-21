@@ -3830,7 +3830,7 @@ shinyServer(function(input, output,session){
       df=contempo(input)
     }
     
-    output$plot <- renderPlotly({Plot(df,input)})
+    if(input$gallicloud==F){output$plot <- renderPlotly({Plot(df,input)})}
     
     if((input$doc_type==1 & input$search_mode==1) | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 41| input$doc_type == 43| input$doc_type == 45| input$doc_type == 46| input$doc_type == 47| input$doc_type == 48| input$doc_type == 49){
       nb_mots<-length(unique(df[["tableau"]]$mot))
