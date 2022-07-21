@@ -921,8 +921,7 @@ cloudify<-function(input){
   w<-bind_cols(w$gram,w$tot)
   colnames(w)<-c("mot","count")
   
-  print(w)
-  
+
   # data = list(w,"Année")
   # names(data) = c("tableau","resolution")
   
@@ -3815,6 +3814,7 @@ shinyServer(function(input, output,session){
     else if(input$search_mode==3){
       if(input$gallicloud==T){
         w=cloudify(input)
+        print(w)
         set.seed(42)
         cl=ggplot(w, aes(label = mot, size = count)) +
           geom_text_wordcloud(area_corr = TRUE) +
