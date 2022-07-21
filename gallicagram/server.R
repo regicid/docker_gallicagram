@@ -3379,6 +3379,7 @@ shinyServer(function(input, output,session){
   
   observeEvent(input$doc_type,{observeEvent(input$search_mode,{observeEvent(input$cooccurrences,{observeEvent(input$prox,{
     observeEvent(input$joker,{
+      observeEvent(input$gallicloud,{
       if(input$cooccurrences==T & ((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1))){
         output$instructions <- renderUI(HTML(str_c('<ul><li>Utiliser "a*b" pour rechercher a à ',input$prox,' mots maximum de b</li><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>')))
         
@@ -3392,7 +3393,8 @@ shinyServer(function(input, output,session){
         output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>'))
       }
       else{output$instructions <- renderUI("")}
-    })
+      if(input$gallicloud==T){output$instructions <- renderUI(HTML("<br><br><br><br>"))}
+    })})
   })})})})
   
   
@@ -3816,12 +3818,11 @@ shinyServer(function(input, output,session){
         w=cloudify(input)
         print(w)
         set.seed(42)
-        cl=ggplot(w, aes(label = mot, size = count)) +
+        cl<-reactive({ggplot(w, aes(label = mot, size = count)) +
           geom_text_wordcloud(area_corr = TRUE) +
           scale_size_area(max_size = 24) +
-          theme_minimal()
-        summary(cl)
-        output$cloud=renderPlot(cl)
+          theme_minimal()})
+        output$cloud=renderPlot(cl())
       }
       else{
       gallicagram=0
