@@ -3793,7 +3793,8 @@ shinyServer(function(input, output,session){
     }
     else if(input$search_mode==3){
       if(input$gallicloud==T){
-        output$cloud=renderPlot(cloudify(input))
+        cl=cloudify(input)
+        output$cloud=renderPlot(cl)
       }
       else{
       gallicagram=0
