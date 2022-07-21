@@ -133,9 +133,9 @@ shinyUI(bootstrapPage(
                                                       div(id="clip",style="display: inline-block;vertical-align:middle;float:right",rclipButton("clipbtn", "Citation",clipText = "Azoulay, B., & de Courson, B. (2021, December 8). Gallicagram : un outil de lexicométrie pour la recherche. https://doi.org/10.31235/osf.io/84bf3",icon = icon("clipboard"))),
                                                       div(id="article",style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Article de recherche",onclick ="window.open('https://osf.io/preprints/socarxiv/84bf3/', '_blank')")),
                                                       div(id="pyllicagram",style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Pyllicagram",onclick ="window.open('https://github.com/regicid/pyllicagram', '_blank')")),
-                                                      fluidRow(div(style="display: inline-block;vertical-align:bottom",conditionalPanel(condition="input.gallicloud==F",plotlyOutput("plot"))),
-                                                      div(style="display: inline-block;vertical-align:bottom",conditionalPanel(condition="input.gallicloud==T",plotOutput("cloud")))
-                                                      ))),
+                                                      conditionalPanel(condition="input.gallicloud==F",plotlyOutput("plot"))
+                                                      #conditionalPanel(condition="input.gallicloud==T",plotOutput("cloud"))
+                                                      )),
                                             div(column(4,
                                                    conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2 || input.doc_type==30) && input.search_mode == 3 && input.joker == 1",switchInput(inputId = "histoJoker",size = "mini",label = "Dynamique",value=F)),
                                                    sliderInput("span","Lissage de la courbe",min = 0,max = 12,value = 0),

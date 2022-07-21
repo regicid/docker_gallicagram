@@ -921,6 +921,8 @@ cloudify<-function(input){
   w<-bind_cols(w$gram,w$tot)
   colnames(w)<-c("mot","count")
   
+  print(w)
+  
   # data = list(w,"Année")
   # names(data) = c("tableau","resolution")
   
@@ -3794,7 +3796,7 @@ shinyServer(function(input, output,session){
     else if(input$search_mode==3){
       if(input$gallicloud==T){
         cl=cloudify(input)
-        output$cloud=renderPlot(cl)
+        #output$cloud=renderPlot(cl)
       }
       else{
       gallicagram=0
