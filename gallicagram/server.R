@@ -28,7 +28,7 @@ library(sf)
 library(gtrendsR)
 library(timetk)
 library(jsonlite)
-library(wordcloud2)
+library(ggwordcloud)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -919,14 +919,17 @@ cloudify<-function(input){
   # colnames(stpw)<-c("mot")
   
   w<-bind_cols(w$gram,w$tot)
-  colnames(w)<-c("word","freq")
+  colnames(w)<-c("mot","count")
   
   # data = list(w,"Année")
   # names(data) = c("tableau","resolution")
   
   
   
-    plot = wordcloud2(tableau)
+  set.seed(42)
+  plot=ggplot(w, aes(label = mot, size = count)) +
+    geom_text_wordcloud() +
+    theme_minimal()
     remove_modal_spinner()
     return(plot)
   
@@ -3790,7 +3793,7 @@ shinyServer(function(input, output,session){
     }
     else if(input$search_mode==3){
       if(input$gallicloud==T){
-        output$cloud=renderWordcloud2(cloudify(input))
+        output$cloud=renderPlot(cloudify(input))
       }
       else{
       gallicagram=0
