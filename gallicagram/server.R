@@ -3347,6 +3347,8 @@ shinyServer(function(input, output,session){
   observeEvent(input$gallicloud, {
     shinyjs::toggle(id = "cloud",anim = F,condition = input$gallicloud)
     shinyjs::toggle(id = "plot",anim = F,condition = input$gallicloud==F)
+    shinyjs::toggle(id = "mot",anim = F,condition = input$gallicloud==F)
+    shinyjs::toggle(id = "resolution",anim = F,condition = input$gallicloud==F)
   })
   observeEvent(input$joker, {
     shinyjs::toggle(id = "histoJoker",anim = F,condition = input$joker)
@@ -3367,7 +3369,12 @@ shinyServer(function(input, output,session){
   output$themes_presse<- renderUI({selectizeInput("theme_presse","Thématique",choices = list("Liste de titres personnalisée"=1))})
   output$theme<- renderUI({selectizeInput("dewey","Thématique",choices = list("-"="999"))})
   options(warn = -1)
-  
+  set.seed(42)
+  cl=ggplot(love_words_small, aes(label = word, size = speakers)) +
+    geom_text_wordcloud(area_corr = TRUE) +
+    scale_size_area(max_size = 24) +
+    theme_minimal()
+  output$cloud=renderPlot(cl)
   
   observeEvent(input$doc_type,{observeEvent(input$search_mode,{observeEvent(input$cooccurrences,{observeEvent(input$prox,{
     observeEvent(input$joker,{
@@ -3808,7 +3815,8 @@ shinyServer(function(input, output,session){
         w=cloudify(input)
         set.seed(42)
         cl=ggplot(w, aes(label = mot, size = count)) +
-          geom_text_wordcloud() +
+          geom_text_wordcloud(area_corr = TRUE) +
+          scale_size_area(max_size = 24) +
           theme_minimal()
         output$cloud=renderPlot(cl)
       }
