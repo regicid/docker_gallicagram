@@ -28,6 +28,7 @@ library(sf)
 library(gtrendsR)
 library(timetk)
 library(jsonlite)
+library(wordcloud2)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -899,6 +900,39 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
   names(data) = c("tableau_volume","tableau_page","mot","resolution")
   return(data)
 }
+cloudify<-function(input){
+  show_modal_spinner()
+  
+  if(input$doc_type==2){ngram_file<-str_c("/mnt/persistent/1gram.db")}
+  if(input$doc_type==1){ngram_file<-str_c("/mnt/persistent/1gram_presse.db")}
+  if(input$doc_type==30){ngram_file<-str_c("/mnt/persistent/1gram_lemonde.db")}
+  con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
+  
+  if(input$doc_type==1 | input$doc_type==2){query = dbSendQuery(con,str_c("select sum(n) as tot, gram from gram where annee between ",input$beginning," and ",input$end," group by gram order by tot desc limit 1200;"))}
+  if(input$doc_type==30){query = dbSendQuery(con,str_c("select sum(n) as tot, gram from gram_mois where annee between ",input$beginning," and ",input$end," group by gram_mois order by tot desc limit 1200;"))}
+  
+  w = dbFetch(query)
+  dbDisconnect(con)
+  
+  # stpw = read.csv("stopwords.csv",row.names=1,stringsAsFactors=F)
+  # stpw<-as.data.frame(stpw$monogram)
+  # colnames(stpw)<-c("mot")
+  
+  w<-bind_cols(w$gram,w$tot)
+  colnames(w)<-c("word","freq")
+  
+  # data = list(w,"Année")
+  # names(data) = c("tableau","resolution")
+  
+  
+  
+    plot = wordcloud2(tableau)
+    remove_modal_spinner()
+    return(plot)
+  
+}
+
+
 
 jokerize<-function(input){
   
@@ -3755,6 +3789,10 @@ shinyServer(function(input, output,session){
       df=page_search(input$mot,input$beginning,input$end,input$resolution,df,input$doc_type,input$search_mode,input$titres)
     }
     else if(input$search_mode==3){
+      if(input$gallicloud==T){
+        output$cloud=renderWordcloud2(cloudify(input))
+      }
+      else{
       gallicagram=0
       nouvrequette=NA
       if(input$joker==T){
@@ -3783,7 +3821,7 @@ shinyServer(function(input, output,session){
         df[[1]][["tableau"]] = bind_rows(df[[1]][["tableau"]],df[[2]][["tableau"]][zz,])
         df = df[[1]]
         memoire<<-bind_rows(df[["tableau"]],memoire)
-      }
+      }}
     }
     else if((input$doc_type==31)&input$resolution=="Semaine"){
       df=contempo(input)
