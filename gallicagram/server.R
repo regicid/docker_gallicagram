@@ -3349,6 +3349,7 @@ shinyServer(function(input, output,session){
     shinyjs::toggle(id = "plot",anim = F,condition = input$gallicloud==F)
     shinyjs::toggle(id = "mot",anim = F,condition = input$gallicloud==F)
     shinyjs::toggle(id = "resolution",anim = F,condition = input$gallicloud==F)
+    shinyjs::toggle(id = "avertissement",anim = F,condition = input$gallicloud==F)
   })
   observeEvent(input$joker, {
     shinyjs::toggle(id = "histoJoker",anim = F,condition = input$joker)
@@ -3370,7 +3371,8 @@ shinyServer(function(input, output,session){
   output$theme<- renderUI({selectizeInput("dewey","Thématique",choices = list("-"="999"))})
   options(warn = -1)
   set.seed(42)
-  cl=ggplot(love_words_small, aes(label = word, size = speakers)) +
+  initcloud=data.frame(mot=c("Foch","Joffre","Pétain"), count=c(105311,72435,33177))
+  cl=ggplot(initcloud, aes(label = mot, size = count)) +
     geom_text_wordcloud(area_corr = TRUE) +
     scale_size_area(max_size = 24) +
     theme_minimal()
@@ -3818,7 +3820,7 @@ shinyServer(function(input, output,session){
           geom_text_wordcloud(area_corr = TRUE) +
           scale_size_area(max_size = 24) +
           theme_minimal()
-        output$cloud=renderPlot(cl)
+        output$cloud=renderPlot(cl())
       }
       else{
       gallicagram=0
