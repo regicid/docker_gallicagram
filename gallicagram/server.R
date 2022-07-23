@@ -3822,8 +3822,11 @@ shinyServer(function(input, output,session){
           geom_text_wordcloud(area_corr = TRUE) +
           scale_size_area(max_size = 24) +
           theme_minimal()
-        print(class(cl))
-        output$cloud<-renderPlot({ggplot(w, aes(label = mot, size = count)) +
+        print(class(w))
+        
+        output$cloud<-renderPlot({
+          req(w)
+          ggplot(w, aes(label = mot, size = count)) +
             geom_text_wordcloud(area_corr = TRUE) +
             scale_size_area(max_size = 24) +
             theme_minimal()
