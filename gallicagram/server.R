@@ -3823,7 +3823,7 @@ shinyServer(function(input, output,session){
           scale_size_area(max_size = 24) +
           theme_minimal()
         print(class(cl))
-        output$cloud=renderPlot(cl())
+        output$cloud=renderPlot({print(cl)})
       }
       else{
       gallicagram=0
