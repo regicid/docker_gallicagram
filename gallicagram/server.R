@@ -3826,7 +3826,7 @@ shinyServer(function(input, output,session){
         
         output$cloud<-renderPlot({
           req(w)
-          ggplot(w, aes(label = mot, size = count)) +
+          ggplot(w(), aes(label = mot, size = count)) +
             geom_text_wordcloud(area_corr = TRUE) +
             scale_size_area(max_size = 24) +
             theme_minimal()
