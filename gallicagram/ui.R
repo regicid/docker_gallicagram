@@ -134,7 +134,7 @@ shinyUI(bootstrapPage(
                                                       div(id="article",style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Article de recherche",onclick ="window.open('https://osf.io/preprints/socarxiv/84bf3/', '_blank')")),
                                                       div(id="pyllicagram",style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Pyllicagram",onclick ="window.open('https://github.com/regicid/pyllicagram', '_blank')")),
                                                       plotlyOutput("plot"),
-                                                      conditionalPanel(condition="input.gallicloud==T",plotOutput("cloud"))
+                                                      #conditionalPanel(condition="input.gallicloud==T",plotOutput("cloud"))
                                                       )),
                                             div(id="outils",column(4,
                                                    conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2 || input.doc_type==30) && input.search_mode == 3 && input.joker == 1",switchInput(inputId = "histoJoker",size = "mini",label = "Dynamique",value=F)),

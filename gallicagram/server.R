@@ -3354,7 +3354,7 @@ shinyServer(function(input, output,session){
     shinyjs::toggle(id = "histoJoker",anim = F,condition = input$joker)
   })
   # shinyURL.server(session)
-  
+  hide(id="gallicloud")
   hideTab("#navbar","Gallicapresse")
   hideTab("#navbar","Gallicanet")
   hideTab("#navbar","English version")
