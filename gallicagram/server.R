@@ -191,20 +191,22 @@ Plot <- function(data,input){
   # print(tableau$ribbon_down)
   # print(tableau$ribbon_up)
   if(length(unique(tableau$date))<=20){
-    plot = plot_ly(tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette,legendgroup=~mot)
-    plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,fillcolor=~mot,line = list(color="#F1F3F8E6"),showlegend=F,hoverinfo="none")
-    plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F,text=~hovers,hoverinfo="text")
+    plot = plot_ly(tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
+    plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,fillcolor=~mot,line = list(color="#F1F3F8E6"),showlegend=F)
+    plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F)
+    #plot = plot %>% layout(hovermode = "x")
     #plot=plot%>%add_trace(y = ~ribbon_up, type = 'scatter', mode = 'lines',color =~mot)
     #plot=plot%>%add_trace(y = ~ribbon_down, type = 'scatter', mode = 'lines',fill = 'tonexty', fillcolor='rgba(0,100,80,0.2)',color =~mot) 
   }  else{
-    plot = plot_ly(data=tableau, x=~date,y=~loess,text=~hovers,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),hoverinfo="text",customdata=tableau$url,colors=customPalette,legendgroup=~mot)
+    plot = plot_ly(data=tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
     #plot=plot%>%add_ribbons(data=tableau,ymin=~loess-.1,ymax=~loess+.1,color =~mot)
     #plot=plot%>%add_ribbons(data=tableau,ymin=~ribbon_down,ymax=~ribbon_up,fillcolor =~mot,alpha=.3,showlegend=F,fillcolor=~mot)
-    plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,showlegend=F,fillcolor=~mot,line = list(color="#F1F3F8E6"),hoverinfo="none")
-    plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F,text=~hovers,hoverinfo="text",customdata=tableau$url)
+    plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,showlegend=F,fillcolor=~mot,line = list(color="#F1F3F8E6"))
+    plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F,customdata=tableau$url)
   y_max = tableau$ribbon_up[which.max(tableau$loess)]
   y_min = tableau$ribbon_down[which.min(tableau$loess)]
   plot = plot %>% layout(yaxis=list(range=c(y_min,y_max)))}
+  #plot = plot %>% layout(hovermode = "x unified")
   if(input$histogramme==T){
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ", tableau$count)}
     else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date," : ", tableau$count)}
@@ -1306,7 +1308,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
     if(input$doc_type==30 & input$resolution=="Semaine"){
       #z$url<-str_c("https://www.google.fr/search?q=inurl%3Alemonde.fr+%22",mot1,"%22&source=lnt&tbs=cdr%3A1%2Ccd_min%3A",substr(z$date,6,7),"%2F",substr(z$date,9,10),"%2F",str_extract(z$date,"...."),"%2Ccd_max%3A",substr(z$date,6,7),"%2F",substr(z$date,9,10),"%2F",str_extract(z$date,"...."),"&tbm=")
       z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&end_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&search_sort=date_asc")
-      z<-z[z$date<="2022/08/20",]
+      z<-z[z$date<="2022/08/31",]
     }
     if(input$resolution=="Année"){z$resolution<-"Année"}
     if(input$resolution=="Mois"){z$resolution<-"Mois"}
