@@ -3361,11 +3361,11 @@ shinyServer(function(input, output,session){
   hideTab("#navbar","Gallicanet")
   hideTab("#navbar","English version")
   
-  data=list(read.csv("exemple.csv",encoding = "UTF-8"),"Joffre&Pétain&Foch","Années")
+  data=list(read.csv("exemple.csv",encoding = "UTF-8"),"écologie&réchauffement climatique&changement climatique&développement durable","Années")
   names(data)=c("tableau","mot","resolution")
   memoire<<-read.csv("exemple.csv",encoding="UTF-8")
   memoire$date<<-as.character(memoire$date)
-  recherche_precedente<<-"Joffre&Pétain&Foch_1914_1920_Année"
+  recherche_precedente<<-"écologie&réchauffement climatique&changement climatique&développement durable_1975_2021_Année"
   corpus_precedent<<-"1_1"
   counter<<-0
   output$themes_presse<- renderUI({selectizeInput("theme_presse","Thématique",choices = list("Liste de titres personnalisée"=1))})
@@ -3483,13 +3483,13 @@ shinyServer(function(input, output,session){
   output$corr<-renderTable(correlation_matrix(prepare_correlation(data),"corr1"),rownames = TRUE)
   output$pvalue=renderText("***p<.001 ; **p<.01 ; *p<.05")
   
-  output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/', target=\'_blank\'> ","gallica.bnf.fr","</a>"),sep = ""))
+  output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.lemonde.fr/', target=\'_blank\'> ","lemonde.fr","</a>"),sep = ""))
   output$legende0=renderText("Affichage : Gallicagram par Benjamin Azoulay et Benoît de Courson")
   nb_mots<-length(unique(data[["tableau"]]$mot))
-  output$legende2<-renderText(str_c("Documents épluchés : ",as.character(sum(data[["tableau"]]$base)/nb_mots)))
+  output$legende2<-renderText(str_c(""))
   output$legende3<-renderText(str_c("Résultats trouvés : ",as.character(sum(data[["tableau"]]$count))))
   output$legende4=renderText("Langue : français")
-  output$legende1<-renderText(str_c("Corpus : presse\n"))
+  output$legende1<-renderText(str_c("Corpus : Le Monde\n"))
   
   recherche_texte<-reactive({input$mot})
   recherche_from<-reactive({input$beginning})
@@ -3551,7 +3551,7 @@ shinyServer(function(input, output,session){
     }
     if( input$doc_type == 30 ){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
-      updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Mois",inline = T)
+      updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Année",inline = T)
     }
     if( input$doc_type == 0 ){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
