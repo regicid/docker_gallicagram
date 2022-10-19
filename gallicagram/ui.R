@@ -35,7 +35,7 @@ shinyUI(bootstrapPage(
                    tabPanel("Graphique",
                               div(id="Sidebar",column(4,wellPanel(
                                 div(style="display: inline-block;vertical-align:top;",id="menumob2",actionButton("showSidebar2", "",icon = icon("bars"))),
-                                                div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","écologie&réchauffement climatique&changement climatique&développement durable")),
+                                                div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","liberté&république")),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 20%;",
                                                     conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",numericInput("prox","Distance",20))
                                                     ),

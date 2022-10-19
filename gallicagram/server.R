@@ -3361,18 +3361,18 @@ shinyServer(function(input, output,session){
   hideTab("#navbar","Gallicanet")
   hideTab("#navbar","English version")
   
-  data=list(read.csv("exemple.csv",encoding = "UTF-8"),"écologie&réchauffement climatique&changement climatique&développement durable","Années")
+  data=list(read.csv("exemple.csv",encoding = "UTF-8"),"liberté&république","Mois")
   names(data)=c("tableau","mot","resolution")
   memoire<<-read.csv("exemple.csv",encoding="UTF-8")
   memoire$date<<-as.character(memoire$date)
-  recherche_precedente<<-"écologie&réchauffement climatique&changement climatique&développement durable_1975_2021_Année"
+  recherche_precedente<<-"liberté&république_1788_1805_Année"
   corpus_precedent<<-"1_1"
   counter<<-0
   output$themes_presse<- renderUI({selectizeInput("theme_presse","Thématique",choices = list("Liste de titres personnalisée"=1))})
   output$theme<- renderUI({selectizeInput("dewey","Thématique",choices = list("-"="999"))})
   options(warn = -1)
   set.seed(42)
-  initcloud=data.frame(mot=c("Foch","Joffre","Pétain"), count=c(105311,72435,33177))
+  initcloud=data.frame(mot=c("liberté","république"), count=c(105311,72435))
   cl=ggplot(initcloud, aes(label = mot, size = count)) +
     geom_text_wordcloud(area_corr = TRUE) +
     scale_size_area(max_size = 24) +
