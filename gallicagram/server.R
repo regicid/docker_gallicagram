@@ -3543,7 +3543,7 @@ shinyServer(function(input, output,session){
     }
     if( input$doc_type == 1 ){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 3)
-      updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
+      updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Mois",inline = T)
     }
     if( input$doc_type == 31){
       updateSelectInput(session,"search_mode",choices = list("Par article" = 4),selected = 4)
