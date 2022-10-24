@@ -3483,13 +3483,13 @@ shinyServer(function(input, output,session){
   output$corr<-renderTable(correlation_matrix(prepare_correlation(data),"corr1"),rownames = TRUE)
   output$pvalue=renderText("***p<.001 ; **p<.01 ; *p<.05")
   
-  output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.lemonde.fr/', target=\'_blank\'> ","lemonde.fr","</a>"),sep = ""))
+  output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/', target=\'_blank\'> ","gallica.bnf.fr","</a>"),sep = ""))
   output$legende0=renderText("Affichage : Gallicagram par Benjamin Azoulay et Benoît de Courson")
   nb_mots<-length(unique(data[["tableau"]]$mot))
   output$legende2<-renderText(str_c(""))
   output$legende3<-renderText(str_c("Résultats trouvés : ",as.character(sum(data[["tableau"]]$count))))
   output$legende4=renderText("Langue : français")
-  output$legende1<-renderText(str_c("Corpus : Le Monde\n"))
+  output$legende1<-renderText(str_c("Corpus : presse\n"))
   
   recherche_texte<-reactive({input$mot})
   recherche_from<-reactive({input$beginning})
