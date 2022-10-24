@@ -1015,7 +1015,7 @@ jokerize<-function(input){
   w = dbFetch(query)
   dbDisconnect(con)
   
-  stpw = read.csv("stopwords.csv",nrows=input$stpw,row.names=1,stringsAsFactors=F)
+  stpw = read.csv("stopwords.csv",stringsAsFactors=F)[0:input$stpw,]
   
   colnames(w)<-c("tot","gram")
   gram<-"gram"
