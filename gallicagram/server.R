@@ -1526,14 +1526,14 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           if(doc_type == 6){beginning<-str_replace_all(beginning,"/","-")
           end<-str_replace_all(end,"/","-")
           langue="de"
-          url<-str_c("https://newspapers.eanadev.org/api/v2/search.json?query=%22",mot1,"%22",or,"&rows=1&profile=hits&wskey=%20athrobid&qf=proxy_dcterms_issued:%5B",beginning,"+TO+",end,"%5D&qf=LANGUAGE:de")
-          url_base<-str_c("https://classic.europeana.eu/portal/fr/collections/newspapers?f%5BTYPE%5D%5B%5D=TEXT&q=&range%5Bproxy_dcterms_issued%5D%5Bbegin%5D=",beginning,"&range%5Bproxy_dcterms_issued%5D%5Bend%5D=",end,"&view=grid&f%5BLANGUAGE%5D%5B%5D=de")
+          url<-str_c("https://www.europeana.eu/fr/search?page=1&qf=collection%3Anewspaper&qf=proxy_dcterms_issued%3A%5B",beginning,"%20TO%20",end,"%5D&qf=TYPE%3A%22TEXT%22&qf=LANGUAGE%3A%22",langue,"%22&query=%22",mot1,"%22",or,"&view=grid&api=fulltext")
+          url_base<-str_c("https://www.europeana.eu/fr/search?page=1&qf=collection%3Anewspaper&qf=proxy_dcterms_issued%3A%5B",beginning,"%20TO%20",end,"%5D&qf=TYPE%3A%22TEXT%22&qf=LANGUAGE%3A%22",langue,"%22&query=&view=grid&api=fulltext")
           }
           if(doc_type == 7){beginning<-str_replace_all(beginning,"/","-")
           end<-str_replace_all(end,"/","-")
           langue="nl"
-          url<-str_c("https://newspapers.eanadev.org/api/v2/search.json?query=%22",mot1,"%22",or,"&rows=1&profile=hits&wskey=%20athrobid&qf=proxy_dcterms_issued:%5B",beginning,"+TO+",end,"%5D&qf=LANGUAGE:nl")
-          url_base<-str_c("https://classic.europeana.eu/portal/fr/collections/newspapers?f%5BTYPE%5D%5B%5D=TEXT&q=&range%5Bproxy_dcterms_issued%5D%5Bbegin%5D=",beginning,"&range%5Bproxy_dcterms_issued%5D%5Bend%5D=",end,"&view=grid&f%5BLANGUAGE%5D%5B%5D=nl")
+          url<-str_c("https://www.europeana.eu/fr/search?page=1&qf=collection%3Anewspaper&qf=proxy_dcterms_issued%3A%5B",beginning,"%20TO%20",end,"%5D&qf=TYPE%3A%22TEXT%22&qf=LANGUAGE%3A%22",langue,"%22&query=%22",mot1,"%22",or,"&view=grid&api=fulltext")
+          url_base<-str_c("https://www.europeana.eu/fr/search?page=1&qf=collection%3Anewspaper&qf=proxy_dcterms_issued%3A%5B",beginning,"%20TO%20",end,"%5D&qf=TYPE%3A%22TEXT%22&qf=LANGUAGE%3A%22",langue,"%22&query=&view=grid&api=fulltext")
           }
           if(doc_type == 8){beginning<-str_replace_all(beginning,"/","-")
           end<-str_replace_all(end,"/","-")
@@ -1860,15 +1860,15 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           if(doc_type == 6 | doc_type == 7){
-            ngram<-as.character(read_html(RETRY("GET",url,times = 6)))
-            ngram<-str_replace_all(ngram,"[:punct:]","")
-            a<-str_extract(str_extract(ngram,"totalResults[:digit:]+"),"[:digit:]+")
+            ngram<-read_html(RETRY("GET",url,times = 6))
+            ngram<-html_text(html_node(ngram,"#search-interface > div > div.col-results.col > div > section > div.mb-3.d-flex.align-items-start.justify-content-between > div.overflow-hidden > h1"))
+            ngram<-str_remove_all(ngram,"[:punct:]")
+            a<-str_extract(ngram,"[:digit:]+")
             if(incr_mot==1){
-              ngram_base<-read_html(RETRY("GET",url_base,times = 6))
-              b<-html_text(html_node(ngram_base,"#maincontent > div > div.results-list.cf > div > div.result-info"))
-              b<-str_remove_all(b,"[:space:]")
-              b<-str_remove_all(b,",")
-              b<-str_extract(str_extract(b,"[:digit:]+résultats"),"[:digit:]+")
+              ngram<-read_html(RETRY("GET",url_base,times = 6))
+              ngram<-html_text(html_node(ngram,"#search-interface > div > div.col-results.col > div > section > div.mb-3.d-flex.align-items-start.justify-content-between > div.overflow-hidden > h1"))
+              ngram<-str_remove_all(ngram,"[:punct:]")
+              b<-str_extract(ngram,"[:digit:]+")
             }
             url<-str_c("https://classic.europeana.eu/portal/fr/collections/newspapers?q=%22",mot1,"%22",or,"&f%5BMEDIA%5D%5B%5D=true&f%5BTYPE%5D%5B%5D=TEXT&f%5BLANGUAGE%5D%5B%5D=",langue,"&f%5Bapi%5D%5B%5D=collection&range%5Bproxy_dcterms_issued%5D%5Bbegin%5D=",beginning,"&range%5Bproxy_dcterms_issued%5D%5Bend%5D=",end)}
           if(doc_type == 8){
