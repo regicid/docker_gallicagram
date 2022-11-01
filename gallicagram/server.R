@@ -1405,7 +1405,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
         for(mot in mots){
           incr_mot=incr_mot+1
           mot2 = str_replace_all(mot," ","%20")
-          mot2=URLencode(mot2)
+          if(doc_type!=28){mot2=URLencode(mot2)}
           mot1=""
           
           
@@ -2029,7 +2029,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               webElem$clickElement() #le clic pour accepter les cookies du coup
               webElem$sendKeysToElement(list(as.character(end_of_month[j])))
               webElem <- remDr$findElement(using = 'css selector',"#submit") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$clickElement()
+              Sys.sleep(1)
               webElem <- remDr$findElement(using = 'css selector',"#labelMotCle")
               webElem$clickElement()
               webElem <- remDr$findElement(using = 'css selector',"#recherche")
@@ -2040,6 +2041,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               webElem$clickElement()
               Sys.sleep(2)
               page <- read_html(remDr$getPageSource()[[1]])
+              if(str_detect(html_text(html_node(page,"h1.ng-binding")),"Aucun résultat")){a=0}
+              else{
               url<-html_attr(html_node(page,"#permalien"),"value")
               a<-html_text(html_node(page,".chapoNbResultat"))
               a<-str_extract(a,"[:digit:]+")
@@ -2048,6 +2051,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               Sys.sleep(1)
               webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
               webElem$clickElement()
+              }
               
               if(incr_mot==1){
                 remDr$navigate(url_base)
@@ -2074,6 +2078,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
                 webElem$clickElement() #le clic pour accepter les cookies du coup
                 Sys.sleep(2)
                 page <- read_html(remDr$getPageSource()[[1]])
+                if(str_detect(html_text(html_node(page,"h1.ng-binding")),"Aucun résultat")){b=0}
+                else{
                 b<-html_text(html_node(page,".chapoNbResultat"))
                 b<-str_extract(b,"[:digit:]+")
                 webElem <- remDr$findElement(using = 'css selector',"#dateInterval")
@@ -2081,6 +2087,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
                 Sys.sleep(1)
                 webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
                 webElem$clickElement()
+                }
               }
             }
             
@@ -2107,7 +2114,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               webElem$clickElement() #le clic pour accepter les cookies du coup
               webElem$sendKeysToElement(list("31"))
               webElem <- remDr$findElement(using = 'css selector',"#submit") #on accepte les cookies
-              webElem$clickElement() #le clic pour accepter les cookies du coup
+              webElem$clickElement()
+              Sys.sleep(1)
               webElem <- remDr$findElement(using = 'css selector',"#labelMotCle")
               webElem$clickElement()
               webElem <- remDr$findElement(using = 'css selector',"#recherche")
@@ -2117,6 +2125,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               webElem$clickElement()
               Sys.sleep(2)
               page <- read_html(remDr$getPageSource()[[1]])
+              if(str_detect(html_text(html_node(page,"h1.ng-binding")),"Aucun résultat")){a=0}
+              else{
               url<-html_attr(html_node(page,"#permalien"),"value")
               a<-html_text(html_node(page,".chapoNbResultat"))
               a<-str_extract(a,"[:digit:]+")
@@ -2124,7 +2134,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               webElem$clickElement()
               Sys.sleep(1)
               webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
-              webElem$clickElement()
+              webElem$clickElement()}
               
               if(incr_mot==1){
                 remDr$navigate(url_base)
@@ -2151,6 +2161,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
                 webElem$clickElement() #le clic pour accepter les cookies du coup
                 Sys.sleep(2)
                 page <- read_html(remDr$getPageSource()[[1]])
+                if(str_detect(html_text(html_node(page,"h1.ng-binding")),"Aucun résultat")){b=0}
+                else{
                 b<-html_text(html_node(page,".chapoNbResultat"))
                 b<-str_extract(b,"[:digit:]+")
                 webElem <- remDr$findElement(using = 'css selector',"#dateInterval")
@@ -2158,6 +2170,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
                 Sys.sleep(1)
                 webElem <- remDr$findElement(using = 'css selector',"facet-filter.ng-isolate-scope > div:nth-child(10) > ul:nth-child(1) > li:nth-child(1) > span:nth-child(1) > i:nth-child(1)")
                 webElem$clickElement()
+                }
               }
             }
           }
