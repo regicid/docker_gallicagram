@@ -1707,11 +1707,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             th<-URLencode(input$theses)
             if (input$theses=="_"){
               url<-str_c("https://www.theses.fr/fr/?q=&zone1=textes&val1=",mot1,"&op1=AND&zone2=auteurs&val2=&op2=AND&zone3=etabSoutenances&val3=&op3=AND&zone4=dateSoutenance&val4a=01%2F01%2F",y,"&val4b=31%2F12%2F",y,"&access=accessible:oui")
-              url_base<-str_c("https://www.theses.fr/fr/?q=&zone1=titreRAs&val1=&op1=AND&zone2=auteurs&val2=&op2=AND&zone3=etabSoutenances&val3=&op3=AND&zone4=dateSoutenance&val4a=01%2F01%2F",y,"&val4b=31%2F12%2F",y,"&access=accessible:oui")
+              url_base<-str_c("https://www.theses.fr/fr/?q=&zone1=titreRAs&val1=le&op1=AND&zone2=auteurs&val2=&op2=AND&zone3=etabSoutenances&val3=&op3=AND&zone4=dateSoutenance&val4a=01%2F01%2F",y,"&val4b=31%2F12%2F",y,"&access=accessible:oui")
             }
             else{
               url<-str_c("https://www.theses.fr/fr/?q=&checkedfacets=discipline=",th,";&zone1=textes&val1=",mot1,"&op1=AND&zone2=auteurs&val2=&op2=AND&zone3=etabSoutenances&val3=&op3=AND&zone4=dateSoutenance&val4a=01%2F01%2F",y,"&val4b=31%2F12%2F",y,"&access=accessible:oui")
-              url_base<-str_c("https://www.theses.fr/fr/?q=&checkedfacets=discipline=",th,";&start=0&status=&access=&prevision=&filtrepersonne=&zone1=titreRAs&val1=&op1=AND&zone2=auteurs&val2=&op2=AND&zone3=etabSoutenances&val3=&op3=AND&zone4=dateSoutenance&val4a=01/01/",y,"&val4b=31/12/",y,"&type=avance&access=accessible:oui")
+              url_base<-str_c("https://www.theses.fr/fr/?q=&checkedfacets=discipline=",th,";&zone1=textes&val1=le&op1=AND&zone2=auteurs&val2=&op2=AND&zone3=etabSoutenances&val3=&op3=AND&zone4=dateSoutenance&val4a=01%2F01%2F",y,"&val4b=31%2F12%2F",y,"&access=accessible:oui")
             }
           }
           if(doc_type == 34){
