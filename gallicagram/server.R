@@ -1900,15 +1900,13 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             ngram<-str_remove_all(ngram,"[:punct:]")
             ngram<-str_remove_all(ngram,"[:space:]")
             ngram<-str_remove_all(ngram,"<strong>")
-            a<-str_extract(str_extract(ngram,"Results[:digit:]+"),"[:digit:]+")
-            if (is.na(a)){a<-str_extract(str_extract(ngram,"Résultats[:digit:]+"),"[:digit:]+")}
+            a<-str_extract(str_extract(ngram,"Resultados[:digit:]+"),"[:digit:]+")
             if(incr_mot==1){
-              ngram_base<-as.character(read_html(RETRY("GET",url_base,times = 6)))
-              ngram_base<-str_remove_all(ngram_base,"[:punct:]")
-              ngram_base<-str_remove_all(ngram_base,"[:space:]")
-              ngram_base<-str_remove_all(ngram_base,"<strong>")
-              b<-str_extract(str_extract(ngram_base,"Results[:digit:]+"),"[:digit:]+")
-              if (is.na(b)){b<-str_extract(str_extract(ngram_base,"Résultats[:digit:]+"),"[:digit:]+")}
+              ngram<-as.character(read_html(RETRY("GET",url_base,times = 6)))
+              ngram<-str_remove_all(ngram,"[:punct:]")
+              ngram<-str_remove_all(ngram,"[:space:]")
+              ngram<-str_remove_all(ngram,"<strong>")
+              b<-str_extract(str_extract(ngram,"Resultados[:digit:]+"),"[:digit:]+")
             }
           }
           if(doc_type == 13 | doc_type == 14){
