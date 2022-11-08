@@ -1363,7 +1363,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   on.exit(progress$close())
   progress$set(message = "Patience...", value = 0)
   
-  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29 | doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40| doc_type==41| doc_type==55){
+  if(doc_type==13 | doc_type==14 | doc_type==28 | doc_type==29 | doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40| doc_type==41| doc_type==55){
     if(se=="windows"){system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
       rD <- rsDriver(browser = "firefox", port = 4444L)
       remDr <- rD[["client"]]}
@@ -1437,7 +1437,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
                   or1[j]<-str_c("%20or%20(%20text%20adj%20%22",mots_co[1],"%22%20%20prox/unit=word/distance=",prox,"%20%22",mots_co[2],"%22)")
                 }
               }
-              if(doc_type==4 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26)
+              if(doc_type==4 | doc_type==19| doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25 | doc_type==26)
               {or1[j]<-str_c("or%20text%20adj%20%22",mots_or[j],"%22%20")
               or1_end[j]<-str_c("%20",mots_or[j])}
               if(doc_type==6 | doc_type==7 | doc_type==8)
@@ -1448,9 +1448,6 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               or1_end[j]<-str_c("&w=%22",mots_or[j],"%22")}
               if(doc_type==15 | doc_type==16)
               {or1[j]<-str_c("+OR+%22",mots_or[j],"%22")
-              or1_end[j]<-str_c("")}
-              if(doc_type==19)
-              {or1[j]<-str_c(",%22",mots_or[j],"%22")
               or1_end[j]<-str_c("")}
               if(doc_type==29)
               {or1[j]<-str_c("+OR+%22",mots_or[j],"%22")
@@ -1623,17 +1620,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           if(doc_type == 19){
-            if(resolution=="Mois"){
-              z = as.character(j)
-              if(nchar(z)<2){z<-str_c("0",z)}
-              beginning = str_c(y,"-",z,"-01")
-              end = str_c(y,"-",z,"-",end_of_month[j])
-              url<-str_c("https://memonum-mediatheques.montpellier3m.fr/form.aspx?SC=MEMONUM_ENCART_SEARCH#/Search/(query:(ForceSearch:!t,Grid:'%7B%22717%22:%5B%22",mot1,"%22",or,"%5D,%22719%22:%5B%22*",z,"/",y,"%22%5D%7D',Page:0,PageRange:3,QueryString:!n,ResultSize:10,ScenarioCode:MEMONUM_ENCART_SEARCH,SearchContext:1))")
-              url_base<-str_c("https://memonum-mediatheques.montpellier3m.fr/form.aspx?SC=MEMONUM_ENCART_SEARCH#/Search/(query:(ForceSearch:!t,Grid:'%7B%22717%22:%5B%22de%22,%22du%22,%22le%22,%22la%22,%22un%22%5D,%22719%22:%5B%22*",z,"/",y,"%22%5D%7D',Page:0,PageRange:3,QueryString:!n,ResultSize:10,ScenarioCode:MEMONUM_ENCART_SEARCH,SearchContext:1))")
-            }
-            if(resolution=="Année"){url<-str_c("https://memonum-mediatheques.montpellier3m.fr/form.aspx?SC=MEMONUM_ENCART_SEARCH#/Search/(query:(ForceSearch:!t,Grid:'%7B%22717%22:%5B%22",mot1,"%22",or,"%5D,%22719%22:%5B%22*",y,"%22%5D%7D',Page:0,PageRange:3,QueryString:!n,ResultSize:10,ScenarioCode:MEMONUM_ENCART_SEARCH,SearchContext:1))")
-            url_base<-str_c("https://memonum-mediatheques.montpellier3m.fr/form.aspx?SC=MEMONUM_ENCART_SEARCH#/Search/(query:(ForceSearch:!t,Grid:'%7B%22717%22:%5B%22de%22,%22du%22,%22le%22,%22la%22,%22un%22%5D,%22719%22:%5B%22*",y,"%22%5D%7D',Page:0,PageRange:3,QueryString:!n,ResultSize:10,ScenarioCode:MEMONUM_ENCART_SEARCH,SearchContext:1))")
-            }
+            url<-str_c("https://memonum-mediatheques.montpellier3m.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
+            url_base<-str_c("https://memonum-mediatheques.montpellier3m.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=")
           }
           if(doc_type == 20){
             url<-str_c("https://www.communpatrimoine.fr/SRU?operation=searchRetrieve&exactSearch=true&maximumRecords=1&page=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",beginning,"%22%20and%20gallicapublication_date%3C=%22",end,"%22)&suggest=10&keywords=",mot1,or_end)
@@ -1853,7 +1841,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           
-          if(doc_type == 1 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
+          if(doc_type == 1 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
             ngram<-as.character(read_xml(RETRY("GET",url,times = 6)))
             a<-str_extract(str_extract(ngram,"numberOfRecordsDecollapser&gt;+[:digit:]+"),"[:digit:]+")
             if(incr_mot==1){
@@ -1957,26 +1945,6 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             if(incr_mot==1){
               ngram_base<-read_html(RETRY("GET",url_base,times = 6))
               b<-str_extract(html_text(html_node(ngram_base,".col-milieu")),"[:digit:]+")
-            }
-          }
-          if(doc_type == 19){
-            remDr$navigate(url)
-            Sys.sleep(2) # give the page time to fully load
-            ngram <- remDr$getPageSource()[[1]]
-            ngram<-str_remove_all(ngram,"[:space:]")
-            ngram<-str_remove_all(ngram,"<span>")
-            ngram<-str_remove_all(ngram,"</span>")
-            ngram<-str_extract(ngram,"Résultats1à[:digit:]+sur[:digit:]+")
-            a<-str_remove(ngram,"Résultats1à[:digit:]+sur")
-            if(incr_mot==1){
-              remDr$navigate(url_base)
-              Sys.sleep(2) # give the page time to fully load
-              ngram_base <- remDr$getPageSource()[[1]]
-              ngram_base<-str_remove_all(ngram_base,"[:space:]")
-              ngram_base<-str_remove_all(ngram_base,"<span>")
-              ngram_base<-str_remove_all(ngram_base,"</span>")
-              ngram_base<-str_extract(ngram_base,"Résultats1à[:digit:]+sur[:digit:]+")
-              b<-str_remove(ngram_base,"Résultats1à[:digit:]+sur")
             }
           }
           if(doc_type ==26){
@@ -2585,7 +2553,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$url = str_replace(tableau$url,"SRU","services/engine/search/sru")
   tableau$url = str_replace(tableau$url,"maximumRecords=1","maximumRecords=25")
   
-  if(doc_type==13 | doc_type==14 | doc_type==19 | doc_type==28 | doc_type==29| doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40| doc_type==41| doc_type==55){
+  if(doc_type==13 | doc_type==14 | doc_type==28 | doc_type==29| doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40| doc_type==41| doc_type==55){
     remDr$closeServer()
     print("-----")
     if(se=="windows"){
