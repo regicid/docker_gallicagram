@@ -1351,7 +1351,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
 
 get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,prox){
   if(doc_type==6 | doc_type==7){mot <- iconv(mot, from="UTF-8",to="ASCII//TRANSLIT//IGNORE")}
-  if(input$doc_type==30|input$doc_type==31){
+  if(input$resolution=="Semaine" & input$doc_type==31){
     from=min(input$dateRange)
     to=max(input$dateRange)
     from=as.integer(str_extract(from,"...."))
@@ -3558,10 +3558,6 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Mois",inline = T)
     }
-    if( input$doc_type == 31){
-      updateSelectInput(session,"search_mode",choices = list("Par article" = 4),selected = 4)
-      updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Mois",inline = T)
-    }
     if( input$doc_type == 30 ){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Année",inline = T)
@@ -3598,7 +3594,7 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par article" = 4),selected = 4)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
-    if(input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53 | input$doc_type == 54){
+    if(input$doc_type == 31 | input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53 | input$doc_type == 54){
       updateSelectInput(session,"search_mode",choices = list("Par article" = 4),selected = 4)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Semaine",inline = T)
     }

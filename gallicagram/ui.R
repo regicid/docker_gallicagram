@@ -84,10 +84,10 @@ shinyUI(bootstrapPage(
                                                                                                                'text/comma-separated-values',
                                                                                                                '.csv'
                                                                                                            ),buttonLabel='Importer', placeholder='un rapport de recherche')),
-                                                div(style="display: inline-block;vertical-align:bottom;width: 49%;",conditionalPanel(condition = "input.resolution != 'Semaine' && input.doc_type != 31",numericInput("beginning","Début",1788))),
-                                                div(style="display: inline-block;vertical-align:bottom;width: 49%;",conditionalPanel(condition = "input.resolution != 'Semaine' && input.doc_type != 31",numericInput("end","Fin",1805))),
+                                                div(style="display: inline-block;vertical-align:bottom;width: 49%;",conditionalPanel(condition = "input.resolution != 'Semaine'",numericInput("beginning","Début",1788))),
+                                                div(style="display: inline-block;vertical-align:bottom;width: 49%;",conditionalPanel(condition = "input.resolution != 'Semaine'",numericInput("end","Fin",1805))),
                                                 conditionalPanel(condition = "input.doc_type == 30 || input.doc_type == 31",div(style = "margin-top: -15px")),
-                                                conditionalPanel(condition = "input.resolution == 'Semaine' || input.doc_type == 31", dateRangeInput('dateRange',
+                                                conditionalPanel(condition = "input.resolution == 'Semaine'", dateRangeInput('dateRange',
                                                                                                                                 label = '\n',
                                                                                                                                 start = as.Date.character("2021-01-01"), end = as.character(Sys.Date()),
                                                                                                                                 separator="à", startview = "decade")),
