@@ -3519,7 +3519,7 @@ shinyServer(function(input, output,session){
   
   observeEvent(input$doc_type,{
     if(input$doc_type == 2){
-      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2,"Par n-gramme"=3),selected = 3)
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
     if( input$doc_type == 1 ){
@@ -3539,7 +3539,7 @@ shinyServer(function(input, output,session){
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
     if(input$doc_type == 4){
-      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
     if( input$doc_type == 6 | input$doc_type == 7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 43 | input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48 | input$doc_type == 49){
@@ -3569,7 +3569,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type == 3){
       observeEvent(input$theme_presse,{observeEvent(input$titres,{
         if(input$theme_presse == 1 & length(input$titres)<=15){
-          updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par page" = 2),selected = 1)
+          updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
           updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
         }
         else{
@@ -3782,11 +3782,6 @@ shinyServer(function(input, output,session){
       colnames(tot_df)<-c("identifier","type","title","creator","contributor","publisher","date","description","format","source","rights","relation")
       tot_df$identifier<-str_remove_all(tot_df$identifier," .+")
       df=page_search(input$mot,input$beginning,input$end,input$resolution,tot_df,input$doc_type,input$search_mode,input$titres)
-    }
-    else if( (input$doc_type==2 | input$doc_type == 3) & input$search_mode==2){
-      df=rapport(input$mot,input$beginning,input$end,input$doc_type,input$titres)
-      df$identifier<-str_remove_all(df$identifier," .+")
-      df=page_search(input$mot,input$beginning,input$end,input$resolution,df,input$doc_type,input$search_mode,input$titres)
     }
     else if(input$search_mode==3){
       if(input$gallicloud==T){
