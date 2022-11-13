@@ -3724,6 +3724,7 @@ shinyServer(function(input, output,session){
       df=page_search(input$mot,input$beginning,input$end,input$resolution,tot_df,input$doc_type,input$search_mode,input$titres)
     }
     else if(input$search_mode==3){
+      agregator=0
       if(input$gallicloud==T){
         w=cloudify(input)
         print(w)
@@ -3755,14 +3756,14 @@ shinyServer(function(input, output,session){
             m<-str_c(m,"&",l[h])
           }}
         nouvrequette=m
-        df=ngramize(input,nouvrequette,gallicagram)
+        df=ngramize(input,nouvrequette,gallicagram,agregator)
       }
-      else if(input$joker==F & input$doc_type!=0 & input$doc_type!=56){df=ngramize(input,nouvrequette,gallicagram)}
+      else if(input$joker==F & input$doc_type!=0 & input$doc_type!=56){df=ngramize(input,nouvrequette,gallicagram,agregator)}
       else if(input$joker==F & input$doc_type==0){
         df = list()
         factor = vector()
         for(i in 1:2){
-          df[[i]] = ngramize(input,nouvrequette,i)
+          df[[i]] = ngramize(input,nouvrequette,i,agregator)
           z = (df[[i]][["tableau"]]$date < 1951) * (df[[i]][["tableau"]]$date>1945)
           factor[i] = mean(df[[i]][["tableau"]]$ratio[z],na.rm=TRUE)
         }
