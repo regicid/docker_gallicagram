@@ -3771,7 +3771,7 @@ shinyServer(function(input, output,session){
         dfbis=ngramize(input,nouvrequette,gallicagram,agregator)
         df[["tableau"]]$count=df[["tableau"]]$count+dfbis[["tableau"]]$count
         df[["tableau"]]$base=df[["tableau"]]$base+dfbis[["tableau"]]$base
-        df[["tableau"]]$ratio=df[["tableau"]]$count+df[["tableau"]]$base
+        df[["tableau"]]$ratio=df[["tableau"]]$count/df[["tableau"]]$base
       }
       }
     }
