@@ -3778,9 +3778,14 @@ shinyServer(function(input, output,session){
         df=ngramize(input,nouvrequette,gallicagram,agregator)
         agregator = 2
         dfbis=ngramize(input,nouvrequette,gallicagram,agregator)
+        is.na(df[["tableau"]]$count)=0
+        is.na(dfbis[["tableau"]]$count)=0
+        is.na(df[["tableau"]]$base)=0
+        is.na(dfbis[["tableau"]]$base)=0
         df[["tableau"]]$count=df[["tableau"]]$count+dfbis[["tableau"]]$count
         df[["tableau"]]$base=df[["tableau"]]$base+dfbis[["tableau"]]$base
         df[["tableau"]]$ratio=df[["tableau"]]$count/df[["tableau"]]$base
+        is.na(df[["tableau"]]$ratio)=0
       }
       }
     }
