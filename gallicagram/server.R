@@ -1048,7 +1048,7 @@ jokerize<-function(input){
   
 }
 
-ngramize<-function(input,nouvrequette,gallicagram){
+ngramize<-function(input,nouvrequette,gallicagram,agregator){
   
   show_modal_spinner()
   
@@ -1088,7 +1088,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
       
       
       
-      if(input$doc_type==2){
+      if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
         if(nb>5){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
         if(nb<=5){
@@ -1105,7 +1105,7 @@ ngramize<-function(input,nouvrequette,gallicagram){
           base<-read.csv("base_livres_gallica_pentagrammes.csv")}
         }
       }
-      if(input$doc_type==1 | gallicagram==1){
+      if(input$doc_type==1 | gallicagram==1 | (input$doc_type==56 & agregator==1)){
         if(nb<=3){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_presse.db")
           gram<-"gram"
@@ -1156,11 +1156,11 @@ ngramize<-function(input,nouvrequette,gallicagram){
       }
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
       
-      if(input$doc_type==2){
+      if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
         w = dbFetch(query)
       }
-      if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0) & input$resolution=="Année"){
+      if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 | (input$doc_type==56 & agregator==1)) & input$resolution=="Année"){
         #q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
         if(input$doc_type==30){
@@ -1290,6 +1290,9 @@ ngramize<-function(input,nouvrequette,gallicagram){
     if(input$doc_type==2){
       z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"%22%20and%20gallicapublication_date%3C=%22",z$date,"%22)&suggest=10&keywords=",mot1,or_end)
     }
+    if(input$doc_type==56){
+      z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22monographie%22%20or%20dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"%22%20and%20gallicapublication_date%3C=%22",z$date,"%22)&suggest=10&keywords=",mot1,or_end)
+    }
     if( (input$doc_type==1 | gallicagram==1) & input$resolution=="Année"){
       z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"%22%20and%20gallicapublication_date%3C=%22",z$date,"%22)&suggest=10&keywords=",mot1,or_end)
     }
@@ -1315,6 +1318,10 @@ ngramize<-function(input,nouvrequette,gallicagram){
     if(input$resolution=="Semaine"){z$resolution<-"Semaine"}
     
     if(input$doc_type==2){z$corpus="Livres"
+    z$langue="Français"
+    z$bibli="Gallica"
+    z$search_mode<-"N-gramme"}
+    if(input$doc_type==56){z$corpus="Presse et livres"
     z$langue="Français"
     z$bibli="Gallica"
     z$search_mode<-"N-gramme"}
@@ -3412,7 +3419,7 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1951-2022" = 0),selected = 0)
       }
       else if(input$language == 1 & input$bibli==1){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse française / Gallica" = 1,"Recherche par titre de presse / Gallica" = 3, "Livres / Gallica" = 2, "Corpus personnalisé / Gallica"=4),selected = 1)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse française / Gallica" = 1,"Recherche par titre de presse / Gallica" = 3, "Livres / Gallica" = 2, "Corpus personnalisé / Gallica"=4, "Livres+Presse / Gallica"=56),selected = 1)
       }
       else if(input$language == 1 & input$bibli==2){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15, "Presse wallonne / KBR"=13, "Presse québécoise / BAnQ"=28, "Livres / Ngram Viewer - Google Books" = 5, "Google Trends / France"=44),selected = 5)
@@ -3425,9 +3432,6 @@ shinyServer(function(input, output,session){
       }
       else if(input$language == 1 & input$bibli==5){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Isidore"=36,"Cairn.info"=32,"Theses.fr"=33,"HAL-SHS"=34),selected = 36)
-      }
-      else if(input$language == 1 & input$bibli==6){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("INA"=41),selected = 41)
       }
       else if(input$language == 1 & input$bibli==7){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("MusixMatch / Français"=45),selected = 45)
@@ -3446,7 +3450,7 @@ shinyServer(function(input, output,session){
   
   
   observeEvent(input$doc_type,{
-    if(input$doc_type == 2){
+    if(input$doc_type == 2 | input$doc_type == 56){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
@@ -3696,7 +3700,7 @@ shinyServer(function(input, output,session){
         input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 44 | ((input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) |
         input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48  | input$doc_type == 49 |
         input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53  | input$doc_type == 54 |
-        input$doc_type == 55){
+        input$doc_type == 55 | (input$doc_type == 56 & input$search_mode==1)){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
@@ -3745,7 +3749,7 @@ shinyServer(function(input, output,session){
         nouvrequette=m
         df=ngramize(input,nouvrequette,gallicagram)
       }
-      else if(input$joker==F & input$doc_type!=0){df=ngramize(input,nouvrequette,gallicagram)}
+      else if(input$joker==F & input$doc_type!=0 & input$doc_type!=56){df=ngramize(input,nouvrequette,gallicagram)}
       else if(input$joker==F & input$doc_type==0){
         df = list()
         factor = vector()
@@ -3759,7 +3763,17 @@ shinyServer(function(input, output,session){
         df[[1]][["tableau"]] = bind_rows(df[[1]][["tableau"]],df[[2]][["tableau"]][zz,])
         df = df[[1]]
         memoire<<-bind_rows(df[["tableau"]],memoire)
-      }}
+      }
+      else if(input$joker==F & input$doc_type==56){
+        agregator = 1
+        df=ngramize(input,nouvrequette,gallicagram,agregator)
+        agregator = 2
+        dfbis=ngramize(input,nouvrequette,gallicagram,agregator)
+        df[["tableau"]]$count=df[["tableau"]]$count+dfbis[["tableau"]]$count
+        df[["tableau"]]$base=df[["tableau"]]$base+dfbis[["tableau"]]$base
+        df[["tableau"]]$ratio=df[["tableau"]]$count+df[["tableau"]]$base
+      }
+      }
     }
     else if((input$doc_type==31)&input$resolution=="Semaine"){
       df=contempo(input)
@@ -3767,12 +3781,12 @@ shinyServer(function(input, output,session){
     
     if(input$gallicloud==F){output$plot <- renderPlotly({Plot(df,input)})}
     
-    if((input$doc_type==1 & input$search_mode==1) | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 43| input$doc_type == 45| input$doc_type == 46| input$doc_type == 47| input$doc_type == 48| input$doc_type == 49){
+    if((input$doc_type==1 & input$search_mode==1) | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | (input$doc_type==56 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 43| input$doc_type == 45| input$doc_type == 46| input$doc_type == 47| input$doc_type == 48| input$doc_type == 49){
       nb_mots<-length(unique(df[["tableau"]]$mot))
       output$legende2<-renderText(str_c("Documents épluchés : ",as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Résultats trouvés : ", as.character(sum(df[["tableau"]]$count))))
     }
-    else if((input$doc_type==1 & input$search_mode==3) | (input$doc_type==2 & input$search_mode==3)| input$doc_type==30 | input$doc_type==0){
+    else if((input$doc_type==1 & input$search_mode==3) | (input$doc_type==2 & input$search_mode==3)| (input$doc_type==56 & input$search_mode==3)| input$doc_type==30 | input$doc_type==0){
       nb_mots<-length(unique(df[["tableau"]]$mot))
       output$legende2<-NULL
       output$legende3<-renderText(str_c("Nombre d'occurrences trouvées : ", as.character(sum(df[["tableau"]]$count))))
@@ -3803,7 +3817,7 @@ shinyServer(function(input, output,session){
       output$legende3<-renderText(str_c("Pages correspondant à la recherche : ", as.character(sum(df[["tableau_page"]]$count))))
     }
     
-    if(input$doc_type==1 | input$doc_type==2 | (input$doc_type == 3 & input$theme_presse==1) | input$doc_type==4){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/', target=\'_blank\'> ","gallica.bnf.fr","</a>"),sep = ""))}
+    if(input$doc_type==1 | input$doc_type==2 | (input$doc_type == 3 & input$theme_presse==1) | input$doc_type==4 | input$doc_type==56){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/', target=\'_blank\'> ","gallica.bnf.fr","</a>"),sep = ""))}
     if(input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://books.google.com/ngrams/', target=\'_blank\'> ","books.google.com/ngrams","</a>"),sep = ""))}
     if(input$doc_type==6 | input$doc_type==7){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.europeana.eu/', target=\'_blank\'> ","europeana.eu","</a>"),sep = ""))}
     if(input$doc_type==8){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.britishnewspaperarchive.co.uk/', target=\'_blank\'> ","britishnewspaperarchive.co.uk","</a>"),sep = ""))}
@@ -3840,7 +3854,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53  | input$doc_type == 54){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://mediacloud.org/', target=\'_blank\'> ","mediacloud.org","</a>"),sep = ""))}
     if(input$doc_type==55){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://lemarin.ouest-france.fr/', target=\'_blank\'> ","lemarin.ouest-france.fr","</a>"),sep = ""))}
     
-    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 44| input$doc_type == 45| input$doc_type == 50| input$doc_type == 55){output$legende4=renderText("Langue : français")}
+    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 44| input$doc_type == 45| input$doc_type == 50| input$doc_type == 55 | input$doc_type==56){output$legende4=renderText("Langue : français")}
     if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16 |input$doc_type==29|input$doc_type==43|input$doc_type==47| input$doc_type == 52){output$legende4=renderText("Langue : allemand")}
     if(input$doc_type==7 | input$doc_type==14|input$doc_type==48| input$doc_type == 53){output$legende4=renderText("Langue : néerlandais")}
     if(input$doc_type==8 | input$doc_type==10| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40|input$doc_type==42|input$doc_type==46| input$doc_type == 51){output$legende4=renderText("Langue : anglais")}
@@ -3849,6 +3863,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type==0 | input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 30 | input$doc_type == 31| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53 | input$doc_type == 54 | input$doc_type == 55){output$legende1<-renderText("Corpus : presse")}
     if(input$doc_type==2 | input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){output$legende1<-renderText("Corpus : livres")}
     if(input$doc_type==4){output$legende1<-renderText("Corpus : personnalisé")}
+    if(input$doc_type==56){output$legende1<-renderText("Corpus : presse et livres")}
     if(input$doc_type==32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){output$legende1<-renderText("Corpus : scientifique")}
     if(input$doc_type==44){output$legende1<-renderText("Corpus : web")}
     if(input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48  | input$doc_type == 49){output$legende1<-renderText("Corpus : paroles de chansons")}
