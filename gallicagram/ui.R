@@ -128,6 +128,7 @@ shinyUI(bootstrapPage(
                                                                      icon = icon("sliders"), width = "300px",
                                                                      tooltip = tooltipOptions(title = "Afficher les options avancées")
                                                                      )),
+                                                      div(style="display: inline-block;vertical-align:middle;float:right",actionButton("flag",label = img (src="English version.png", width="15", height="15"),onclick ="window.open('https://shiny.ens-paris-saclay.fr/app/gallicagram_en', '_blank')")),
                                                       div(style="display: inline-block;vertical-align:middle;float:right",actionButton("twitter",label = img (src="twitter.png", width="15", height="15"),onclick ="window.open('https://twitter.com/gallicagram', '_blank')")),
                                                       div(style="display: inline-block;vertical-align:middle;float:right",actionButton("fb",label = img (src="facebook.png", width="15", height="15"),onclick ="window.open('https://www.facebook.com/gallicagram', '_blank')")),
                                                       div(id="clip",style="display: inline-block;vertical-align:middle;float:right",rclipButton("clipbtn", "Citation",clipText = "Azoulay, B., & de Courson, B. (2021, December 8). Gallicagram : un outil de lexicométrie pour la recherche. https://doi.org/10.31235/osf.io/84bf3",icon = icon("clipboard"))),
