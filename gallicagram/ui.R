@@ -246,7 +246,7 @@ shinyUI(bootstrapPage(
                             )
                    )),
                    
-             navbarMenu("Langue",tabPanel(title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicagram_en' target='_blank'>English version</a>"))),
+             
              tabPanel(value="Gallicapresse",title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicapresse' target='_blank'>Gallicapresse</a>")),
              tabPanel(value="Gallicanet",title=HTML("<li><a href='https://shiny.ens-paris-saclay.fr/app/gallicanet' target='_blank'>Gallicanet</a>"))
 )))
