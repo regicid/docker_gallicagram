@@ -967,7 +967,9 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   
   for(mot1 in mots){
     
-    mots2 = str_split(mot1,"[+]")[[1]]
+        mots2 = str_split(mot1,"[+]")[[1]]
+    xxxx=str_c("l'",mots2)
+    mots2=append(mots2,xxxx)
     
     increment2<-1
     for(mot in mots2){
