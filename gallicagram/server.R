@@ -3174,8 +3174,8 @@ shinyServer(function(input, output,session){
   observeEvent(input$joker, {
     shinyjs::toggle(id = "histoJoker",anim = F,condition = input$joker)
   })
-  # shinyURL.server(session)
-  hide(id="gallicloud")
+  
+  #hide(id="gallicloud")
   hideTab("#navbar","Gallicapresse")
   hideTab("#navbar","Gallicanet")
   hideTab("#navbar","English version")
@@ -3191,7 +3191,7 @@ shinyServer(function(input, output,session){
   output$theme<- renderUI({selectizeInput("dewey","Thématique",choices = list("-"="999"))})
   options(warn = -1)
   set.seed(42)
-  initcloud=data.frame(mot=c("liberté","république"), count=c(105311,72435))
+  initcloud=data.frame(mot=c("liberté","république"), count=c(168035,226300))
   cl=ggplot(initcloud, aes(label = mot, size = count)) +
     geom_text_wordcloud(area_corr = TRUE) +
     scale_size_area(max_size = 24) +
