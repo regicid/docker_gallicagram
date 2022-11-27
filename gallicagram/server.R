@@ -796,34 +796,39 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
 }
 cloudify<-function(input){
   show_modal_spinner()
-  
-  if(input$doc_type==2){ngram_file<-str_c("/mnt/persistent/1gram.db")}
-  if(input$doc_type==1){ngram_file<-str_c("/mnt/persistent/1gram_presse.db")}
-  if(input$doc_type==30){ngram_file<-str_c("/mnt/persistent/1gram_lemonde.db")}
-  con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
-  
-  if(input$doc_type==1 | input$doc_type==2){query = dbSendQuery(con,str_c("select sum(n) as tot, gram from gram where annee between ",input$beginning," and ",input$end," group by gram order by tot desc limit 1200;"))}
-  if(input$doc_type==30){query = dbSendQuery(con,str_c("select sum(n) as tot, gram from gram_mois where annee between ",input$beginning," and ",input$end," group by gram_mois order by tot desc limit 1200;"))}
-  
-  w = dbFetch(query)
-  dbDisconnect(con)
-  
-  # stpw = read.csv("stopwords.csv",row.names=1,stringsAsFactors=F)
-  # stpw<-as.data.frame(stpw$monogram)
-  # colnames(stpw)<-c("mot")
+  # 
+  # if(input$doc_type==2){ngram_file<-str_c("/mnt/persistent/1gram.db")}
+  # if(input$doc_type==1){ngram_file<-str_c("/mnt/persistent/1gram_presse.db")}
+  # if(input$doc_type==30){ngram_file<-str_c("/mnt/persistent/1gram_lemonde.db")}
+  # con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
+  # 
+  # if(input$doc_type==1 | input$doc_type==2){query = dbSendQuery(con,str_c("select sum(n) as tot, gram from gram where annee between ",input$beginning," and ",input$end," group by gram order by tot desc limit 1200;"))}
+  # if(input$doc_type==30){query = dbSendQuery(con,str_c("select sum(n) as tot, gram from gram_mois where annee between ",input$beginning," and ",input$end," group by gram_mois order by tot desc limit 1200;"))}
+  # 
+  # w = dbFetch(query)
+  # dbDisconnect(con)
+  # 
+  # # stpw = read.csv("stopwords.csv",row.names=1,stringsAsFactors=F)
+  # # stpw<-as.data.frame(stpw$monogram)
+  # # colnames(stpw)<-c("mot")
+
+  w=bind_cols(c(1000000,100000),c("de","la"))
+  colnames(w)<-c("tot","gram")
   
   w<-bind_cols(w$gram,w$tot)
   colnames(w)<-c("mot","count")
   
+  set.seed(42)
+  cl<-ggplot(w, aes(label = mot, size = count)) +
+    geom_text_wordcloud(area_corr = TRUE) +
+    scale_size_area(max_size = 24) +
+    theme_minimal()
 
-  # data = list(w,"Année")
-  # names(data) = c("tableau","resolution")
-  
-  
-  
-  
+  # # data = list(w,"Année")
+  # # names(data) = c("tableau","resolution")
+
     remove_modal_spinner()
-    return(w)
+    return(cl)
   
 }
 
@@ -3175,7 +3180,7 @@ shinyServer(function(input, output,session){
     shinyjs::toggle(id = "histoJoker",anim = F,condition = input$joker)
   })
   
-  #hide(id="gallicloud")
+  hide(id="gallicloud")
   hideTab("#navbar","Gallicapresse")
   hideTab("#navbar","Gallicanet")
   hideTab("#navbar","English version")
@@ -3621,22 +3626,7 @@ shinyServer(function(input, output,session){
     else if(input$search_mode==3){
       agregator=0
       if(input$gallicloud==T){
-        w=cloudify(input)
-        print(w)
-        set.seed(42)
-        cl<-ggplot(w, aes(label = mot, size = count)) +
-          geom_text_wordcloud(area_corr = TRUE) +
-          scale_size_area(max_size = 24) +
-          theme_minimal()
-        print(class(w))
-        
-        output$cloud<-renderPlot({
-          req(w)
-          ggplot(w, aes(label = mot, size = count)) +
-            geom_text_wordcloud(area_corr = TRUE) +
-            scale_size_area(max_size = 24) +
-            theme_minimal()
-          })
+        cloudplot=cloudify(input)
       }
       else{
       gallicagram=0
@@ -3690,6 +3680,7 @@ shinyServer(function(input, output,session){
     }
     
     if(input$gallicloud==F){output$plot <- renderPlotly({Plot(df,input)})}
+    if(input$gallicloud==T & input$search_mode==3){output$cloud<-renderPlot({cloudplot})}
     
     if((input$doc_type==1 & input$search_mode==1) | (input$doc_type==2 & input$search_mode==1) | (input$doc_type == 3 & input$search_mode==1) | (input$doc_type==56 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27  | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 43| input$doc_type == 45| input$doc_type == 46| input$doc_type == 47| input$doc_type == 48| input$doc_type == 49){
       nb_mots<-length(unique(df[["tableau"]]$mot))
