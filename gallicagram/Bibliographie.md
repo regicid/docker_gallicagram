@@ -39,3 +39,12 @@
 - https://numrha.hypotheses.org/4886
 - http://blog.ac-versailles.fr/starter/index.php/post/24/02/2022/GALLICAGRAM
 - https://www.bases-netsources.com/component/flexicontent/category/conseil-semaine
+
+## Projets fondés sur Gallicagram
+- Pyllicagram (API Python) par Benoît de Courson : https://github.com/regicid/pyllicagram
+- Ruby Gem Gallicagram par Nicolas Le Roux : https://github.com/nicolrx/gallicagram
+
+## Projets utilisant Gallicagram
+- Gallicagrapher par Will Gleason : https://d32d5ops9ui5td.cloudfront.net/
+- La Langue Française par Nicolas Le Roux : https://www.lalanguefrancaise.com/dictionnaire
+- Aide à la recherche sur Gallica par Thomas Fressin : à venir
