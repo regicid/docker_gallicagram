@@ -45,6 +45,6 @@
 - Ruby Gem Gallicagram par Nicolas Le Roux : https://github.com/nicolrx/gallicagram
 
 ## Projets utilisant Gallicagram
-- Gallicagrapher par Will Gleason : https://d32d5ops9ui5td.cloudfront.net/
+- Gallica Grapher par Will Gleason : https://d32d5ops9ui5td.cloudfront.net/
 - La Langue Française par Nicolas Le Roux : https://www.lalanguefrancaise.com/dictionnaire
 - Aide à la recherche sur Gallica par Thomas Fressin : à venir
