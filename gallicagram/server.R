@@ -970,7 +970,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         mots2 = str_split(mot1,"[+]")[[1]]
     xxxx=str_c("l'",mots2)
     mots2=append(mots2,xxxx)
-    
+    mots2=mots2[!duplicated(mots2)]
+    print(mots2)
     increment2<-1
     for(mot in mots2){
       
