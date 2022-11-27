@@ -191,7 +191,9 @@ shinyUI(bootstrapPage(
                                    h3("Présentation de Gallicagram"),
                                    fluidRow(uiOutput("pdfview"))
                                  )),
-                        tabPanel("Bibliographie",shiny::includeMarkdown("Bibliographie.md"))
+                        tabPanel("Bibliographie",shiny::includeMarkdown("Bibliographie.md")),
+                        tabPanel(title=HTML("<li><a href='https://github.com/regicid/pyllicagram' target='_blank'>API Pyllicagram</a>")),
+                        tabPanel(title=HTML("<li><a href='https://github.com/nicolrx/gallicagram' target='_blank'>Ruby Gem</a>"))
                         ),
                    navbarMenu("Distributions",
                    tabPanel("Distributions",fluidPage(),
