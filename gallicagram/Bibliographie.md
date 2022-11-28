@@ -20,6 +20,7 @@
 - K. Bender, « A voyage to Cythera (3): among publishers and their fake imprints », 23 octobre 2022, https://kbender.blogspot.com/2022/10/111-voyage-to-cythera-3-among.html?view=classic
 - Benoît Roux, « FAIR Way : approches éthique et épistémologique », Eveille, 16 mai 2022, https://eveille.hypotheses.org/2565
 - Noé Leroy, « Étude sémantico-historique du terme seruus entre le 9e et le 13e siècle : essai de diplomatique numérique », Université catholique de Louvain, 2022, https://dial.uclouvain.be/memoire/ucl/en/object/thesis%3A37571
+- Franck Antoni, « De ces exemples tout à fait banaux… »,25 novembre 2022, https://franckantoni.com/pluriel-banals-ou-banaux/
 
 
 ## Conférences de présentation de Gallicagram
@@ -30,6 +31,7 @@
 - Séminaire Quantitativisme réflexif, 28 octobre 2022 : https://www.idhes.cnrs.fr/seminaire-quantitativisme-reflexif-2022-23/
 - Séminaire Méthodologie de la recherche, Master Lettres - Sorbonne Université, 21 octobre 2022
 - Séminaire du laboratoire Econophysix - Ecole Polytechnique, 27 octobre 2022
+- Séminaire Evolution, Cognition and Culture Conference - ENS Ulm, 28 novembre 2022
 
 
 ## Sites référençant Gallicagram comme outil
@@ -40,9 +42,11 @@
 - http://blog.ac-versailles.fr/starter/index.php/post/24/02/2022/GALLICAGRAM
 - https://www.bases-netsources.com/component/flexicontent/category/conseil-semaine
 
+
 ## Projets fondés sur Gallicagram
 - Pyllicagram (API Python) par Benoît de Courson : https://github.com/regicid/pyllicagram
 - Ruby Gem Gallicagram par Nicolas Le Roux : https://github.com/nicolrx/gallicagram
+
 
 ## Projets utilisant Gallicagram
 - Gallica Grapher par Will Gleason : https://d32d5ops9ui5td.cloudfront.net/
