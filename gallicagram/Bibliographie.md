@@ -33,16 +33,6 @@
 - Séminaire Evolution, Cognition and Culture Conference - ENS Ulm, 28 novembre 2022
 
 
-## Sites référençant Gallicagram comme outil
-- https://www.wikidata.org/wiki/Q115121837
-- http://www.bis-sorbonne.fr/sid/spip.php?article898
-- https://bu.univ-lyon2.fr/fle-sc-du-langage -> ressources complémentaires
-- https://numrha.hypotheses.org/2840
-- https://numrha.hypotheses.org/4886
-- http://blog.ac-versailles.fr/starter/index.php/post/24/02/2022/GALLICAGRAM
-- https://www.bases-netsources.com/component/flexicontent/category/conseil-semaine
-
-
 ## Projets fondés sur Gallicagram
 - Pyllicagram (API Python) par Benoît de Courson : https://github.com/regicid/pyllicagram
 - Ruby Gem Gallicagram par Nicolas Le Roux : https://github.com/nicolrx/gallicagram
@@ -53,3 +43,15 @@
 - Gallica Grapher par Will Gleason : https://d32d5ops9ui5td.cloudfront.net/
 - La Langue Française par Nicolas Le Roux : https://www.lalanguefrancaise.com/dictionnaire
 - Aide à la recherche sur Gallica par Thomas Fressin : à venir
+
+
+## Sites référençant Gallicagram comme outil
+- https://www.wikidata.org/wiki/Q115121837
+- http://www.bis-sorbonne.fr/sid/spip.php?article898
+- https://bu.univ-lyon2.fr/fle-sc-du-langage -> ressources complémentaires
+- https://numrha.hypotheses.org/2840
+- https://numrha.hypotheses.org/4886
+- https://lasciem.hypotheses.org/
+- http://blog.ac-versailles.fr/starter/index.php/post/24/02/2022/GALLICAGRAM
+- https://www.bases-netsources.com/component/flexicontent/category/conseil-semaine
+
