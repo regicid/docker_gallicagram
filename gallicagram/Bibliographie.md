@@ -9,7 +9,6 @@
 
 ## Travaux de recherche utilisant Gallicagram
 - Olivier Ritz, « Gallicagram: un outil d’exploration pour l’histoire littéraire de la Révolution », Littérature et Révolution, 7 novembre 2022, https://litrev.hypotheses.org/2449
-- Gallibase par Etienne Brunet http://ancilla.unice.fr/pages/bases/
 - Alexandre Grit, « Gallicagram : un outil pour comprendre les enjeux d’opinion à propos de la soutenabilité budgétaire ? », Mémoire de master, Ecole normale supérieure Paris-Saclay, 2022, https://hal.archives-ouvertes.fr/hal-03845936
 - Madeleine Leroy. « „Bäder bauen heißt Spitäler sparen“. Piscines et bains-douches publics de « Vienne la rouge » (1919-1934) comme éléments d’une politique urbaine d’hygiène sociale », 2021, https://dumas.ccsd.cnrs.fr/dumas-03416702
 - Erwan Le Gall, « A propos de l’antimilitarisme des Sârs et de la rougeole politique (1913) », Ar Brezel, 5 janvier 2022, https://arbrezel.hypotheses.org/4804
@@ -49,6 +48,7 @@
 
 
 ## Projets utilisant Gallicagram
+- Gallibase par Etienne Brunet et Laurent Vanni http://ancilla.unice.fr/pages/bases/
 - Gallica Grapher par Will Gleason : https://d32d5ops9ui5td.cloudfront.net/
 - La Langue Française par Nicolas Le Roux : https://www.lalanguefrancaise.com/dictionnaire
 - Aide à la recherche sur Gallica par Thomas Fressin : à venir
