@@ -36,6 +36,7 @@
 ## Sites référençant Gallicagram comme outil
 - https://www.wikidata.org/wiki/Q115121837
 - http://www.bis-sorbonne.fr/sid/spip.php?article898
+- https://bu.univ-lyon2.fr/fle-sc-du-langage -> ressources complémentaires
 - https://numrha.hypotheses.org/2840
 - https://numrha.hypotheses.org/4886
 - http://blog.ac-versailles.fr/starter/index.php/post/24/02/2022/GALLICAGRAM
