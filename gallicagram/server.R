@@ -192,7 +192,9 @@ Plot <- function(data,input){
   tableau$ribbon_down[is.na(tableau$ribbon_down)] <- 0
    if(length(unique(tableau$date))<=20){
     plot = plot_ly(tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
-    plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,fillcolor=~mot,line = list(color="#F1F3F8E6"),showlegend=F)
+    if(input$doc_type!=5 & input$doc_type!=9 & input$doc_type!=10 & input$doc_type!=12){
+      plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,fillcolor=~mot,line = list(color="#F1F3F8E6"),showlegend=F)
+    }
     plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F)
     #plot = plot %>% layout(hovermode = "x")
     #plot=plot%>%add_trace(y = ~ribbon_up, type = 'scatter', mode = 'lines',color =~mot)
@@ -201,7 +203,9 @@ Plot <- function(data,input){
     plot = plot_ly(data=tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
     #plot=plot%>%add_ribbons(data=tableau,ymin=~loess-.1,ymax=~loess+.1,color =~mot)
     #plot=plot%>%add_ribbons(data=tableau,ymin=~ribbon_down,ymax=~ribbon_up,fillcolor =~mot,alpha=.3,showlegend=F,fillcolor=~mot)
-    plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,showlegend=F,fillcolor=~mot,line = list(color="#F1F3F8E6"))
+    if(input$doc_type!=5 & input$doc_type!=9 & input$doc_type!=10 & input$doc_type!=12){
+      plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,showlegend=F,fillcolor=~mot,line = list(color="#F1F3F8E6"))
+    }
     plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F,customdata=tableau$url)
   y_max = tableau$ribbon_up[which.max(tableau$loess)]
   y_min = tableau$ribbon_down[which.min(tableau$loess)]
