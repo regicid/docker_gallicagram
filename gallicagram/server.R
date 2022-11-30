@@ -4394,10 +4394,24 @@ shinyServer(function(input, output,session){
       Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," numéros de presse en allemand océrisés\ndans AustriaN Newspapers Online<b> </a>")
       type="de documents"
     }
+    if(input$distribution==30){
+      table<-read.csv("base_presse_annees_lemonde_fr.csv",encoding="UTF-8")
+      somme<-sum(table$base)
+      lien="https://www.lemonde.fr/archives-du-monde/"
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," monogrammes\n extraits du journal Le Monde\n jusqu'au 31 juillet 2022<b> </a>")
+      type="de monogrammes"
+    }
+    if(input$distribution==31){
+      table<-read.csv("base_presse_annees_lefigaro_fr.csv",encoding="UTF-8")
+      somme<-sum(table$base)
+      lien="https://recherche.lefigaro.fr/recherche/"
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," articles du journal\n Le Figaro<b> </a>")
+      type="d'articles"
+    }
     
     table$hovers = str_c(table$date,": N = ",table$base)
     plot2<-plot_ly(table, x=~date,y=~base,text=~hovers,type='bar',hoverinfo="text")
-    y <- list(title = "Nombre ",type,titlefont = 41)
+    y <- list(title = str_c("Nombre ",type),titlefont = 41)
     x <- list(title = "Date",titlefont = 41)
     plot2 = layout(plot2, yaxis = y, xaxis = x,title = Title)
     output$d_plot<-renderPlotly({plot2})
@@ -4422,6 +4436,9 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"distribution", "Corpus",choices = list("Presse britannique / BNA" = 8, "Livres / Ngram Viewer Anglais" = 10),selected = 8)
       }else if(input$d_language == 5){
         updateSelectInput(session,"distribution", "Corpus",choices = list("Presse espagnole / BNE"=11, "Livres / Ngram Viewer Espagnol"=12),selected = 11)
+      }
+      else if(input$d_language == 1 & input$d_bibli==4){
+        updateSelectInput(session,"distribution", "Corpus",choices = list("Le Monde"=30, "Le Figaro"=31),selected = 30)
       }
     })})
   
