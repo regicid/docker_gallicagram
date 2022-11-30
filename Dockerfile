@@ -83,6 +83,8 @@ RUN R -e "install.packages(c('gtrendsR'), repos='https://cloud.r-project.org/')"
 
 RUN R -e "install.packages(c('ggwordcloud'), repos='https://cloud.r-project.org/')"
 
+RUN R -e "install.packages(c('ngramr'), repos='https://cloud.r-project.org/')"
+
 # copy the app to the image
 RUN mkdir /root/gallicagram
 COPY gallicagram /root/gallicagram
