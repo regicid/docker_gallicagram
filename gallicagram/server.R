@@ -4405,8 +4405,15 @@ shinyServer(function(input, output,session){
       table<-read.csv("base_presse_annees_lefigaro_fr.csv",encoding="UTF-8")
       somme<-sum(table$base)
       lien="https://recherche.lefigaro.fr/recherche/"
-      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," articles du journal\n Le Figaro<b> </a>")
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," articles du journal\n Le Figaro (numérique)<b> </a>")
       type="d'articles"
+    }
+    if(input$distribution==36){
+      table<-read.csv("base_isidore.csv",encoding="UTF-8")
+      somme<-sum(table$base)
+      lien="https://isidore.science/"
+      Title = str_c("<a href = '",lien,"'> <b>Répartition des ",somme," documents de la\n base isidore.science<b> </a>")
+      type="de documents"
     }
     
     table$hovers = str_c(table$date,": N = ",table$base)
@@ -4439,6 +4446,9 @@ shinyServer(function(input, output,session){
       }
       else if(input$d_language == 1 & input$d_bibli==4){
         updateSelectInput(session,"distribution", "Corpus",choices = list("Le Monde"=30, "Le Figaro"=31),selected = 30)
+      }
+      else if(input$d_language == 1 & input$d_bibli==5){
+        updateSelectInput(session,"distribution", "Corpus",choices = list("Isidore"=36),selected = 36)
       }
     })})
   
