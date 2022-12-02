@@ -3189,6 +3189,7 @@ shinyServer(function(input, output,session){
   hideTab("#navbar","Gallicanet")
   hideTab("#navbar","English version")
   
+  temp<<-list()
   data=list(read.csv("exemple.csv",encoding = "UTF-8"),"liberté&république","Mois")
   names(data)=c("tableau","mot","resolution")
   memoire<<-read.csv("exemple.csv",encoding="UTF-8")
@@ -3794,8 +3795,41 @@ shinyServer(function(input, output,session){
     }
     
     
+    recherche_precedente<<-str_c(input$mot,"_",input$beginning,"_",input$end,"_",input$resolution)
+    corpus_precedent<<-str_c(input$doc_type,"_",input$search_mode)
+    
+    output$downloadData <- downloadHandler(
+      filename = function() {
+        paste("gallicagram_",input$mot,"_",input$beginning,"_",input$end,'.csv', sep='')
+      },
+      content = function(con) {
+        if((input$doc_type==2 | input$doc_type == 3 | input$doc_type==4) & input$search_mode==2){write.csv(df$tableau_page, con,row.names = F,fileEncoding = "UTF-8")}
+        else if(input$search_mode==1 & input$doc_type==4){write.csv(df$tableau_volume, con,row.names = F,fileEncoding = "UTF-8")}
+        else{write.csv(df$tableau, con,row.names = F,fileEncoding = "UTF-8")}
+      })
+    output$downloadPlot <- downloadHandler(
+      filename = function() {
+        paste('plot_',input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.html', sep='')
+      },
+      content = function(con) {
+        htmlwidgets::saveWidget(as_widget(Plot(df,input)), con)
+      })
+    output$downloadSPlot <- downloadHandler(
+      filename = function() {
+        paste('Splot_',input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.png', sep='')
+      },
+      content = function(filename) {
+        save_plot(filename,SPlot(df,input))
+      })
+    temp<<-df
+    updateCheckboxInput(session,"correlation_test",value=FALSE)
+  })
+  
+  ###
+  observeEvent(input$correlation_test,{
+  if(input$correlation_test==TRUE){
     if(str_detect(input$mot,".+&.+"))
-    {output$corr<-renderTable(correlation_matrix(prepare_correlation(df),"corr1"),rownames = TRUE)}
+    {output$corr<-renderTable(correlation_matrix(prepare_correlation(temp),"corr1"),rownames = TRUE)}
     else{output$corr<-renderTable(as.matrix(NA),colnames = FALSE)}
     
     if(recherche_precedente==str_c(input$mot,"_",input$beginning,"_",input$end,"_",input$resolution)&corpus_precedent!=str_c(input$doc_type,"_",input$search_mode)){
@@ -3823,33 +3857,9 @@ shinyServer(function(input, output,session){
       output$corr2<-renderTable(b,colnames = FALSE)
     }
     else{output$corr2<-renderTable(as.matrix(NA),colnames = FALSE)}
-    recherche_precedente<<-str_c(input$mot,"_",input$beginning,"_",input$end,"_",input$resolution)
-    corpus_precedent<<-str_c(input$doc_type,"_",input$search_mode)
-    
-    output$downloadData <- downloadHandler(
-      filename = function() {
-        paste("gallicagram_",input$mot,"_",input$beginning,"_",input$end,'.csv', sep='')
-      },
-      content = function(con) {
-        if((input$doc_type==2 | input$doc_type == 3 | input$doc_type==4) & input$search_mode==2){write.csv(df$tableau_page, con,row.names = F,fileEncoding = "UTF-8")}
-        else if(input$search_mode==1 & input$doc_type==4){write.csv(df$tableau_volume, con,row.names = F,fileEncoding = "UTF-8")}
-        else{write.csv(df$tableau, con,row.names = F,fileEncoding = "UTF-8")}
-      })
-    output$downloadPlot <- downloadHandler(
-      filename = function() {
-        paste('plot_',input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.html', sep='')
-      },
-      content = function(con) {
-        htmlwidgets::saveWidget(as_widget(Plot(df,input)), con)
-      })
-    output$downloadSPlot <- downloadHandler(
-      filename = function() {
-        paste('Splot_',input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.png', sep='')
-      },
-      content = function(filename) {
-        save_plot(filename,SPlot(df,input))
-      })
+  }
   })
+  ###
   
   output$currentTime <- renderText({
     invalidateLater(1000, session)
