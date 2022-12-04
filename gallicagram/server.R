@@ -192,7 +192,7 @@ Plot <- function(data,input){
   tableau$ribbon_down[is.na(tableau$ribbon_down)] <- 0
    if(length(unique(tableau$date))<=20){
     plot = plot_ly(tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
-    if(input$doc_type!=5 & input$doc_type!=9 & input$doc_type!=10 & input$doc_type!=12){
+    if(input$doc_type!=5 & input$doc_type!=9 & input$doc_type!=10 & input$doc_type!=12 & input$doc_type!=44){
       plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,fillcolor=~mot,showlegend=F,opacity=.2)
     }
     plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F)
@@ -203,7 +203,7 @@ Plot <- function(data,input){
     plot = plot_ly(data=tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
     #plot=plot%>%add_ribbons(data=tableau,ymin=~loess-.1,ymax=~loess+.1,color =~mot)
     #plot=plot%>%add_ribbons(data=tableau,ymin=~ribbon_down,ymax=~ribbon_up,fillcolor =~mot,alpha=.3,showlegend=F,fillcolor=~mot)
-    if(input$doc_type!=5 & input$doc_type!=9 & input$doc_type!=10 & input$doc_type!=12){
+    if(input$doc_type!=5 & input$doc_type!=9 & input$doc_type!=10 & input$doc_type!=12 & input$doc_type!=44){
       plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,showlegend=F,fillcolor=~mot,opacity=.2)
     }
     plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F,customdata=tableau$url)
@@ -2468,7 +2468,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     tableau$count[is.na(tableau$count)]<-0
     tableau$ratio=tableau$count/tableau$base
     tableau$url="https://trends.google.fr/trends/"
-    #tableau$url<-str_c("https://www.google.fr/search?q=%22",mot1,"%22&source=lnt&tbs=cdr%3A1%2Ccd_min%3A",substr(tableau$date,6,7),"%2F",substr(tableau$date,9,10),"%2F",str_extract(tableau$date,"...."),"%2Ccd_max%3A",substr(tableau$date,6,7),"%2F",substr(tableau$date,9,10),"%2F",str_extract(tableau$date,"...."),"&tbm=")
+    for(i in 1:length(tableau$url)-1){
+      tableau$url[i]=str_c("https://www.google.fr/search?q=",tableau$mot[i],"&tbs=cdr:1,cd_min:",as.character.Date(as.Date(tableau$date[i]),format="%m/%d/%Y"),",cd_max:",as.character.Date(as.Date(tableau$date[i+1])-1,format="%m/%d/%Y"),",lr:lang_1fr&tbm=nws&source=lnt&lr=lang_fr")
+    }
+    tableau$url[length(tableau$url)]="https://trends.google.fr/trends/"
     tableau$date<-str_replace_all(tableau$date,"-","/")
   }
   
