@@ -181,7 +181,7 @@ shinyUI(bootstrapPage(
                                    )
                             ),
              navbarMenu("Notice",
-                        tabPanel("Notice",shiny::includeMarkdown("Notice.md")),
+                        tabPanel("Notice",shiny::includeMarkdown("Notice.md"),dataTableOutput("notice_corp")),
                         tabPanel("Tutoriel",
                                  fluidPage(
                                    h3("Tutoriel et Séminaire de présentation"),

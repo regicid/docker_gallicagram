@@ -3829,6 +3829,8 @@ shinyServer(function(input, output,session){
   })
   
   ###
+  output$notice_corp<-renderDataTable(read.csv("corpus.csv",sep=",",encoding = "UTF-8"))
+  ###
   observeEvent(input$correlation_test,{
   if(input$correlation_test==TRUE){
     if(str_detect(input$mot,".+&.+"))

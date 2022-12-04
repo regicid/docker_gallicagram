@@ -55,3 +55,7 @@ $$ ratio_i=\frac{count_i}{base_i} =\frac{x_i}{N_i} $$
 
 ### Conception et précautions d'usage
 - Toutes les informations nécessaires à la bonne utilisation de Gallicagram sont indiquées dans <a href="https://osf.io/preprints/socarxiv/84bf3/" target="_blank">l'article de recherche associé à ce logiciel</a>.
+
+
+### Corpus disponibles / langue / mode de recherche
+
