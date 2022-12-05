@@ -7,7 +7,7 @@
 - Anne Bugner, « Présentation critique d’un outil numérique à destination de la recherche en SHS : Gallicagram », Mémoire de master, 2022, Ecole nationale des chartes - PSL
 
 
-## Travaux de recherche utilisant Gallicagram
+## Travaux utilisant Gallicagram
 - Olivier Ritz, « Gallicagram: un outil d’exploration pour l’histoire littéraire de la Révolution », Littérature et Révolution, 7 novembre 2022, https://litrev.hypotheses.org/2449
 - Alexandre Grit, « Gallicagram : un outil pour comprendre les enjeux d’opinion à propos de la soutenabilité budgétaire ? », Mémoire de master, Ecole normale supérieure Paris-Saclay, 2022, https://hal.archives-ouvertes.fr/hal-03845936
 - Benjamin Azoulay, _Abel Bonnard, Plume de la Collaboration_, Perrin, Paris, 2023, https://livre.fnac.com/a17443355/Benjamin-Azoulay-Abel-Bonnard
