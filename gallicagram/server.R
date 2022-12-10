@@ -1107,6 +1107,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         print(1.10)
         w$n = as.integer(w$n)
         print(1.11)
+        print(w)
         for (i in 1:length(w$mois)) {
           print(1.12)
           print(w$annee[i])
