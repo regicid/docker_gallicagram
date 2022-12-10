@@ -952,7 +952,7 @@ jokerize<-function(input){
 ngramize<-function(input,nouvrequette,gallicagram,agregator){
   
   show_modal_spinner()
-  
+  print(1)
   from<-input$beginning
   to<-input$end
   
@@ -983,7 +983,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     print(mots2)
     increment2<-1
     for(mot in mots2){
-      
+      print(2)
       
       table<-unnest_tokens(as.data.frame(mot),ngram,mot, token = "ngrams", n = 1)
       nb<-length(table$ngram)
@@ -1071,6 +1071,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           q=str_c('SELECT sum(n),gram,annee,mois FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
           
         }
+        print(2.5)
         query = dbSendQuery(con,q)
         w = dbFetch(query)
         if(input$doc_type==30){
@@ -1252,7 +1253,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   if(input$joker==F){data = list(tableau,paste(input$mot,collapse="&"),input$resolution)}
   if(input$joker==T){data = list(tableau,paste(nouvrequette,collapse="&"),input$resolution)}
   names(data) = c("tableau","mot","resolution")
-  print(1)
+  print(3)
   remove_modal_spinner()
   
   
