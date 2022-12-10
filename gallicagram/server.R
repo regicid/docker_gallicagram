@@ -1252,7 +1252,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   if(input$joker==F){data = list(tableau,paste(input$mot,collapse="&"),input$resolution)}
   if(input$joker==T){data = list(tableau,paste(nouvrequette,collapse="&"),input$resolution)}
   names(data) = c("tableau","mot","resolution")
-  
+  print(1)
   remove_modal_spinner()
   
   

@@ -118,8 +118,6 @@ shinyUI(bootstrapPage(
                                                                      checkboxInput("histogramme", "Mode histogramme", value = FALSE),
                                                                      div(style = "margin-top: -15px"),
                                                                      checkboxInput("spline", "Spline dans le graphe scientifique", value = TRUE),
-                                                                     # div(style = "margin-top: -15px"),
-                                                                     # shinyURL.ui(),
                                                                      div(style = "margin-top: -15px"),
                                                                      actionButton("lemmatiseur","Formes fléchies"),
                                                                      downloadButton("data_session","Données de la session"),
