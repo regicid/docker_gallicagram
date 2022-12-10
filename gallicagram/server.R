@@ -1058,6 +1058,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       }
       print(1)
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
+      print(1.1)
       
       if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
