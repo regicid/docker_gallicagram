@@ -267,6 +267,7 @@ Plot <- function(data,input){
   } else{
     plot=layout(plot)
     return(onRender(plot,js))
+    print('blaaa')
   }
   
   
@@ -951,7 +952,7 @@ jokerize<-function(input){
 ngramize<-function(input,nouvrequette,gallicagram,agregator){
   
   show_modal_spinner()
-
+  
   from<-input$beginning
   to<-input$end
   
@@ -982,6 +983,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     print(mots2)
     increment2<-1
     for(mot in mots2){
+      
       
       table<-unnest_tokens(as.data.frame(mot),ngram,mot, token = "ngrams", n = 1)
       nb<-length(table$ngram)
@@ -1056,25 +1058,19 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         base<-base[base[,"date"]<=to,]
         base<-base[base[,"date"]>=from,]
       }
-      print(1)
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
-      print(1.1)
       
       if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
-        print(1.2)
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
         w = dbFetch(query)
       }
-      print(1.3)
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 | (input$doc_type==56 & agregator==1)) & input$resolution=="Année"){
-        
-        print(1.4)
+        #q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
         if(input$doc_type==30){
           q=str_c('SELECT sum(n),gram,annee,mois FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
           
         }
-        print(3)
         query = dbSendQuery(con,q)
         w = dbFetch(query)
         if(input$doc_type==30){
@@ -1086,42 +1082,25 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w = group_by(w,annee) %>% summarise(n = sum(as.integer(n)))
         w$annee = as.integer(w$annee)
       }
-      print(1.5)
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0) & input$resolution=="Mois"){
-        print(1.6)
         # q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee,mois FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee,mois')
         if(input$doc_type==30){
           q=str_c('SELECT * FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
           
         }
-        print(1.7)
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        print(1.8)
         if(input$doc_type==30){
           w<-w[,-2]
         }
-        print(1.9)
         colnames(w)<-c("n","annee","mois")
-        print(1.10)
         w$n = as.integer(w$n)
-        print(1.11)
-        print(w)
-        print(length(w$mois))
-        print(length(w$annee))
-        for (i in 1:length(w$mois)) {
-          print(1.12)
-          print(w$annee[i])
-          print(w$mois[i])
-          if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}
-          print(1.13)
+        if(str_length(w$mois)!=0){
+          for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}}
         }
-        print(1.14)
         w$annee<-str_c(w$annee,"/",w$mois)
-        print(1.15)
         w<-w[,-3]
-        print(1.16)
       }
       
       if(input$doc_type==30 & input$resolution=="Semaine"){
@@ -1130,8 +1109,10 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w = dbFetch(query)
         w<-w[,-2]
         w$n = as.integer(w$n)
+        if(str_length(w$mois)!=0){
         for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}
           if(str_length(w$jour[i])==1){w$jour[i]<-str_c("0",w$jour[i])}}
+        }
         w$annee<-str_c(w$annee,"/",w$mois,"/",w$jour)
         w<-w[,-3]
         w<-w[,-3]
@@ -1275,7 +1256,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   if(input$joker==F){data = list(tableau,paste(input$mot,collapse="&"),input$resolution)}
   if(input$joker==T){data = list(tableau,paste(nouvrequette,collapse="&"),input$resolution)}
   names(data) = c("tableau","mot","resolution")
-
+  
   remove_modal_spinner()
   
   
