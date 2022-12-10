@@ -1097,7 +1097,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         colnames(w)<-c("n","annee","mois")
         w$n = as.integer(w$n)
         print(w)
-        if(str_length(w$mois)>0){
+        if(length(w$mois)>0){
           for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}}
         }
         w$annee<-str_c(w$annee,"/",w$mois)
@@ -1111,7 +1111,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w<-w[,-2]
         w$n = as.integer(w$n)
         print(w)
-        if(str_length(w$mois)>0){
+        if(length(w$mois)>0){
         for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}
           if(str_length(w$jour[i])==1){w$jour[i]<-str_c("0",w$jour[i])}}
         }
