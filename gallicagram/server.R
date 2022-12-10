@@ -1102,12 +1102,21 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         if(input$doc_type==30){
           w<-w[,-2]
         }
-        colnames(w)<-c("n","annee","mois")
-        w$n = as.integer(w$n)
-        for (i in 1:length(w$mois)) {if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}}
-        w$annee<-str_c(w$annee,"/",w$mois)
-        w<-w[,-3]
         print(1.9)
+        colnames(w)<-c("n","annee","mois")
+        print(1.10)
+        w$n = as.integer(w$n)
+        print(1.11)
+        for (i in 1:length(w$mois)) {
+          print(1.12)
+          if(str_length(w$mois[i])==1){w$mois[i]<-str_c("0",w$mois[i])}
+          print(1.13)
+        }
+        print(1.14)
+        w$annee<-str_c(w$annee,"/",w$mois)
+        print(1.15)
+        w<-w[,-3]
+        print(1.16)
       }
       
       if(input$doc_type==30 & input$resolution=="Semaine"){
