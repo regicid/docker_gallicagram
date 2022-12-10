@@ -1065,9 +1065,10 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
         w = dbFetch(query)
       }
+      print(1.3)
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 | (input$doc_type==56 & agregator==1)) & input$resolution=="Année"){
         
-        print(1.3)
+        print(1.4)
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
         if(input$doc_type==30){
           q=str_c('SELECT sum(n),gram,annee,mois FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
