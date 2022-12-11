@@ -119,6 +119,8 @@ shinyUI(bootstrapPage(
                                                                      div(style = "margin-top: -15px"),
                                                                      checkboxInput("spline", "Spline dans le graphe scientifique", value = TRUE),
                                                                      div(style = "margin-top: -15px"),
+                                                                     checkboxInput("points", "Points dans le graphe scientifique", value = TRUE),
+                                                                     div(style = "margin-top: -15px"),
                                                                      actionButton("lemmatiseur","Formes fléchies"),
                                                                      downloadButton("data_session","Données de la session"),
                                                                      circle = TRUE, status = "default",

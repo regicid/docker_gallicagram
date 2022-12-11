@@ -400,7 +400,7 @@ SPlot <- function(data,input){
         theme_tufte()+ scale_color_manual(values=customPalette)+
         theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=6),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
     }
-    else if (input$span==0){
+    else if (input$span==0 | input$points==F){
       if (input$spline==T){plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
         theme_tufte()+ scale_color_manual(values=customPalette)+
         theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
