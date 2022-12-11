@@ -192,18 +192,13 @@ Plot <- function(data,input){
   tableau$ribbon_down[is.na(tableau$ribbon_down)] <- 0
    if(length(unique(tableau$date))<=20){
     plot = plot_ly(tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
-    if(input$doc_type!=5 & input$doc_type!=9 & input$doc_type!=10 & input$doc_type!=12 & input$doc_type!=44){
+    if(input$doc_type!=5 & input$doc_type!=9 & input$doc_type!=10 & input$doc_type!=12 & input$doc_type!=44 & input$scale==F){
       plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,fillcolor=~mot,showlegend=F,opacity=.2)
     }
     plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F)
-    #plot = plot %>% layout(hovermode = "x")
-    #plot=plot%>%add_trace(y = ~ribbon_up, type = 'scatter', mode = 'lines',color =~mot)
-    #plot=plot%>%add_trace(y = ~ribbon_down, type = 'scatter', mode = 'lines',fill = 'tonexty', fillcolor='rgba(0,100,80,0.2)',color =~mot) 
-  }  else{
+    }  else{
     plot = plot_ly(data=tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
-    #plot=plot%>%add_ribbons(data=tableau,ymin=~loess-.1,ymax=~loess+.1,color =~mot)
-    #plot=plot%>%add_ribbons(data=tableau,ymin=~ribbon_down,ymax=~ribbon_up,fillcolor =~mot,alpha=.3,showlegend=F,fillcolor=~mot)
-    if(input$doc_type!=5 & input$doc_type!=9 & input$doc_type!=10 & input$doc_type!=12 & input$doc_type!=44){
+    if(input$doc_type!=5 & input$doc_type!=9 & input$doc_type!=10 & input$doc_type!=12 & input$doc_type!=44& input$scale==F){
       plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,showlegend=F,fillcolor=~mot,opacity=.2)
     }
     plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F,customdata=tableau$url)
@@ -263,11 +258,12 @@ Plot <- function(data,input){
     plot1 = layout(plot1, yaxis = y, xaxis = x,title = Title,showlegend = FALSE)
     plot= plot%>%add_lines()
     plot = plotly::subplot(plot,plot1,nrows = 2,legend=NULL,shareX = T)
+    plot=plot %>%  layout(xaxis = list(autorange = TRUE),  yaxis = list(autorange = TRUE))
     return(onRender(plot,js))
   } else{
     plot=layout(plot)
+    plot=plot %>%  layout(xaxis = list(autorange = TRUE),  yaxis = list(autorange = TRUE))
     return(onRender(plot,js))
-    print('blaaa')
   }
   
   
