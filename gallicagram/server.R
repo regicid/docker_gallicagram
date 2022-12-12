@@ -2540,13 +2540,13 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   
   tableau$resolution<-resolution
   
-  if(tableau$resolution=="Mois"){
+  if(tableau$resolution[1]=="Mois"){
     auj<-Sys.Date()
     auj<-str_extract(auj,".......")
     auj<-str_replace(auj,"-","/")
     tableau<-tableau[tableau$date<=auj,]
     }
-    
+  
   if(doc_type==1){tableau$corpus="Presse"
   tableau$langue="Français"
   tableau$bibli="Gallica"
