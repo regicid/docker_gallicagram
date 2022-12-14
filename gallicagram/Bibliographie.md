@@ -10,7 +10,7 @@
 ## Travaux utilisant Gallicagram
 - Olivier Ritz, « Gallicagram: un outil d’exploration pour l’histoire littéraire de la Révolution », Littérature et Révolution, 7 novembre 2022, https://litrev.hypotheses.org/2449
 - Alexandre Grit, « Gallicagram : un outil pour comprendre les enjeux d’opinion à propos de la soutenabilité budgétaire ? », Mémoire de master, Ecole normale supérieure Paris-Saclay, 2022, https://hal.archives-ouvertes.fr/hal-03845936
-- Benjamin Azoulay, _Abel Bonnard, Plume de la Collaboration_, Perrin, Paris, 2023, https://livre.fnac.com/a17443355/Benjamin-Azoulay-Abel-Bonnard
+- Benjamin Azoulay, _Abel Bonnard, Plume de la Collaboration_, Perrin, Paris, 2023, https://www.lisez.com/livre-grand-format/abel-bonnard/9782262095376
 - François Jacquesson, « L'auto et le vélo », Caramel, Sciences du langage et monde contemporain, 7 décembre 2022, https://caramel.hypotheses.org/24021
 - Madeleine Leroy. « „Bäder bauen heißt Spitäler sparen“. Piscines et bains-douches publics de « Vienne la rouge » (1919-1934) comme éléments d’une politique urbaine d’hygiène sociale », 2021, https://dumas.ccsd.cnrs.fr/dumas-03416702
 - Erwan Le Gall, « A propos de l’antimilitarisme des Sârs et de la rougeole politique (1913) », Ar Brezel, 5 janvier 2022, https://arbrezel.hypotheses.org/4804
