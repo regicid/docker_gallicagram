@@ -3662,6 +3662,7 @@ shinyServer(function(input, output,session){
         zz = df[[2]][["tableau"]]$date>1945
         df[[1]][["tableau"]] = bind_rows(df[[1]][["tableau"]],df[[2]][["tableau"]][zz,])
         df = df[[1]]
+        df[["tableau"]]<-df[["tableau"]][[df[["tableau"]]$date>input$beginning]]
         memoire<<-bind_rows(df[["tableau"]],memoire)
       }
       else if(input$joker==F & input$doc_type==56){
