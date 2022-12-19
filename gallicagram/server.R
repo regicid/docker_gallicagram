@@ -295,6 +295,7 @@ SPlot <- function(data,input){
     }
   }
   tableau<-distinct(tableau)
+  print(tableau)
   
   if(data[["resolution"]]=="Semaine"){tableau$date=ymd(tableau$date)}
   if(data[["resolution"]]=="Mois"){
