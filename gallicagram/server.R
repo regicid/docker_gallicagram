@@ -1238,9 +1238,13 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     z$langue="Français"
     z$bibli="Le Monde"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==0){z$corpus="Presse"
+    if((input$doc_type==0 & gallicagram==2)){z$corpus="Presse"
     z$langue="Français"
-    z$bibli="Gallicagram"
+    z$bibli="Le Monde"
+    z$search_mode<-"N-gramme"}
+    if((input$doc_type==0 & gallicagram==1)){z$corpus="Presse"
+    z$langue="Français"
+    z$bibli="Gallica"
     z$search_mode<-"N-gramme"}
     
     if(increment==1){tableau=z}
@@ -3333,7 +3337,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$language,{
     observeEvent(input$bibli,{
       if(input$language == 1 & input$bibli==0){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1951-2022" = 0),selected = 0)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0),selected = 0)
       }
       else if(input$language == 1 & input$bibli==1){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse française / Gallica" = 1,"Recherche par titre de presse / Gallica" = 3, "Livres / Gallica" = 2, "Corpus personnalisé / Gallica"=4, "Livres+Presse / Gallica"=56),selected = 1)
@@ -3655,14 +3659,11 @@ shinyServer(function(input, output,session){
       else if(input$joker==F & input$doc_type!=0 & input$doc_type!=56){df=ngramize(input,nouvrequette,gallicagram,agregator)}
       else if(input$joker==F & input$doc_type==0){
         df = list()
-        factor = vector()
         for(i in 1:2){
           df[[i]] = ngramize(input,nouvrequette,i,agregator)
-          z = (df[[i]][["tableau"]]$date < 1951) * (df[[i]][["tableau"]]$date>1945)
-          factor[i] = mean(df[[i]][["tableau"]]$ratio[z],na.rm=TRUE)
+          z = df[[i]][["tableau"]]$date < 1951
         }
-        zz = df[[2]][["tableau"]]$date>1950
-        if(!is.na(factor[1] > 0) & !is.na(factor[2])){if(factor[1] > 0 & factor[2] > 0){df[[1]][["tableau"]]$ratio = df[[1]][["tableau"]]$ratio*factor[2]/factor[1]}}
+        zz = df[[2]][["tableau"]]$date>1945
         df[[1]][["tableau"]] = bind_rows(df[[1]][["tableau"]],df[[2]][["tableau"]][zz,])
         df = df[[1]]
         memoire<<-bind_rows(df[["tableau"]],memoire)

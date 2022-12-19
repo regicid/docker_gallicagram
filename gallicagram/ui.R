@@ -92,7 +92,7 @@ shinyUI(bootstrapPage(
                                                                                                                                 label = '\n',
                                                                                                                                 start = as.Date.character("2021-01-01"), end = as.character(Sys.Date()),
                                                                                                                                 separator="à", startview = "decade")),
-                                                conditionalPanel(condition="input.doc_type==0",div(materialSwitch(inputId = "overlap",label = "Superposer les corpus sur la période 1945-1950",status="primary",right = T,value=T))),
+                                                #conditionalPanel(condition="input.doc_type==0",div(materialSwitch(inputId = "overlap",label = "Superposer les corpus sur la période 1945-1950",status="primary",right = T,value=T))),
                                                 div(style="display: inline-block;vertical-align:top;width: 49%;",radioButtons("resolution", label = "Résolution", choices = c("Année","Mois"),inline=T)),
                                                 div(style="display: inline-block;vertical-align:top;width: 49%;",conditionalPanel(condition="input.doc_type == 2 && input.search_mode==1",uiOutput("theme"))),
                                                 
