@@ -333,7 +333,6 @@ SPlot <- function(data,input){
   tableau$loess=tableau$ratio
   width = length(unique(tableau$date))
   span = 2/width + input$span*(width-2)/(10*width)
-  print(tableau$loess)
   
   if(input$span >0){
     if(input$loess==F){
@@ -355,10 +354,6 @@ SPlot <- function(data,input){
     }
     
   }
-  print(tableau$loess)
-  
-  
-  
   
   
   
@@ -389,7 +384,7 @@ SPlot <- function(data,input){
     customPalette = customPalette[c(2,1)]
   }
   
-  
+  print(tableau$loess)
   if(input$histogramme==T){
     plot=ggplot(data=tableau, aes(x = date, y = count, group=mot,fill=mot))+geom_bar(stat="identity",position=position_dodge())+xlab("")+ylab("")+
       theme_tufte()+ scale_fill_manual(values=customPalette)+
@@ -401,7 +396,7 @@ SPlot <- function(data,input){
         theme_tufte()+ scale_color_manual(values=customPalette)+
         theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.text.y = element_blank(),axis.ticks.y = element_blank(),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=6),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
     }
-    else if (input$span==0 | input$points==F){
+    else if (input$span==0 | input$points==F | input$doc_type==0){
       if (input$spline==T){plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot)) + geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
         theme_tufte()+ scale_color_manual(values=customPalette)+
         theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))}
