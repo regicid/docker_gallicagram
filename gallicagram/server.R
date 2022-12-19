@@ -55,7 +55,7 @@ Plot <- function(data,input){
       tableau = data[["tableau_volume"]]
     }
   }
-  if(input$multicourbes==TRUE){
+  if(input$multicourbes==TRUE | input$doc_type==0){
     tableau = memoire
     tableau$mot<-str_c(tableau$mot," (",tableau$langue,"/",tableau$bibli,"/",tableau$corpus,"/",tableau$search_mode,")")
     if(input$resolution=="Mois"){
