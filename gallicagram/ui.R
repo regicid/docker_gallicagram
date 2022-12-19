@@ -30,7 +30,9 @@ shinyUI(bootstrapPage(
   tags$head(includeHTML(("google-analytics.html"))),
   mobileDetect('isMobile'),
   useShinyjs(),
-  navbarPage(id="#navbar",title=div(img(src="Logo.png")),collapsible=TRUE,
+  navbarPage(id="#navbar",title=div(img(src="Logoo.png",
+                                        height = "50px",
+                                        style = "position: relative;top: -17px;")),collapsible=TRUE,
                    tabPanel("Graphique",
                               div(id="Sidebar",column(4,wellPanel(
                                 div(style="display: inline-block;vertical-align:top;",id="menumob2",actionButton("showSidebar2", "",icon = icon("bars"))),
