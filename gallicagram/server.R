@@ -295,7 +295,6 @@ SPlot <- function(data,input){
     }
   }
   tableau<-distinct(tableau)
-  print(tableau)
   
   if(data[["resolution"]]=="Semaine"){tableau$date=ymd(tableau$date)}
   if(data[["resolution"]]=="Mois"){
@@ -334,7 +333,7 @@ SPlot <- function(data,input){
   tableau$loess=tableau$ratio
   width = length(unique(tableau$date))
   span = 2/width + input$span*(width-2)/(10*width)
-  
+  print(tableau$loess)
   
   if(input$span >0){
     if(input$loess==F){
@@ -356,6 +355,7 @@ SPlot <- function(data,input){
     }
     
   }
+  print(tableau$loess)
   
   
   
