@@ -174,9 +174,11 @@ Plot <- function(data,input){
   
   if(input$visualiseur==4){
     total<-select(tableau,ratio,mot,date,url)
-    if(input$resolution=="Mois"){total$size=10000*(total$ratio/sum(total$ratio))}
-    if(input$resolution=="Année"){total$size=1000*(total$ratio/sum(total$ratio))}
-    if(input$resolution=="Semaine"){total$size=100000*(total$ratio/sum(total$ratio))}
+    for(mot in unique(total$mot)){
+    if(input$resolution=="Mois"){total$size[total$mot==mot]=10000*(total$ratio[total$mot==mot]/sum(total$ratio[total$mot==mot]))}
+    if(input$resolution=="Année"){total$size[total$mot==mot]=1000*(total$ratio[total$mot==mot]/sum(total$ratio[total$mot==mot]))}
+    if(input$resolution=="Semaine"){total$size[total$mot==mot]=100000*(total$ratio[total$mot==mot]/sum(total$ratio[total$mot==mot]))}
+    }
     total<-total%>%group_by(mot)
     plot<-plot_ly(x=~total$date,y=total$mot,type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,colors=customPalette,marker = list(size = ~total$size, opacity = 0.3))
     plot<-layout(plot,xaxis=list(title=""))
