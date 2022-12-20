@@ -180,8 +180,7 @@ Plot <- function(data,input){
     total<-total%>%group_by(mot)
     plot<-plot_ly(x=~total$date,y=total$mot,type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,colors=customPalette,marker = list(size = ~total$size, opacity = 0.3))
     plot<-layout(plot,xaxis=list(title=""))
-    if(length(grep(",",data$mot))==0 & input$isMobile==F){plot = layout(plot,showlegend=TRUE,legend = list(x = 100, y = -0.1))}
-    if(length(grep(",",data$mot))==0 & input$isMobile==T){plot = layout(plot,showlegend=TRUE,legend = list(orientation = 'h',y=-0.1))}
+    plot = layout(plot,showlegend=F)
     return(onRender(plot,js))
   }
   
