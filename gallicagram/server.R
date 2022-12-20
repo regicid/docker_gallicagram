@@ -95,16 +95,7 @@ Plot <- function(data,input){
     plot<-layout(plot,xaxis=list(title="Nombre d'occurrences dans le corpus"))
     return(onRender(plot,js))
   }
-  if(input$visualiseur==4){
-    total<-select(tableau,ratio,mot,date,url)
-    if(input$resolution=="Mois"){total$size=10000*(total$ratio/sum(total$ratio))}
-    if(input$resolution=="Année"){total$size=1000*(total$ratio/sum(total$ratio))}
-    if(input$resolution=="Semaine"){total$size=100000*(total$ratio/sum(total$ratio))}
-    total<-total%>%group_by(mot)
-    plot<-plot_ly(x=~total$date,y=total$mot,type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,marker = list(size = ~total$size, opacity = 0.3))
-    plot<-layout(plot,xaxis=list(title=""))
-    return(onRender(plot,js))
-  }
+  
   
   tableau$scale<-tableau$ratio
   
@@ -179,6 +170,21 @@ Plot <- function(data,input){
     customPalette <- brewer.pal(numGroups, "Set1")
     customPalette = customPalette[c(2,1)]
   }
+  
+  
+  if(input$visualiseur==4){
+    total<-select(tableau,ratio,mot,date,url)
+    if(input$resolution=="Mois"){total$size=10000*(total$ratio/sum(total$ratio))}
+    if(input$resolution=="Année"){total$size=1000*(total$ratio/sum(total$ratio))}
+    if(input$resolution=="Semaine"){total$size=100000*(total$ratio/sum(total$ratio))}
+    total<-total%>%group_by(mot)
+    plot<-plot_ly(x=~total$date,y=total$mot,type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,colors=customPalette,marker = list(size = ~total$size, opacity = 0.3))
+    plot<-layout(plot,xaxis=list(title=""))
+    if(length(grep(",",data$mot))==0 & input$isMobile==F){plot = layout(plot,showlegend=TRUE,legend = list(x = 100, y = -0.1))}
+    if(length(grep(",",data$mot))==0 & input$isMobile==T){plot = layout(plot,showlegend=TRUE,legend = list(orientation = 'h',y=-0.1))}
+    return(onRender(plot,js))
+  }
+  
   
   if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
   else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
@@ -3347,13 +3353,13 @@ shinyServer(function(input, output,session){
   observeEvent(input$language,{
     observeEvent(input$bibli,{
       if(input$language == 1 & input$bibli==0){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0),selected = 0)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0,"Presse française / Gallica" = 1,"Livres / Gallica" = 2,"Le Monde"=30),selected = 1)
       }
       else if(input$language == 1 & input$bibli==1){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse française / Gallica" = 1,"Recherche par titre de presse / Gallica" = 3, "Livres / Gallica" = 2, "Corpus personnalisé / Gallica"=4, "Livres+Presse / Gallica"=56),selected = 1)
       }
       else if(input$language == 1 & input$bibli==2){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15, "Presse wallonne / KBR"=13, "Presse québécoise / BAnQ"=28, "Livres / Ngram Viewer - Google Books" = 5, "Google Trends / France"=44),selected = 5)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15, "Presse wallonne / KBR"=13, "Presse québécoise / BAnQ"=28),selected = 5)
       }
       else if(input$language == 1 & input$bibli==3){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse Auvergne-Rhône-Alpes / Lectura"=17, "Presse du sillon lorrain / Limedia"=18, "Presse méridionale / Mémonum"=19, "Presse de Saint-Denis / Commun-Patrimoine"=20, "Presse de Brest / Yroise"=21, "Presse des Pyrénées / Pireneas"=22, "Presse toulousaine / Rosalis"=23, "Presse diplomatique / Bibliothèque diplomatique numérique"=24, "Presse francophone / RFN"=25, "Presse alsacienne / Numistral"=26, "Presse de Roubaix / BN-R"=27),selected = 17)
@@ -3366,6 +3372,9 @@ shinyServer(function(input, output,session){
       }
       else if(input$language == 1 & input$bibli==7){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("MusixMatch / Français"=45),selected = 45)
+      }
+      if(input$language == 1 & input$bibli==8){
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Livres / Ngram Viewer - Google Books" = 5, "Google Trends / France"=44),selected = 5)
       }
       else if(input$language == 2){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse allemande / Deutsche digitale bibliothek" = 43,"Presse allemande / Europeana" = 6, "Presse austro-hongroise / ANNO"=29, "Presse suisse-allemande / Bibliothèque nationale suisse"=16 ,"Presse germanophone / MediaCloud"=52, "Livres / Ngram Viewer Allemand" = 9,"MusixMatch / Allemand"=47),selected = 43)
