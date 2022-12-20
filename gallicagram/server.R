@@ -174,9 +174,8 @@ Plot <- function(data,input){
   
   if(input$visualiseur==4){
     total<-select(tableau,ratio,mot,date,url)
-    sizer=max(total$ratio)/30
     total<-total%>%group_by(mot)
-    plot<-plot_ly(x=~total$date,y=total$mot,type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,colors=customPalette,marker = list(size = ~total$ratio, sizeref=sizer, opacity = 0.3))
+    plot<-plot_ly(x=~total$date,y=total$mot,type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,colors=customPalette,size = ~total$ratio,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3))
     plot<-layout(plot,xaxis=list(title=""))
     plot = layout(plot,showlegend=F)
     return(onRender(plot,js))
