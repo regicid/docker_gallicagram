@@ -101,6 +101,7 @@ shinyUI(bootstrapPage(
                                             ))),
                                             
                                             div(column(8,rclipboardSetup(),
+                                                       fixedRow(
                                                       div(id="menumob",style="display: inline-block;vertical-align:middle;",actionButton("showSidebar", "",icon = icon("bars"))),
                                                       div(style="display: inline-block;vertical-align:middle;",dropdownButton(tags$h3("Options avancées"),
                                                                      checkboxInput("barplot", "Distribution des documents de la base de données ", value = FALSE),
@@ -120,21 +121,23 @@ shinyUI(bootstrapPage(
                                                                      checkboxInput("spline", "Spline dans le graphe scientifique", value = TRUE),
                                                                      div(style = "margin-top: -15px"),
                                                                      checkboxInput("points", "Points dans le graphe scientifique", value = TRUE),
-                                                                     div(style = "margin-top: -30px"),
-                                                                     div(style="display: inline-block;vertical-align:top;width:100px;",selectInput("visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4),selected = 1)),
-                                                                     div(style = "margin-top: -20px"),
+                                                                     # div(style = "margin-top: -30px"),
+                                                                     # div(style="display: inline-block;vertical-align:top;width:100px;",selectInput("visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4),selected = 1)),
+                                                                     div(style = "margin-top: -15px"),
                                                                      actionButton("lemmatiseur","Formes fléchies"),
                                                                      downloadButton("data_session","Données de la session"),
                                                                      circle = TRUE, status = "default",
                                                                      icon = icon("sliders"), width = "300px",
                                                                      tooltip = tooltipOptions(title = "Afficher les options avancées")
                                                                      )),
+                                                      
                                                       div(style="display: inline-block;vertical-align:middle;float:right",actionButton("flag",label = img (src="English version.png", width="15", height="15"),onclick ="window.open('https://shiny.ens-paris-saclay.fr/app/gallicagram_en', '_blank')")),
                                                       div(style="display: inline-block;vertical-align:middle;float:right",actionButton("twitter",label = img (src="twitter.png", width="15", height="15"),onclick ="window.open('https://twitter.com/gallicagram', '_blank')")),
                                                       div(style="display: inline-block;vertical-align:middle;float:right",actionButton("fb",label = img (src="facebook.png", width="15", height="15"),onclick ="window.open('https://www.facebook.com/gallicagram', '_blank')")),
                                                       div(id="clip",style="display: inline-block;vertical-align:middle;float:right",rclipButton("clipbtn", "Citation",clipText = "Azoulay, B., & de Courson, B. (2021, December 8). Gallicagram : un outil de lexicométrie pour la recherche. https://doi.org/10.31235/osf.io/84bf3",icon = icon("clipboard"))),
                                                       div(id="article",style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Article de recherche",onclick ="window.open('https://osf.io/preprints/socarxiv/84bf3/', '_blank')")),
                                                       div(id="pyllicagram",style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Pyllicagram",onclick ="window.open('https://github.com/regicid/pyllicagram', '_blank')")),
+                                                      div(style="display: inline-block;vertical-align:middle;float:right;width:100px;margin-top:-20px",selectInput("visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4),selected = 1))),
                                                       plotlyOutput("plot"),
                                                       plotOutput("cloud")
                                                       )),
