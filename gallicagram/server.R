@@ -82,15 +82,27 @@ Plot <- function(data,input){
   
   tableau$mot[str_length(tableau$mot)>=30]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=30],30,"right"),"...")
   
-  if(input$joker==T & input$histoJoker==F & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){
+  
+  if(input$visualiseur==2){
     
     total<-select(tableau,count,mot)
     total<-total%>%group_by(mot)%>%summarise_all(sum)
+    total$url="www.google.com"
     if(input$doc_type==1){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
     if(input$doc_type==2){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
     if(input$doc_type==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=date_asc")}
     plot<-plot_ly(x=~total$count,y=reorder(total$mot,total$count),type="bar",customdata=total$url)
     plot<-layout(plot,xaxis=list(title="Nombre d'occurrences dans le corpus"))
+    return(onRender(plot,js))
+  }
+  if(input$visualiseur==4){
+    total<-select(tableau,ratio,mot,date,url)
+    if(input$resolution=="Mois"){total$size=10000*(total$ratio/sum(total$ratio))}
+    if(input$resolution=="Année"){total$size=1000*(total$ratio/sum(total$ratio))}
+    if(input$resolution=="Semaine"){total$size=100000*(total$ratio/sum(total$ratio))}
+    total<-total%>%group_by(mot)
+    plot<-plot_ly(x=~total$date,y=total$mot,type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,marker = list(size = ~total$size, opacity = 0.3))
+    plot<-layout(plot,xaxis=list(title=""))
     return(onRender(plot,js))
   }
   
@@ -207,7 +219,7 @@ Plot <- function(data,input){
   y_min = tableau$ribbon_down[which.min(tableau$loess)]
   plot = plot %>% layout(yaxis=list(range=c(y_min,y_max)))}
   #plot = plot %>% layout(hovermode = "x unified")
-  if(input$histogramme==T){
+  if(input$visualiseur==3){
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ", tableau$count)}
     else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date," : ", tableau$count)}
     else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ", tableau$count)}
@@ -385,7 +397,7 @@ SPlot <- function(data,input){
   }
   
   print(tableau)
-  if(input$histogramme==T){
+  if(input$visualiseur==3){
     plot=ggplot(data=tableau, aes(x = date, y = count, group=mot,fill=mot))+geom_bar(stat="identity",position=position_dodge())+xlab("")+ylab("")+
       theme_tufte()+ scale_fill_manual(values=customPalette)+
       theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.size = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
@@ -3185,7 +3197,9 @@ shinyServer(function(input, output,session){
     shinyjs::toggle(id = "mess",anim = F,condition = input$gallicloud==F)
   })
   observeEvent(input$joker, {
-    shinyjs::toggle(id = "histoJoker",anim = F,condition = input$joker)
+    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4),selected = 2)}
+    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4),selected = 1)}
+    
   })
   
   hide(id="gallicloud")
