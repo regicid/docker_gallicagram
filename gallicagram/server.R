@@ -57,7 +57,7 @@ Plot <- function(data,input){
   }
   if(input$multicourbes==TRUE | input$doc_type==0){
     if(input$multicourbes==TRUE){tableau = memoire}
-    tableau$mot<-str_c(tableau$mot," (",tableau$langue,"/",tableau$bibli,"/",tableau$corpus,"/",tableau$search_mode,")")
+    tableau$mot<-str_c(tableau$mot,"<br>(",tableau$corpus,"/",tableau$langue,"/",tableau$search_mode,")")
     if(input$resolution=="Mois"){
       tableau<-tableau[tableau$resolution=="Mois",]
     }
@@ -80,7 +80,7 @@ Plot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   
-  tableau$mot[str_length(tableau$mot)>=30]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=30],30,"right"),"...")
+  tableau$mot[str_length(tableau$mot)>=60]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=60],60,"right"),"...")
   
   
   if(input$visualiseur==2){
@@ -315,7 +315,7 @@ SPlot <- function(data,input){
   }
   if(input$multicourbes==TRUE | input$doc_type==0){
     if(input$multicourbes==TRUE){tableau = memoire}
-    tableau$mot<-str_c(tableau$mot," (",tableau$langue,"/",tableau$bibli,"/",tableau$corpus,"/",tableau$search_mode,")")
+    tableau$mot<-str_c(tableau$mot," (",tableau$corpus,"/",tableau$langue,"/",tableau$search_mode,")")
     if(input$resolution=="Mois"){
       tableau<-tableau[tableau$resolution=="Mois",]
     }
