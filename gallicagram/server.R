@@ -182,6 +182,14 @@ Plot <- function(data,input){
     return(onRender(plot,js))
   }
   
+  if(input$visualiseur==5){
+    
+    plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(aes(color=mot))+geom_area(aes(fill=mot),alpha=0.3)+facet_wrap(~mot,ncol = 1)+xlab("")+ylab("")+
+      theme_tufte()+ scale_color_manual(values=customPalette)+ scale_fill_manual(values=customPalette)+
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="none", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+    plot=ggplotly(plot)
+    return(onRender(plot,js))
+  }
   
   if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
   else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
@@ -221,7 +229,8 @@ Plot <- function(data,input){
   y_max = tableau$ribbon_up[which.max(tableau$loess)]
   y_min = tableau$ribbon_down[which.min(tableau$loess)]
   plot = plot %>% layout(yaxis=list(range=c(y_min,y_max)))}
-  #plot = plot %>% layout(hovermode = "x unified")
+  
+  
   if(input$visualiseur==3){
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ", tableau$count)}
     else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date," : ", tableau$count)}
@@ -3200,8 +3209,8 @@ shinyServer(function(input, output,session){
     shinyjs::toggle(id = "mess",anim = F,condition = input$gallicloud==F)
   })
   observeEvent(input$joker, {
-    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4),selected = 2)}
-    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4),selected = 1)}
+    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4,"Densités"=5),selected = 2)}
+    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4,"Densités"=5),selected = 1)}
     
   })
   
