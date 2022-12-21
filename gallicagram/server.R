@@ -169,6 +169,7 @@ Plot <- function(data,input){
     plot<-plot_ly(x=~total$count,y=reorder(total$mot,total$count),type="bar",customdata=total$url,color=~total$mot,colors=customPalette)
     if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$count,y=reorder(total$mot,total$count),type="bar",customdata=total$url,color=~total$mot)}
     plot<-layout(plot,xaxis=list(title="Nombre d'occurrences dans le corpus"))
+    plot = layout(plot,showlegend=F)
     return(onRender(plot,js))
   }
   
