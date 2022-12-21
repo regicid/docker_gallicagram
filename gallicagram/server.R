@@ -315,7 +315,7 @@ SPlot <- function(data,input){
   }
   if(input$multicourbes==TRUE | input$doc_type==0){
     if(input$multicourbes==TRUE){tableau = memoire}
-    tableau$mot<-str_c(tableau$mot," (",tableau$corpus,"/",tableau$langue,"/",tableau$search_mode,")")
+    tableau$mot<-str_c(tableau$mot," \n(",tableau$corpus,"/",tableau$langue,"/",tableau$search_mode,")")
     if(input$resolution=="Mois"){
       tableau<-tableau[tableau$resolution=="Mois",]
     }
