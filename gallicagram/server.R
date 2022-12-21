@@ -172,24 +172,6 @@ Plot <- function(data,input){
   }
   
   
-  if(input$visualiseur==4){
-    total<-select(tableau,ratio,mot,date,url)
-    total<-total%>%group_by(mot)
-    plot<-plot_ly(x=~total$date,y=total$mot,type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,colors=customPalette,size = ~total$ratio,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3))
-    if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$date,y=total$mot,type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,size = ~total$ratio,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3))}
-    plot<-layout(plot,xaxis=list(title=""))
-    plot = layout(plot,showlegend=F)
-    return(onRender(plot,js))
-  }
-  
-  if(input$visualiseur==5){
-    
-    plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(aes(color=mot))+geom_area(aes(fill=mot),alpha=0.3)+facet_wrap(~mot,ncol = 1)+xlab("")+ylab("")+
-      theme_tufte()+ scale_color_manual(values=customPalette)+ scale_fill_manual(values=customPalette)+
-      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="none", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
-    plot=ggplotly(plot)
-    return(onRender(plot,js))
-  }
   
   if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
   else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date,": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
@@ -204,6 +186,32 @@ Plot <- function(data,input){
     y <- list(title = "Fréquence dans le corpus",titlefont = 41,tickformat = digit_number,spikecolor="grey")
     if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41,spikecolor="grey")}
   }
+  
+  
+  if(input$visualiseur==4){
+    total<-tableau
+    total$hovers<-str_c(total$mot," : ",total$hovers)
+    total<-total%>%group_by(mot)
+    plot<-plot_ly(x=~total$date,y=total$mot,type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,colors=customPalette,size = ~total$ratio,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3),text=~total$hovers,hoverinfo="text")
+    if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$date,y=total$mot,type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,size = ~total$ratio,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3),text=~total$hovers,hoverinfo="text")}
+    plot<-layout(plot,xaxis=list(title=""))
+    plot = layout(plot,showlegend=F)
+    return(onRender(plot,js))
+  }
+  
+  if(input$visualiseur==5){
+    plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(aes(color=mot))+geom_area(aes(fill=mot,text=map(paste('<b>',mot,':</b>', hovers, '<br>'), HTML)),alpha=0.3)+facet_wrap(~mot,ncol = 1)+xlab("")+ylab("")+
+      theme_tufte()+ scale_color_manual(values=customPalette)+ scale_fill_manual(values=customPalette)+
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="none", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+    if(length(unique(tableau$mot))>9){
+      plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(aes(color=mot))+geom_area(aes(fill=mot,text=map(paste('<b>',mot,':</b>', hovers, '<br>'), HTML)),alpha=0.3)+facet_wrap(~mot,ncol = 1)+xlab("")+ylab("")+
+        theme_tufte()+
+        theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.line.x = element_line(colour = "black"),axis.line.y = element_line(colour = "black"),legend.title= element_blank(),legend.position="none", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+    }
+    plot=ggplotly(plot,tooltip = c("text"))
+    return(onRender(plot,js))
+  }
+  
   loess = tableau$loess
   base = tableau$base
   tableau$ribbon_down = loess-1.96*sqrt(loess*(1-loess)/base)
@@ -3209,8 +3217,8 @@ shinyServer(function(input, output,session){
     shinyjs::toggle(id = "mess",anim = F,condition = input$gallicloud==F)
   })
   observeEvent(input$joker, {
-    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4,"Densités"=5),selected = 2)}
-    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4,"Densités"=5),selected = 1)}
+    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5),selected = 2)}
+    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5),selected = 1)}
     
   })
   

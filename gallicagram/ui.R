@@ -135,7 +135,7 @@ shinyUI(bootstrapPage(
                                                       div(id="clip",style="display: inline-block;vertical-align:middle;float:right",rclipButton("clipbtn", "Citation",clipText = "Azoulay, B., & de Courson, B. (2021, December 8). Gallicagram : un outil de lexicométrie pour la recherche. https://doi.org/10.31235/osf.io/84bf3",icon = icon("clipboard"))),
                                                       div(id="article",style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Article de recherche",onclick ="window.open('https://osf.io/preprints/socarxiv/84bf3/', '_blank')")),
                                                       div(id="pyllicagram",style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Pyllicagram",onclick ="window.open('https://github.com/regicid/pyllicagram', '_blank')")),
-                                                      div(style="display: inline-block;vertical-align:middle;float:right;width:100px;margin-top:-20px",selectInput("visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4,"Densités"=5),selected = 1))),
+                                                      div(style="display: inline-block;vertical-align:middle;float:right;width:100px;margin-top:-20px",selectInput("visualiseur", "",choices = list("Courbes"=1, "Barres"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5),selected = 1))),
                                                       plotlyOutput("plot"),
                                                       plotOutput("cloud")
                                                       )),
