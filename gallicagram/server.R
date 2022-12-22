@@ -29,6 +29,7 @@ library(gtrendsR)
 library(timetk)
 library(jsonlite)
 library(ggwordcloud)
+library(shinyalert)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -3236,6 +3237,23 @@ cartoGramme<-function(fra,titre,from,to,colorscale){
 options(shiny.maxRequestSize = 100*1024^2)
 
 shinyServer(function(input, output,session){
+  shinyalert(
+    title = "Vous utilisez Gallicagram pour vos recherches ? Citez nous !",
+    text = "https://osf.io/preprints/socarxiv/84bf3/",
+    size = "s", 
+    closeOnEsc = TRUE,
+    closeOnClickOutside = TRUE,
+    html = TRUE,
+    type = "",
+    showConfirmButton = TRUE,
+    showCancelButton = FALSE,
+    confirmButtonText = "OK",
+    confirmButtonCol = "#377EB8",
+    timer = 4000,
+    imageUrl = "",
+    animation = TRUE
+  )
+  
   observeEvent(input$isMobile,{
     if(input$isMobile==T){
       shinyjs::hide(id="Sidebar",anim = T)
@@ -4572,4 +4590,5 @@ shinyServer(function(input, output,session){
   })
   
   shinyOptions(progress.style="old")
+  
 })
