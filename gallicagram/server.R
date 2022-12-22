@@ -3500,24 +3500,25 @@ shinyServer(function(input, output,session){
       }
       
     })
-  
+  table_corpus<-read.csv("corpus.csv",fileEncoding = "UTF-8",sep=",")
+  print(table_corpus)
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste("data_",input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.csv', sep='')
+      paste("data_",input$mot,"_",input$beginning,"_",input$end,"_",table_corpus$Corpus[input$doc_type==table_corpus$ID],'.csv', sep='')
     },
     content = function(con) {
       write.csv(data$tableau, con,row.names = F,fileEncoding = "UTF-8")
     })
   output$downloadPlot <- downloadHandler(
     filename = function() {
-      paste('plot_',input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.html', sep='')
+      paste(input$mot,"_",input$beginning,"_",input$end,"_",table_corpus$Corpus[input$doc_type==table_corpus$ID],'.html', sep='')
     },
     content = function(con) {
       htmlwidgets::saveWidget(as_widget(Plot(data,input)), con)
     })
   output$downloadSPlot <- downloadHandler(
     filename = function() {
-      paste('Splot_',input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.png', sep='')
+      paste(input$mot,"_",input$beginning,"_",input$end,"_",table_corpus$Corpus[input$doc_type==table_corpus$ID],'.png', sep='')
     },
     content = function(filename) {
       save_plot(filename,SPlot(data,input))
@@ -3864,7 +3865,7 @@ shinyServer(function(input, output,session){
     
     output$downloadData <- downloadHandler(
       filename = function() {
-        paste("gallicagram_",input$mot,"_",input$beginning,"_",input$end,'.csv', sep='')
+        paste("data_",input$mot,"_",input$beginning,"_",input$end,table_corpus$Corpus[input$doc_type==table_corpus$ID],'.csv', sep='')
       },
       content = function(con) {
         if((input$doc_type==2 | input$doc_type == 3 | input$doc_type==4) & input$search_mode==2){write.csv(df$tableau_page, con,row.names = F,fileEncoding = "UTF-8")}
@@ -3873,14 +3874,14 @@ shinyServer(function(input, output,session){
       })
     output$downloadPlot <- downloadHandler(
       filename = function() {
-        paste('plot_',input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.html', sep='')
+        paste(input$mot,"_",input$beginning,"_",input$end,"_",table_corpus$Corpus[input$doc_type==table_corpus$ID],'.html', sep='')
       },
       content = function(con) {
         htmlwidgets::saveWidget(as_widget(Plot(df,input)), con)
       })
     output$downloadSPlot <- downloadHandler(
       filename = function() {
-        paste('Splot_',input$mot,"_",input$beginning,"_",input$end,"_",input$doc_type,'.png', sep='')
+        paste(input$mot,"_",input$beginning,"_",input$end,"_",table_corpus$Corpus[input$doc_type==table_corpus$ID],'.png', sep='')
       },
       content = function(filename) {
         save_plot(filename,SPlot(df,input))

@@ -1,54 +1,52 @@
-"Corpus","Type de documents","Langue","Mode de recherche"
-"Gallica-presse 1789-1950 / Le Monde 1945-2022","Presse ancienne et contemporaine","Français","N-gramme offline"
-"Presse française – Gallica","Presse ancienne","Français","N-gramme offline & Document online"
-"Recherche par titre de presse – Gallica","Presse ancienne","Français","Document online"
-"Livres – Gallica","Livres","Français","N-gramme offline & Document online"
-"Corpus personnalisé – Gallica","Divers","Français","Document online"
-"Livres+Presse – Gallica","Presse ancienne et livres","Français","N-gramme offline & Document online"
-"Le Monde","Presse contemporaine","Français","N-gramme offline"
-"Le Figaro","Presse contemporaine","Français","Article online"
-"Presse française – MediaCloud","Presse contemporaine","Français","Article online"
-"Presse suisse-romande – Bibliothèque nationale suisse","Presse ancienne","Français","Article online"
-"Presse wallonne – KBR","Presse ancienne","Français","Page online"
-"Presse luxembourgeoise – eLuxemburgensia","Presse ancienne","Français","Article online"
-"Presse québécoise – BanQ","Presse ancienne et contemporaine","Français","Document online"
-"Livres – Ngram Viewer Français","Livres","Français","N-gramme online"
-"Google Trends – France","Recherches web","Français","Gtrends"
-"Presse Auvergne-Rhône-Alpes – Lectura","Presse ancienne régionale","Français","Page online"
-"Presse du sillon lorain – Limédia","Presse ancienne régionale","Français","Document online"
-"Presse méridionale – Mémonum","Presse ancienne régionale","Français","Document online"
-"Presse de Saint-Denis – Commun-Patrimoine","Presse ancienne régionale","Français","Document online"
-"Presse de Brest – Yroise","Presse ancienne régionale","Français","Document online"
-"Presse des Pyrénées – Pireneas","Presse ancienne régionale","Français","Document online"
-"Presse toulousaine – Rosalis","Presse ancienne régionale","Français","Document online"
-"Presse diplomatique – Bibliothèque diplomatique numérique","Presse ancienne spécialisée","Français","Document online"
-"Presse francophone – RFN","Presse ancienne régionale","Français","Document online"
-"Presse alsacienne – Numistral","Presse ancienne régionale","Français","Document online"
-"Presse de Roubaix – BN-R","Presse ancienne régionale","Français","Document online"
-"Isidore","Travaux de recherche","Français","Document online"
-"Cairn.info","Travaux de recherche","Français","Document online"
-"Theses.fr","Travaux de recherche","Français","Document online"
-"HAL-SHS","Travaux de recherche","Français","Document online"
-"MusixMatch – Français","Paroles de chansons","Français","Document online"
-"Gallica-presse (1789/1950) + Le Monde (1951-2022)","Presse ancienne et contemporaine","Français","N-gramme offline"
-"Presse allemande – Deutsche digitale bibliothek","Presse ancienne","Allemand","Document online"
-"Presse allemande – Europeana","Presse ancienne","Allemand","Document online"
-"Presse austro-hongroise – ANNO","Presse ancienne","Allemand","Document online"
-"Presse suisse-allemande – Bibliothèque nationale suisse","Presse ancienne","Allemand","Article online"
-"Presse germanophone – MediaCloud","Presse contemporaine","Allemand","Article online"
-"Livres – Ngram Viewer Allemand","Livres","Allemand","N-gramme online"
-"MusixMatch – Allemand","Paroles de chansons","Allemand","Document online"
-"Presse britannique – BNA","Presse ancienne et contemporaine","Anglais","Article online"
-"Presse australienne – Trove","Presse ancienne","Anglais","Article online"
-"Presse américaine – Library of Congress","Presse ancienne","Anglais","Page online"
-"Presse anglophone – MediaCloud","Presse contemporaine","Anglais","Article online"
-"Livres – Ngram Viewer Anglais","Livres","Anglais","N-gramme online"
-"MusixMatch – Anglais","Paroles de chansons","Anglais","Document online"
-"Presse néerlandaise – Europeana","Presse ancienne","Néerlandais","Document online"
-"Presse flamande – KBR","Presse ancienne","Néerlandais","Page online"
-"Presse néerlandophone – MediaCloud","Presse contemporaine","Néerlandais","Article online"
-"MusixMatch – Néerlandais","Paroles de chansons","Néerlandais","Document online"
-"Presse espagnole – BNE","Presse ancienne et contemporaine","Espagnol","Page online"
-"Presse hispanophone – MediaCloud","Presse contemporaine","Espagnol","Article online"
-"Livres – Ngram Viewer Espagnol","Livres","Espagnol","N-gramme online"
-"MusixMatch – Espagnol","Paroles de chansons","Espagnol","Document online"
+"Corpus","Type de documents","Langue","Mode de recherche","ID"
+"Gallica-presse 1789-1950 / Le Monde 1945-2022","Presse ancienne et contemporaine","Français","N-gramme offline",0
+"Presse française – Gallica","Presse ancienne","Français","N-gramme offline & Document online",1
+"Recherche par titre de presse – Gallica","Presse ancienne","Français","Document online",3
+"Livres – Gallica","Livres","Français","N-gramme offline & Document online",2
+"Corpus personnalisé – Gallica","Divers","Français","Document online",4
+"Livres+Presse – Gallica","Presse ancienne et livres","Français","N-gramme offline & Document online",56
+"Le Monde","Presse contemporaine","Français","N-gramme offline",30
+"Le Figaro","Presse contemporaine","Français","Article online",31
+"Presse française – MediaCloud","Presse contemporaine","Français","Article online",50
+"Presse suisse-romande – Bibliothèque nationale suisse","Presse ancienne","Français","Article online",15
+"Presse wallonne – KBR","Presse ancienne","Français","Page online",13
+"Presse québécoise – BanQ","Presse ancienne et contemporaine","Français","Document online",28
+"Livres – Ngram Viewer Français","Livres","Français","N-gramme online",5
+"Google Trends – France","Recherches web","Français","Gtrends",44
+"Presse Auvergne-Rhône-Alpes – Lectura","Presse ancienne régionale","Français","Page online",17
+"Presse du sillon lorain – Limédia","Presse ancienne régionale","Français","Document online",18
+"Presse méridionale – Mémonum","Presse ancienne régionale","Français","Document online",19
+"Presse de Saint-Denis – Commun-Patrimoine","Presse ancienne régionale","Français","Document online",20
+"Presse de Brest – Yroise","Presse ancienne régionale","Français","Document online",21
+"Presse des Pyrénées – Pireneas","Presse ancienne régionale","Français","Document online",22
+"Presse toulousaine – Rosalis","Presse ancienne régionale","Français","Document online",23
+"Presse diplomatique – Bibliothèque diplomatique numérique","Presse ancienne spécialisée","Français","Document online",24
+"Presse francophone – RFN","Presse ancienne régionale","Français","Document online",25
+"Presse alsacienne – Numistral","Presse ancienne régionale","Français","Document online",26
+"Presse de Roubaix – BN-R","Presse ancienne régionale","Français","Document online",27
+"Isidore","Travaux de recherche","Français","Document online",36
+"Cairn.info","Travaux de recherche","Français","Document online",32
+"Theses.fr","Travaux de recherche","Français","Document online",33
+"HAL-SHS","Travaux de recherche","Français","Document online",34
+"MusixMatch – Français","Paroles de chansons","Français","Document online",45
+"Presse allemande – Deutsche digitale bibliothek","Presse ancienne","Allemand","Document online",43
+"Presse allemande – Europeana","Presse ancienne","Allemand","Document online",6
+"Presse austro-hongroise – ANNO","Presse ancienne","Allemand","Document online",29
+"Presse suisse-allemande – Bibliothèque nationale suisse","Presse ancienne","Allemand","Article online",16
+"Presse germanophone – MediaCloud","Presse contemporaine","Allemand","Article online",52
+"Livres – Ngram Viewer Allemand","Livres","Allemand","N-gramme online",9
+"MusixMatch – Allemand","Paroles de chansons","Allemand","Document online",47
+"Presse britannique – BNA","Presse ancienne et contemporaine","Anglais","Article online",8
+"Presse australienne – Trove","Presse ancienne","Anglais","Article online",35
+"Presse américaine – Library of Congress","Presse ancienne","Anglais","Page online",42
+"Presse anglophone – MediaCloud","Presse contemporaine","Anglais","Article online",51
+"Livres – Ngram Viewer Anglais","Livres","Anglais","N-gramme online",10
+"MusixMatch – Anglais","Paroles de chansons","Anglais","Document online",46
+"Presse néerlandaise – Europeana","Presse ancienne","Néerlandais","Document online",7
+"Presse flamande – KBR","Presse ancienne","Néerlandais","Page online",14
+"Presse néerlandophone – MediaCloud","Presse contemporaine","Néerlandais","Article online",53
+"MusixMatch – Néerlandais","Paroles de chansons","Néerlandais","Document online",48
+"Presse espagnole – BNE","Presse ancienne et contemporaine","Espagnol","Page online",11
+"Presse hispanophone – MediaCloud","Presse contemporaine","Espagnol","Article online",54
+"Livres – Ngram Viewer Espagnol","Livres","Espagnol","N-gramme online",12
+"MusixMatch – Espagnol","Paroles de chansons","Espagnol","Document online",49
