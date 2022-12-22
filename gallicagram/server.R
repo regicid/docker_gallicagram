@@ -1056,7 +1056,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       }
       
       if(input$doc_type==30 | gallicagram==2){
-        if(nb<=3){
+        if(nb<=4){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
           gram<-"gram"
           base<-read.csv(str_c("lemonde",nb,".csv"))
