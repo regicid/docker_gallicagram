@@ -84,6 +84,11 @@ Plot <- function(data,input){
   
   if(input$visualiseur==6){
     library(FactoMineR)
+    library(tidyr)
+    if(data[["resolution"]]=="Année"){
+      tableau$date<-str_extract(tableau$date,"....")}
+    if(data[["resolution"]]=="Mois"){
+      tableau$date<-str_extract(tableau$date,".......")}
     total<-select(tableau,mot,date,ratio)
     a=spread(total, mot,ratio)
     rownames(a)=a$date
@@ -349,6 +354,24 @@ SPlot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   Title = paste("")
+  
+  
+  if(input$visualiseur==6){
+    library(FactoMineR)
+    library(tidyr)
+    if(data[["resolution"]]=="Année"){
+      tableau$date<-str_extract(tableau$date,"....")}
+    if(data[["resolution"]]=="Mois"){
+      tableau$date<-str_extract(tableau$date,".......")}
+    total<-select(tableau,mot,date,ratio)
+    a=spread(total, mot,ratio)
+    rownames(a)=a$date
+    a<-a[,-1]
+    res.pca=PCA(a,scale.unit = TRUE)
+    library(factoextra)
+    plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")
+    return(plot)
+  }
   
   tableau$scale<-tableau$ratio
   
