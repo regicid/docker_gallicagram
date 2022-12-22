@@ -201,12 +201,12 @@ Plot <- function(data,input){
   
   if(input$visualiseur==5){
     plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(aes(color=mot))+geom_area(aes(fill=mot,text=map(paste('<b>',mot,':</b>', hovers, '<br>'), HTML)),alpha=0.3)+facet_wrap(~mot,ncol = 1)+xlab("")+ylab("")+
-      theme_tufte()+ scale_color_manual(values=customPalette)+ scale_fill_manual(values=customPalette)+
-      theme(plot.background = element_rect(fill = 'white', colour = 'white'),panel.margin.y = unit(0, "lines"),axis.line.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),strip.background = element_blank(), strip.text.x = element_blank(),axis.line.x = element_line(colour = "black"),legend.title= element_blank(),legend.position="none", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+      theme_tufte()+ scale_color_manual(values=customPalette,name=NULL)+ scale_fill_manual(values=customPalette,name=NULL)+
+      theme(plot.background = element_rect(fill = 'white', colour = 'white'),panel.margin.y = unit(0, "lines"),axis.line.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),strip.background = element_blank(), strip.text.x = element_blank(),axis.line.x = element_line(colour = "black"),legend.title= element_blank(), legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
     if(length(unique(tableau$mot))>9){
       plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(aes(color=mot))+geom_area(aes(fill=mot,text=map(paste('<b>',mot,':</b>', hovers, '<br>'), HTML)),alpha=0.3)+facet_wrap(~mot,ncol = 1)+xlab("")+ylab("")+
-        theme_tufte()+
-        theme(plot.background = element_rect(fill = 'white', colour = 'white'),panel.margin.y = unit(0, "lines"),axis.line.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),strip.background = element_blank(), strip.text.x = element_blank(),axis.line.x = element_line(colour = "black"),legend.title= element_blank(),legend.position="none", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+        theme_tufte()+scale_color_discrete(name=NULL)+
+        theme(plot.background = element_rect(fill = 'white', colour = 'white'),panel.margin.y = unit(0, "lines"),axis.line.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),strip.background = element_blank(), strip.text.x = element_blank(),axis.line.x = element_line(colour = "black"),legend.title= element_blank(), legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
     }
     plot=ggplotly(plot,tooltip = c("text"))
     return(onRender(plot,js))
@@ -423,13 +423,13 @@ SPlot <- function(data,input){
   }
   else{
     if(input$visualiseur==5){
-      plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(aes(color=mot))+geom_area(aes(fill=mot),alpha=0.3)+facet_wrap(~mot,ncol = 1)+xlab("")+ylab("")+
-        theme_tufte()+ scale_color_manual(values=customPalette)+ scale_fill_manual(values=customPalette)+
-        theme(plot.background = element_rect(fill = 'white', colour = 'white'),panel.margin.y = unit(0, "lines"),axis.line.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),strip.background = element_blank(), strip.text.x = element_blank(),axis.line.x = element_line(colour = "black"),legend.title= element_blank(),legend.position="none", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+      plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_area(aes(fill=mot),alpha=0.3)+facet_wrap(~mot,ncol = 1)+xlab("")+ylab("")+
+        theme_tufte()+ scale_color_manual(values=customPalette,name=NULL)+ scale_fill_manual(values=customPalette)+
+        theme(plot.background = element_rect(fill = 'white', colour = 'white'),panel.margin.y = unit(0, "lines"),axis.line.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),strip.background = element_blank(), strip.text.x = element_blank(),axis.line.x = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
       if(length(unique(tableau$mot))>9){
-        plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(aes(color=mot))+geom_area(aes(fill=mot),alpha=0.3)+facet_wrap(~mot,ncol = 1)+xlab("")+ylab("")+
-          theme_tufte()+
-          theme(plot.background = element_rect(fill = 'white', colour = 'white'),panel.margin.y = unit(0, "lines"),axis.line.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),strip.background = element_blank(), strip.text.x = element_blank(),axis.line.x = element_line(colour = "black"),legend.title= element_blank(),legend.position="none", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
+        plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+geom_area(aes(fill=mot),alpha=0.3)+facet_wrap(~mot,ncol = 1)+xlab("")+ylab("")+
+          theme_tufte()+scale_color_discrete(name=NULL)+
+          theme(plot.background = element_rect(fill = 'white', colour = 'white'),panel.margin.y = unit(0, "lines"),axis.line.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),strip.background = element_blank(), strip.text.x = element_blank(),axis.line.x = element_line(colour = "black"),legend.title= element_blank(),legend.position="bottom", legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
       }
     }else if(input$scale==TRUE |input$multicourbes==TRUE){
       plot=ggplot(data=tableau, aes(x = date, y = loess, group=mot))+ geom_line(data = spline.d,aes(x=x,y=y,group=mot,color=mot),size=.7)+xlab("")+ylab("")+
