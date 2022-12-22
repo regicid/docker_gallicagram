@@ -82,7 +82,18 @@ Plot <- function(data,input){
   
   tableau$mot[str_length(tableau$mot)>=60]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=60],60,"right"),"...")
   
-  
+  if(input$visualiseur==6){
+    library(FactoMineR)
+    total<-select(tableau,mot,date,ratio)
+    a=spread(total, mot,ratio)
+    rownames(a)=a$date
+    a<-a[,-1]
+    res.pca=PCA(a,scale.unit = TRUE)
+    library(factoextra)
+    bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")
+    plot=ggplotly(bb)
+    return(onRender(plot,js))
+    }
   
   tableau$scale<-tableau$ratio
   
@@ -3239,8 +3250,8 @@ shinyServer(function(input, output,session){
     shinyjs::toggle(id = "mess",anim = F,condition = input$gallicloud==F)
   })
   observeEvent(input$joker, {
-    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5),selected = 2)}
-    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5),selected = 1)}
+    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"AFC"=6),selected = 2)}
+    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"AFC"=6),selected = 1)}
     
   })
   
@@ -3501,7 +3512,7 @@ shinyServer(function(input, output,session){
       
     })
   table_corpus<-read.csv("corpus.csv",fileEncoding = "UTF-8",sep=",")
-  print(table_corpus)
+  
   output$downloadData <- downloadHandler(
     filename = function() {
       paste("data_",input$mot,"_",input$beginning,"_",input$end,"_",table_corpus$Corpus[input$doc_type==table_corpus$ID],'.csv', sep='')
