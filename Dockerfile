@@ -81,6 +81,10 @@ RUN R -e "install.packages(c('ggwordcloud'), repos='https://cloud.r-project.org/
 
 RUN R -e "install.packages(c('FactoMineR'), repos='https://cloud.r-project.org/')"
 
+RUN R -e "install.packages(c('chron'), repos='https://cloud.r-project.org/')"
+
+RUN R -e "install.packages(c('FactoMineR'), repos='https://cloud.r-project.org/')"
+
 # copy the app to the image
 RUN mkdir /root/gallicagram
 COPY gallicagram /root/gallicagram
