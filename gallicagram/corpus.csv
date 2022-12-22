@@ -1,4 +1,5 @@
 "Corpus","Type de documents","Langue","Mode de recherche"
+"Gallica-presse 1789-1950 / Le Monde 1945-2022","Presse ancienne et contemporaine","Français","N-gramme offline"
 "Presse française – Gallica","Presse ancienne","Français","N-gramme offline & Document online"
 "Recherche par titre de presse – Gallica","Presse ancienne","Français","Document online"
 "Livres – Gallica","Livres","Français","N-gramme offline & Document online"
@@ -9,6 +10,7 @@
 "Presse française – MediaCloud","Presse contemporaine","Français","Article online"
 "Presse suisse-romande – Bibliothèque nationale suisse","Presse ancienne","Français","Article online"
 "Presse wallonne – KBR","Presse ancienne","Français","Page online"
+"Presse luxembourgeoise – eLuxemburgensia","Presse ancienne","Français","Article online"
 "Presse québécoise – BanQ","Presse ancienne et contemporaine","Français","Document online"
 "Livres – Ngram Viewer Français","Livres","Français","N-gramme online"
 "Google Trends – France","Recherches web","Français","Gtrends"
