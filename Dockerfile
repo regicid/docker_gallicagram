@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y \
-	libnlopt-dev
+	libnlopt-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get upgrade --yes
