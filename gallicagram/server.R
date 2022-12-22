@@ -1315,7 +1315,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   on.exit(progress$close())
   progress$set(message = "Patience...", value = 0)
   
-  if(doc_type==13 | doc_type==14 | doc_type==28 | doc_type==29 | doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40| doc_type==55){
+  if(doc_type==13 | doc_type==14 | doc_type==28 | doc_type==29 | doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40| doc_type==55 | doc_type==57){
     if(se=="windows"){system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
       rD <- rsDriver(browser = "firefox", port = 4444L)
       remDr <- rD[["client"]]}
@@ -1792,6 +1792,20 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             if (resolution=="Année"){
               url<-str_c("https://lemarin.ouest-france.fr/archives/search/%22",mot1,"%22/92c8b815583ded5ee58155129533fdfe/",y,"-01-01/",y,"-12-31/page")
               url_base<-str_c("https://lemarin.ouest-france.fr/archives/search/%20/92c8b815583ded5ee58155129533fdfe/",y,"-01-01/",y,"-12-31/page")
+            }
+          }
+          if(doc_type == 57){
+            if(resolution=="Mois"){
+              z = as.character(j)
+              if(nchar(z)<2){z<-str_c("0",z)}
+              beginning = str_c(y,"-",z,"-01")
+              end = str_c(y,"-",z,"-",end_of_month[j])
+              url<-str_c("https://eluxemburgensia.lu/search?query=",mot1,"&documentType=newspaper,serial&type=CORRECTIONS,SUPPLEMENT,MAP_GROUP,Monograph,TITLE_SECTION,SHIPPING,ADVERTISEMENT_SECTION,ISSUE,APPENDIX,INDEX,Manuscript,WEATHER,VOLUME,PREFACE,COVER_SECTION,ARTICLE,BIBLIOGRAPHY,CONTRIBUTION,CHAPTER,Poster,REVIEW,SECTION,TABLE_OF_CONTENTS&startDate=",beginning,"&endDate=",end,"&rows=20&start=0&contains=true&exact=true")
+              url_base<-str_c("https://eluxemburgensia.lu/search?query=la&documentType=newspaper,serial&type=CORRECTIONS,SUPPLEMENT,MAP_GROUP,Monograph,TITLE_SECTION,SHIPPING,ADVERTISEMENT_SECTION,ISSUE,APPENDIX,INDEX,Manuscript,WEATHER,VOLUME,PREFACE,COVER_SECTION,ARTICLE,BIBLIOGRAPHY,CONTRIBUTION,CHAPTER,Poster,REVIEW,SECTION,TABLE_OF_CONTENTS&startDate=",beginning,"&endDate=",end,"&rows=20&start=0&contains=true&exact=true")
+            }
+            if (resolution=="Année"){
+              url<-str_c("https://eluxemburgensia.lu/search?query=",mot1,"&documentType=newspaper,serial&type=CORRECTIONS,SUPPLEMENT,MAP_GROUP,Monograph,TITLE_SECTION,SHIPPING,ADVERTISEMENT_SECTION,ISSUE,APPENDIX,INDEX,Manuscript,WEATHER,VOLUME,PREFACE,COVER_SECTION,ARTICLE,BIBLIOGRAPHY,CONTRIBUTION,CHAPTER,Poster,REVIEW,SECTION,TABLE_OF_CONTENTS&startDate=",y,"-01-01&endDate=",y,"-12-31&rows=20&start=0&contains=true&exact=true")
+              url_base<-str_c("https://eluxemburgensia.lu/search?query=la&documentType=newspaper,serial&type=CORRECTIONS,SUPPLEMENT,MAP_GROUP,Monograph,TITLE_SECTION,SHIPPING,ADVERTISEMENT_SECTION,ISSUE,APPENDIX,INDEX,Manuscript,WEATHER,VOLUME,PREFACE,COVER_SECTION,ARTICLE,BIBLIOGRAPHY,CONTRIBUTION,CHAPTER,Poster,REVIEW,SECTION,TABLE_OF_CONTENTS&startDate=",y,"-01-01&endDate=",y,"-12-31&rows=20&start=0&contains=true&exact=true")
             }
           }
           
@@ -3381,7 +3395,7 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse française / Gallica" = 1,"Recherche par titre de presse / Gallica" = 3, "Livres / Gallica" = 2, "Corpus personnalisé / Gallica"=4, "Livres+Presse / Gallica"=56),selected = 1)
       }
       else if(input$language == 1 & input$bibli==2){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15, "Presse wallonne / KBR"=13,"Presse luxembourgeoise / eLuxemburgensia"=57, "Presse québécoise / BAnQ"=28),selected = 15)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15, "Presse wallonne / KBR"=13, "Presse québécoise / BAnQ"=28),selected = 15)
       }
       else if(input$language == 1 & input$bibli==3){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse Auvergne-Rhône-Alpes / Lectura"=17, "Presse du sillon lorrain / Limedia"=18, "Presse méridionale / Mémonum"=19, "Presse de Saint-Denis / Commun-Patrimoine"=20, "Presse de Brest / Yroise"=21, "Presse des Pyrénées / Pireneas"=22, "Presse toulousaine / Rosalis"=23, "Presse diplomatique / Bibliothèque diplomatique numérique"=24, "Presse francophone / RFN"=25, "Presse alsacienne / Numistral"=26, "Presse de Roubaix / BN-R"=27),selected = 17)
