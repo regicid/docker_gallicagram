@@ -92,14 +92,18 @@ Plot <- function(data,input){
       tableau$date<-str_extract(tableau$date,".......")}
     total<-select(tableau,mot,date,ratio)
     a=spread(total, mot,ratio)
+    print("1-------------")
+    print(a$date)
     rownames(a)=a$date
+    print("2-------------")
+    print(rownames(a))
     a<-a[,-1]
     res.pca=PCA(a,scale.unit = TRUE)
     rownames(res.pca$ind$coord)=rownames(a)
+    print("3-------------")
     summary(res.pca)
     library(factoextra)
     bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")
-    summary(bb)
     plot=ggplotly(bb)
     return(onRender(plot,js))
     }
