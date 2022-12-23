@@ -92,21 +92,12 @@ Plot <- function(data,input){
       tableau$date<-str_extract(tableau$date,".......")}
     total<-select(tableau,mot,date,ratio)
     a=spread(total, mot,ratio)
-    print("1-------------")
-    print(a$date)
     rownames(a)=as.character(a$date)
     b=as.character(a$date)
-    print("2-------------")
-    
     a<-a[,-1]
     rownames(a)=b
-    print(rownames(a))
     res.pca=PCA(a,scale.unit = TRUE)
     rownames(res.pca$ind$coord)=rownames(a)
-    print("3-------------")
-    print(res.pca$ind$coord)
-    summary(res.pca$ind$coord)
-    summary(res.pca)
     library(factoextra)
     bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")
     plot=ggplotly(bb)
@@ -378,9 +369,12 @@ SPlot <- function(data,input){
       tableau$date<-str_extract(tableau$date,".......")}
     total<-select(tableau,mot,date,ratio)
     a=spread(total, mot,ratio)
-    rownames(a)=a$date
+    rownames(a)=as.character(a$date)
+    b=as.character(a$date)
     a<-a[,-1]
+    rownames(a)=b
     res.pca=PCA(a,scale.unit = TRUE)
+    rownames(res.pca$ind$coord)=rownames(a)
     library(factoextra)
     plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")
     return(plot)
