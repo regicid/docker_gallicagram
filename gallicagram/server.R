@@ -93,9 +93,9 @@ Plot <- function(data,input){
     total<-select(tableau,mot,date,ratio)
     a=spread(total, mot,ratio)
     rownames(a)=a$date
-    print(rownames(a))
     a<-a[,-1]
     res.pca=PCA(a,scale.unit = TRUE)
+    rownames(res.pca)=a$date
     summary(res.pca)
     library(factoextra)
     bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")
