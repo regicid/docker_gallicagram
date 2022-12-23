@@ -376,7 +376,7 @@ SPlot <- function(data,input){
     res.pca=PCA(a,scale.unit = TRUE)
     rownames(res.pca$ind$coord)=rownames(a)
     library(factoextra)
-    plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")
+    plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")+theme(plot.background = element_rect(fill = 'white', colour = 'white'))
     return(plot)
   }
   
