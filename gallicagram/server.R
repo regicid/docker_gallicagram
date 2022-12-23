@@ -96,8 +96,9 @@ Plot <- function(data,input){
     print(a$date)
     rownames(a)=as.character(a$date)
     print("2-------------")
-    print(rownames(a))
+    
     a<-a[,-1]
+    print(rownames(a))
     res.pca=PCA(a,scale.unit = TRUE)
     rownames(res.pca$ind$coord)=rownames(a)
     print("3-------------")
