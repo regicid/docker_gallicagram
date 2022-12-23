@@ -91,10 +91,9 @@ Plot <- function(data,input){
     if(data[["resolution"]]=="Mois"){
       tableau$date<-str_extract(tableau$date,".......")}
     total<-select(tableau,mot,date,ratio)
-    print(total$date)
     a=spread(total, mot,ratio)
-    print(a$date)
     rownames(a)=a$date
+    print(rownames(a))
     a<-a[,-1]
     res.pca=PCA(a,scale.unit = TRUE)
     library(factoextra)
