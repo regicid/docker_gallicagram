@@ -91,7 +91,9 @@ Plot <- function(data,input){
     if(data[["resolution"]]=="Mois"){
       tableau$date<-str_extract(tableau$date,".......")}
     total<-select(tableau,mot,date,ratio)
+    print(total$date)
     a=spread(total, mot,ratio)
+    print(a$date)
     rownames(a)=a$date
     a<-a[,-1]
     res.pca=PCA(a,scale.unit = TRUE)
@@ -3237,22 +3239,23 @@ cartoGramme<-function(fra,titre,from,to,colorscale){
 options(shiny.maxRequestSize = 100*1024^2)
 
 shinyServer(function(input, output,session){
-  shinyalert(
-    title = "Vous utilisez Gallicagram pour vos recherches ? Citez nous !",
-    text = "https://osf.io/preprints/socarxiv/84bf3/",
-    size = "s", 
-    closeOnEsc = TRUE,
-    closeOnClickOutside = TRUE,
-    html = TRUE,
-    type = "",
-    showConfirmButton = TRUE,
-    showCancelButton = FALSE,
-    confirmButtonText = "OK",
-    confirmButtonCol = "#377EB8",
-    timer = 4000,
-    imageUrl = "",
-    animation = TRUE
-  )
+  # shinyalert(
+  #   title = "Vous utilisez Gallicagram pour vos recherches ? Citez nous !",
+  #   text = "https://osf.io/preprints/socarxiv/84bf3/",
+  #   size = "s", 
+  #   closeOnEsc = TRUE,
+  #   closeOnClickOutside = TRUE,
+  #   html = TRUE,
+  #   type = "",
+  #   showConfirmButton = TRUE,
+  #   showCancelButton = FALSE,
+  #   confirmButtonText = "OK",
+  #   confirmButtonCol = "#377EB8",
+  #   timer = 4000,
+  #   imageUrl = "",
+  #   animation = TRUE
+  # )
+  show_modal_spinner()
   
   observeEvent(input$isMobile,{
     if(input$isMobile==T){
@@ -4591,4 +4594,5 @@ shinyServer(function(input, output,session){
   
   shinyOptions(progress.style="old")
   
+  remove_modal_spinner()
 })
