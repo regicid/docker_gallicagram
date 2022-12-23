@@ -95,7 +95,7 @@ Plot <- function(data,input){
     rownames(a)=a$date
     a<-a[,-1]
     res.pca=PCA(a,scale.unit = TRUE)
-    rownames(res.pca)=a$date
+    rownames(res.pca$ind$coord)=a$date
     summary(res.pca)
     library(factoextra)
     bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")
