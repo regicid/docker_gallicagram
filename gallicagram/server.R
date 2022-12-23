@@ -96,8 +96,10 @@ Plot <- function(data,input){
     print(rownames(a))
     a<-a[,-1]
     res.pca=PCA(a,scale.unit = TRUE)
+    summary(res.pca)
     library(factoextra)
     bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")
+    summary(bb)
     plot=ggplotly(bb)
     return(onRender(plot,js))
     }
