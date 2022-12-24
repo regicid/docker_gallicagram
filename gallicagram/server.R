@@ -960,12 +960,13 @@ jokerize<-function(input){
   if(nb>1){for(x in 2:nb){mot<-str_c(mot," ",table$ngram[x])}}
   
   if(input$doc_type==30){
-    if(nb>2){next}
-    if(nb<=2){
+    if(nb>3){next}
+    if(nb<=3){
       ngram_file<-str_c("/mnt/persistent/",nb+1,"gram_lemonde.db")
       gram<-"gram"
       if(nb==1){base<-read.csv("lemonde2.csv")}
       if(nb==2){base<-read.csv("lemonde3.csv")}
+      if(nb==3){base<-read.csv("lemonde4.csv")}
     }
   }
   
