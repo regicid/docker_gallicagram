@@ -1721,8 +1721,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           if(doc_type == 34){
-            url<-str_c("https://www.persee.fr/search?da=",y,"&q=%22",mot1,"%22")
-            url_base<-str_c("https://www.persee.fr/search?da=",y,"&q=%22les%22")
+            url<-str_c("https://www.persee.fr/search?l=fre&da=",y,"&q=%22",mot1,"%22")
+            url_base<-str_c("https://www.persee.fr/search?l=fre&da=",y,"&q=%22les%22")
           }
           if(doc_type == 35){
             if(resolution=="Mois"){
