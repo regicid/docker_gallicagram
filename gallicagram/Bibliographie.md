@@ -1,7 +1,7 @@
 # Bibliographie
 
 ## Articles décrivant Gallicagram
-- Benjamin Azoulay et Benoît de Courson, « Gallicagram, un outil de lexicométrie pour la recherche », 2021, https://osf.io/preprints/socarxiv/84bf3
+- Benjamin Azoulay et Benoît de Courson, « Gallicagram, un outil de lexicométrie pour la recherche », 2021, https://doi.org/10.31235/osf.io/84bf3
 - « Actualités - Gallicagram : un outil de lexicométrie pour la recherche », novembre 2021, https://odhn.ens.psl.eu/newsroom/gallicagram-un-outil-de-lexicometrie-pour-la-recherche
 - « Utiliser les API de Gallica : L'exemple de Gallicagram », https://api.bnf.fr/fr/gallicagram-un-outil-de-lexicographie
 - Anne Bugner, « Présentation critique d’un outil numérique à destination de la recherche en SHS : Gallicagram », Mémoire de master, 2022, Ecole nationale des chartes - PSL
