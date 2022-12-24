@@ -46,7 +46,7 @@ window.open(url);
 se="linux"
 
 Plot <- function(data,input){
-  
+  show_modal_spinner()
   tableau = data[["tableau"]]
   if(is.null(data[["tableau_page"]])==FALSE){
     if(input$search_mode==2){
@@ -101,6 +101,7 @@ Plot <- function(data,input){
     library(factoextra)
     bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")
     plot=ggplotly(bb)
+    remove_modal_spinner()
     return(onRender(plot,js))
     }
   if(input$visualiseur==7){
@@ -123,6 +124,7 @@ Plot <- function(data,input){
     plot=layout(plot,xaxis = list(title = "",zeroline = FALSE,showline = FALSE, showticklabels = FALSE, showgrid = FALSE),
               yaxis = list(title = "",zeroline = FALSE,showline = FALSE, showticklabels = FALSE, showgrid = FALSE),
               showlegend=F)
+    remove_modal_spinner()
     return(onRender(plot,js))
   }
   
@@ -212,6 +214,7 @@ Plot <- function(data,input){
     if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$count,y=reorder(total$mot,total$count),type="bar",customdata=total$url,color=~total$mot)}
     plot<-layout(plot,xaxis=list(title="Nombre d'occurrences dans le corpus"))
     plot = layout(plot,showlegend=F)
+    remove_modal_spinner()
     return(onRender(plot,js))
   }
   
@@ -238,6 +241,7 @@ Plot <- function(data,input){
     if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$date,y=reorder(total$mot, total$count, sum),type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,size = ~total$ratio,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3),text=~total$hovers,hoverinfo="text")}
     plot<-layout(plot,xaxis=list(title=""))
     plot = layout(plot,showlegend=F)
+    remove_modal_spinner()
     return(onRender(plot,js))
   }
   
@@ -251,6 +255,7 @@ Plot <- function(data,input){
         theme(plot.background = element_rect(fill = 'white', colour = 'white'),panel.margin.y = unit(0, "lines"),axis.line.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),strip.background = element_blank(), strip.text.x = element_blank(),axis.line.x = element_line(colour = "black"),legend.title= element_blank(), legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
     }
     plot=ggplotly(plot,tooltip = c("text"))
+    remove_modal_spinner()
     return(onRender(plot,js))
   }
   
@@ -334,13 +339,14 @@ Plot <- function(data,input){
     plot= plot%>%add_lines()
     plot = plotly::subplot(plot,plot1,nrows = 2,legend=NULL,shareX = T)
     plot=plot %>%  layout(xaxis = list(autorange = TRUE),  yaxis = list(autorange = TRUE))
+    remove_modal_spinner()
     return(onRender(plot,js))
   } else{
     plot=layout(plot)
     plot=plot %>%  layout(xaxis = list(autorange = TRUE),  yaxis = list(autorange = TRUE))
+    remove_modal_spinner()
     return(onRender(plot,js))
   }
-  
   
 }
 
