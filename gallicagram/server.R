@@ -1722,8 +1722,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           if(doc_type == 34){
-            url<-str_c("https://halshs.archives-ouvertes.fr/search/index/?qa%5Btext_fulltext%5D%5B%5D=",mot1,"&producedDateY_i=",y,"&language_s=fr")
-            url_base<-str_c("https://halshs.archives-ouvertes.fr/search/index/?qa%5Btext_fulltext%5D%5B%5D=le&producedDateY_i=",y,"&language_s=fr")
+            url<-str_c("https://www.persee.fr/search?da=",y,"&q=%22",mot1,"%22")
+            url_base<-str_c("https://www.persee.fr/search?da=",y,"&q=%22les%22")
           }
           if(doc_type == 35){
             if(resolution=="Mois"){
@@ -2237,16 +2237,16 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           }
           if(doc_type ==34){
             ngram<-read_html(RETRY("GET",url,times = 3))
-            a<-html_text(html_node(ngram,"#facets-list"))
-            a<-str_remove_all(a,"[:space:]")
-            a<-str_extract(a,"[:digit:]+résultats")
-            a<-str_remove_all(a,"résultats")
+            a<-html_text(ngram)
+            a<-str_extract(a,".+Résultats")
+            a=str_sub(a,-20)
+            a<-str_extract(a,"[:digit:]+")
             if(incr_mot==1){
               ngram_base<-read_html(RETRY("GET",url_base,times = 3))
-              b<-html_text(html_node(ngram_base,"#facets-list"))
-              b<-str_remove_all(b,"[:space:]")
-              b<-str_extract(b,"[:digit:]+résultats")
-              b<-str_remove_all(b,"résultats")
+              b<-html_text(ngram_base)
+              b<-str_extract(b,".+Résultats")
+              b=str_sub(b,-20)
+              b<-str_extract(b,"[:digit:]+")
             }
           }
           if(doc_type ==36){
@@ -2802,7 +2802,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$search_mode<-"Document"}
   if(doc_type==34){tableau$corpus="Scientifique"
   tableau$langue="Français"
-  tableau$bibli="HAL-SHS"
+  tableau$bibli="Persée"
   tableau$search_mode<-"Document"}
   if(doc_type==35){tableau$corpus="Presse"
   tableau$langue="Anglais"
@@ -3485,7 +3485,7 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Le Monde"=30, "Le Figaro"=31,"Presse française / MediaCloud"=50),selected = 30)#Le Marin 55
       }
       else if(input$language == 1 & input$bibli==5){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Isidore"=36,"Cairn.info"=32,"Theses.fr"=33,"HAL-SHS"=34),selected = 36)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Isidore"=36,"Cairn.info"=32,"Theses.fr"=33,"Persée"=34),selected = 36)
       }
       else if(input$language == 1 & input$bibli==7){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("MusixMatch / Français"=45),selected = 45)
@@ -3893,7 +3893,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type==30){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.lemonde.fr/', target=\'_blank\'> ","lemonde.fr","</a>"),sep = ""))}
     if(input$doc_type==32){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.cairn.info/', target=\'_blank\'> ","cairn.info","</a>"),sep = ""))}
     if(input$doc_type==33){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.theses.fr/', target=\'_blank\'> ","theses.fr","</a>"),sep = ""))}
-    if(input$doc_type==34){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://halshs.archives-ouvertes.fr/', target=\'_blank\'> ","halshs.archives-ouvertes.fr","</a>"),sep = ""))}
+    if(input$doc_type==34){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.persee.fr/', target=\'_blank\'> ","persee.fr","</a>"),sep = ""))}
     if(input$doc_type==35){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://trove.nla.gov.au/', target=\'_blank\'> ","trove.nla.gov.au","</a>"),sep = ""))}
     if(input$doc_type==36){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://isidore.science/', target=\'_blank\'> ","isidore.science","</a>"),sep = ""))}
     if(input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://ww.newspapers.com', target=\'_blank\'> ","newspapers.com","</a>"),sep = ""))}
