@@ -966,8 +966,7 @@ jokerize<-function(input){
       gram<-"gram"
       if(nb==1){base<-read.csv("lemonde2.csv")}
       if(nb==2){base<-read.csv("lemonde3.csv")}
-      if(nb==3){base<-read.csv("lemonde4.csv")
-      print("bla")}
+      if(nb==3){base<-read.csv("lemonde4.csv")}
     }
   }
   
