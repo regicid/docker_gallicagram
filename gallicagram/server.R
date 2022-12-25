@@ -306,7 +306,7 @@ Plot <- function(data,input){
       
     }
     else{
-    tableau$date=360*as.numeric(aaa)+30*as.numeric(bbb)+30
+    tableau$date=360*as.numeric(aaa)+30*as.numeric(bbb)
     plot = plot_ly(data=tableau,r=~loess, theta=~date,color =~mot,type='scatterpolar',mode='spline',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
     }
     plot=layout(plot,
@@ -319,7 +319,7 @@ Plot <- function(data,input){
                     direction = 'clockwise',
                     tickmode="array",
                     tickvals = seq(0, 360, 30),
-                    ticktext = as.array(c("novembre","décembre","janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre"))
+                    ticktext = as.array(c("décembre","janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre"))
                   ),
                   radialaxis = list(
                     showgrid = T,
