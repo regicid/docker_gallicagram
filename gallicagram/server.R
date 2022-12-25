@@ -301,7 +301,11 @@ Plot <- function(data,input){
       tableau$mois=bbb
       tableau<-tableau%>%group_by(mois,mot)%>%summarise(loess=mean(loess))
       tableau$date=as.numeric(tableau$mois)*30
-      
+      for (mot in unique(tableau$mot)) {
+        ccc=tableau[tableau$mot==mot,]
+        ccc=ccc[1,]
+        tableau=rbind(tableau,ccc)
+      }
       plot = plot_ly(data=tableau,r=~loess, theta=~date,color =~mot,type='scatterpolar',mode='spline',line = list(shape = "spline"),colors=customPalette,legendgroup=~mot)
       
     }
