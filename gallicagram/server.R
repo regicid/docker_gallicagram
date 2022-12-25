@@ -279,6 +279,32 @@ Plot <- function(data,input){
   y_min = tableau$ribbon_down[which.min(tableau$loess)]
   plot = plot %>% layout(yaxis=list(range=c(y_min,y_max)))}
   
+  if(input$visualiseur==8 & input$resolution=="Mois"){
+    aaa=str_extract(tableau$date,"....")
+    bbb=str_extract(tableau$date,".......")
+    bbb=str_remove(bbb,"....")
+    tableau$date=360*as.numeric(aaa)+30*as.numeric(bbb)+30
+    plot = plot_ly(data=tableau,r=~loess, theta=~date,color =~mot,type='scatterpolar',mode='spline',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
+    plot=layout(plot,
+                showlegend = T,
+                polar = list(
+                  angularaxis = list(
+                    showticklabels = TRUE,
+                    showgrid = FALSE,
+                    ticks = '',
+                    #direction = 'clockwise',
+                    tickmode="array",
+                    tickvals = seq(0, 360, 30),
+                    ticktext = as.array(c("janvier","décembre","novembre","octobre","septembre","août","juillet","juin","mai","avril","mars","février"))
+                  ),
+                  radialaxis = list(
+                    showgrid = FALSE,
+                    showticklabels = F,
+                    ticks = ''
+                  )
+                  ))
+    return(onRender(plot,js))
+  }
   
   if(input$visualiseur==3){
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ", tableau$count)}
@@ -3319,8 +3345,8 @@ shinyServer(function(input, output,session){
     shinyjs::toggle(id = "mess",anim = F,condition = input$gallicloud==F)
   })
   observeEvent(input$joker, {
-    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"AFC"=6,"Nuage de mots"=7),selected = 2)}
-    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"AFC"=6,"Nuage de mots"=7),selected = 1)}
+    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"AFC"=6,"Nuage de mots"=7,"Polaires"=8),selected = 2)}
+    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"AFC"=6,"Nuage de mots"=7,"Polaires"=8),selected = 1)}
     
   })
   
