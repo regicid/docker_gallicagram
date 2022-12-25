@@ -280,6 +280,19 @@ Plot <- function(data,input){
   plot = plot %>% layout(yaxis=list(range=c(y_min,y_max)))}
   
   if(input$visualiseur==8 & input$resolution=="Mois"){
+    if(input$loess==T){
+    for (mot in unique(tableau$mot)) {
+      z = which(tableau$mot==mot)
+      for(i in 1:length(z)){
+        j = max(i-floor(12/2),0)
+        k = i+ceil(12/2)
+        pond = tableau$base[z][j:k]
+        tableau$trend[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm = T)
+      }
+    }
+      tableau$loess=tableau$ratio-tableau$trend
+    }
+    
     aaa=str_extract(tableau$date,"....")
     bbb=str_extract(tableau$date,".......")
     bbb=str_remove(bbb,"....")
