@@ -311,7 +311,7 @@ Plot <- function(data,input){
                     ticktext = as.array(c("janvier","décembre","novembre","octobre","septembre","août","juillet","juin","mai","avril","mars","février"))
                   ),
                   radialaxis = list(
-                    showgrid = FALSE,
+                    showgrid = T,
                     showticklabels = F,
                     ticks = ''
                   )
