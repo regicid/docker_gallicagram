@@ -118,6 +118,8 @@ shinyUI(bootstrapPage(
                                                                      div(style = "margin-top: -15px"),
                                                                      checkboxInput("loess", "Lissage loess (tendances)", value = FALSE),
                                                                      div(style = "margin-top: -15px"),
+                                                                     checkboxInput("saisons", "Sommes mensuelles/saisonnalité", value = FALSE),
+                                                                     div(style = "margin-top: -15px"),
                                                                      checkboxInput("spline", "Spline dans le graphe scientifique", value = TRUE),
                                                                      div(style = "margin-top: -15px"),
                                                                      checkboxInput("points", "Points dans le graphe scientifique", value = TRUE),

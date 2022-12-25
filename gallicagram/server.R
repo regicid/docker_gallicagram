@@ -295,9 +295,22 @@ Plot <- function(data,input){
     
     aaa=str_extract(tableau$date,"....")
     bbb=str_extract(tableau$date,".......")
-    bbb=str_remove(bbb,"....")
+    bbb=str_remove(bbb,".....")
+    if(input$saisons==T){
+      tableau$annee=aaa
+      tableau$mois=bbb
+      tableau<-tableau%>%group_by(mois)%>%summarise(loess=mean(loess))
+      tableau[13,]=tableau[1,]
+      print(tableau)
+      tableau$date=as.numeric(tableau$mois)*30
+      
+      plot = plot_ly(data=tableau,r=~loess, theta=~date,color =~mot,type='scatterpolar',mode='spline',line = list(shape = "spline"),colors=customPalette,legendgroup=~mot)
+      
+    }
+    else{
     tableau$date=360*as.numeric(aaa)+30*as.numeric(bbb)+30
     plot = plot_ly(data=tableau,r=~loess, theta=~date,color =~mot,type='scatterpolar',mode='spline',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
+    }
     plot=layout(plot,
                 showlegend = T,
                 polar = list(
@@ -305,10 +318,10 @@ Plot <- function(data,input){
                     showticklabels = TRUE,
                     showgrid = FALSE,
                     ticks = '',
-                    #direction = 'clockwise',
+                    direction = 'clockwise',
                     tickmode="array",
                     tickvals = seq(0, 360, 30),
-                    ticktext = as.array(c("janvier","décembre","novembre","octobre","septembre","août","juillet","juin","mai","avril","mars","février"))
+                    ticktext = as.array(c("novembre","décembre","janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre"))
                   ),
                   radialaxis = list(
                     showgrid = T,
