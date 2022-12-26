@@ -51,7 +51,7 @@
 - Aires : graphique en aires figurant la fréquence d'occurrence de chacun des termes recherchés au cours du temps. Tri des termes par ordre décroissant en regard de la somme des occurrences sur l'ensemble de la période.
 - AFC : graphique figurant le résultat de l'analyse factorielle des correspondances pour les termes recherchés sur la période étudiée. Le graphique représente à la fois les termes et les dates selon les deux axes principaux calculés par l'AFC.
 - Nuage de mots : graphique en nuage de mots. Chaque bulle représente un terme de recherche sur l'ensemble de la période analysée. Son diamètre est proportionnel à la fréquence d'apparition du terme sur l'ensemble de la période.
-- Polaires : graphique en coordonnées polaires. Ce mode permet d'étudier la saisonnalité des termes recherchés. Ici la fonction rescale calcule la différence par rapport à la moyenne mobile sur douze mois. Une option avancée permet d'étudier les moyennes mensuelles sur l'ensemble de la période (un cercle par mot).
+- Polaires : graphique en coordonnées polaires. Ce mode permet d'étudier la saisonnalité des termes recherchés. Ici la fonction "loess" calcule la différence par rapport à la moyenne mobile sur douze mois. Une option avancée permet d'étudier les moyennes mensuelles sur l'ensemble de la période (un cercle par mot).
 
 ### Traitements
  - Le traitement des données extraites consiste au calcul pour chaque sous-séquence temporelle de la fréquence d’apparition du terme défini par l’utilisateur. Cette fréquence est le rapport des deux variables extraites (le nombre de résultats et le volume de la base) soit pour une sous-séquence temporelle  : 
