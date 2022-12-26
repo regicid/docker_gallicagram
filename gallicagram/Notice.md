@@ -43,6 +43,16 @@
 	- observer les corrélations pour un même terme entre les différents modes de recherche ;
 	- télécharger les graphes et les données du visualiseur ainsi que les données de la totalité de la session.
 
+### 8 Types de visualisation différents
+- Courbes : courbes d'évolution entourées de leur marge d'erreur calculée en fonction du volume de la base et de la fréquence d'occurrences du terme recherché. Présentation par défaut de Gallicagram.
+- Sommes : graphique en barres horizontales figurant la somme des occurrences des différents mots sur l'ensemble de la période étudiée. Tri par ordre décroissant d'occurrences.
+- Histogrammes : graphique en barres verticales figurant le nombre d'occurrences de chacun des termes recherchés au cours du temps.
+- Bulles : graphique en bulles figurant la fréquence d'occurrence de chacun des termes recherchés au cours du temps. Tri des termes par ordre décroissant en regard de la somme des occurrences sur l'ensemble de la période. La fonction rescale permet de faire apparaître les termes les moins fréquents.
+- Aires : graphique en aires figurant la fréquence d'occurrence de chacun des termes recherchés au cours du temps. Tri des termes par ordre décroissant en regard de la somme des occurrences sur l'ensemble de la période.
+- AFC : graphique figurant le résultat de l'analyse factorielle des correspondances pour les termes recherchés sur la période étudiée. Le graphique représente à la fois les termes et les dates selon les deux axes principaux calculés par l'AFC.
+- Nuage de mots : graphique en nuage de mots. Chaque bulle représente un terme de recherche sur l'ensemble de la période analysée. Son diamètre est proportionnel à la fréquence d'apparition du terme sur l'ensemble de la période.
+- Polaires : graphique en coordonnées polaires. Ce mode permet d'étudier la saisonnalité des termes recherchés. Ici la fonction rescale calcule la différence par rapport à la moyenne mobile sur douze mois. Une option avancée permet d'étudier les moyennes mensuelles sur l'ensemble de la période (un cercle par mot).
+
 ### Traitements
  - Le traitement des données extraites consiste au calcul pour chaque sous-séquence temporelle de la fréquence d’apparition du terme défini par l’utilisateur. Cette fréquence est le rapport des deux variables extraites (le nombre de résultats et le volume de la base) soit pour une sous-séquence temporelle  : 
 <script type="text/javascript"
