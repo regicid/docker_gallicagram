@@ -279,6 +279,20 @@ Plot <- function(data,input){
   y_min = tableau$ribbon_down[which.min(tableau$loess)]
   plot = plot %>% layout(yaxis=list(range=c(y_min,y_max)))}
   
+  if(input$visualiseur==1 & input$resolution=="Mois" & input$saisons==T){
+    aaa=str_extract(tableau$date,"....")
+    bbb=str_extract(tableau$date,".......")
+    bbb=str_remove(bbb,".....")
+      tableau$annee=aaa
+      tableau$mois=bbb
+      tableau<-tableau%>%group_by(mois,mot)%>%summarise(loess=mean(loess))
+      tableau$date=as.numeric(tableau$mois)
+      tableau$date=as.Date.character(str_c("2000-",tableau$date,"-01"))
+      plot = plot_ly(data=tableau,x=~date,y=~loess,color=~mot,type='scatter',mode='spline',line = list(shape = "spline"),colors=customPalette,legendgroup=~mot)
+      plot=layout(plot,xaxis = list(tickformat="%b"))
+    return(onRender(plot,js))
+  }
+  
   if(input$visualiseur==8 & input$resolution=="Mois"){
     if(input$loess==T){
     for (mot in unique(tableau$mot)) {
