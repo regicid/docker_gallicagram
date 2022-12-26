@@ -44,7 +44,7 @@
 	- télécharger les graphes et les données du visualiseur ainsi que les données de la totalité de la session.
 
 ### 8 Types de visualisation différents
-- Courbes : courbes d'évolution entourées de leur marge d'erreur calculée en fonction du volume de la base et de la fréquence d'occurrences du terme recherché. Présentation par défaut de Gallicagram.
+- Courbes : courbes d'évolution entourées de leur marge d'erreur calculée en fonction du volume de la base et de la fréquence d'occurrence du terme recherché. Présentation par défaut de Gallicagram.
 - Sommes : graphique en barres horizontales figurant la somme des occurrences des différents mots sur l'ensemble de la période étudiée. Tri par ordre décroissant d'occurrences.
 - Histogrammes : graphique en barres verticales figurant le nombre d'occurrences de chacun des termes recherchés au cours du temps.
 - Bulles : graphique en bulles figurant la fréquence d'occurrence de chacun des termes recherchés au cours du temps. Tri des termes par ordre décroissant en regard de la somme des occurrences sur l'ensemble de la période. La fonction rescale permet de faire apparaître les termes les moins fréquents.
