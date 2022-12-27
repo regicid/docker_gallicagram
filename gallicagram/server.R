@@ -3358,6 +3358,7 @@ shinyServer(function(input, output,session){
       shinyjs::hide(id="article")
       shinyjs::hide(id="pyllicagram")
       shinyjs::hide(id="mode")
+      shinyjs::hide(id="modemob2")
       observeEvent(input$do, {
         shinyjs::hide(id = "Sidebar")
       })
@@ -3366,7 +3367,6 @@ shinyServer(function(input, output,session){
       shinyjs::hide(id="menumob")
       shinyjs::hide(id="menumob2")
       shinyjs::hide(id="modemob")
-      shinyjs::hide(id="modemob2")
     }
   })
   
