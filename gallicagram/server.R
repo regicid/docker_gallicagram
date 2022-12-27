@@ -2602,10 +2602,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   #ngram_viewer
   
   if(doc_type==5 | doc_type==9 | doc_type==10 | doc_type==12){
-    if(doc_type==5){tableau=ngrami(mots,corpus = "fre_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)}
-    if(doc_type==9){tableau=ngrami(mots,corpus = "ger_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)}
-    if(doc_type==10){tableau=ngrami(mots,corpus = "eng_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)}
-    if(doc_type==12){tableau=ngrami(mots,corpus = "spa_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)}
+    if(doc_type==5){tableau=tryCatch({ngrami(mots,corpus = "fre_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)},error=function(cond) {})}
+    if(doc_type==9){tableau=tryCatch({ngrami(mots,corpus = "ger_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)},error=function(cond) {})}
+    if(doc_type==10){tableau=tryCatch({ngrami(mots,corpus = "eng_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)},error=function(cond) {})}
+    if(doc_type==12){tableau=tryCatch({ngrami(mots,corpus = "spa_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)},error=function(cond) {})}
+    if(is.null(tableau)){tableau=as.data.frame(cbind("0000","erreur",0,"ngram"))}
     tableau$search_mode<-"match"
     colnames(tableau)=c("date","mot","ratio","corpus","search_mode")
     tableau$date<-as.character(tableau$date)
@@ -2635,14 +2636,20 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     base$date<-as.character(base$date)
     tableau<-left_join(tableau,base,by="date")
     tableau$base[is.na(tableau$base)]<-0
+    tableau$ratio<-as.double(tableau$ratio)
   }
   
   if(doc_type==44){
     if(to==2022){to=as.character(Sys.Date())}
     else{to=str_c(to,"-12-31")}
     from=str_c(from,"-01-01")
-    a<-gtrends(keyword = mots,geo = "FR",time = str_c(from," ",to), onlyInterest = T)
-    a<-a$interest_over_time
+    a<-tryCatch({gtrends(keyword = mots,geo = "FR",time = str_c(from," ",to), onlyInterest = T)},error=function(cond) {})
+    a<-tryCatch({a$interest_over_time},error=function(cond) {})
+    if(is.null(a)){
+      a=as.data.frame(cbind("0000-01-01",0,"erreur"))
+      colnames(a)=c("date","hits","keyword")
+    }
+    print(a)
     a<-as.data.frame(a)
     a$date<-as.character(a$date)
     tableau<-cbind(a$date,a$hits,a$keyword)
