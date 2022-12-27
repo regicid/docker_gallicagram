@@ -27,6 +27,8 @@ mobileDetect <- function(inputId, value = 0) {
 }
 
 shinyUI(bootstrapPage(
+  theme=NULL,
+  uiOutput("style"),
   tags$head(includeHTML(("google-analytics.html"))),
   mobileDetect('isMobile'),
   useShinyjs(),
@@ -92,7 +94,6 @@ shinyUI(bootstrapPage(
                                                                                                                                 label = '\n',
                                                                                                                                 start = as.Date.character("2021-01-01"), end = as.character(Sys.Date()),
                                                                                                                                 separator="à", startview = "decade")),
-                                                #conditionalPanel(condition="input.doc_type==0",div(materialSwitch(inputId = "overlap",label = "Superposer les corpus sur la période 1945-1950",status="primary",right = T,value=T))),
                                                 div(style="display: inline-block;vertical-align:top;width: 49%;",radioButtons("resolution", label = "Résolution", choices = c("Année","Mois"),inline=T)),
                                                 div(style="display: inline-block;vertical-align:top;width: 49%;",conditionalPanel(condition="input.doc_type == 2 && input.search_mode==1",uiOutput("theme"))),
                                                 
@@ -137,7 +138,10 @@ shinyUI(bootstrapPage(
                                                       div(id="clip",style="display: inline-block;vertical-align:middle;float:right",rclipButton("clipbtn", "Citation",clipText = "Azoulay, B., & de Courson, B. (2021, December 8). Gallicagram : un outil de lexicométrie pour la recherche. https://doi.org/10.31235/osf.io/84bf3",icon = icon("clipboard"))),
                                                       div(id="article",style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Article de recherche",onclick ="window.open('https://osf.io/preprints/socarxiv/84bf3/', '_blank')")),
                                                       div(id="pyllicagram",style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Pyllicagram",onclick ="window.open('https://github.com/regicid/pyllicagram', '_blank')")),
+                                                      div(style="display: inline-block;vertical-align:bottom;",materialSwitch(inputId = "mode", label = icon("moon"),
+                                                                                                                              right=TRUE,status = "default",inline = T,width = "150%")),
                                                       div(style="display: inline-block;vertical-align:middle;float:right;width:100px;margin-top:-20px",selectInput("visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"AFC"=6,"Nuage de mots"=7,"Polaires"=8),selected = 1))),
+                                                      
                                                       plotlyOutput("plot"),
                                                       plotOutput("cloud")
                                                       )),

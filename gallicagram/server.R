@@ -3373,7 +3373,15 @@ shinyServer(function(input, output,session){
   observeEvent(input$showSidebar2, {
     shinyjs::toggle(id = "Sidebar",anim = T)
   })
-  
+  observeEvent(input$mode, {
+  output$style <- renderUI({
+    if(isTRUE(input$mode)){
+        includeCSS("www/cyborg.css")
+      } else {
+        includeCSS("www/default.css")
+      }
+  })
+  })
   observeEvent(input$correlation_test, {
     shinyjs::toggle(id = "corr",anim = T,condition = input$correlation_test)
     shinyjs::toggle(id = "corr2",anim = T,condition = input$correlation_test)
