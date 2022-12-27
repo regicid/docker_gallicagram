@@ -105,7 +105,11 @@ shinyUI(bootstrapPage(
                                                        fixedRow(
                                                       div(id="menumob",style="display: inline-block;vertical-align:middle;",actionButton("showSidebar", "",icon = icon("bars"))),
                                                       div(style="display: inline-block;vertical-align:middle;",dropdownButton(tags$h3("Options avancées"),
-                                                                     checkboxInput("barplot", "Distribution des documents de la base de données ", value = FALSE),
+                                                                    div(style="display: inline-block;vertical-align:bottom;",materialSwitch(inputId = "modemob", label = icon("moon"),
+                                                                                                                                   right=TRUE,status = "default",inline = T,width = "150%")),
+                                                                    div(style = "margin-top: -20px"),
+                                                                    div(id="modemob2",style = "margin-top: -40px"), 
+                                                                    checkboxInput("barplot", "Distribution des documents de la base de données ", value = FALSE),
                                                                      div(style = "margin-top: -15px"),
                                                                      checkboxInput("correlation_test", "Matrices de corrélation", value = FALSE),
                                                                      div(style = "margin-top: -15px"),

@@ -3365,6 +3365,8 @@ shinyServer(function(input, output,session){
     if(input$isMobile==F){
       shinyjs::hide(id="menumob")
       shinyjs::hide(id="menumob2")
+      shinyjs::hide(id="modemob")
+      shinyjs::hide(id="modemob2")
     }
   })
   
@@ -3382,6 +3384,15 @@ shinyServer(function(input, output,session){
         includeCSS("www/default.css")
       }
   })
+  })
+  observeEvent(input$modemob, {
+    output$style <- renderUI({
+      if(isTRUE(input$modemob)){
+        includeCSS("www/cyborg.css")
+      } else {
+        includeCSS("www/default.css")
+      }
+    })
   })
   observeEvent(input$correlation_test, {
     shinyjs::toggle(id = "corr",anim = T,condition = input$correlation_test)
