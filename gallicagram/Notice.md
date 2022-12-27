@@ -26,7 +26,7 @@
 - Il peut aussi comparer les évolutions respectives de deux syntagmes concurrents en les séparant par une esperluette "&" (ex. Georges Clemenceau&Aristide Briand).
 - Il peut effectuer une recherche conditionnelle de forme OU en utilisant le signe "+" (ex. juif+juive). Il s'agit d'un "ou" inclusif qui renverra tous les numéros contenant les termes séparés par un "+". La recherche dénombre des syntagmes exacts et isolés. Ainsi, entrer le mot "juif" ne permettra pas d'obtenir les résultats correspondant à son pluriel : "juifs". La recherche conditionnelle OU avec "+" permet d'intégrer ces résultats.
 - Dans le mode de recherche "Par document" (et non "Par N-gramme", comme par défaut), il peut chercher des cooccurrences dans les corpus de Gallica à l'aide de l'opérateur "\*" (ex. universel\*nation). Une case apparait alors à côté du champ de la requête pour définir la distance maximale entre les termes recherchés (en nombre de mots).  
-- Ces trois options de recherche sont cumulables (ex. juif+juive+judéo&calviniste+huguenot+parpaillot ; ex. universel\*nation+universel\*patrie&étranger\*ennemi). "&" est prioritaire sur "*" qui est prioritaire sur "+". Ainsi a*b+c*d&e = [(a*b)+(c*d)]&e
+- Ces trois options de recherche sont cumulables (ex. juif+juive+judéo&calviniste+huguenot+parpaillot ; ex. universel\*nation+universel\*patrie&étranger\*ennemi). "&" est prioritaire sur "\*" qui est prioritaire sur "+". Ainsi a\*b+c\*d&e = [(a\*b)+(c\*d)]&e
 - La recherche n'est pas sensible à la casse (case insensitive).
 
 ### Options de visualisation
