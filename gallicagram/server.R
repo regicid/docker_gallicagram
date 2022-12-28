@@ -102,14 +102,18 @@ Plot <- function(data,input){
     library(factoextra)
     if( input$resolution=="Mois"){b = str_extract(b,"....")
     }
-    bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black")+labs(title="") + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
+    bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("point"), label="all",labelsize=4,col.ind=as.integer(b),col.var="black")+labs(title="") + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
     
     gg=as.data.frame(cbind(res.pca$ind$coord[,1],res.pca$ind$coord[,2]))
     colnames(gg)=c("x","y")
     gg=as.data.frame(bezier::bezier(seq(0, 1, len=100), gg, deg=nrow(gg)-1))
     colnames(gg)=c("x","y")
     bb=bb+geom_path(data=gg,aes(x,y),col=1)
+    
     plot=ggplotly(bb)
+    plot$x$data[[1]]$text <- bb$data$name
+    plot$x$data[[4]]$hovertext<-plot$x$data[[4]]$text
+    plot$x$data[[5]]$text=NA
     return(onRender(plot,js))
     }
   if(input$visualiseur==7){
@@ -478,7 +482,12 @@ SPlot <- function(data,input){
   b = str_extract(b,"....")}
     repel = (length(unique(tableau$date))<30)
     plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black",repel=repel)+labs(title="")+theme(plot.background = element_rect(fill = 'white', colour = 'white')) + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
-
+    
+    gg=as.data.frame(cbind(res.pca$ind$coord[,1],res.pca$ind$coord[,2]))
+    colnames(gg)=c("x","y")
+    gg=as.data.frame(bezier::bezier(seq(0, 1, len=100), gg, deg=nrow(gg)-1))
+    colnames(gg)=c("x","y")
+    plot=plot+geom_path(data=gg,aes(x,y),col=1)
     return(plot)
   }
   
