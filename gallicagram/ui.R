@@ -29,6 +29,7 @@ mobileDetect <- function(inputId, value = 0) {
 shinyUI(bootstrapPage(
   theme=NULL,
   uiOutput("style"),
+  tags$head(tags$script(src = "enter_button.js")),
   tags$head(includeHTML(("google-analytics.html"))),
   mobileDetect('isMobile'),
   useShinyjs(),
