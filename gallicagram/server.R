@@ -102,7 +102,7 @@ Plot <- function(data,input){
     library(factoextra)
     if( input$resolution=="Mois"){b = str_extract(b,"....")
     }
-    bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("point"), label="all",labelsize=4,col.ind=as.integer(b),col.var="black")+labs(title="") + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
+    bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("point"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black")+labs(title="") + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
     
     gg=as.data.frame(cbind(res.pca$ind$coord[,1],res.pca$ind$coord[,2]))
     colnames(gg)=c("x","y")
