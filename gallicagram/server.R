@@ -95,10 +95,13 @@ Plot <- function(data,input){
     b=as.character(a$date)
     a<-a[,-1]
     rownames(a)=b
+    #a = t(a)
     res.pca=PCA(a,scale.unit = TRUE)
     rownames(res.pca$ind$coord)=rownames(a)
     library(factoextra)
-    bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")
+    if( input$resolution=="Mois"){b = str_extract(b,"....")
+    }
+    bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black")+labs(title="") + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
     plot=ggplotly(bb)
     return(onRender(plot,js))
     }
@@ -464,7 +467,11 @@ SPlot <- function(data,input){
     res.pca=PCA(a,scale.unit = TRUE)
     rownames(res.pca$ind$coord)=rownames(a)
     library(factoextra)
-    plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3)+labs(title="")+theme(plot.background = element_rect(fill = 'white', colour = 'white'))
+    if( input$resolution=="Mois"){
+  b = str_extract(b,"....")}
+    repel = (length(unique(tableau$date))<30)
+    plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3,col.ind=as.integer(b),repel=repel)+labs(title="")+theme(plot.background = element_rect(fill = 'white', colour = 'white')) + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
+
     return(plot)
   }
   
@@ -1140,8 +1147,9 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   for(mot1 in mots){
     
         mots2 = str_split(mot1,"[+]")[[1]]
-    xxxx=str_c("l'",mots2)
-    mots2=append(mots2,xxxx)
+    z = grep("^[aeiou]",mot1)
+    xxxx=str_c("l'",mots2[z])
+    if(length(z)>0){mots2=append(mots2,xxxx)}
     mots2=mots2[!duplicated(mots2)]
     print(mots2)
     increment2<-1
