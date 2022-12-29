@@ -102,7 +102,7 @@ Plot <- function(data,input){
     library(factoextra)
     if( input$resolution=="Mois"){b = str_extract(b,"....")
     }
-    if(length(unique(tableau$date))>30){
+    if(input$afcline==T){
       bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("point"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black")+labs(title="") + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
       gg=as.data.frame(cbind(res.pca$ind$coord[,1],res.pca$ind$coord[,2]))
       colnames(gg)=c("x","y")
@@ -486,11 +486,14 @@ SPlot <- function(data,input){
     repel = (length(unique(tableau$date))<30)
     plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black",repel=repel)+labs(title="")+theme(plot.background = element_rect(fill = 'white', colour = 'white')) + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
     
+    if(input$afcline==T){
+    plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("point"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black",repel=repel)+labs(title="")+theme(plot.background = element_rect(fill = 'white', colour = 'white')) + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
     gg=as.data.frame(cbind(res.pca$ind$coord[,1],res.pca$ind$coord[,2]))
     colnames(gg)=c("x","y")
     gg=as.data.frame(bezier::bezier(seq(0, 1, len=100), gg, deg=nrow(gg)-1))
     colnames(gg)=c("x","y")
     plot=plot+geom_path(data=gg,aes(x,y),col=1)
+    }
     return(plot)
   }
   
@@ -3383,6 +3386,12 @@ shinyServer(function(input, output,session){
     animation = TRUE
   )
   show_modal_spinner()
+  observeEvent(input$visualiseur,{
+    if(input$visualiseur==6){shinyjs::hide(id="afcspace",anim = F)
+      shinyjs::show(id="afcline",anim = F)}
+    else{shinyjs::hide(id="afcline",anim = F)
+      shinyjs::show(id="afcspace",anim = F)}
+  })
   
   observeEvent(input$isMobile,{
     if(input$isMobile==T){
