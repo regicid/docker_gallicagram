@@ -266,7 +266,7 @@ Plot <- function(data,input){
     tableau<-tableau%>%group_by(mois,mot)%>%summarise(loess=mean(loess))
     tableau$date=as.numeric(tableau$mois)
     tableau$date=as.Date.character(str_c("2000-",tableau$date,"-01"))
-    plot<-plot_ly(x=~tableau$date,y=reorder(tableau$mot, tableau$loess, sum),type = 'scatter', mode = 'markers', color=~tableau$mot,colors=customPalette,size = ~tableau$loess,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3))
+    plot<-plot_ly(x=~tableau$date,y=reorder(tableau$mot, tableau$loess, sum),type = 'scatter', mode = 'markers', color=~tableau$mot,colors=customPalette,size = ~tableau$loess,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.6))
     plot<-layout(plot,xaxis=list(title="",tickformat="%b"))
     plot = layout(plot,showlegend=F)
     return(onRender(plot,js))
