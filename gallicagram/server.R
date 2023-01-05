@@ -215,6 +215,7 @@ Plot <- function(data,input){
     customPalette <- brewer.pal(numGroups, "Set1")
     customPalette = customPalette[c(2,1)]
   }
+  if(length(unique(tableau$mot))>9){customPalette=NULL}
   
   if(input$visualiseur==2){
     
@@ -3424,10 +3425,18 @@ shinyServer(function(input, output,session){
   )
   show_modal_spinner()
   observeEvent(input$visualiseur,{
-    if(input$visualiseur==6){shinyjs::hide(id="afcspace",anim = F)
-      shinyjs::show(id="afcline",anim = F)}
-    else{shinyjs::hide(id="afcline",anim = F)
-      shinyjs::show(id="afcspace",anim = F)}
+    if(input$visualiseur==6){
+      shinyjs::hide(id="afcspace",anim = F)
+      shinyjs::show(id="afcline",anim = F)
+      shinyjs::hide(id="afcspace1",anim = F)
+      shinyjs::show(id="afcmois",anim = F)
+      }
+    else{
+      shinyjs::hide(id="afcline",anim = F)
+      shinyjs::show(id="afcspace",anim = F)
+      shinyjs::hide(id="afcmois",anim = F)
+      shinyjs::show(id="afcspace1",anim = F)
+      }
   })
   
   observeEvent(input$isMobile,{
