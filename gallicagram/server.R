@@ -247,13 +247,27 @@ Plot <- function(data,input){
   }
   
   
-  if(input$visualiseur==4){
+  if(input$visualiseur==4 & (input$resolution!="Mois" | input$saisons==F)){
     total<-tableau
     total$hovers<-str_c(total$mot," : ",total$hovers)
     total<-total%>%group_by(mot)
     plot<-plot_ly(x=~total$date,y=reorder(total$mot, total$count, sum),type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,colors=customPalette,size = ~total$ratio,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3),text=~total$hovers,hoverinfo="text")
     if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$date,y=reorder(total$mot, total$count, sum),type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,size = ~total$ratio,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3),text=~total$hovers,hoverinfo="text")}
     plot<-layout(plot,xaxis=list(title=""))
+    plot = layout(plot,showlegend=F)
+    return(onRender(plot,js))
+  }
+  if(input$visualiseur==4 & input$resolution=="Mois" & input$saisons==T){
+    aaa=str_extract(tableau$date,"....")
+    bbb=str_extract(tableau$date,".......")
+    bbb=str_remove(bbb,".....")
+    tableau$annee=aaa
+    tableau$mois=bbb
+    tableau<-tableau%>%group_by(mois,mot)%>%summarise(loess=mean(loess))
+    tableau$date=as.numeric(tableau$mois)
+    tableau$date=as.Date.character(str_c("2000-",tableau$date,"-01"))
+    plot<-plot_ly(x=~tableau$date,y=reorder(tableau$mot, tableau$loess, sum),type = 'scatter', mode = 'markers', color=~tableau$mot,colors=customPalette,size = ~tableau$loess,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3))
+    plot<-layout(plot,xaxis=list(title="",tickformat="%b"))
     plot = layout(plot,showlegend=F)
     return(onRender(plot,js))
   }
