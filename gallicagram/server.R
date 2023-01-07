@@ -369,7 +369,7 @@ Plot <- function(data,input){
                     direction = 'clockwise',
                     tickmode="array",
                     tickvals = seq(0, 360, 30),
-                    ticktext = as.array(c("décembre","janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre"))
+                    ticktext = as.array(c("décembre","janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"))
                   ),
                   radialaxis = list(
                     showgrid = T,
