@@ -133,12 +133,33 @@ Plot <- function(data,input){
     if(input$doc_type==1){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
     if(input$doc_type==2){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
     if(input$doc_type==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=date_asc")}
-    plot=plot_ly(total,x=~x,y=~y,size = ~count,color=~count,type = 'scatter', mode = 'markers',colors="Reds",
-               marker = list(sizemode = "diameter", opacity = 0.5),text=~total$hovers,hoverinfo="text")%>%
-      add_text(text=~mot,size=10, textposition="center",textfont = list(color = '#000000'))
-    plot=layout(plot,xaxis = list(title = "",zeroline = FALSE,showline = FALSE, showticklabels = FALSE, showgrid = FALSE),
-              yaxis = list(title = "",zeroline = FALSE,showline = FALSE, showticklabels = FALSE, showgrid = FALSE),
-              showlegend=F)
+    # plot=plot_ly(total,x=~x,y=~y,size = ~count,color=~count,type = 'scatter', mode = 'markers',colors="Reds",
+    #            marker = list(sizemode = "diameter", opacity = 0.5),text=~total$hovers,hoverinfo="text")%>%
+    #   add_text(text=~mot,size=10, textposition="center",textfont = list(color = '#000000'))
+    # plot=layout(plot,xaxis = list(title = "",zeroline = FALSE,showline = FALSE, showticklabels = FALSE, showgrid = FALSE),
+    #           yaxis = list(title = "",zeroline = FALSE,showline = FALSE, showticklabels = FALSE, showgrid = FALSE),
+    #           showlegend=F)
+    plot=ggplot(total, aes(x=x, y=y, size = count,color=count,text=hovers)) +
+      geom_point(alpha=0.7)+
+      scale_size(range = c(1, 24))+
+      scale_colour_gradient(low = "yellow", high = "red", na.value = NA)+
+      geom_text(aes(x=x,y=y,label=mot),size=3,color="black")+
+      labs(x = "", y = "") + theme_void()+
+      theme(
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.line.x=element_blank(),
+        axis.line.y=element_blank(),
+        legend.position="none"
+      )
+    plot=ggplotly(plot,tooltip = "text")%>%
+      layout(xaxis = list(autorange = TRUE),
+             yaxis = list(autorange = TRUE))
     return(onRender(plot,js))
   }
   
@@ -509,6 +530,44 @@ SPlot <- function(data,input){
     colnames(gg)=c("x","y")
     plot=plot+geom_path(data=gg,aes(x,y),col=1)
     }
+    return(plot)
+  }
+  
+  
+  if(input$visualiseur==7){
+    total<-select(tableau,mot,count)
+    total=total%>%group_by(mot)%>%summarise_all(sum)
+    total$x=0
+    total$y=0
+    for (i in 1:length(total$count)) {
+      total$x[i]=runif(1)*100
+      total$y[i]=runif(1)*100
+    }
+    total$hovers=str_c(total$mot," : ",total$count)
+    total$url="www.google.com"
+    if(input$doc_type==1){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
+    if(input$doc_type==2){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
+    if(input$doc_type==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=date_asc")}
+    plot=ggplot(total, aes(x=x, y=y, size = count,color=count,text=hovers)) +
+      geom_point(alpha=0.7)+
+      scale_size(range = c(1, 24))+
+      scale_colour_gradient(low = "yellow", high = "red", na.value = NA)+
+      geom_text(aes(x=x,y=y,label=mot),size=3,color="black")+
+      coord_fixed(xlim=c(min(total$x)-2,max(total$x)+2),ylim=c(min(total$y)-2,max(total$y)+2))+
+      labs(x = "", y = "") + theme_void()+
+      theme(
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.line.x=element_blank(),
+        axis.line.y=element_blank(),
+        plot.background = element_rect(fill = 'white', colour = 'white'),
+        legend.position="none"
+      )
     return(plot)
   }
   
