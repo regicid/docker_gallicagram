@@ -81,7 +81,14 @@ Plot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   
-  tableau$mot[str_length(tableau$mot)>=60]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=60],60,"right"),"...")
+  if(str_detect(tableau$mot[1],"<br>")){
+    tronc=str_split(tableau$mot[str_length(tableau$mot)>=30],"<br>")
+    troncat=str_trunc(tronc[[1]][1],30,"right")
+    tableau$mot[str_length(tableau$mot)>=30]<-str_c(troncat,"...<br>",tronc[[1]][2])
+  } else{
+    tableau$mot[str_length(tableau$mot)>=30]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=30],30,"right"),"...")
+  }
+  
   
   if(input$visualiseur==6){
     library(FactoMineR)
@@ -1244,7 +1251,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     
         mots2 = str_split(mot1,"[+]")[[1]]
     z = grep("^[aeiou]",mots2)
-    print(z)
     xxxx=str_c("l'",mots2[z])
     if(length(z)>0){mots2=append(mots2,xxxx)}
     mots2=mots2[!duplicated(mots2)]
