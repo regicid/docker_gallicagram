@@ -1243,7 +1243,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   for(mot1 in mots){
     
         mots2 = str_split(mot1,"[+]")[[1]]
-    z = grep("^[aeiou]",mot1)
+    z = grep("^[aeiou]",mots2)
+    print(z)
     xxxx=str_c("l'",mots2[z])
     if(length(z)>0){mots2=append(mots2,xxxx)}
     mots2=mots2[!duplicated(mots2)]
