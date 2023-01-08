@@ -83,8 +83,11 @@ Plot <- function(data,input){
   
   if(str_detect(tableau$mot[1],"<br>")){
     tronc=str_split(tableau$mot[str_length(tableau$mot)>=30],"<br>")
-    troncat=str_trunc(tronc[[1]][1],30,"right")
-    tableau$mot[str_length(tableau$mot)>=30]<-str_c(troncat,"...<br>",tronc[[1]][2])
+    for (i in length(unique(tableau$mot))) {
+      troncat=str_trunc(tronc[[i]][1],30,"right")
+      tableau$mot[tableau$mot==unique(tableau$mot[i])]<-str_c(troncat,"...<br>",tronc[[i]][2])
+    }
+    
   } else{
     tableau$mot[str_length(tableau$mot)>=30]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=30],30,"right"),"...")
   }
