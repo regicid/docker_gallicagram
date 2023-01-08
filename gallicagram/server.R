@@ -85,7 +85,7 @@ Plot <- function(data,input){
   if(str_detect(tableau$mot[1],"<br>")){
     tronc=str_split(tableau$mot,"<br>")
     for (i in length(unique(tableau$mot))) {
-      if(str_length(troncat)>=30){
+      if(str_length(tronc[[i]][1])>=30){
         troncat=str_trunc(tronc[[i]][1],30,"right")
         troncat=str_c(troncat,"...")
         }else{troncat=tronc[[i]][1]}
