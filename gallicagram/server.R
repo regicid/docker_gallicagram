@@ -58,7 +58,9 @@ Plot <- function(data,input){
   }
   if(input$multicourbes==TRUE | input$doc_type==0){
     if(input$multicourbes==TRUE){tableau = memoire}
+    tableau$mot[str_length(tableau$mot)>=30]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=30],30,"right"),"..")
     tableau$mot<-str_c(tableau$mot,"<br>",tableau$bibli,"/",tableau$corpus,"/",tableau$langue,"/",tableau$search_mode)
+    
     if(input$resolution=="Mois"){
       tableau<-tableau[tableau$resolution=="Mois",]
     }
@@ -68,7 +70,8 @@ Plot <- function(data,input){
     if(input$resolution=="Semaine"){
       tableau<-tableau[tableau$resolution=="Semaine",]
     }
-  }
+  }else{tableau$mot[str_length(tableau$mot)>=30]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=30],30,"right"),"..")}
+  
   tableau<-distinct(tableau)
   
   if(data[["resolution"]]=="Semaine"){tableau$date=ymd(tableau$date)}
@@ -80,22 +83,6 @@ Plot <- function(data,input){
     tableau$date<-str_c(tableau$date,"/01/01")
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
-  
-  if(input$resolution==data[["resolution"]]){
-  if(str_detect(tableau$mot[1],"<br>")){
-    tronc=str_split(tableau$mot,"<br>")
-    for (i in length(unique(tableau$mot))) {
-      if(str_length(tronc[[i]][1])>=30){
-        troncat=str_trunc(tronc[[i]][1],30,"right")
-        troncat=str_c(troncat,"...")
-        }else{troncat=tronc[[i]][1]}
-      tableau$mot[tableau$mot==unique(tableau$mot[i])]<-str_c(troncat,"<br>",tronc[[i]][2])
-    }
-    
-  } else{
-    tableau$mot[str_length(tableau$mot)>=30]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=30],30,"right"),"...")
-  }}
-  
   
   if(input$visualiseur==6){
     library(FactoMineR)
