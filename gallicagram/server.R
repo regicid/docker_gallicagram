@@ -3510,7 +3510,9 @@ shinyServer(function(input, output,session){
       shinyjs::show(id="afcspace",anim = F)
       shinyjs::hide(id="afcmois",anim = F)
       shinyjs::show(id="afcspace1",anim = F)
-      }
+    }
+    if(input$visualiseur==2 | input$visualiseur==3 | input$visualiseur==6 | input$visualiseur==7){shinyjs::hide(id="span",anim = F)}
+    else{shinyjs::show(id="span",anim = F)}
   })
   
   observeEvent(input$isMobile,{
