@@ -81,16 +81,18 @@ Plot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   
+  if(input$resolution==data[["resolution"]]){
   if(str_detect(tableau$mot[1],"<br>")){
-    tronc=str_split(tableau$mot[str_length(tableau$mot)>=30],"<br>")
+    tronc=str_split(tableau$mot,"<br>")
     for (i in length(unique(tableau$mot))) {
       troncat=str_trunc(tronc[[i]][1],30,"right")
-      tableau$mot[tableau$mot==unique(tableau$mot[i])]<-str_c(troncat,"...<br>",tronc[[i]][2])
+      if(str_length(troncat)>=30){troncat=str_c(troncat,"...")}
+      tableau$mot[tableau$mot==unique(tableau$mot[i])]<-str_c(troncat,"<br>",tronc[[i]][2])
     }
     
   } else{
     tableau$mot[str_length(tableau$mot)>=30]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=30],30,"right"),"...")
-  }
+  }}
   
   
   if(input$visualiseur==6){
