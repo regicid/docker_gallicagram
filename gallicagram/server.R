@@ -525,7 +525,7 @@ SPlot <- function(data,input){
   Title = paste("")
   
   
-  if(input$visualiseur==6){
+  if(input$visualiseur==6 | input$visualiseur==9){
     library(FactoMineR)
     library(tidyr)
     if(data[["resolution"]]=="Année"){
@@ -538,17 +538,33 @@ SPlot <- function(data,input){
     b=as.character(a$date)
     a<-a[,-1]
     rownames(a)=b
-    res.pca=PCA(a,scale.unit = TRUE)
-    rownames(res.pca$ind$coord)=rownames(a)
+    if(input$visualiseur==6){
+      res.pca=PCA(a,scale.unit = TRUE)
+      rownames(res.pca$ind$coord)=rownames(a)
+    }
+    if(input$visualiseur==9){
+      res.pca=CA(a)
+      rownames(res.pca$row$coord)=rownames(a)
+    }
     library(factoextra)
     if( input$resolution=="Mois"){
   b = str_extract(b,"....")}
     repel = (length(unique(tableau$date))<30)
-    plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black",repel=repel)+labs(title="")+theme(plot.background = element_rect(fill = 'white', colour = 'white')) + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
-    
+    if(input$visualiseur==6){
+      plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black",repel=repel)+labs(title="")+theme(plot.background = element_rect(fill = 'white', colour = 'white')) + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
+    }
+    if(input$visualiseur==9){
+      plot<-fviz_ca_biplot(res.pca,geom.col = c("text"),geom.row = c("text"), label="all",labelsize=3,col.row=as.integer(b),col.col="black",repel=repel)+labs(title="")+theme(plot.background = element_rect(fill = 'white', colour = 'white')) + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
+    }
     if(input$afcline==T){
-    plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("point"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black",repel=repel)+labs(title="")+theme(plot.background = element_rect(fill = 'white', colour = 'white')) + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
-    gg=as.data.frame(cbind(res.pca$ind$coord[,1],res.pca$ind$coord[,2]))
+      if(input$visualiseur==6){
+        plot<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("point"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black",repel=repel)+labs(title="")+theme(plot.background = element_rect(fill = 'white', colour = 'white')) + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
+        gg=as.data.frame(cbind(res.pca$ind$coord[,1],res.pca$ind$coord[,2]))
+      }
+      if(input$visualiseur==9){
+        plot<-fviz_ca_biplot(res.pca,geom.col = c("text"),geom.row = c("point"), label="all",labelsize=3,col.row=as.integer(b),col.col="black",repel=repel)+labs(title="")+theme(plot.background = element_rect(fill = 'white', colour = 'white')) + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
+        gg=as.data.frame(cbind(res.pca$row$coord[,1],res.pca$row$coord[,2]))
+      }
     colnames(gg)=c("x","y")
     gg=as.data.frame(bezier::bezier(seq(0, 1, len=100), gg, deg=nrow(gg)-1))
     colnames(gg)=c("x","y")
