@@ -110,7 +110,7 @@ shinyUI(bootstrapPage(
                                                                                                                                    right=TRUE,status = "default",inline = T,width = "150%")),
                                                                     div(style = "margin-top: -20px"),
                                                                     div(id="modemob2",style = "margin-top: -40px"), 
-                                                                    checkboxInput("afcline", "Epurer l'AFC", value = FALSE),
+                                                                    checkboxInput("afcline", "Epurer l'ACP-AFC", value = FALSE),
                                                                     div(style = "margin-top: -20px"),
                                                                     div(id="afcspace",style = "margin-top: -30px"), 
                                                                     checkboxInput("afcmois", "Saisonnaliser l'AFC", value = FALSE),
@@ -151,7 +151,7 @@ shinyUI(bootstrapPage(
                                                       div(id="pyllicagram",style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Pyllicagram",onclick ="window.open('https://github.com/regicid/pyllicagram', '_blank')")),
                                                       div(style="display: inline-block;vertical-align:bottom;",materialSwitch(inputId = "mode", label = icon("moon"),
                                                                                                                               right=TRUE,status = "default",inline = T,width = "150%")),
-                                                      div(style="display: inline-block;vertical-align:middle;float:right;width:100px;margin-top:-20px",selectInput("visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"AFC"=6,"Nuage de mots"=7,"Polaires"=8),selected = 1))),
+                                                      div(style="display: inline-block;vertical-align:middle;float:right;width:100px;margin-top:-20px",selectInput("visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9),selected = 1))),
                                                       
                                                       plotlyOutput("plot"),
                                                       plotOutput("cloud")

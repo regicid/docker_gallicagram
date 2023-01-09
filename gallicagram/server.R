@@ -84,7 +84,7 @@ Plot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   
-  if(input$visualiseur==6){
+  if(input$visualiseur==6 | input$visualiseur==9){
     library(FactoMineR)
     library(tidyr)
     if(data[["resolution"]]=="Année"){
@@ -98,24 +98,47 @@ Plot <- function(data,input){
     a<-a[,-1]
     rownames(a)=b
     #a = t(a)
-    res.pca=PCA(a,scale.unit = TRUE)
-    rownames(res.pca$ind$coord)=rownames(a)
+    if(input$visualiseur==6){
+      res.pca=PCA(a,scale.unit = TRUE)
+      rownames(res.pca$ind$coord)=rownames(a)
+      }
+    if(input$visualiseur==9){
+      res.pca=CA(a)
+      rownames(res.pca$row$coord)=rownames(a)
+      }
+    
     library(factoextra)
     if( input$resolution=="Mois"){b = str_extract(b,"....")
     }
     if(input$afcline==T){
-      bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("point"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black")+labs(title="") + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
-      gg=as.data.frame(cbind(res.pca$ind$coord[,1],res.pca$ind$coord[,2]))
+      if(input$visualiseur==6){
+        bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("point"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black")+labs(title="") + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
+        gg=as.data.frame(cbind(res.pca$ind$coord[,1],res.pca$ind$coord[,2]))
+      }
+      if(input$visualiseur==9){
+        bb<-fviz_ca_biplot(res.pca,geom.col = c("text"),geom.row = c("point"), label="all",labelsize=3,col.row=as.integer(b),col.col="black")+labs(title="") + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
+        gg=as.data.frame(cbind(res.pca$row$coord[,1],res.pca$row$coord[,2]))
+      }
+      
       colnames(gg)=c("x","y")
       gg=as.data.frame(bezier::bezier(seq(0, 1, len=100), gg, deg=nrow(gg)-1))
       colnames(gg)=c("x","y")
       bb=bb+geom_path(data=gg,aes(x,y),col=1)
       plot=ggplotly(bb)
       plot$x$data[[1]]$text <- bb$data$name
+      #print(plot$x$data[[1]]$text)
       plot$x$data[[4]]$hovertext<-plot$x$data[[4]]$text
+      #print(plot$x$data[[4]]$hovertext)
+      
       plot$x$data[[5]]$text=NA
+      
     }else{
-      bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black")+labs(title="") + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
+      if(input$visualiseur==6){
+        bb<-fviz_pca_biplot(res.pca,geom.var = c("text"),geom.ind = c("text"), label="all",labelsize=3,col.ind=as.integer(b),col.var="black")+labs(title="") + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
+      }
+      if(input$visualiseur==9){
+        bb<-fviz_ca_biplot(res.pca,geom.col = c("text"),geom.row = c("text"), label="all",labelsize=3,col.row=as.integer(b),col.col="black")+labs(title="") + scale_color_gradientn(colors=rainbow(10,start=.65),guide="none")
+      }
       plot=ggplotly(bb)
     }
     return(onRender(plot,js))
@@ -3499,19 +3522,19 @@ shinyServer(function(input, output,session){
   )
   show_modal_spinner()
   observeEvent(input$visualiseur,{
-    if(input$visualiseur==6){
+    if(input$visualiseur==6 | input$visualiseur==9){
       shinyjs::hide(id="afcspace",anim = F)
       shinyjs::show(id="afcline",anim = F)
-      shinyjs::hide(id="afcspace1",anim = F)
-      shinyjs::show(id="afcmois",anim = F)
+      # shinyjs::hide(id="afcspace1",anim = F)
+      # shinyjs::show(id="afcmois",anim = F)
       }
     else{
       shinyjs::hide(id="afcline",anim = F)
       shinyjs::show(id="afcspace",anim = F)
       shinyjs::hide(id="afcmois",anim = F)
-      shinyjs::show(id="afcspace1",anim = F)
+      shinyjs::hide(id="afcspace1",anim = F)#à changer  en show pour activer la saisonnalité
     }
-    if(input$visualiseur==2 | input$visualiseur==3 | input$visualiseur==6 | input$visualiseur==7){shinyjs::hide(id="span",anim = F)}
+    if(input$visualiseur==2 | input$visualiseur==3 | input$visualiseur==6 | input$visualiseur==7 | input$visualiseur==9){shinyjs::hide(id="span",anim = F)}
     else{shinyjs::show(id="span",anim = F)}
   })
   
@@ -3572,8 +3595,8 @@ shinyServer(function(input, output,session){
     shinyjs::toggle(id = "mess",anim = F,condition = input$gallicloud==F)
   })
   observeEvent(input$joker, {
-    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"AFC"=6,"Nuage de mots"=7,"Polaires"=8),selected = 2)}
-    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"AFC"=6,"Nuage de mots"=7,"Polaires"=8),selected = 1)}
+    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9),selected = 2)}
+    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9),selected = 1)}
     
   })
   
