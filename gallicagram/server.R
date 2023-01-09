@@ -133,7 +133,7 @@ Plot <- function(data,input){
     total$url="www.google.com"
     if(input$doc_type==1){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
     if(input$doc_type==2){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
-    if(input$doc_type==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=date_asc")}
+    if(input$doc_type==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=relevance_desc")}
     # plot=plot_ly(total,x=~x,y=~y,size = ~count,color=~count,type = 'scatter', mode = 'markers',colors="Reds",
     #            marker = list(sizemode = "diameter", opacity = 0.5),text=~total$hovers,hoverinfo="text")%>%
     #   add_text(text=~mot,size=10, textposition="center",textfont = list(color = '#000000'))
@@ -246,7 +246,7 @@ Plot <- function(data,input){
     total$url="www.google.com"
     if(input$doc_type==1){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
     if(input$doc_type==2){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
-    if(input$doc_type==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=date_asc")}
+    if(input$doc_type==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=relevance_desc")}
     plot<-plot_ly(x=~total$count,y=reorder(total$mot,total$count),type="bar",customdata=total$url,colors=customPalette)
     if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$count,y=reorder(total$mot,total$count),type="bar",customdata=total$url)}
     plot<-layout(plot,xaxis=list(title="Nombre d'occurrences dans le corpus"))
@@ -548,7 +548,7 @@ SPlot <- function(data,input){
     total$url="www.google.com"
     if(input$doc_type==1){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
     if(input$doc_type==2){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
-    if(input$doc_type==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=date_asc")}
+    if(input$doc_type==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=relevance_desc")}
     plot=ggplot(total, aes(x=x, y=y, size = count,color=count,text=hovers)) +
       geom_point(alpha=0.7)+
       scale_size(range = c(1, 24))+
@@ -1477,16 +1477,16 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     }
     if((input$doc_type==30 | gallicagram==2) & input$resolution=="Année"){
       #z$url<-str_c("https://www.google.fr/search?q=inurl%3Alemonde.fr+%22",mot1,"%22&source=lnt&tbs=cdr%3A1%2Ccd_min%3A01%2F01%2F",z$date,"%2Ccd_max%3A12%2F31%2F",z$date,"&tbm=")
-      z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F01%2F",z$date,"&end_at=31%2F12%2F",z$date,"&search_sort=date_asc")
+      z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F01%2F",z$date,"&end_at=31%2F12%2F",z$date,"&search_sort=relevance_desc")
     }
     if((input$doc_type==30 | gallicagram==2) & input$resolution=="Mois"){
       #z$url<-str_c("https://www.google.fr/search?q=inurl%3Alemonde.fr+%22",mot1,"%22&source=lnt&tbs=cdr%3A1%2Ccd_min%3A",str_extract(z$date,"..$"),"%2F01%2F",str_extract(z$date,"...."),"%2Ccd_max%3A",str_extract(z$date,"..$"),"%2F31%2F",str_extract(z$date,"...."),"&tbm=")
-      z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F",str_extract(z$date,"..$"),"%2F",str_extract(z$date,"...."),"&end_at=31%2F",str_extract(z$date,"..$"),"%2F",str_extract(z$date,"...."),"&search_sort=date_asc")
+      z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F",str_extract(z$date,"..$"),"%2F",str_extract(z$date,"...."),"&end_at=31%2F",str_extract(z$date,"..$"),"%2F",str_extract(z$date,"...."),"&search_sort=relevance_desc")
       z<-z[z$date<="2022/08",]
     }
     if(input$doc_type==30 & input$resolution=="Semaine"){
       #z$url<-str_c("https://www.google.fr/search?q=inurl%3Alemonde.fr+%22",mot1,"%22&source=lnt&tbs=cdr%3A1%2Ccd_min%3A",substr(z$date,6,7),"%2F",substr(z$date,9,10),"%2F",str_extract(z$date,"...."),"%2Ccd_max%3A",substr(z$date,6,7),"%2F",substr(z$date,9,10),"%2F",str_extract(z$date,"...."),"&tbm=")
-      z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&end_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&search_sort=date_asc")
+      z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&end_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&search_sort=relevance_desc")
       z<-z[z$date<="2022/08/31",]
     }
     if(input$resolution=="Année"){z$resolution<-"Année"}
@@ -1927,12 +1927,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               if(nchar(z)<2){z<-str_c("0",z)}
               beginning = str_c(y,"-",z,"-01")
               end = str_c(y,"-",z,"-",end_of_month[j])
-              url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F",z,"%2F",y,"&end_at=",end_of_month[j],"%2F",z,"%2F",y,"&search_sort=date_asc")
-              url_base<-str_c("https://www.lemonde.fr/recherche/?search_keywords=le&start_at=01%2F",z,"%2F",y,"&end_at=",end_of_month[j],"%2F",z,"%2F",y,"&search_sort=date_asc")
+              url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F",z,"%2F",y,"&end_at=",end_of_month[j],"%2F",z,"%2F",y,"&search_sort=relevance_desc")
+              url_base<-str_c("https://www.lemonde.fr/recherche/?search_keywords=le&start_at=01%2F",z,"%2F",y,"&end_at=",end_of_month[j],"%2F",z,"%2F",y,"&search_sort=relevance_desc")
             }
             if (resolution=="Année"){
-              url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F01%2F",y,"&end_at=31%2F12%2F",y,"&search_sort=date_asc")
-              url_base<-str_c("https://www.lemonde.fr/recherche/?search_keywords=le&start_at=01%2F01%2F",y,"&end_at=31%2F12%2F",y,"&search_sort=date_asc")
+              url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F01%2F",y,"&end_at=31%2F12%2F",y,"&search_sort=relevance_desc")
+              url_base<-str_c("https://www.lemonde.fr/recherche/?search_keywords=le&start_at=01%2F01%2F",y,"&end_at=31%2F12%2F",y,"&search_sort=relevance_desc")
             }
           }
           if(doc_type == 31){
@@ -3243,8 +3243,8 @@ contempo<-function(input){
       mot1=mot2
       
       if(input$doc_type == 30){
-        url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=",day(y),"%2F",month(y),"%2F",year(y),"&end_at=",day(z),"%2F",month(z),"%2F",year(z),"&search_sort=date_asc")
-        url_base<-str_c("https://www.lemonde.fr/recherche/?search_keywords=le&start_at=",day(y),"%2F",month(y),"%2F",year(y),"&end_at=",day(z),"%2F",month(z),"%2F",year(z),"&search_sort=date_asc")
+        url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=",day(y),"%2F",month(y),"%2F",year(y),"&end_at=",day(z),"%2F",month(z),"%2F",year(z),"&search_sort=relevance_desc")
+        url_base<-str_c("https://www.lemonde.fr/recherche/?search_keywords=le&start_at=",day(y),"%2F",month(y),"%2F",year(y),"&end_at=",day(z),"%2F",month(z),"%2F",year(z),"&search_sort=relevance_desc")
         
         page<-read_html(RETRY("GET",url,times = 6))
         ngram<-page
