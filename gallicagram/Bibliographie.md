@@ -13,12 +13,15 @@
 - Benjamin Azoulay, _Abel Bonnard, Plume de la Collaboration_, Perrin, Paris, 2023, 384p., https://www.lisez.com/livre-grand-format/abel-bonnard/9782262095376
 - Elise Meyer, _La mémoire de la bataille de Valmy, de 1792 à nos jours_, thèse de doctorat dirigée par Philippe Buton, Université de Reims Champagne-Ardenne, 2022, https://www.theses.fr/s147190
 - François Jacquesson, « L'auto et le vélo », Caramel, Sciences du langage et monde contemporain, 7 décembre 2022, https://caramel.hypotheses.org/24021
+- François Jacquesson, « Le bel aujourd’hui », Caramel, Sciences du langage et monde contemporain, 30 décembre 2022, https://caramel.hypotheses.org/25103
 - Madeleine Leroy. « „Bäder bauen heißt Spitäler sparen“. Piscines et bains-douches publics de « Vienne la rouge » (1919-1934) comme éléments d’une politique urbaine d’hygiène sociale », 2021, https://dumas.ccsd.cnrs.fr/dumas-03416702
 - Erwan Le Gall, « A propos de l’antimilitarisme des Sârs et de la rougeole politique (1913) », Ar Brezel, 5 janvier 2022, https://arbrezel.hypotheses.org/4804
 - Erwan Le Gall, « Février 1918 : l’estuaire de la Loire au bord de la Révolution ? », Ar Brezel, 2 février 2022, https://arbrezel.hypotheses.org/4963
 - Erwan Le Gall, « La Grande Guerre comme rupture ? A propos de César Chabrun », Ar Brezel, 18 mai 2022, https://arbrezel.hypotheses.org/6355
 - Olivier Jacquot, «Le « novohispanisme », champ impensé des sciences sociales», Amoxcalli, 26 mai 2022, https://amoxcalli.hypotheses.org/42495
 - Feargal McKay, « Mythologies: Alphonse Steinès and the Invention of the Pyrénées », Podium Cafe, 20 mars 2022, https://www.podiumcafe.com/book-corner/2022/3/20/22925846/alphonse-steines-tourmalet-aubisque-tour-de-france
+- Jana Altmanova, Emmanuel Cartier, Jimmy Luzzi, Sarah Pinto et Sergio Piscopo, « Innovations lexicales dans le domaine de l’environnement et de la biodiversité : le cas de bio en français et en italien », Neologica, n° 16, 2022, Néologie et environnement, p. 85-110, https://dx.doi.org/10.48611/isbn.978-2-406-13219-6.p.0085
+
 - K. Bender, « A voyage to Cythera (3): among publishers and their fake imprints », 23 octobre 2022, https://kbender.blogspot.com/2022/10/111-voyage-to-cythera-3-among.html?view=classic
 - Benoît Roux, « FAIR Way : approches éthique et épistémologique », Eveille, 16 mai 2022, https://eveille.hypotheses.org/2565
 - Noé Leroy, « Étude sémantico-historique du terme seruus entre le 9e et le 13e siècle : essai de diplomatique numérique », Université catholique de Louvain, 2022, https://dial.uclouvain.be/memoire/ucl/en/object/thesis%3A37571
