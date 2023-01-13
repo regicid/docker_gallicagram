@@ -84,6 +84,7 @@ Plot <- function(data,input){
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
   }
   
+  
   if(input$visualiseur==6 | input$visualiseur==9){
     library(FactoMineR)
     library(tidyr)
@@ -126,9 +127,7 @@ Plot <- function(data,input){
       bb=bb+geom_path(data=gg,aes(x,y),col=1)
       plot=ggplotly(bb)
       plot$x$data[[1]]$text <- bb$data$name
-      #print(plot$x$data[[1]]$text)
       plot$x$data[[4]]$hovertext<-plot$x$data[[4]]$text
-      #print(plot$x$data[[4]]$hovertext)
       
       plot$x$data[[5]]$text=NA
       
@@ -261,6 +260,35 @@ Plot <- function(data,input){
     customPalette = customPalette[c(2,1)]
   }
   if(length(unique(tableau$mot))>9){customPalette=NULL}
+  
+  if(input$visualiseur==10){
+    total<-select(tableau,mot,ratio)
+    total=total%>%group_by(mot)%>%summarise_all(sum)
+    total$center=as.Date(NA)
+    for (mot in total$mot) {
+      zaz=tableau[tableau$mot==mot,]
+      zoo=0
+      j=NULL
+      for (i in 1:length(zaz$ratio)) {
+        if(zoo<total$ratio[total$mot==mot]/2) {
+          zoo=zoo+zaz$ratio[i]
+          j=zaz$date[i]
+        }
+        
+      }
+      total$center[total$mot==mot]<-as.Date(j)
+    }
+    
+    tableau$ratio=0
+    for (mot in total$mot) {
+      tableau$ratio[tableau$mot==mot & tableau$date==total$center[total$mot==mot]]=total$ratio[total$mot==mot]
+    }
+    plot=plot_ly(tableau, x = ~date, y = ~ratio, text = ~mot,color=~mot, type = 'scatter', mode = 'markers',size = ~ratio,sizes = c(0, 25),
+                 colors=customPalette,marker = list(sizemode="diameter", opacity = 0))
+    plot=plot%>%add_text()
+    plot=layout(plot,showlegend = FALSE)
+    return(onRender(plot,js))
+  }
   
   if(input$visualiseur==2){
     
@@ -3552,7 +3580,7 @@ shinyServer(function(input, output,session){
       shinyjs::hide(id="afcspace1",anim = F)#à changer  en show pour activer la saisonnalité
       output$legende0=renderText("Affichage : Gallicagram par Benjamin Azoulay et Benoît de Courson")
     }
-    if(input$visualiseur==2 | input$visualiseur==3 | input$visualiseur==6 | input$visualiseur==7 | input$visualiseur==9){shinyjs::hide(id="span",anim = F)}
+    if(input$visualiseur==2 | input$visualiseur==3 | input$visualiseur==6 | input$visualiseur==7 | input$visualiseur==9  | input$visualiseur==10){shinyjs::hide(id="span",anim = F)}
     else{shinyjs::show(id="span",anim = F)}
   })
   
@@ -3613,8 +3641,8 @@ shinyServer(function(input, output,session){
     shinyjs::toggle(id = "mess",anim = F,condition = input$gallicloud==F)
   })
   observeEvent(input$joker, {
-    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9),selected = 2)}
-    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9),selected = 1)}
+    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Centre de gravité"=10),selected = 2)}
+    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Centre de gravité"=10),selected = 1)}
     
   })
   
