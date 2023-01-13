@@ -167,7 +167,7 @@ shinyUI(bootstrapPage(
                                                    h6(textOutput("currentTime"), style="color:white"))),
                               div(id="leg",column(4,
                                                       fluidRow(uiOutput("legende"),align="right"),
-                                                      fluidRow(textOutput("legende0"),align="right"),
+                                                      fluidRow(uiOutput("legende0"),align="right"),
                                                       fluidRow(textOutput("legende1"),align="right"),
                                                       fluidRow(textOutput("legende4"),align="right"),
                                                       fluidRow(textOutput("legende3"),align="right"),

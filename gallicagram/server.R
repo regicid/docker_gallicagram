@@ -3543,12 +3543,14 @@ shinyServer(function(input, output,session){
       shinyjs::show(id="afcline",anim = F)
       # shinyjs::hide(id="afcspace1",anim = F)
       # shinyjs::show(id="afcmois",anim = F)
+      output$legende0=renderText(HTML(paste("Affichage : Gallicagram feat. ","<a href = 'http://hyperbase.unice.fr/hyperbase/', target=\'_blank\'> ","Hyperbase","</a>"),sep = ""))
       }
     else{
       shinyjs::hide(id="afcline",anim = F)
       shinyjs::show(id="afcspace",anim = F)
       shinyjs::hide(id="afcmois",anim = F)
       shinyjs::hide(id="afcspace1",anim = F)#à changer  en show pour activer la saisonnalité
+      output$legende0=renderText("Affichage : Gallicagram par Benjamin Azoulay et Benoît de Courson")
     }
     if(input$visualiseur==2 | input$visualiseur==3 | input$visualiseur==6 | input$visualiseur==7 | input$visualiseur==9){shinyjs::hide(id="span",anim = F)}
     else{shinyjs::show(id="span",anim = F)}
