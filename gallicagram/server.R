@@ -279,14 +279,18 @@ Plot <- function(data,input){
       total$center[total$mot==mot]<-as.Date(j)
     }
     
-    tableau$ratio=0
+    tableau$ratio=NA
     for (mot in total$mot) {
       tableau$ratio[tableau$mot==mot & tableau$date==total$center[total$mot==mot]]=total$ratio[total$mot==mot]
     }
-    plot=plot_ly(tableau, x = ~date, y = ~ratio, text = ~mot,color=~mot, type = 'scatter', mode = 'markers',size = ~ratio,sizes = c(0, 25),
+    plot=plot_ly(tableau, x = ~date, y = ~ratio, text = ~mot,color=~mot, type = 'scatter', mode = 'markers',size = ~ratio,sizes = c(10, 25),
                  colors=customPalette,marker = list(sizemode="diameter", opacity = 0))
     plot=plot%>%add_text()
-    plot=layout(plot,showlegend = FALSE)
+    maximum=tableau$ratio[!is.na(tableau$ratio)]
+    maximum=max(maximum)
+    print(maximum)
+    plot=layout(plot,showlegend = FALSE,xaxis=list(range=c(tableau$date[1],tableau$date[length(tableau$date)])),yaxis=list(range=c(0,maximum+maximum/10)))
+    
     return(onRender(plot,js))
   }
   
