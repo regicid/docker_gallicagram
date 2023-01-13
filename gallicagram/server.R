@@ -288,8 +288,9 @@ Plot <- function(data,input){
     plot=plot%>%add_text()
     maximum=tableau$ratio[!is.na(tableau$ratio)]
     maximum=max(maximum)
-    print(maximum)
-    plot=layout(plot,showlegend = FALSE,xaxis=list(range=c(tableau$date[1],tableau$date[length(tableau$date)])),yaxis=list(range=c(0,maximum+maximum/10)))
+    maximum=maximum+maximum/10
+    plot=layout(plot,showlegend = FALSE,xaxis=list(range=c(tableau$date[1],tableau$date[length(tableau$date)])),
+                yaxis=list(type = "log"))
     
     return(onRender(plot,js))
   }
