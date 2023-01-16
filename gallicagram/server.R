@@ -8,7 +8,6 @@ library(markdown)
 library(shinythemes)
 library(htmlwidgets)
 library(httr)
-library(ngramr)
 library(dplyr)
 library(htmltools)
 library(purrr)
@@ -2815,7 +2814,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     tableau=as.data.frame(tableau)
     
     tableau$search_mode<-"match"
-    tableau$corpus="Ngram"
+    tableau$corpus="Presse"
     tableau$date<-as.character(tableau$date)
     tableau$count<-0
     tableau$url<-""
