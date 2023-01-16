@@ -2791,6 +2791,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   
   if(doc_type==5 | doc_type==9 | doc_type==10 | doc_type==12){
     entree=paste(unlist(mots),collapse="%2C")
+    entree=str_replace_all(entree,"\\+","%2B")
+    entree=str_replace_all(entree," ","\\+")
     if(doc_type==5){corpus="fr-2019"}
     if(doc_type==9){corpus="de-2019"}
     if(doc_type==10){corpus="en-2019"}
