@@ -534,7 +534,13 @@ SPlot <- function(data,input){
   }
   if(input$multicourbes==TRUE | input$doc_type==0){
     if(input$multicourbes==TRUE){tableau = memoire}
-    tableau$mot<-str_c(tableau$mot," \n(",tableau$langue,"/",tableau$bibli,"/",tableau$corpus,"/",tableau$search_mode,")")
+    if(input$multicourbes==TRUE){
+      tableau$mot<-str_c(tableau$mot,"\n",tableau$bibli,"/",tableau$corpus,"/",tableau$langue,"/",tableau$search_mode)
+    }
+    if(input$doc_type==0){
+      tableau$mot<-str_c(tableau$mot,"\n",tableau$bibli,"/",tableau$corpus)
+      tableau$mot<-str_replace_all(tableau$mot,"Le Monde/Presse","Le Monde")
+    }
     if(input$resolution=="Mois"){
       tableau<-tableau[tableau$resolution=="Mois",]
     }
