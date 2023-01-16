@@ -2791,13 +2791,31 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   #ngram_viewer
   
   if(doc_type==5 | doc_type==9 | doc_type==10 | doc_type==12){
-    if(doc_type==5){tableau=tryCatch({ngrami(mots,corpus = "fre_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)},error=function(cond) {})}
-    if(doc_type==9){tableau=tryCatch({ngrami(mots,corpus = "ger_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)},error=function(cond) {})}
-    if(doc_type==10){tableau=tryCatch({ngrami(mots,corpus = "eng_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)},error=function(cond) {})}
-    if(doc_type==12){tableau=tryCatch({ngrami(mots,corpus = "spa_2019",year_start = from, year_end = to, smoothing = 0, aggregate = TRUE)},error=function(cond) {})}
-    if(is.null(tableau)){tableau=as.data.frame(cbind("0000","erreur",0,"ngram"))}
+    entree=paste(unlist(mots),collapse="%2C")
+    if(doc_type==5){corpus="fr-2019"}
+    if(doc_type==9){corpus="de-2019"}
+    if(doc_type==10){corpus="en-2019"}
+    if(doc_type==12){corpus="es-2019"}
+    url=str_c("https://books.google.com/ngrams/json?content=",entree,"&year_start=",from,"&year_end=",to,"&corpus=",corpus,"&smoothing=0")
+    aie=as.character(RETRY("GET",url,times=6))
+    ouille=fromJSON(aie)%>% as.data.frame
+    outch=as.data.frame(ouille)
+    tableau=cbind(c(""),c(""),c(""))
+    colnames(tableau)=c("date","ratio","mot")
+    i=0
+    for (mot in mots) {
+      i=i+1
+      a=cbind(seq(from,to),unlist(outch$timeseries[i]))
+      a=as.data.frame(a)
+      a$mot=mot
+      colnames(a)=c("date","ratio","mot")
+      tableau=rbind(tableau,a)
+    }
+    tableau=tableau[-1,]
+    tableau=as.data.frame(tableau)
+    
     tableau$search_mode<-"match"
-    colnames(tableau)=c("date","mot","ratio","corpus","search_mode")
+    tableau$corpus="Ngram"
     tableau$date<-as.character(tableau$date)
     tableau$count<-0
     tableau$url<-""
