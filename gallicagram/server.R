@@ -329,6 +329,29 @@ Plot <- function(data,input){
     if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41,spikecolor="grey")}
   }
   
+  if(input$visualiseur==11){
+    total<-tableau
+    total$hovers<-str_c(total$mot," : ",total$hovers)
+    total<-total%>%group_by(mot)
+    #mylab=seq.Date(total$date[1],total$date[length(total$date)],by="month")
+    plot=ggplot(total,aes(x=rev(date),fill=rev(ratio),y=rev(mot)))+geom_col(show.legend = F)+
+      scale_fill_fermenter(palette="RdBu")+
+      #scale_x_date(labels = mylab,date_labels = "%b/%d")+
+      labs(x = "", y = "")+theme_tufte() +
+      theme(
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        axis.text.x= element_blank(),
+        axis.ticks.x= element_blank(),
+        axis.line.x= element_blank(),
+        axis.line.y= element_blank(),
+        plot.background = element_rect(fill = 'white', colour = 'white'),
+        legend.position="none"
+      )
+    plot=ggplotly(plot)
+    return(onRender(plot,js))
+  }
   
   if(input$visualiseur==4 & (input$resolution!="Mois" | input$saisons==F)){
     total<-tableau
@@ -568,7 +591,6 @@ SPlot <- function(data,input){
   }
   Title = paste("")
   
-  
   if(input$visualiseur==6 | input$visualiseur==9){
     library(FactoMineR)
     library(tidyr)
@@ -731,6 +753,30 @@ SPlot <- function(data,input){
     customPalette <- brewer.pal(numGroups, "Set1")
     customPalette = customPalette[c(2,1)]
   }
+  
+  if(input$visualiseur==11){
+    total<-tableau
+    total$hovers<-str_c(total$mot," : ",total$hovers)
+    total<-total%>%group_by(mot)
+    #mylab=seq.Date(total$date[1],total$date[length(total$date)],by="month")
+    plot=ggplot(total,aes(x=rev(date),fill=rev(ratio),y=rev(mot)))+geom_col(show.legend = F)+
+      scale_fill_fermenter(palette="RdBu")+
+      #scale_x_date(labels = mylab,date_labels = "%b/%d")+
+      labs(x = "", y = "")+theme_tufte() +
+      theme(
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        axis.text.x= element_blank(),
+        axis.ticks.x= element_blank(),
+        axis.line.x= element_blank(),
+        axis.line.y= element_blank(),
+        plot.background = element_rect(fill = 'white', colour = 'white'),
+        legend.position="none"
+      )
+    return(plot)
+  }
+  
   
   if(input$visualiseur==3){
     plot=ggplot(data=tableau, aes(x = date, y = count, group=mot,fill=mot))+geom_bar(stat="identity",position=position_dodge())+xlab("")+ylab("")+
@@ -3616,7 +3662,7 @@ shinyServer(function(input, output,session){
       shinyjs::hide(id="afcspace1",anim = F)#à changer  en show pour activer la saisonnalité
       output$legende0=renderText("Affichage : Gallicagram par Benjamin Azoulay et Benoît de Courson")
     }
-    if(input$visualiseur==2 | input$visualiseur==3 | input$visualiseur==6 | input$visualiseur==7 | input$visualiseur==9  | input$visualiseur==10){shinyjs::hide(id="span",anim = F)}
+    if(input$visualiseur==2 | input$visualiseur==3 | input$visualiseur==6 | input$visualiseur==7 | input$visualiseur==9  | input$visualiseur==10 | input$visualiseur==11){shinyjs::hide(id="span",anim = F)}
     else{shinyjs::show(id="span",anim = F)}
   })
   
@@ -3677,8 +3723,8 @@ shinyServer(function(input, output,session){
     shinyjs::toggle(id = "mess",anim = F,condition = input$gallicloud==F)
   })
   observeEvent(input$joker, {
-    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Centre de gravité"=10),selected = 2)}
-    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Centre de gravité"=10),selected = 1)}
+    if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Centre de gravité"=10,"Rayures"=11),selected = 2)}
+    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Centre de gravité"=10,"Rayures"=11),selected = 1)}
     
   })
   
