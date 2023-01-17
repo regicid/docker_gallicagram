@@ -151,7 +151,7 @@ shinyUI(bootstrapPage(
                                                       div(id="pyllicagram",style="display: inline-block;vertical-align:middle;float:right",actionButton("link", "Pyllicagram",onclick ="window.open('https://github.com/regicid/pyllicagram', '_blank')")),
                                                       div(style="display: inline-block;vertical-align:bottom;",materialSwitch(inputId = "mode", label = icon("moon"),
                                                                                                                               right=TRUE,status = "default",inline = T,width = "150%")),
-                                                      div(style="display: inline-block;vertical-align:middle;float:right;width:100px;margin-top:-20px",selectInput("visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Centre de gravité"=10,"Rayures"=11),selected = 1))),
+                                                      div(style="display: inline-block;vertical-align:middle;float:right;width:100px;margin-top:-20px",selectInput("visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Ctre de gravité"=10,"Rayures"=11),selected = 1))),
                                                       
                                                       plotlyOutput("plot"),
                                                       plotOutput("cloud")
