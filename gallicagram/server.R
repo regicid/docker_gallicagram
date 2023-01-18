@@ -336,6 +336,7 @@ Plot <- function(data,input){
     total$date=as.factor(total$date)
     total$mot=as.factor(total$mot)
     total$date=as.factor(total$date)
+    total=total[order(total$mot,total$date),]
     plot=ggplot(total,aes(x=date,fill=ratio,group=mot,y=1))+geom_col(stat="identity", position = "dodge",width = 1)+
       scale_fill_fermenter(palette="RdBu")+facet_grid(rows = vars(mot),margins = F)+
       labs(x = "", y = "")+theme_tufte() +
@@ -769,6 +770,7 @@ SPlot <- function(data,input){
     total$date=as.factor(total$date)
     total$mot=as.factor(total$mot)
     total$date=as.factor(total$date)
+    total=total[order(total$mot,total$date),]
     plot=ggplot(total,aes(x=date,fill=ratio,group=mot,y=1))+geom_col(stat="identity", position = "dodge",width = 1)+
       scale_fill_fermenter(palette="RdBu")+facet_grid(rows = vars(mot),margins = F)+
       labs(x = "", y = "")+theme_tufte() +
