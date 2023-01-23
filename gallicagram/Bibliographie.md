@@ -37,6 +37,7 @@
 - Séminaire Méthodologie de la recherche, Master Lettres - Sorbonne Université, 21 octobre 2022
 - Séminaire du laboratoire Econophysix - Ecole Polytechnique, 27 octobre 2022
 - Séminaire Evolution, Cognition and Culture Conference - ENS Ulm, 28 novembre 2022
+- Présentation de l'outil de lexicométrie Gallicagram, ADEMEC - Ecole des Chartes, 23 janvier 2023 : https://www.eventbrite.fr/e/billets-atelier-n4-presentation-de-loutil-de-lexicometrie-gallicagram-505923700407
 
 
 ## Projets fondés sur Gallicagram
