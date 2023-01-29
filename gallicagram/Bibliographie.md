@@ -21,7 +21,6 @@
 - Olivier Jacquot, «Le « novohispanisme », champ impensé des sciences sociales», Amoxcalli, 26 mai 2022, https://amoxcalli.hypotheses.org/42495
 - Feargal McKay, « Mythologies: Alphonse Steinès and the Invention of the Pyrénées », Podium Cafe, 20 mars 2022, https://www.podiumcafe.com/book-corner/2022/3/20/22925846/alphonse-steines-tourmalet-aubisque-tour-de-france
 - Jana Altmanova, Emmanuel Cartier, Jimmy Luzzi, Sarah Pinto et Sergio Piscopo, « Innovations lexicales dans le domaine de l’environnement et de la biodiversité : le cas de bio en français et en italien », Neologica, n° 16, 2022, Néologie et environnement, p. 85-110, https://dx.doi.org/10.48611/isbn.978-2-406-13219-6.p.0085
-
 - K. Bender, « A voyage to Cythera (3): among publishers and their fake imprints », 23 octobre 2022, https://kbender.blogspot.com/2022/10/111-voyage-to-cythera-3-among.html?view=classic
 - Benoît Roux, « FAIR Way : approches éthique et épistémologique », Eveille, 16 mai 2022, https://eveille.hypotheses.org/2565
 - Noé Leroy, « Étude sémantico-historique du terme seruus entre le 9e et le 13e siècle : essai de diplomatique numérique », Université catholique de Louvain, 2022, https://dial.uclouvain.be/memoire/ucl/en/object/thesis%3A37571
@@ -55,9 +54,11 @@
 ## Sites référençant Gallicagram comme outil
 - https://www.wikidata.org/wiki/Q115121837
 - http://www.bis-sorbonne.fr/sid/spip.php?article898
+- https://marketplace.sshopencloud.eu/tool-or-service/bSv19B
 - https://bu.univ-lyon2.fr/fle-sc-du-langage → ressources complémentaires
 - https://numrha.hypotheses.org/2840
 - https://numrha.hypotheses.org/4886
+- https://www.fabula.org/actualites/111893/gallicagram.html
 - https://lasciem.hypotheses.org/
 - http://blog.ac-versailles.fr/starter/index.php/post/24/02/2022/GALLICAGRAM
 - https://www.bases-netsources.com/component/flexicontent/category/conseil-semaine

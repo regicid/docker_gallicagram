@@ -3610,16 +3610,11 @@ cartoPlot<-function(input,fra){
 cartoPicture<-function(fra,titre,from,to,colorscale){
   fra$val<-fra$val/100
   titre=str_c(titre,"\n",from," - ",to)
-  if(colorscale==F){plot=ggplot(data = fra) + geom_sf(aes(fill = val))+
-    scale_fill_gradient2(low = "white", high = "red", labels = percent)+
+  plot=ggplot(data = fra) + geom_sf(aes(fill = val))+
+    scale_fill_viridis_b(option = "B",direction = -1)+
     theme_classic()+theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.ticks.x = element_blank(),axis.text.x = element_blank(),
                           axis.ticks.y = element_blank(),axis.text.y = element_blank(),
-                          line = element_blank())+ labs(fill = titre)}
-  if(colorscale==T){plot=ggplot(data = fra) + geom_sf(aes(fill = val))+
-    scale_fill_gradient2(low = "yellow",mid="red", high = "purple", midpoint = .5, labels = percent)+
-    theme_classic()+theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.ticks.x = element_blank(),axis.text.x = element_blank(),
-                          axis.ticks.y = element_blank(),axis.text.y = element_blank(),
-                          line = element_blank())+ labs(fill = titre)}
+                          line = element_blank())+ labs(fill = titre)
   
   return(plot)
 }
@@ -3631,16 +3626,11 @@ cartoGramme<-function(fra,titre,from,to,colorscale){
   titre=str_c(titre,"\n",from," - ",to)
   #  plot<-cartogram_cont(fra, "base", itermax = 5,prepare="adjust",threshold = 0.3)
   plot<-cartogram_dorling(fra, "base", itermax = 5)
-  if(colorscale==F){plot=ggplot(data = plot) + geom_sf(aes(fill = val))+
-    scale_fill_gradient2(low = "white", high = "red", labels = percent)+
+  plot=ggplot(data = plot) + geom_sf(aes(fill = val))+
+    scale_fill_viridis_b(option = "B",direction = -1)+
     theme_classic()+theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.ticks.x = element_blank(),axis.text.x = element_blank(),
                           axis.ticks.y = element_blank(),axis.text.y = element_blank(),
-                          line = element_blank())+ labs(fill = titre)}
-  if(colorscale==T){plot=ggplot(data = plot) + geom_sf(aes(fill = val))+
-    scale_fill_gradient2(low = "yellow",mid="red", high = "purple", midpoint = .5, labels = percent)+
-    theme_classic()+theme(plot.background = element_rect(fill = 'white', colour = 'white'),axis.ticks.x = element_blank(),axis.text.x = element_blank(),
-                          axis.ticks.y = element_blank(),axis.text.y = element_blank(),
-                          line = element_blank())+ labs(fill = titre)}
+                          line = element_blank())+ labs(fill = titre)
   
   return(plot)
 }

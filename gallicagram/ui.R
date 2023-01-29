@@ -193,8 +193,7 @@ shinyUI(bootstrapPage(
                                    fluidRow(
                                      div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadCarto', 'Carte interactive')),
                                      div(style="display: inline-block;vertical-align:bottom",downloadButton('cartoPng', 'Carte .png')),
-                                     div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png')),
-                                     div(style="display: inline-block;vertical-align:bottom",prettySwitch(inputId = "colorscale",label = "Vérouiller le gradient colorimétrique",status = "success",fill = FALSE))
+                                     div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png'))
                                      ),
                                    fluidRow(plotlyOutput("carto2"))
                                    )
