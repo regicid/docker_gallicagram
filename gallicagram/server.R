@@ -333,26 +333,23 @@ Plot <- function(data,input){
     total<-tableau
     total$hovers<-str_c(total$mot," : ",total$hovers)
     total<-total%>%group_by(mot)
-    total$date=as.factor(total$date)
+    total$date=as.Date.character(total$date)
     total$mot=as.factor(total$mot)
     total$date=as.factor(total$date)
     total=total[order(total$mot,total$date),]
-    plot=ggplot(total,aes(x=date,fill=ratio,group=mot,y=1))+geom_col(stat="identity", position = "dodge",width = 1)+
-      scale_fill_fermenter(palette="RdBu")+facet_grid(rows = vars(mot),margins = F)+
+    plot=ggplot(total,aes(x=date,fill=ratio,y=mot))+
+      geom_tile()+
+      scale_fill_fermenter(palette="RdBu")+
+      # scale_x_date(breaks = date_breaks("2 year"),
+      #              labels = date_format("%Y"))+
       labs(x = "", y = "")+theme_tufte() +
       theme(
-        strip.text.y = element_text(angle = 0),
-        plot.margin=margin(t = 0, r = 2, b = 0, l = 0, unit = "cm"),
-        panel.spacing.x=unit(0, "lines"),
-        panel.spacing.y=unit(0, "lines"),
-        panel.margin.x=unit(0, "lines") , panel.margin.y=unit(0,"lines"),
         axis.title = element_blank(),
         axis.ticks = element_blank(),
         panel.grid = element_blank(),
-        axis.text.y= element_blank(),
         axis.ticks.y = element_blank(),
-        axis.text.x= element_blank(),
-        axis.ticks.x= element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank(),
         axis.line.x= element_blank(),
         axis.line.y= element_blank(),
         plot.background = element_rect(fill = 'white', colour = 'white'),
