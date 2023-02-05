@@ -3649,6 +3649,38 @@ shinyServer(function(input, output,session){
     animation = TRUE
   )
   show_modal_spinner()
+  will<-""
+  observe({
+    data$e <- event_data("plotly_click")
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){
+    will<<-as.character(unlist(data$e$customdata))
+    fromm=str_extract(will,"gallicapublication_date.+")
+    fromm=str_remove_all(fromm,"%22%20.+")
+    fromm=str_remove_all(fromm,"gallicapublication_date%3E=%22")
+    too=str_extract(will,"and%20gallicapublication_date.+")
+    too=str_remove_all(too,"and%20gallicapublication_date%3C=%22")
+    too=str_remove_all(too,"%22.+")
+    word=str_extract(will,"text%20adj%20%22.+")
+    word=str_remove_all(word,"text%20adj%20%22")
+    word=str_remove_all(word,"%22%20.+")
+    mois=""
+    if(input$resolution=="Mois"){mois=str_c("&month=",str_extract(str_remove(fromm,"....."),".."))}
+    
+    if(input$doc_type==1){
+      will_url=str_c("https://www.gallicagrapher.com/context?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois)
+    }
+    if(input$doc_type==2){
+      will_url=str_c("https://www.gallicagrapher.com/context?terms=",word,"&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois)
+    }
+    if(input$doc_type==56){
+      will_url=str_c("https://www.gallicagrapher.com/context?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois)
+    }
+    #print(will_url)
+    output$frame <- renderUI({
+      tags$iframe(src=will_url, height=200, width=800, frameBorder=0)
+    })
+    }
+  })
   observeEvent(input$visualiseur,{
     if(input$visualiseur==6 | input$visualiseur==9){
       shinyjs::hide(id="afcspace",anim = F)
