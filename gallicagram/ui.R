@@ -163,7 +163,7 @@ shinyUI(bootstrapPage(
                                                    div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadPlot', 'Graphique interactif')),
                                                    div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadSPlot', 'Graphique scientifique')),
                                                    p(""),
-                                                   
+                                                   conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",htmlOutput("frame")),
                                                    h6(textOutput("currentTime"), style="color:white"))),
                               div(id="leg",column(4,
                                                       fluidRow(uiOutput("legende"),align="right"),
