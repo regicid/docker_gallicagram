@@ -162,9 +162,7 @@ shinyUI(bootstrapPage(
                                                    div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadData', 'Données')),
                                                    div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadPlot', 'Graphique interactif')),
                                                    div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadSPlot', 'Graphique scientifique')),
-                                                   p(""),
-                                                   conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",htmlOutput("frame")),
-                                                   h6(textOutput("currentTime"), style="color:white"))),
+                                                   p(""))),
                               div(id="leg",column(4,
                                                       fluidRow(uiOutput("legende"),align="right"),
                                                       fluidRow(uiOutput("legende0"),align="right"),
@@ -176,7 +174,11 @@ shinyUI(bootstrapPage(
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(tableOutput("corr"),align="right")),
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(tableOutput("corr2"),align="right")),
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right"))
-                                                     ))
+                                                     )),
+                            fluidRow(column(12,
+                                   #conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",htmlOutput("frame")),
+                                   conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",dataTableOutput("frame")),
+                                   h6(textOutput("currentTime"), style="color:white")))
                                               ),
                    tabPanel("Cartographie",
                             column(4,wellPanel(

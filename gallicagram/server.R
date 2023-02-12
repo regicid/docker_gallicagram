@@ -30,6 +30,7 @@ library(jsonlite)
 library(ggwordcloud)
 library(shinyalert)
 library(bezier)
+library(jsonlite)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -3652,7 +3653,7 @@ shinyServer(function(input, output,session){
   will<-""
   observe({
     data$e <- event_data("plotly_click")
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){
+    if(is.null(data$e)==F&(input$doc_type==1 | input$doc_type==2 | input$doc_type==56)){
     will<<-as.character(unlist(data$e$customdata))
     fromm=str_extract(will,"gallicapublication_date.+")
     fromm=str_remove_all(fromm,"%22%20.+")
@@ -3667,18 +3668,34 @@ shinyServer(function(input, output,session){
     if(input$resolution=="Mois"){mois=str_c("&month=",str_extract(str_remove(fromm,"....."),".."))}
     
     if(input$doc_type==1){
-      will_url=str_c("https://www.gallicagrapher.com/context?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois)
+      will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
     }
     if(input$doc_type==2){
-      will_url=str_c("https://www.gallicagrapher.com/context?terms=",word,"&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois)
+      will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
     }
     if(input$doc_type==56){
-      will_url=str_c("https://www.gallicagrapher.com/context?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois)
+      will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
     }
-    #print(will_url)
-    output$frame <- renderUI({
-      tags$iframe(src=will_url, height=200, width=800, frameBorder=0)
-    })
+    will_url=URLencode(will_url)
+    a<-tryCatch({fromJSON(html_text(read_html(will_url)))%>%data.frame()},error=function(cond){return(NULL)})
+    if(is.null(a)==F){
+    b=data.frame(titre_journal=character(),
+                       date=character(),
+                       contexte_gauche=character(),
+                       pivot=character(), 
+                       contexte_droit=character(), 
+                       stringsAsFactors=FALSE) 
+    for (i in 1:length(a$records.paper_title)) {
+      url_titre=HTML(str_c("<a href='",a$records.url[i],"' target='_blank'>",a$records.paper_title[i],"</a>"))
+      b=rbind(b,cbind(url_titre,a$records.date[i],a$records.context[[i]]$left_context,a$records.context[[i]]$pivot,a$records.context[[i]]$right_context))
+    }
+    colnames(b)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
+    output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE,columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+    }
+    # output$frame <- renderUI({
+    #   tags$iframe(src=will_url, height=200, width=800, frameBorder=0)
+    # })
+    
     }
   })
   observeEvent(input$visualiseur,{
@@ -4411,7 +4428,7 @@ shinyServer(function(input, output,session){
   })
   
   ###
-  output$notice_corp<-renderDataTable(read.csv("corpus.csv",sep=",",encoding = "UTF-8"),options = list(pageLength = 100))
+  output$notice_corp<-renderDataTable(read.csv("corpus.csv",sep=",",encoding = "UTF-8"),options = list(pageLength = 100,lengthChange = FALSE))
   ###
   observeEvent(input$correlation_test,{
   if(input$correlation_test==TRUE){
