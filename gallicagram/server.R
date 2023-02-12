@@ -3711,7 +3711,7 @@ shinyServer(function(input, output,session){
       shinyjs::show(id="afcspace",anim = F)
       shinyjs::hide(id="afcmois",anim = F)
       shinyjs::hide(id="afcspace1",anim = F)#à changer  en show pour activer la saisonnalité
-      output$legende0=renderText("Affichage : Gallicagram par Benjamin Azoulay et Benoît de Courson")
+      output$legende0=renderText("Affichage : Gallicagram par B. Azoulay et B. de Courson")
     }
     if(input$visualiseur==2 | input$visualiseur==3 | input$visualiseur==6 | input$visualiseur==7 | input$visualiseur==9  | input$visualiseur==10 | input$visualiseur==11){shinyjs::hide(id="span",anim = F)}
     else{shinyjs::show(id="span",anim = F)}
@@ -3908,7 +3908,7 @@ shinyServer(function(input, output,session){
   output$pvalue=renderText("***p<.001 ; **p<.01 ; *p<.05")
   
   output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/', target=\'_blank\'> ","gallica.bnf.fr","</a>"),sep = ""))
-  output$legende0=renderText("Affichage : Gallicagram par Benjamin Azoulay et Benoît de Courson")
+  output$legende0=renderText("Affichage : Gallicagram par B. Azoulay et B. de Courson")
   nb_mots<-length(unique(data[["tableau"]]$mot))
   output$legende2<-renderText(str_c(""))
   output$legende3<-renderText(str_c("Résultats trouvés : ",as.character(sum(data[["tableau"]]$count))))
