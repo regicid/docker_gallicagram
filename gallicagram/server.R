@@ -3710,6 +3710,7 @@ shinyServer(function(input, output,session){
       b=rbind(b,cbind(url_titre,a$records.date[i],a$records.context[[i]]$left_context,a$records.context[[i]]$pivot,a$records.context[[i]]$right_context))
     }
     colnames(b)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
+    output$lien=renderUI(HTML(str_c("Affichage du contexte par Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
     output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE,columnDefs = list(list(className = 'dt-body-right', targets = 3))))
     }
     # output$frame <- renderUI({

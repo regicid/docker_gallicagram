@@ -176,6 +176,7 @@ shinyUI(bootstrapPage(
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right"))
                                                      )),
                             fluidRow(column(12,
+                                    conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",htmlOutput("lien")),         
                                    #conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",htmlOutput("frame")),
                                    conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",dataTableOutput("frame")),
                                    h6(textOutput("currentTime"), style="color:white")))
