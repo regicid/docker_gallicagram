@@ -37,6 +37,8 @@
 - Séminaire du laboratoire Econophysix - Ecole Polytechnique, 27 octobre 2022
 - Séminaire Evolution, Cognition and Culture Conference - ENS Ulm, 28 novembre 2022
 - Présentation de l'outil de lexicométrie Gallicagram, ADEMEC - Ecole des Chartes, 23 janvier 2023 : https://www.eventbrite.fr/e/billets-atelier-n4-presentation-de-loutil-de-lexicometrie-gallicagram-505923700407
+- Séminaire IMAREV, Gallicagram : impressions de la Révolution - Université Paris Cité, 24 mars 2023 : https://imarev.hypotheses.org/366
+- Séminaire ISOCO Indices d’opinion sociaux économiques - Université Paris Nanterre, 6 juillet
 
 
 ## Projets fondés sur Gallicagram

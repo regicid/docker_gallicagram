@@ -44,6 +44,14 @@ window.open(url);
 });
 }"
 
+jsg <- "
+function(el, x) {
+el.on('plotly_click', function(d) {
+var point = d.points[0];
+var url = point.data.customdata[point.pointIndex];
+});
+}"
+
 se="linux"
 
 Plot <- function(data,input){
@@ -145,7 +153,8 @@ Plot <- function(data,input){
       }
       plot=ggplotly(bb)
     }
-    return(onRender(plot,js))
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    else{return(onRender(plot,js))}
     }
   if(input$visualiseur==7){
     total<-select(tableau,mot,count)
@@ -188,7 +197,8 @@ Plot <- function(data,input){
     plot=ggplotly(plot,tooltip = "text")%>%
       layout(xaxis = list(autorange = TRUE),
              yaxis = list(autorange = TRUE))
-    return(onRender(plot,js))
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    else{return(onRender(plot,js))}
   }
   
   tableau$scale<-tableau$ratio
@@ -298,7 +308,8 @@ Plot <- function(data,input){
                 xaxis=list(range=c(tableau$date[1],tableau$date[length(tableau$date)]),title=""),
                 yaxis=list(type = "log",showticklabels = FALSE,showgrid = FALSE,title=""))
     
-    return(onRender(plot,js))
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    else{return(onRender(plot,js))}
   }
   
   if(input$visualiseur==2){
@@ -313,7 +324,8 @@ Plot <- function(data,input){
     if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$count,y=reorder(total$mot,total$count),type="bar",customdata=total$url)}
     plot<-layout(plot,xaxis=list(title="Nombre d'occurrences dans le corpus"))
     plot = layout(plot,showlegend=F)
-    return(onRender(plot,js))
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    else{return(onRender(plot,js))}
   }
   
   if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,"......."),": x/N = ",tableau$count,"/",tableau$base,"\n                 = ",round(tableau$ratio*100,digits = 1),"%")}
@@ -357,7 +369,8 @@ Plot <- function(data,input){
         legend.position="none"
       )
     plot=ggplotly(plot)
-    return(onRender(plot,js))
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    else{return(onRender(plot,js))}
   }
   
   if(input$visualiseur==4 & (input$resolution!="Mois" | input$saisons==F)){
@@ -368,7 +381,8 @@ Plot <- function(data,input){
     if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$date,y=reorder(total$mot, total$count, sum),type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,size = ~total$ratio,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3),text=~total$hovers,hoverinfo="text")}
     plot<-layout(plot,xaxis=list(title=""))
     plot = layout(plot,showlegend=F)
-    return(onRender(plot,js))
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    else{return(onRender(plot,js))}
   }
   if(input$visualiseur==4 & input$resolution=="Mois" & input$saisons==T){
     aaa=str_extract(tableau$date,"....")
@@ -382,7 +396,8 @@ Plot <- function(data,input){
     plot<-plot_ly(x=~tableau$date,y=reorder(tableau$mot, tableau$loess, sum),type = 'scatter', mode = 'markers', color=~tableau$mot,colors=customPalette,size = ~tableau$loess,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.6))
     plot<-layout(plot,xaxis=list(title="",tickformat="%b"))
     plot = layout(plot,showlegend=F)
-    return(onRender(plot,js))
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    else{return(onRender(plot,js))}
   }
   
   if(input$visualiseur==5){
@@ -395,7 +410,8 @@ Plot <- function(data,input){
         theme(plot.background = element_rect(fill = 'white', colour = 'white'),panel.margin.y = unit(0, "lines"),axis.line.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),strip.background = element_blank(), strip.text.x = element_blank(),axis.line.x = element_line(colour = "black"),legend.title= element_blank(), legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
     }
     plot=ggplotly(plot,tooltip = c("text"))
-    return(onRender(plot,js))
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    else{return(onRender(plot,js))}
   }
   
   loess = tableau$loess
@@ -435,7 +451,8 @@ Plot <- function(data,input){
       tableau$date=as.Date.character(str_c("2000-",tableau$date,"-01"))
       plot = plot_ly(data=tableau,x=~date,y=~loess,color=~mot,type='scatter',mode='spline',line = list(shape = "spline"),colors=customPalette,legendgroup=~mot)
       plot=layout(plot,xaxis = list(tickformat="%b"))
-    return(onRender(plot,js))
+      if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+      else{return(onRender(plot,js))}
   }
   
   if(input$visualiseur==8 & input$resolution=="Mois"){
@@ -490,7 +507,8 @@ Plot <- function(data,input){
                     ticks = ''
                   )
                   ))
-    return(onRender(plot,js))
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    else{return(onRender(plot,js))}
   }
   
   if(input$visualiseur==3){
@@ -546,11 +564,13 @@ Plot <- function(data,input){
     plot= plot%>%add_lines()
     plot = plotly::subplot(plot,plot1,nrows = 2,legend=NULL,shareX = T)
     plot=plot %>%  layout(xaxis = list(autorange = TRUE),  yaxis = list(autorange = TRUE))
-    return(onRender(plot,js))
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    else{return(onRender(plot,js))}
   } else{
     plot=layout(plot)
     plot=plot %>%  layout(xaxis = list(autorange = TRUE),  yaxis = list(autorange = TRUE))
-    return(onRender(plot,js))
+    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    else{return(onRender(plot,js))}
   }
   
 }
