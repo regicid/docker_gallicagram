@@ -13,7 +13,6 @@ library(htmltools)
 library(purrr)
 library(rvest)
 library(RSelenium)
-library(RSQLite)
 library(tidytext)
 library(DBI)
 library(shinybusy)
@@ -57,30 +56,30 @@ se="linux"
 Plot <- function(data,input){
   tableau = data[["tableau"]]
   if(is.null(data[["tableau_page"]])==FALSE){
-    if(input$search_mode==2){
+    if(isolate(input$search_mode)==2){
       tableau = data[["tableau_page"]]
     }
-    if(input$doc_type==4 & input$search_mode==1){
+    if(isolate(input$doc_type)==4 & isolate(input$search_mode)==1){
       tableau = data[["tableau_volume"]]
     }
   }
-  if(input$multicourbes==TRUE | input$doc_type==0){
+  if(input$multicourbes==TRUE | isolate(input$doc_type)==0){
     if(input$multicourbes==TRUE){tableau = memoire}
     tableau$mot[str_length(tableau$mot)>=30]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=30],30,"right"),"..")
     if(input$multicourbes==TRUE){
       tableau$mot<-str_c(tableau$mot,"<br>",tableau$bibli,"/",tableau$corpus,"/",tableau$langue,"/",tableau$search_mode)
     }
-    if(input$doc_type==0){
+    if(isolate(input$doc_type)==0){
       tableau$mot<-str_c(tableau$mot,"<br>",tableau$bibli,"/",tableau$corpus)
       tableau$mot<-str_replace_all(tableau$mot,"Le Monde/Presse","Le Monde")
     }
-    if(input$resolution=="Mois"){
+    if(isolate(input$resolution=="Mois")){
       tableau<-tableau[tableau$resolution=="Mois",]
     }
-    if(input$resolution=="Année"){
+    if(isolate(input$resolution=="Année")){
       tableau<-tableau[tableau$resolution=="Année",]
     }
-    if(input$resolution=="Semaine"){
+    if(isolate(input$resolution=="Semaine")){
       tableau<-tableau[tableau$resolution=="Semaine",]
     }
   }else{tableau$mot[str_length(tableau$mot)>=30]<-str_c(str_trunc(tableau$mot[str_length(tableau$mot)>=30],30,"right"),"..")}
@@ -115,14 +114,14 @@ Plot <- function(data,input){
     if(input$visualiseur==6){
       res.pca=PCA(a,scale.unit = TRUE)
       rownames(res.pca$ind$coord)=rownames(a)
-      }
+    }
     if(input$visualiseur==9){
       res.pca=CA(a)
       rownames(res.pca$row$coord)=rownames(a)
-      }
+    }
     
     library(factoextra)
-    if( input$resolution=="Mois"){b = str_extract(b,"....")
+    if( isolate(input$resolution=="Mois")){b = str_extract(b,"....")
     }
     if(input$afcline==T){
       if(input$visualiseur==6){
@@ -153,9 +152,9 @@ Plot <- function(data,input){
       }
       plot=ggplotly(bb)
     }
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
-    }
+  }
   if(input$visualiseur==7){
     total<-select(tableau,mot,count)
     total=total%>%group_by(mot)%>%summarise_all(sum)
@@ -167,9 +166,9 @@ Plot <- function(data,input){
     }
     total$hovers=str_c(total$mot," : ",total$count)
     total$url="www.google.com"
-    if(input$doc_type==1){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
-    if(input$doc_type==2){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
-    if(input$doc_type==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=relevance_desc")}
+    if(isolate(input$doc_type)==1){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
+    if(isolate(input$doc_type)==2){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
+    if(isolate(input$doc_type)==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=relevance_desc")}
     # plot=plot_ly(total,x=~x,y=~y,size = ~count,color=~count,type = 'scatter', mode = 'markers',colors="Reds",
     #            marker = list(sizemode = "diameter", opacity = 0.5),text=~total$hovers,hoverinfo="text")%>%
     #   add_text(text=~mot,size=10, textposition="center",textfont = list(color = '#000000'))
@@ -197,7 +196,7 @@ Plot <- function(data,input){
     plot=ggplotly(plot,tooltip = "text")%>%
       layout(xaxis = list(autorange = TRUE),
              yaxis = list(autorange = TRUE))
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -308,7 +307,7 @@ Plot <- function(data,input){
                 xaxis=list(range=c(tableau$date[1],tableau$date[length(tableau$date)]),title=""),
                 yaxis=list(type = "log",showticklabels = FALSE,showgrid = FALSE,title=""))
     
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -317,14 +316,14 @@ Plot <- function(data,input){
     total<-select(tableau,count,mot)
     total<-total%>%group_by(mot)%>%summarise_all(sum)
     total$url="www.google.com"
-    if(input$doc_type==1){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
-    if(input$doc_type==2){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
-    if(input$doc_type==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=relevance_desc")}
+    if(isolate(input$doc_type)==1){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
+    if(isolate(input$doc_type)==2){total$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=1&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",total$mot,"%22%20)%20%20and%20(dc.type%20all%20%22monographie%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",input$beginning,"%22%20and%20gallicapublication_date%3C=%22",input$end,"%22)&suggest=10&keywords=",total$mot)}
+    if(isolate(input$doc_type)==30){total$url=str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",total$mot,"%22&start_at=01%2F01%2F",input$beginning,"&end_at=31%2F12%2F",input$end,"&search_sort=relevance_desc")}
     plot<-plot_ly(x=~total$count,y=reorder(total$mot,total$count),type="bar",customdata=total$url,colors=customPalette)
     if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$count,y=reorder(total$mot,total$count),type="bar",customdata=total$url)}
     plot<-layout(plot,xaxis=list(title="Nombre d'occurrences dans le corpus"))
     plot = layout(plot,showlegend=F)
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -334,7 +333,7 @@ Plot <- function(data,input){
   y <- list(title = "Fréquence dans le corpus",titlefont = 41,tickformat = digit_number,spikecolor="grey")
   if(input$scale==TRUE | input$multicourbes==TRUE){y <- list(title = "Fréquence dans le corpus",titlefont = 41,spikecolor="grey")}
   x <- list(title = "",titlefont = 41,spikecolor="grey")
-  if(input$search_mode==3){
+  if(isolate(input$search_mode)==3){
     if(data[["resolution"]]=="Mois"){tableau$hovers = str_c(str_extract(tableau$date,".......")," : ",round(tableau$ratio*100,digits = 6),"%")}
     else if(data[["resolution"]]=="Semaine"){tableau$hovers = str_c(tableau$date," : ",round(tableau$ratio*100,digits = 6),"%")}
     else{tableau$hovers = str_c(str_extract(tableau$date,"....")," : ",round(tableau$ratio*100,digits = 6),"%")}
@@ -369,11 +368,11 @@ Plot <- function(data,input){
         legend.position="none"
       )
     plot=ggplotly(plot)
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
-  if(input$visualiseur==4 & (input$resolution!="Mois" | input$saisons==F)){
+  if(input$visualiseur==4 & (isolate(input$resolution!="Mois") | input$saisons==F)){
     total<-tableau
     total$hovers<-str_c(total$mot," : ",total$hovers)
     total<-total%>%group_by(mot)
@@ -381,10 +380,10 @@ Plot <- function(data,input){
     if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$date,y=reorder(total$mot, total$count, sum),type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,size = ~total$ratio,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3),text=~total$hovers,hoverinfo="text")}
     plot<-layout(plot,xaxis=list(title=""))
     plot = layout(plot,showlegend=F)
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
-  if(input$visualiseur==4 & input$resolution=="Mois" & input$saisons==T){
+  if(input$visualiseur==4 & isolate(input$resolution=="Mois") & input$saisons==T){
     aaa=str_extract(tableau$date,"....")
     bbb=str_extract(tableau$date,".......")
     bbb=str_remove(bbb,".....")
@@ -396,7 +395,7 @@ Plot <- function(data,input){
     plot<-plot_ly(x=~tableau$date,y=reorder(tableau$mot, tableau$loess, sum),type = 'scatter', mode = 'markers', color=~tableau$mot,colors=customPalette,size = ~tableau$loess,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.6))
     plot<-layout(plot,xaxis=list(title="",tickformat="%b"))
     plot = layout(plot,showlegend=F)
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -410,7 +409,7 @@ Plot <- function(data,input){
         theme(plot.background = element_rect(fill = 'white', colour = 'white'),panel.margin.y = unit(0, "lines"),axis.line.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),strip.background = element_blank(), strip.text.x = element_blank(),axis.line.x = element_line(colour = "black"),legend.title= element_blank(), legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
     }
     plot=ggplotly(plot,tooltip = c("text"))
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -424,48 +423,48 @@ Plot <- function(data,input){
   tableau$ribbon_up[z] = 3/base[z]
   tableau$ribbon_up[is.na(tableau$ribbon_up)] <- max(tableau$ribbon_up,na.rm=T)
   tableau$ribbon_down[is.na(tableau$ribbon_down)] <- 0
-   if(length(unique(tableau$date))<=20){
+  if(length(unique(tableau$date))<=20){
     plot = plot_ly(tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='spline+markers',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
-    if(input$doc_type!=5 & input$doc_type!=9 & input$doc_type!=10 & input$doc_type!=12 & input$doc_type!=44 & input$doc_type!=58 & input$doc_type!=59 & input$doc_type!=60 & input$doc_type!=61 & input$doc_type!=62 & input$doc_type!=63 & input$doc_type!=64 & input$scale==F & input$multicourbes==F){
+    if(isolate(input$doc_type)!=5 & isolate(input$doc_type)!=9 & isolate(input$doc_type)!=10 & isolate(input$doc_type)!=12 & isolate(input$doc_type)!=44 & isolate(input$doc_type)!=58 & isolate(input$doc_type)!=59 & isolate(input$doc_type)!=60 & isolate(input$doc_type)!=61 & isolate(input$doc_type)!=62 & isolate(input$doc_type)!=63 & isolate(input$doc_type)!=64 & input$scale==F & input$multicourbes==F){
       plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,fillcolor=~mot,showlegend=F,opacity=.2)
     }
     plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F)
-    }  else{
+  }  else{
     plot = plot_ly(data=tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='spline',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
-    if(input$doc_type!=5 & input$doc_type!=9 & input$doc_type!=10 & input$doc_type!=12 & input$doc_type!=44 & input$doc_type!=58 & input$doc_type!=59 & input$doc_type!=60 & input$doc_type!=61 & input$doc_type!=62 & input$doc_type!=63 & input$doc_type!=64 & input$scale==F & input$multicourbes==F){
+    if(isolate(input$doc_type)!=5 & isolate(input$doc_type)!=9 & isolate(input$doc_type)!=10 & isolate(input$doc_type)!=12 & isolate(input$doc_type)!=44 & isolate(input$doc_type)!=58 & isolate(input$doc_type)!=59 & isolate(input$doc_type)!=60 & isolate(input$doc_type)!=61 & isolate(input$doc_type)!=62 & isolate(input$doc_type)!=63 & isolate(input$doc_type)!=64 & input$scale==F & input$multicourbes==F){
       plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,showlegend=F,fillcolor=~mot,opacity=.2)
     }
     plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F,customdata=tableau$url)
-  y_max = tableau$ribbon_up[which.max(tableau$loess)]
-  y_min = tableau$ribbon_down[which.min(tableau$loess)]
-  plot = plot %>% layout(yaxis=list(range=c(y_min,y_max)))}
+    y_max = tableau$ribbon_up[which.max(tableau$loess)]
+    y_min = tableau$ribbon_down[which.min(tableau$loess)]
+    plot = plot %>% layout(yaxis=list(range=c(y_min,y_max)))}
   
-  if(input$visualiseur==1 & input$resolution=="Mois" & input$saisons==T){
+  if(input$visualiseur==1 & isolate(input$resolution=="Mois") & input$saisons==T){
     aaa=str_extract(tableau$date,"....")
     bbb=str_extract(tableau$date,".......")
     bbb=str_remove(bbb,".....")
-      tableau$annee=aaa
-      tableau$mois=bbb
-      tableau<-tableau%>%group_by(mois,mot)%>%summarise(loess=mean(loess))
-      tableau$date=as.numeric(tableau$mois)
-      tableau$date=as.Date.character(str_c("2000-",tableau$date,"-01"))
-      plot = plot_ly(data=tableau,x=~date,y=~loess,color=~mot,type='scatter',mode='spline',line = list(shape = "spline"),colors=customPalette,legendgroup=~mot)
-      plot=layout(plot,xaxis = list(tickformat="%b"))
-      if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
-      else{return(onRender(plot,js))}
+    tableau$annee=aaa
+    tableau$mois=bbb
+    tableau<-tableau%>%group_by(mois,mot)%>%summarise(loess=mean(loess))
+    tableau$date=as.numeric(tableau$mois)
+    tableau$date=as.Date.character(str_c("2000-",tableau$date,"-01"))
+    plot = plot_ly(data=tableau,x=~date,y=~loess,color=~mot,type='scatter',mode='spline',line = list(shape = "spline"),colors=customPalette,legendgroup=~mot)
+    plot=layout(plot,xaxis = list(tickformat="%b"))
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    else{return(onRender(plot,js))}
   }
   
-  if(input$visualiseur==8 & input$resolution=="Mois"){
+  if(input$visualiseur==8 & isolate(input$resolution=="Mois")){
     if(input$loess==T){
-    for (mot in unique(tableau$mot)) {
-      z = which(tableau$mot==mot)
-      for(i in 1:length(z)){
-        j = max(i-floor(12/2),0)
-        k = i+ceil(12/2)
-        pond = tableau$base[z][j:k]
-        tableau$trend[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm = T)
+      for (mot in unique(tableau$mot)) {
+        z = which(tableau$mot==mot)
+        for(i in 1:length(z)){
+          j = max(i-floor(12/2),0)
+          k = i+ceil(12/2)
+          pond = tableau$base[z][j:k]
+          tableau$trend[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm = T)
+        }
       }
-    }
       tableau$loess=tableau$ratio-tableau$trend
     }
     
@@ -486,8 +485,8 @@ Plot <- function(data,input){
       
     }
     else{
-    tableau$date=360*as.numeric(aaa)+30*as.numeric(bbb)
-    plot = plot_ly(data=tableau,r=~loess, theta=~date,color =~mot,type='scatterpolar',mode='spline',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
+      tableau$date=360*as.numeric(aaa)+30*as.numeric(bbb)
+      plot = plot_ly(data=tableau,r=~loess, theta=~date,color =~mot,type='scatterpolar',mode='spline',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text")
     }
     plot=layout(plot,
                 showlegend = T,
@@ -506,8 +505,8 @@ Plot <- function(data,input){
                     showticklabels = F,
                     ticks = ''
                   )
-                  ))
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+                ))
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -564,12 +563,12 @@ Plot <- function(data,input){
     plot= plot%>%add_lines()
     plot = plotly::subplot(plot,plot1,nrows = 2,legend=NULL,shareX = T)
     plot=plot %>%  layout(xaxis = list(autorange = TRUE),  yaxis = list(autorange = TRUE))
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   } else{
     plot=layout(plot)
     plot=plot %>%  layout(xaxis = list(autorange = TRUE),  yaxis = list(autorange = TRUE))
-    if(input$doc_type==1 | input$doc_type==2 | input$doc_type==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -595,13 +594,13 @@ SPlot <- function(data,input){
       tableau$mot<-str_c(tableau$mot,"\n",tableau$bibli,"/",tableau$corpus)
       tableau$mot<-str_replace_all(tableau$mot,"Le Monde/Presse","Le Monde")
     }
-    if(input$resolution=="Mois"){
+    if(isolate(input$resolution=="Mois")){
       tableau<-tableau[tableau$resolution=="Mois",]
     }
-    if(input$resolution=="Année"){
+    if(isolate(input$resolution=="Année")){
       tableau<-tableau[tableau$resolution=="Année",]
     }
-    if(input$resolution=="Semaine"){
+    if(isolate(input$resolution)=="Semaine"){
       tableau<-tableau[tableau$resolution=="Semaine",]
     }
   }
@@ -640,7 +639,7 @@ SPlot <- function(data,input){
       rownames(res.pca$row$coord)=rownames(a)
     }
     library(factoextra)
-    if( input$resolution=="Mois"){
+    if( isolate(input$resolution=="Mois")){
   b = str_extract(b,"....")}
     repel = (length(unique(tableau$date))<30)
     if(input$visualiseur==6){
@@ -1381,7 +1380,7 @@ jokerize<-function(input){
 ngramize<-function(input,nouvrequette,gallicagram,agregator){
   
   show_modal_spinner()
-  
+  library(RSQLite) 
   from<-input$beginning
   to<-input$end
   
@@ -3711,8 +3710,9 @@ shinyServer(function(input, output,session){
       b=rbind(b,cbind(url_titre,a$records.date[i],a$records.context[[i]]$left_context,a$records.context[[i]]$pivot,a$records.context[[i]]$right_context))
     }
     colnames(b)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
-    output$lien=renderUI(HTML(str_c("Affichage du contexte par Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
+    output$lien=renderUI(HTML(str_c("<b>Contexte par Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a>","</b><br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
     output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE,columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+
     remove_modal_spinner()
     }
     # output$frame <- renderUI({
