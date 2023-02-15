@@ -2,7 +2,7 @@ library(shiny)
 library(ggplot2)
 library(plotly)
 library(stringr)
-library(Hmisc)
+#library(Hmisc)
 library(xml2)
 library(markdown)
 library(shinythemes)
@@ -3347,7 +3347,7 @@ correlation_matrix <- function(df, corr,
                is.character(replacement)
   })
     # we need the Hmisc package for this
-    require(Hmisc)
+    #require(Hmisc)
     
     # retain only numeric and boolean columns
     isNumericOrBoolean = vapply(df, function(x) is.numeric(x) | is.logical(x), logical(1))
@@ -3697,7 +3697,8 @@ shinyServer(function(input, output,session){
       will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
     }
     will_url=URLencode(will_url)
-    a<-tryCatch({fromJSON(html_text(read_html(will_url)))%>%data.frame()},error=function(cond){return(NULL)})
+    show_modal_spinner()
+    a<-tryCatch({fromJSON(will_url)%>%data.frame()},error=function(cond){return(NULL)})
     if(is.null(a)==F){
     b=data.frame(titre_journal=character(),
                        date=character(),
@@ -3712,6 +3713,7 @@ shinyServer(function(input, output,session){
     colnames(b)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
     output$lien=renderUI(HTML(str_c("Affichage du contexte par Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
     output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE,columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+    remove_modal_spinner()
     }
     # output$frame <- renderUI({
     #   tags$iframe(src=will_url, height=200, width=800, frameBorder=0)
