@@ -1,5 +1,4 @@
 library(shiny)
-#library(ggplot2)
 library(plotly)
 library(stringr)
 #library(Hmisc)
@@ -28,7 +27,6 @@ library(jsonlite)
 library(ggwordcloud)
 library(shinyalert)
 library(bezier)
-library(jsonlite)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -3697,7 +3695,7 @@ shinyServer(function(input, output,session){
       will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
     }
     will_url=URLencode(will_url)
-    show_modal_spinner()
+    show_spinner()
     a<-tryCatch({fromJSON(will_url)%>%data.frame()},error=function(cond){return(NULL)})
     if(is.null(a)==F){
     b=data.frame(titre_journal=character(),
@@ -3712,9 +3710,9 @@ shinyServer(function(input, output,session){
     }
     colnames(b)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
     output$lien=renderUI(HTML(str_c("<b>Contexte par Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a>","</b><br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
-    output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE,columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+    output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, columnDefs = list(className = 'dt-body-center', targets = 0:4)))
 
-    remove_modal_spinner()
+    hide_spinner()
     }
     # output$frame <- renderUI({
     #   tags$iframe(src=will_url, height=200, width=800, frameBorder=0)
