@@ -3710,7 +3710,7 @@ shinyServer(function(input, output,session){
     }
     colnames(b)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
     output$lien=renderUI(HTML(str_c("<b>Contexte par Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a>","</b><br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
-    output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, columnDefs = list(className = 'dt-body-center', targets = 0:4)))
+    output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, columnDefs = list(list(className = 'dt-body-center', targets = 0:4))))
 
     hide_spinner(spin_id = "contexte")
     }
