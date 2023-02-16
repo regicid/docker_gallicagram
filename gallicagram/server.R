@@ -4491,10 +4491,7 @@ shinyServer(function(input, output,session){
     invalidateLater(1000, session)
     paste("The current time is", Sys.time())
   })
-  session$onSessionEnded(function() {
-    
-    stopApp()
-  })
+  session$onSessionEnded(stopApp())
   invalid<<-0
   observe({
     invalidateLater(3600000, session)
