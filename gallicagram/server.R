@@ -4493,7 +4493,7 @@ shinyServer(function(input, output,session){
   })
   session$onSessionEnded(function() {
     
-    stopApp())
+    stopApp()})
   invalid<<-0
   observe({
     invalidateLater(3600000, session)
