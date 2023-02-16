@@ -1376,7 +1376,7 @@ jokerize<-function(input){
 
 ngramize<-function(input,nouvrequette,gallicagram,agregator){
   
-  show_modal_spinner()
+  use_spinner(spin_id="ngram")
   require("RSQLite")
   require("DBI")
   from<-input$beginning
@@ -1688,7 +1688,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   if(input$joker==T){data = list(tableau,paste(nouvrequette,collapse="&"),input$resolution)}
   names(data) = c("tableau","mot","resolution")
   
-  remove_modal_spinner()
+  hide_spinner(spin_id="ngram")
   
   
   return(data)
@@ -3695,7 +3695,7 @@ shinyServer(function(input, output,session){
       will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
     }
     will_url=URLencode(will_url)
-    show_spinner()
+    show_spinner(spin_id = "contexte")
     a<-tryCatch({fromJSON(will_url)%>%data.frame()},error=function(cond){return(NULL)})
     if(is.null(a)==F){
     b=data.frame(titre_journal=character(),
@@ -3712,7 +3712,7 @@ shinyServer(function(input, output,session){
     output$lien=renderUI(HTML(str_c("<b>Contexte par Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a>","</b><br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
     output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, columnDefs = list(className = 'dt-body-center', targets = 0:4)))
 
-    hide_spinner()
+    hide_spinner(spin_id = "contexte")
     }
     # output$frame <- renderUI({
     #   tags$iframe(src=will_url, height=200, width=800, frameBorder=0)
