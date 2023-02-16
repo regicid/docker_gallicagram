@@ -1,6 +1,7 @@
 # Bibliographie
 
 ## Articles décrivant Gallicagram
+- Benoît de Courson, Benjamin Azoulay, Clara de Courson, Laurent Vanni et Étienne Brunet, « Gallicagram : les archives de presse sous les rotatives de la statistique textuelle », _Corpus_, 2023, https://doi.org/10.4000/corpus.7944
 - Benjamin Azoulay et Benoît de Courson, « Gallicagram, un outil de lexicométrie pour la recherche », 2021, https://doi.org/10.31235/osf.io/84bf3
 - « Actualités - Gallicagram : un outil de lexicométrie pour la recherche », novembre 2021, https://odhn.ens.psl.eu/newsroom/gallicagram-un-outil-de-lexicometrie-pour-la-recherche
 - « Utiliser les API de Gallica : L'exemple de Gallicagram », https://api.bnf.fr/fr/gallicagram-un-outil-de-lexicographie
@@ -18,6 +19,7 @@
 - Erwan Le Gall, « A propos de l’antimilitarisme des Sârs et de la rougeole politique (1913) », Ar Brezel, 5 janvier 2022, https://arbrezel.hypotheses.org/4804
 - Erwan Le Gall, « Février 1918 : l’estuaire de la Loire au bord de la Révolution ? », Ar Brezel, 2 février 2022, https://arbrezel.hypotheses.org/4963
 - Erwan Le Gall, « La Grande Guerre comme rupture ? A propos de César Chabrun », Ar Brezel, 18 mai 2022, https://arbrezel.hypotheses.org/6355
+- Erwan Le Gall, « À propos de la peur du maquis », Ar Brezel, 12 février 2023, https://arbrezel.hypotheses.org/8879
 - Olivier Jacquot, «Le « novohispanisme », champ impensé des sciences sociales», Amoxcalli, 26 mai 2022, https://amoxcalli.hypotheses.org/42495
 - Feargal McKay, « Mythologies: Alphonse Steinès and the Invention of the Pyrénées », Podium Cafe, 20 mars 2022, https://www.podiumcafe.com/book-corner/2022/3/20/22925846/alphonse-steines-tourmalet-aubisque-tour-de-france
 - Jana Altmanova, Emmanuel Cartier, Jimmy Luzzi, Sarah Pinto et Sergio Piscopo, « Innovations lexicales dans le domaine de l’environnement et de la biodiversité : le cas de bio en français et en italien », Neologica, n° 16, 2022, Néologie et environnement, p. 85-110, https://dx.doi.org/10.48611/isbn.978-2-406-13219-6.p.0085
@@ -37,6 +39,7 @@
 - Séminaire du laboratoire Econophysix - Ecole Polytechnique, 27 octobre 2022
 - Séminaire Evolution, Cognition and Culture Conference - ENS Ulm, 28 novembre 2022
 - Présentation de l'outil de lexicométrie Gallicagram, ADEMEC - Ecole des Chartes, 23 janvier 2023 : https://www.eventbrite.fr/e/billets-atelier-n4-presentation-de-loutil-de-lexicometrie-gallicagram-505923700407
+- Séminaire MédiaLab - SciencesPo, 28 février 2023
 - Séminaire IMAREV, Gallicagram : impressions de la Révolution - Université Paris Cité, 24 mars 2023 : https://imarev.hypotheses.org/366
 - Séminaire ISOCO Indices d’opinion sociaux économiques - Université Paris Nanterre, 6 juillet
 
