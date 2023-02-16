@@ -1376,7 +1376,7 @@ jokerize<-function(input){
 
 ngramize<-function(input,nouvrequette,gallicagram,agregator){
   
-  use_spinner(spin_id="ngram")
+  show_spinner(spin_id="ngram")
   require("RSQLite")
   require("DBI")
   from<-input$beginning
@@ -3683,15 +3683,15 @@ shinyServer(function(input, output,session){
     word=str_remove_all(word,"text%20adj%20%22")
     word=str_remove_all(word,"%22%20.+")
     mois=""
-    if(input$resolution=="Mois"){mois=str_c("&month=",str_extract(str_remove(fromm,"....."),".."))}
+    if(isolate(input$resolution=="Mois")){mois=str_c("&month=",str_extract(str_remove(fromm,"....."),".."))}
     
-    if(input$doc_type==1){
+    if(isolate(input$doc_type==1)){
       will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
     }
-    if(input$doc_type==2){
+    if(isolate(input$doc_type==2)){
       will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
     }
-    if(input$doc_type==56){
+    if(isolate(input$doc_type)==56){
       will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
     }
     will_url=URLencode(will_url)
