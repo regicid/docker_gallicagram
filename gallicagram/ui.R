@@ -180,7 +180,7 @@ shinyUI(bootstrapPage(
                                    #conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",htmlOutput("frame")),
                                    conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",dataTableOutput("frame")),
                                    useShinyjs(),
-                                   extendShinyjs(text = "window.scrollTo(0,document.body.scrollHeight);", functions = c()),
+                                   extendShinyjs(text = "window.scrollTo(0,document.body.scrollHeight)", functions = c()),
                                    h6(textOutput("currentTime"), style="color:white")))
                                               ),
                    tabPanel("Cartographie",
