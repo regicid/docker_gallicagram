@@ -1223,7 +1223,7 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
   return(data)
 }
 cloudify<-function(input){
-  show_modal_spinner()
+  show_spinner(spin_id = "ngram")
   # 
   # if(input$doc_type==2){ngram_file<-str_c("/mnt/persistent/1gram.db")}
   # if(input$doc_type==1){ngram_file<-str_c("/mnt/persistent/1gram_presse.db")}
@@ -1255,7 +1255,7 @@ cloudify<-function(input){
   # # data = list(w,"Année")
   # # names(data) = c("tableau","resolution")
 
-    remove_modal_spinner()
+    hide_spinner(spin_id="ngram")
     return(cl)
   
 }
@@ -1264,7 +1264,7 @@ cloudify<-function(input){
 
 jokerize<-function(input){
   
-  show_modal_spinner()
+  show_spinner(spin_id="ngram")
   
   mot<-str_remove_all(input$mot,"&.+")
   mot<-str_remove_all(mot,"[+].+")
@@ -1368,7 +1368,7 @@ jokerize<-function(input){
   jokertable<-jokertable[is.na(jokertable$tot)==F,]
   
   
-  remove_modal_spinner()
+  hide_spinner(spin_id = "ngram")
   
   return(jokertable)
   
