@@ -48,6 +48,7 @@ var url = point.data.customdata[point.pointIndex];
 });
 }"
 
+
 se="linux"
 
 Plot <- function(data,input){
@@ -3713,6 +3714,7 @@ shinyServer(function(input, output,session){
     output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-center', targets = 0:4))))
 
     hide_spinner(spin_id = "contexte")
+    shinyjs::runjs("window.scrollTo(0,document.body.scrollHeight)")
     }
     # output$frame <- renderUI({
     #   tags$iframe(src=will_url, height=200, width=800, frameBorder=0)
