@@ -1,5 +1,5 @@
 library(shiny)
-library(ggplot2)
+#library(ggplot2)
 library(plotly)
 library(stringr)
 #library(Hmisc)
@@ -12,9 +12,8 @@ library(dplyr)
 library(htmltools)
 library(purrr)
 library(rvest)
-library(RSelenium)
+#library(RSelenium)
 library(tidytext)
-library(DBI)
 library(shinybusy)
 library(ggthemes)
 library(RColorBrewer)
@@ -460,7 +459,7 @@ Plot <- function(data,input){
         z = which(tableau$mot==mot)
         for(i in 1:length(z)){
           j = max(i-floor(12/2),0)
-          k = i+ceil(12/2)
+          k = i+ceiling(12/2)
           pond = tableau$base[z][j:k]
           tableau$trend[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm = T)
         }
@@ -736,7 +735,7 @@ SPlot <- function(data,input){
         z = which(tableau$mot==mot)
         for(i in 1:length(z)){
           j = max(i-floor(input$span/2),0)
-          k = i+ceil(input$span/2)
+          k = i+ceiling(input$span/2)
           pond = tableau$base[z][j:k]
           tableau$loess[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm = T)
         }}
@@ -1380,7 +1379,8 @@ jokerize<-function(input){
 ngramize<-function(input,nouvrequette,gallicagram,agregator){
   
   show_modal_spinner()
-  library(RSQLite) 
+  require("RSQLite")
+  require("DBI")
   from<-input$beginning
   to<-input$end
   
@@ -1713,6 +1713,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   
   if(doc_type==13 | doc_type==14 | doc_type==28 | doc_type==29 | doc_type==37 | doc_type==38 | doc_type==39 | doc_type==40| doc_type==55 | doc_type==57){
     if(se=="windows"){system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
+      require("RSelenium")
       rD <- rsDriver(browser = "firefox", port = 4444L)
       remDr <- rD[["client"]]}
     if(se=="linux"){remDr<-remoteDriver$new(remoteServerAddr = "172.18.0.1", port = 4444L, browserName = "firefox")
