@@ -36,7 +36,7 @@ shinyUI(bootstrapPage(
                                         style = "position: relative;top: -17px;")),collapsible=TRUE,
                    tabPanel("Graphique",
                             use_busy_spinner(spin = "fingerprint",position="bottom-right",color="#FF0000",spin_id = "contexte"),
-                            use_busy_spinner(spin = "fingerprint",position="full-page",spin_id = "ngram"),
+                            use_busy_spinner(spin = "fingerprint",position="upper-right",spin_id = "ngram"),
                               div(id="Sidebar",column(4,wellPanel(
                                 div(style="display: inline-block;vertical-align:top;",id="menumob2",actionButton("showSidebar2", "",icon = icon("bars"))),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","liberté&république")),

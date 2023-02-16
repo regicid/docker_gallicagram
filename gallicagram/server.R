@@ -3671,7 +3671,7 @@ shinyServer(function(input, output,session){
   will<-""
   observe({
     data$e <- event_data("plotly_click")
-    if(is.null(data$e)==F&(input$doc_type==1 | input$doc_type==2 | input$doc_type==56)){
+    if(is.null(data$e)==F&(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56))){
     will<<-as.character(unlist(data$e$customdata))
     fromm=str_extract(will,"gallicapublication_date.+")
     fromm=str_remove_all(fromm,"%22%20.+")
