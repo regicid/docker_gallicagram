@@ -3711,7 +3711,8 @@ shinyServer(function(input, output,session){
     }
     colnames(b)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
     output$lien=renderUI(HTML(str_c("<b><font size=\"5\">Contexte</font><br>Crédit : Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a></b></font>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
-    output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-center', targets = 0:4))))
+    require("DT")
+    output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
 
     hide_spinner(spin_id = "contexte")
     shinyjs::runjs("window.scrollTo(0,document.body.scrollHeight)")

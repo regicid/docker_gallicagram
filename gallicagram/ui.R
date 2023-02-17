@@ -14,7 +14,7 @@ library(rclipboard)
 library(lubridate)
 library(leaflet)
 library(shinyjs)
-
+library(DT)
 mobileDetect <- function(inputId, value = 0) {
   tagList(
     singleton(tags$head(tags$script(src = "mobile.js"))),
