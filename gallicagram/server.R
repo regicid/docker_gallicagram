@@ -3648,7 +3648,52 @@ cartoGramme<-function(fra,titre,from,to,colorscale){
   
   return(plot)
 }
-
+willisation <- function(input,will){
+  fromm=str_extract(will,"gallicapublication_date.+")
+  fromm=str_remove_all(fromm,"%22%20.+")
+  fromm=str_remove_all(fromm,"gallicapublication_date%3E=%22")
+  too=str_extract(will,"and%20gallicapublication_date.+")
+  too=str_remove_all(too,"and%20gallicapublication_date%3C=%22")
+  too=str_remove_all(too,"%22.+")
+  word=str_extract(will,"text%20adj%20%22.+")
+  word=str_remove_all(word,"text%20adj%20%22")
+  word=str_remove_all(word,"%22%20.+")
+  mois=""
+  if(isolate(input$resolution=="Mois")){mois=str_c("&month=",str_extract(str_remove(fromm,"....."),".."))}
+  
+  if(isolate(input$doc_type==1)){
+    will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
+  }
+  if(isolate(input$doc_type==2)){
+    will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
+  }
+  if(isolate(input$doc_type)==56){
+    will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
+  }
+  will_url=URLencode(will_url)
+  show_spinner(spin_id = "contexte")
+  a<-tryCatch({fromJSON(will_url)%>%data.frame()},error=function(cond){return(NULL)})
+  if(is.null(a)==F){
+    b=data.frame(titre_journal=character(),
+                 date=character(),
+                 contexte_gauche=character(),
+                 pivot=character(), 
+                 contexte_droit=character(), 
+                 stringsAsFactors=FALSE) 
+    for (i in 1:length(a$records.paper_title)) {
+      url_titre=str_c("<a href='",a$records.context[[i]]$page_url,"' target='_blank'>",a$records.paper_title[i],"</a>")
+      b=rbind(b,cbind(url_titre,a$records.date[i],a$records.context[[i]]$left_context,a$records.context[[i]]$pivot,a$records.context[[i]]$right_context))
+    }
+    for (j in 1:length(b$V1)) {
+      b$V1[j]=HTML(b$V1[j])
+    }
+    colnames(b)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
+    b=b[,-6]
+  }
+  else{b=NULL}
+  return(b)
+}
+  
 options(shiny.maxRequestSize = 100*1024^2)
 
 shinyServer(function(input, output,session){
@@ -3669,64 +3714,24 @@ shinyServer(function(input, output,session){
     animation = TRUE
   )
   show_modal_spinner()
+  
+  
   will<-""
   observe({
     data$e <- event_data("plotly_click")
     if(is.null(data$e)==F&(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56))){
     will<<-as.character(unlist(data$e$customdata))
-    fromm=str_extract(will,"gallicapublication_date.+")
-    fromm=str_remove_all(fromm,"%22%20.+")
-    fromm=str_remove_all(fromm,"gallicapublication_date%3E=%22")
-    too=str_extract(will,"and%20gallicapublication_date.+")
-    too=str_remove_all(too,"and%20gallicapublication_date%3C=%22")
-    too=str_remove_all(too,"%22.+")
-    word=str_extract(will,"text%20adj%20%22.+")
-    word=str_remove_all(word,"text%20adj%20%22")
-    word=str_remove_all(word,"%22%20.+")
-    mois=""
-    if(isolate(input$resolution=="Mois")){mois=str_c("&month=",str_extract(str_remove(fromm,"....."),".."))}
-    
-    if(isolate(input$doc_type==1)){
-      will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
-    }
-    if(isolate(input$doc_type==2)){
-      will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
-    }
-    if(isolate(input$doc_type)==56){
-      will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
-    }
-    will_url=URLencode(will_url)
-    show_spinner(spin_id = "contexte")
-    a<-tryCatch({fromJSON(will_url)%>%data.frame()},error=function(cond){return(NULL)})
-    if(is.null(a)==F){
-    b=data.frame(titre_journal=character(),
-                       date=character(),
-                       contexte_gauche=character(),
-                       pivot=character(), 
-                       contexte_droit=character(), 
-                       stringsAsFactors=FALSE) 
-    for (i in 1:length(a$records.paper_title)) {
-      url_titre=str_c("<a href='",a$records.context[[i]]$page_url,"' target='_blank'>",a$records.paper_title[i],"</a>")
-      b=rbind(b,cbind(url_titre,a$records.date[i],a$records.context[[i]]$left_context,a$records.context[[i]]$pivot,a$records.context[[i]]$right_context))
-    }
-    for (j in 1:length(b$V1)) {
-      b$V1[j]=HTML(b$V1[j])
-    }
-    colnames(b)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
-    b=b[,-6]
+    b=willisation(input,will)
+    if(is.null(b)==F){
     output$lien=renderUI(HTML(str_c("<b><font size=\"5\">Contexte</font><br>Crédit : Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a></b></font>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
     require("DT")
     output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
 
-    hide_spinner(spin_id = "contexte")
+    
     shinyjs::runjs("const target = document.querySelector('#legende');
                                                  target.scrollIntoView(behavior='smooth');")
-    }
-    # output$frame <- renderUI({
-    #   tags$iframe(src=will_url, height=200, width=800, frameBorder=0)
-    # })
-    
-    }
+    }}
+    hide_spinner(spin_id = "contexte")
   })
   observeEvent(input$visualiseur,{
     if(input$visualiseur==6 | input$visualiseur==9){
@@ -5102,6 +5107,13 @@ shinyServer(function(input, output,session){
   output$pdfview <- renderUI({
     tags$iframe(style="height:600px; width:100%", src="presentation_gallicagram.pdf")
   })
+  
+  ##################
+  b=willisation(input,"https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22libert%C3%A9%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%221788/01/01%22%20and%20gallicapublication_date%3C=%221788/01/31%22)&suggest=10&keywords=libert%C3%A9")
+  output$lien=renderUI(HTML(str_c("<b><font size=\"5\">Contexte</font><br>Crédit : Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a></b></font>","<br><a href='","https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22libert%C3%A9%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%221788/01/01%22%20and%20gallicapublication_date%3C=%221788/01/31%22)&suggest=10&keywords=libert%C3%A9","' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
+  require("DT")
+  output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+  ##################
   
   shinyOptions(progress.style="old")
   
