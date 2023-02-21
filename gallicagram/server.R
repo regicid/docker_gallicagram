@@ -3706,10 +3706,14 @@ shinyServer(function(input, output,session){
                        contexte_droit=character(), 
                        stringsAsFactors=FALSE) 
     for (i in 1:length(a$records.paper_title)) {
-      url_titre=HTML(str_c("<a href='",a$records.url[i],"' target='_blank'>",a$records.paper_title[i],"</a>"))
+      url_titre=str_c("<a href='",a$records.context[[i]]$page_url,"' target='_blank'>",a$records.paper_title[i],"</a>")
       b=rbind(b,cbind(url_titre,a$records.date[i],a$records.context[[i]]$left_context,a$records.context[[i]]$pivot,a$records.context[[i]]$right_context))
     }
+    for (j in 1:length(b$V1)) {
+      b$V1[j]=HTML(b$V1[j])
+    }
     colnames(b)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
+    
     output$lien=renderUI(HTML(str_c("<b><font size=\"5\">Contexte</font><br>Crédit : Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a></b></font>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
     require("DT")
     output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
