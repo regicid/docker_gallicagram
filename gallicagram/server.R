@@ -5109,10 +5109,9 @@ shinyServer(function(input, output,session){
   })
   
   ##################
-  b=willisation(input,"https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22libert%C3%A9%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%221788/01/01%22%20and%20gallicapublication_date%3C=%221788/01/31%22)&suggest=10&keywords=libert%C3%A9")
-  output$lien=renderUI(HTML(str_c("<b><font size=\"5\">Contexte</font><br>Crédit : Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a></b></font>","<br><a href='","https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22libert%C3%A9%22%20)%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%221788/01/01%22%20and%20gallicapublication_date%3C=%221788/01/31%22)&suggest=10&keywords=libert%C3%A9","' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
-  require("DT")
-  output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+  if(data[[2]]=="liberté&république"){
+    output$frame<-renderDataTable(read.csv("DTexemple.csv",header = T,encoding = "UTF-8",sep = ","),escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+  }
   ##################
   
   shinyOptions(progress.style="old")
