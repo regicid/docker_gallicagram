@@ -3649,18 +3649,27 @@ cartoGramme<-function(fra,titre,from,to,colorscale){
   return(plot)
 }
 willisation <- function(input,will){
-  fromm=str_extract(will,"gallicapublication_date.+")
-  fromm=str_remove_all(fromm,"%22%20.+")
-  fromm=str_remove_all(fromm,"gallicapublication_date%3E=%22")
-  too=str_extract(will,"and%20gallicapublication_date.+")
-  too=str_remove_all(too,"and%20gallicapublication_date%3C=%22")
-  too=str_remove_all(too,"%22.+")
-  word=str_extract(will,"text%20adj%20%22.+")
-  word=str_remove_all(word,"text%20adj%20%22")
-  word=str_remove_all(word,"%22%20.+")
-  mois=""
-  if(isolate(input$resolution=="Mois")){mois=str_c("&month=",str_extract(str_remove(fromm,"....."),".."))}
-  
+  if(will==""){
+    mois=""
+    fromm=isolate(input$beginning)
+    too=isolate(input$end)
+    word = str_split(input$mot,"&")[[1]]
+    word = str_split(word,"[+]")[[1]]
+    word=word[1]
+  }
+  else{
+    fromm=str_extract(will,"gallicapublication_date.+")
+    fromm=str_remove_all(fromm,"%22%20.+")
+    fromm=str_remove_all(fromm,"gallicapublication_date%3E=%22")
+    too=str_extract(will,"and%20gallicapublication_date.+")
+    too=str_remove_all(too,"and%20gallicapublication_date%3C=%22")
+    too=str_remove_all(too,"%22.+")
+    word=str_extract(will,"text%20adj%20%22.+")
+    word=str_remove_all(word,"text%20adj%20%22")
+    word=str_remove_all(word,"%22%20.+")
+    mois=""
+    if(isolate(input$resolution=="Mois")){mois=str_c("&month=",str_extract(str_remove(fromm,"....."),".."))}
+  }
   if(isolate(input$doc_type==1)){
     will_url=str_c("https://gallica-grapher-production.up.railway.app/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
   }
@@ -4460,6 +4469,17 @@ shinyServer(function(input, output,session){
       })
     temp<<-df
     updateCheckboxInput(session,"correlation_test",value=FALSE)
+    
+    
+    if(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56)){
+      will<<-""
+      b=willisation(input,will)
+      if(is.null(b)==F){
+        output$lien=renderUI(HTML(str_c("<b><font size=\"5\">Contexte</font><br>Crédit : Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a></b></font>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>")))
+        require("DT")
+        output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+      }
+      hide_spinner(spin_id = "contexte")}
   })
   
   ###
