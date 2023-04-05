@@ -195,13 +195,14 @@ shinyUI(bootstrapPage(
                               actionButton("cartoButton","Générer la carte")
                             )),
                             column(8,
-                                   fluidRow(leafletOutput("carto")),
-                                   fluidRow(
-                                     div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadCarto', 'Carte interactive')),
-                                     div(style="display: inline-block;vertical-align:bottom",downloadButton('cartoPng', 'Carte .png')),
-                                     div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png'))
-                                     ),
-                                   fluidRow(plotlyOutput("carto2"))
+                                   #fluidRow(leafletOutput("carto")),
+                                   # fluidRow(
+                                   #   div(style="display: inline-block;vertical-align:bottom",downloadButton('downloadCarto', 'Carte interactive')),
+                                   #   div(style="display: inline-block;vertical-align:bottom",downloadButton('cartoPng', 'Carte .png')),
+                                   #   div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png'))
+                                   #   ),
+                                   fluidRow(plotlyOutput("carto2")),
+                                   div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png'))
                                    )
                             ),
              navbarMenu("Notice",
