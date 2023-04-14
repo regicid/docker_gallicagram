@@ -4741,17 +4741,22 @@ shinyServer(function(input, output,session){
         tableau<-read.csv("base_livres_annees_bnf.csv",encoding = "UTF-8")
         tableau1<-read.csv("base_livres_annees.csv",encoding = "UTF-8")
         tableau3<-read.csv("base_livres_annees_numerises.csv",encoding = "UTF-8")
-        for (i in 1:1379) {
+        for (i in 1:(tableau1$date[1]-1)) {
           a<-as.data.frame(cbind(i,0))
           colnames(a)<-c("date","base")
           tableau1<-bind_rows(tableau1,a)
           tableau1<-tableau1[order(tableau1$date),]
           rownames(tableau1)<-NULL
+        }
+        for (i in 1:(tableau3$date[1]-1)) {
+          a<-as.data.frame(cbind(i,0))
+          colnames(a)<-c("date","base")
           tableau3<-bind_rows(tableau3,a)
           tableau3<-tableau3[order(tableau3$date),]
           rownames(tableau3)<-NULL
         }
         tableau3$base<-tableau3$base-tableau1$base
+        
         tableau$base<-tableau$base-tableau1$base-tableau3$base
         tableau$corpus<-"Non numérisé"
         tableau1$corpus<-"Numérisé et océrisé"
@@ -4843,12 +4848,16 @@ shinyServer(function(input, output,session){
         tableau<-read.csv("base_livres_annees_bnf.csv",encoding = "UTF-8")
         tableau1<-read.csv("base_livres_annees.csv",encoding = "UTF-8")
         tableau3<-read.csv("base_livres_annees_numerises.csv",encoding = "UTF-8")
-        for (i in 1:1379) {
+        for (i in 1:(tableau1$date[1]-1)) {
           a<-as.data.frame(cbind(i,0))
           colnames(a)<-c("date","base")
           tableau1<-bind_rows(tableau1,a)
           tableau1<-tableau1[order(tableau1$date),]
           rownames(tableau1)<-NULL
+        }
+        for (i in 1:(tableau3$date[1]-1)) {
+          a<-as.data.frame(cbind(i,0))
+          colnames(a)<-c("date","base")
           tableau3<-bind_rows(tableau3,a)
           tableau3<-tableau3[order(tableau3$date),]
           rownames(tableau3)<-NULL
