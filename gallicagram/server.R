@@ -3703,6 +3703,28 @@ willisation <- function(input,will){
   else{b=NULL}
   return(b)
 }
+
+gallicapresse<-function(input){
+  mot=str_replace_all(input$cartoMot," ","+")
+  mot=URLencode(mot)
+  input$cartoRange
+  debut=min(input$cartoRange)
+  fin=max(input$cartoRange)
+  year=str_extract(debut,"....")
+  month=str_extract(debut,".......")
+  month=str_remove(month,".....")
+  day=str_remove(debut,"........")
+  year_end=str_extract(fin,"....")
+  month_end=str_extract(fin,".......")
+  month_end=str_remove(month_end,".....")
+  day_end=str_remove(fin,"........")
+  
+  url=str_c("https://gallica-grapher.ew.r.appspot.com/api/topPapers?term=",mot,"&year=",year,"&month=",month,"&day=",day,"&end_year=",year_end,"&end_month=",month_end,"&end_day=",day_end)
+  print(url)
+  a=fromJSON(url)
+  print(a$top_papers)
+  return(plot)
+}
   
 options(shiny.maxRequestSize = 100*1024^2)
 
@@ -4149,6 +4171,7 @@ shinyServer(function(input, output,session){
     car<-cartoGramme(fra,input$cartoMot,min(input$cartoRange),max(input$cartoRange),input$colorscale)
     
     output$carto2<-renderPlotly({ggplotly(car)})
+    output$top_presse<-renderPlotly({gallicapresse(input)})
     
     output$cartogramme<-downloadHandler(
       filename = function() {
@@ -4182,6 +4205,7 @@ shinyServer(function(input, output,session){
   fru$base=fri$base
   output$carto<-renderLeaflet({cartoPlot(input,fru)})
   output$carto2<-renderPlotly({ggplotly(cartoGramme(fru,"Général Boulanger","1885-01-01","1890-01-01",F))})
+  output$top_presse<-renderPlotly({gallicapresse(input)})
   
   observeEvent(input$colorscale,{
     if(iscarto==F){

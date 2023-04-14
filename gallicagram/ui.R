@@ -202,7 +202,8 @@ shinyUI(bootstrapPage(
                                    #   div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png'))
                                    #   ),
                                    fluidRow(plotlyOutput("carto2")),
-                                   div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png'))
+                                   div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png')),
+                                   fluidRow(plotlyOutput("top_presse"))
                                    )
                             ),
              navbarMenu("Notice",
