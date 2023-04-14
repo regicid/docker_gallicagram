@@ -4,7 +4,7 @@ library(xml2)
 
 mot="cochon"
 from="1380"
-to="2021"
+to="2022"
 resolution="Année"
 doc_type=2
 
@@ -66,7 +66,7 @@ for (i in from:to){
       # ngram<-as.character(read_xml(url))
       # a<-str_extract(str_extract(ngram,"numberOfRecords>[:digit:]+"),"[:digit:]+")
       a=0
-      url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=true&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords=")
+      url_base<-str_c("https://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=1&page=1&collapsing=false&exactSearch=true&query=(dc.language%20all%20%22fre%22)%20and%20(dc.type%20all%20%22monographie%22)%20and%20(gallicapublication_date%3E=%22",y,"%22%20and%20gallicapublication_date%3C=%22",y,"%22)%20sortby%20dc.date/sort.ascending&suggest=10&keywords=")
       ngram_base<-as.character(read_xml(url_base))
       b<-str_extract(str_extract(ngram_base,"numberOfRecords>[:digit:]+"),"[:digit:]+")
       tableau[nrow(tableau)+1,] = NA
@@ -89,4 +89,4 @@ tableau<-tableau[,-2]
 tableau<-tableau[,-3]
 tableau<-tableau[,-3]  
 
-write.csv(tableau,'C:/Users/Benjamin/gallicagram_app/base_livres_annees_numerises.csv',fileEncoding = "UTF-8",row.names = FALSE)  
+write.csv(tableau,'C:/Users/Benjamin/docker_gallicagram/gallicagram/base_livres_annees_numerises.csv',fileEncoding = "UTF-8",row.names = FALSE)  

@@ -66,7 +66,7 @@ for (i in from:to){
       # ngram<-as.character(read_xml(url))
       # a<-str_extract(str_extract(ngram,"numberOfRecords>[:digit:]+"),"[:digit:]+")
       a=0
-      url_base<-str_c("http://catalogue.bnf.fr/api/SRU?version=1.2&operation=searchRetrieve&query=bib.unimarc:doctype%20any%20%22am%22%20and%20bib.publicationdate%20=%20%22",y,"%22and%20bib.language%20adj%20%22fre%22")
+      url_base<-str_c("http://catalogue.bnf.fr/api/SRU?version=1.2&operation=searchRetrieve&query=bib.unimarc:doctype%20all%20%22am%22%20and%20bib.publicationdate%20=%20%22",y,"%22and%20bib.language%20adj%20%22fre%22")
       ngram_base<-as.character(read_xml(url_base))
       b<-str_extract(str_extract(ngram_base,"numberOfRecords>[:digit:]+"),"[:digit:]+")
       tableau[nrow(tableau)+1,] = NA
