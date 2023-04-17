@@ -27,6 +27,7 @@
 - Benoît Roux, « FAIR Way : approches éthique et épistémologique », Eveille, 16 mai 2022, https://eveille.hypotheses.org/2565
 - Noé Leroy, « Étude sémantico-historique du terme seruus entre le 9e et le 13e siècle : essai de diplomatique numérique », Université catholique de Louvain, 2022, https://dial.uclouvain.be/memoire/ucl/en/object/thesis%3A37571
 - Franck Antoni, « De ces exemples tout à fait banaux… »,25 novembre 2022, https://franckantoni.com/pluriel-banals-ou-banaux/
+- Alban Lannéhoa, « Une histoire de la frégate », 28 mars 2023, https://tribord-amure.fr/2023/03/28/une-histoire-de-la-fregate/?fbclid=IwAR05B8cwGaDb7bsXB9-n6zAlBLYjsvPj3dNrkH27Dm3puJKLfIU02967oHg
 
 
 ## Conférences de présentation de Gallicagram
@@ -53,7 +54,8 @@
 - Gallibase par Etienne Brunet et Laurent Vanni : http://ancilla.unice.fr/pages/bases/
 - Gallica Grapher par Will Gleason : https://d32d5ops9ui5td.cloudfront.net/
 - La Langue Française par Nicolas Le Roux : https://www.lalanguefrancaise.com/dictionnaire
-- Aide à la recherche sur Gallica par Thomas Fressin : à venir
+- Aide à la recherche sur Gallica par Thomas Fressin (à venir)
+- CNRTL, Lexicographie : https://www.cnrtl.fr/definition/ (à venir)
 
 
 ## Sites référençant Gallicagram comme outil
@@ -65,6 +67,7 @@
 - https://numrha.hypotheses.org/4886
 - https://www.fabula.org/actualites/111893/gallicagram.html
 - https://lasciem.hypotheses.org/
+- https://current.ndl.go.jp/en/e2533_en
 - http://blog.ac-versailles.fr/starter/index.php/post/24/02/2022/GALLICAGRAM
 - https://www.bases-netsources.com/component/flexicontent/category/conseil-semaine
 
