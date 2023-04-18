@@ -3721,8 +3721,25 @@ gallicapresse<-function(input){
   
   url=str_c("https://gallica-grapher.ew.r.appspot.com/api/topPapers?term=",mot,"&year=",year,"&month=",month,"&day=",day,"&end_year=",year_end,"&end_month=",month_end,"&end_day=",day_end)
   print(url)
-  a=fromJSON(url)
-  print(a$top_papers)
+  a<-tryCatch(
+    {a=fromJSON(url)},error=function(cond){
+      a<-tryCatch(
+        {a=fromJSON(url)},error=function(cond){
+          a<-tryCatch(
+            {a=fromJSON(url)},error=function(cond){
+            }
+          )
+        }
+      )
+    }
+  )
+  
+  b=as.data.frame(cbind(a$paper$title,a$count))
+  colnames(b)=c("title","count")
+  b$title=str_replace_all(b$title,":.+","")
+  b$count=as.integer(b$count)
+  plot=plot_ly(data=b,x=~count,y=~reorder(title,count),type = "bar",orientation="h")%>%
+    layout(xaxis = list(title = ""),yaxis = list(title =""))
   return(plot)
 }
   
