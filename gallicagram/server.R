@@ -3705,11 +3705,11 @@ willisation <- function(input,will){
 }
 
 gallicapresse<-function(input){
-  mot=str_replace_all(input$cartoMot," ","+")
+  show_spinner(spin_id="gpresse")
+  mot=str_replace_all(isolate(input$cartoMot)," ","+")
   mot=URLencode(mot)
-  input$cartoRange
-  debut=min(input$cartoRange)
-  fin=max(input$cartoRange)
+  debut=min(isolate(input$cartoRange))
+  fin=max(isolate(input$cartoRange))
   year=str_extract(debut,"....")
   month=str_extract(debut,".......")
   month=str_remove(month,".....")
@@ -3720,7 +3720,7 @@ gallicapresse<-function(input){
   day_end=str_remove(fin,"........")
   
   url=str_c("https://gallica-grapher.ew.r.appspot.com/api/topPapers?term=",mot,"&year=",year,"&month=",month,"&day=",day,"&end_year=",year_end,"&end_month=",month_end,"&end_day=",day_end)
-  print(url)
+
   a<-tryCatch(
     {a=fromJSON(url)},error=function(cond){
       a<-tryCatch(
@@ -3740,6 +3740,7 @@ gallicapresse<-function(input){
   b$count=as.integer(b$count)
   plot=plot_ly(data=b,x=~count,y=~reorder(title,count),type = "bar",orientation="h")%>%
     layout(xaxis = list(title = ""),yaxis = list(title =""))
+  hide_spinner(spin_id="gpresse")
   return(plot)
 }
   
@@ -4180,6 +4181,10 @@ shinyServer(function(input, output,session){
     blabla$Total<-as.integer(blabla$Total)
     output$total_table_bis<-renderTable({blabla})
   }
+  observeEvent(input$topButton,{
+    output$top_presse<-renderPlotly({gallicapresse(input)})
+    })
+  
   observeEvent(input$cartoButton,{
     fra<<-cartographie(input)
     iscarto<<-T
@@ -4188,7 +4193,6 @@ shinyServer(function(input, output,session){
     car<-cartoGramme(fra,input$cartoMot,min(input$cartoRange),max(input$cartoRange),input$colorscale)
     
     output$carto2<-renderPlotly({ggplotly(car)})
-    output$top_presse<-renderPlotly({gallicapresse(input)})
     
     output$cartogramme<-downloadHandler(
       filename = function() {

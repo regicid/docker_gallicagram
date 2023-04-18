@@ -192,6 +192,7 @@ shinyUI(bootstrapPage(
                                              label = '\n',
                                              start = as.Date.character("1885-01-01"), end = as.Date.character("1890-01-01"),
                                              separator="à", startview = "decade"),
+                              actionButton("topButton","Générer l'analyse"),
                               actionButton("cartoButton","Générer la carte")
                             )),
                             column(8,
@@ -201,7 +202,8 @@ shinyUI(bootstrapPage(
                                    #   div(style="display: inline-block;vertical-align:bottom",downloadButton('cartoPng', 'Carte .png')),
                                    #   div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png'))
                                    #   ),
-fluidRow(plotlyOutput("top_presse")),
+                                   fluidRow(plotlyOutput("top_presse")),
+                                   use_busy_spinner(spin = "fingerprint",position="full-page",color="#FF0000",spin_id = "gpresse"),
                                    fluidRow(plotlyOutput("carto2")),
                                    div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png'))
                                    
