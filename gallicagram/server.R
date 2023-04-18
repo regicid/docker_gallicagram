@@ -3737,6 +3737,7 @@ gallicapresse<-function(input){
   b=as.data.frame(cbind(a$paper$title,a$count))
   colnames(b)=c("title","count")
   b$title=str_replace_all(b$title,":.+","")
+  b$title=str_replace_all(b$title,"/.+","")
   b$count=as.integer(b$count)
   plot=plot_ly(data=b,x=~count,y=~reorder(title,count),type = "bar",orientation="h")%>%
     layout(xaxis = list(title = ""),yaxis = list(title =""))
