@@ -184,7 +184,7 @@ shinyUI(bootstrapPage(
                                                  target.scrollIntoView(behavior='smooth');", functions = c()),
                                    h6(textOutput("currentTime"), style="color:white")))
                                               ),
-                   tabPanel("Cartographie",
+                   tabPanel("Analyse",
                             column(4,wellPanel(
                               textInput("cartoMot","Recherche dans Gallica/presse","Général Boulanger"),
                               div(style = "margin-top: -15px"),
@@ -201,9 +201,10 @@ shinyUI(bootstrapPage(
                                    #   div(style="display: inline-block;vertical-align:bottom",downloadButton('cartoPng', 'Carte .png')),
                                    #   div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png'))
                                    #   ),
+fluidRow(plotlyOutput("top_presse")),
                                    fluidRow(plotlyOutput("carto2")),
-                                   div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png')),
-                                   fluidRow(plotlyOutput("top_presse"))
+                                   div(style="display: inline-block;vertical-align:bottom",downloadButton('cartogramme', 'Cartogramme .png'))
+                                   
                                    )
                             ),
              navbarMenu("Notice",
