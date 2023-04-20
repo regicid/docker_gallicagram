@@ -4503,7 +4503,8 @@ shinyServer(function(input, output,session){
     
     output$downloadData <- downloadHandler(
       filename = function() {
-        paste("data_",input$mot,"_",input$beginning,"_",input$end,table_corpus$Corpus[input$doc_type==table_corpus$ID],'.csv', sep='')
+        if(str_length(input$mot)<=30){paste("data_",input$mot,"_",input$beginning,"_",input$end,table_corpus$Corpus[input$doc_type==table_corpus$ID],'.csv', sep='')}
+        else(paste("data.csv"))
       },
       content = function(con) {
         if((input$doc_type==2 | input$doc_type == 3 | input$doc_type==4) & input$search_mode==2){write.csv(df$tableau_page, con,row.names = F,fileEncoding = "UTF-8")}
@@ -4512,14 +4513,16 @@ shinyServer(function(input, output,session){
       })
     output$downloadPlot <- downloadHandler(
       filename = function() {
-        paste(input$mot,"_",input$beginning,"_",input$end,"_",table_corpus$Corpus[input$doc_type==table_corpus$ID],'.html', sep='')
+        if(str_length(input$mot)<=30){paste(input$mot,"_",input$beginning,"_",input$end,"_",table_corpus$Corpus[input$doc_type==table_corpus$ID],'.html', sep='')}
+        else{paste("plot.html")}
       },
       content = function(con) {
         htmlwidgets::saveWidget(as_widget(Plot(df,input)), con)
       })
     output$downloadSPlot <- downloadHandler(
       filename = function() {
-        paste(input$mot,"_",input$beginning,"_",input$end,"_",table_corpus$Corpus[input$doc_type==table_corpus$ID],'.png', sep='')
+        if(str_length(input$mot)<=30){paste(input$mot,"_",input$beginning,"_",input$end,"_",table_corpus$Corpus[input$doc_type==table_corpus$ID],'.png', sep='')}
+        else{paste("plot.png")}
       },
       content = function(filename) {
         save_plot(filename,SPlot(df,input))
