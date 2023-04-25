@@ -28,6 +28,7 @@
 - Noé Leroy, « Étude sémantico-historique du terme seruus entre le 9e et le 13e siècle : essai de diplomatique numérique », Université catholique de Louvain, 2022, https://dial.uclouvain.be/memoire/ucl/en/object/thesis%3A37571
 - Franck Antoni, « De ces exemples tout à fait banaux… »,25 novembre 2022, https://franckantoni.com/pluriel-banals-ou-banaux/
 - Alban Lannéhoa, « Une histoire de la frégate », 28 mars 2023, https://tribord-amure.fr/2023/03/28/une-histoire-de-la-fregate/?fbclid=IwAR05B8cwGaDb7bsXB9-n6zAlBLYjsvPj3dNrkH27Dm3puJKLfIU02967oHg
+- Edmée Garcia-Mariller, « Dire son "Mood" : une nouvelle forme de la narration de soi. Étude linguistique et sémiologique de la sous-culture du "Mood" », Mémoire de Master, 2022, SU CELSA - Sorbonne Université, https://dumas.ccsd.cnrs.fr/dumas-04033748v1
 
 
 ## Conférences de présentation de Gallicagram
