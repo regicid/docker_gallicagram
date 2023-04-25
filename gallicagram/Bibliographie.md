@@ -29,6 +29,8 @@
 - Franck Antoni, « De ces exemples tout à fait banaux… »,25 novembre 2022, https://franckantoni.com/pluriel-banals-ou-banaux/
 - Alban Lannéhoa, « Une histoire de la frégate », 28 mars 2023, https://tribord-amure.fr/2023/03/28/une-histoire-de-la-fregate/?fbclid=IwAR05B8cwGaDb7bsXB9-n6zAlBLYjsvPj3dNrkH27Dm3puJKLfIU02967oHg
 - Edmée Garcia-Mariller, « Dire son "Mood" : une nouvelle forme de la narration de soi. Étude linguistique et sémiologique de la sous-culture du "Mood" », Mémoire de Master, 2022, SU CELSA - Sorbonne Université, https://dumas.ccsd.cnrs.fr/dumas-04033748v1
+- Gaëtan Bonnot, « Des traces aux échos d'une révolte : études sur la Jacquerie de 1358 », Thèse de doctorat, 2022, Université Paris I - Panthéon Sorbonne, Ecole doctorale d'histoire, LAMOP - Laboratoire de Médiévistique Occidentale de Paris, https://hal.science/tel-04043231v1
+- Arnaud Laborderie, Florence Tfibel, « Ouvrir les données de la Bibliothèque nationale de France pour la recherche », 2023, https://hal-bnf.archives-ouvertes.fr/hal-04074665
 
 
 ## Conférences de présentation de Gallicagram
