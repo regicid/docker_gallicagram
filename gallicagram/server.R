@@ -3723,7 +3723,7 @@ gallicapresse<-function(input){
   debut=URLencode(str_replace_all(debut,"-","/"))
   fin=URLencode(str_replace_all(fin,"-","/"))
   
-  url=str_c("https://gallica-grapher.ew.r.appspot.com/api/topPapers?term=",mot,"&year=",year,"&month=",month,"&day=",day,"&end_year=",year_end,"&end_month=",month_end,"&end_day=",day_end)
+  url=str_c("https://gallica-grapher.ew.r.appspot.com/api/top?term=",mot,"&year=",year,"&month=",month,"&day=",day,"&end_year=",year_end,"&end_month=",month_end,"&end_day=",day_end)
 
   a<-tryCatch(
     {a=fromJSON(url)},error=function(cond){
@@ -3738,15 +3738,27 @@ gallicapresse<-function(input){
     }
   )
   
-  b=as.data.frame(cbind(a$paper$title,a$count,a$paper$code))
+  b=as.data.frame(cbind(a$top_papers$paper$title,a$top_papers$count,a$top_papers$paper$code))
   colnames(b)=c("title","count","url")
   b$url=str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&version=1.2&startRecord=0&maximumRecords=50&page=1&collapsing=disabled&query=arkPress%20all%20%22",b$url,"_date%22%20and%20%28gallica%20adj%20%22",mot1,"%22%20and%20%28gallicapublication_date%3E%3D%22",debut,"%22%20and%20gallicapublication_date%3C%3D%22",fin,"%22%29%20sortby%20dc.date%2Fsort.ascending")
-  print(b$url)
   b$title=str_replace_all(b$title,":.+","")
   b$title=str_replace_all(b$title,"/.+","")
   b$count=as.integer(b$count)
   plot=plot_ly(data=b,x=~count,y=~reorder(title,count),type = "bar",orientation="h",customdata=b$url)%>%
     layout(xaxis = list(title = ""),yaxis = list(title =""))
+  c=as.data.frame(cbind(a$top_cities$city,a$top_cities$count))
+  colnames(c)=c("ville","count")
+  c$ville=str_replace_all(c$ville,"\\[s\\.n\\.\\]","")
+  c$ville=str_replace_all(c$ville,"\\(","")
+  c$ville=str_replace_all(c$ville,"\\)","")
+  c$ville=str_trim(c$ville,side="both")
+  c$count=as.integer(c$count)
+  c %>%group_by(ville) %>%
+    summarise(count = sum(count))
+  plot1=plot_ly(data=c,x=~count,y=~reorder(ville,count),type = "bar",orientation="h")%>%
+    layout(xaxis = list(title = ""),yaxis = list(title =""),showlegend = F)
+  plot=subplot(plot,plot1)
+  
   hide_spinner(spin_id="gpresse")
   return(onRender(plot,js))
 }
