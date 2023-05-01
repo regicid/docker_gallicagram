@@ -2212,11 +2212,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               beginning = str_c(y,z,"01")
               end = str_c(y,z,end_of_month[j])
               url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",end,"&query=%22",mot1,"%22&sort=best&startDate=",beginning,"&types=article")
-              url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",end,"&query=do&sort=best&startDate=",beginning,"&types=article")
+              url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",end,"&query=%22do%22&sort=best&startDate=",beginning,"&types=article")
               }
             if (resolution=="Année"){
               url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=%22",mot1,"%22&sort=best&startDate=",y,"0101&types=article")
-              url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=do&sort=best&startDate=",y,"0101&types=article")
+              url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=%22do%22&sort=best&startDate=",y,"0101&types=article")
             }
           }
           
