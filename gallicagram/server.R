@@ -2211,12 +2211,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               if(nchar(z)<2){z<-str_c("0",z)}
               beginning = str_c(y,z,"01")
               end = str_c(y,z,end_of_month[j])
-              url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",end,"&query=%22",mot1,"%22&sort=best&startDate=",beginning,"&types=article")
-              url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",end,"&query=%22do%22&sort=best&startDate=",beginning,"&types=article")
+              url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",end,"&query=",mot1,"&sort=best&startDate=",beginning,"&types=article")
+              url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",end,"&query=have&sort=best&startDate=",beginning,"&types=article")
               }
             if (resolution=="Année"){
               url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=",mot1,"&sort=best&startDate=",y,"0101&types=article")
-              url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=do&sort=best&startDate=",y,"0101&types=article")
+              url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=have&sort=best&startDate=",y,"0101&types=article")
             }
           }
           
@@ -3301,6 +3301,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$langue="Néerlandais"
   tableau$bibli="Google Trends NL"
   tableau$search_mode<-"gtrends"}
+  if(doc_type==65){tableau$corpus="Presse"
+  tableau$langue="Anglais"
+  tableau$bibli="New York Times"
+  tableau$search_mode<-"Article"}
   
   
 
@@ -3956,7 +3960,7 @@ shinyServer(function(input, output,session){
       }else if((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1)|(input$doc_type == 1 & input$search_mode == 3)|(input$doc_type == 2 & input$search_mode == 3)|input$doc_type == 5|input$doc_type == 6|input$doc_type == 7|input$doc_type == 8|input$doc_type == 9|input$doc_type == 10|input$doc_type == 11|input$doc_type == 12|input$doc_type == 15|input$doc_type == 16|input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 29){
         output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>'))
         
-      }else if(input$doc_type==13|input$doc_type==14|input$doc_type==17|input$doc_type==18 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48 | input$doc_type == 49){
+      }else if(input$doc_type==13|input$doc_type==14|input$doc_type==17|input$doc_type==18 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48 |  input$doc_type == 49 | input$doc_type == 65){
         output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>'))
       }
       else{output$instructions <- renderUI("")}
