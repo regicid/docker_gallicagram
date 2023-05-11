@@ -27,6 +27,7 @@ library(jsonlite)
 library(ggwordcloud)
 library(shinyalert)
 library(bezier)
+library(doParallel)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -1739,7 +1740,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     if(resolution=="Mois"){I=1:12} #Pour faire ensuite une boucle sur les mois
     
     
-    if(doc_type !=5 & doc_type !=9 & doc_type !=10 & doc_type !=12 & doc_type !=44 & doc_type !=50 & doc_type !=51 & doc_type !=52 & doc_type !=53 & doc_type !=54 & doc_type !=58 & doc_type !=59 & doc_type !=60 & doc_type !=61 & doc_type !=62 & doc_type !=63 & doc_type !=64){
+    if(doc_type !=5 & doc_type !=9 & doc_type !=10 & doc_type !=12 & doc_type !=44 & doc_type !=50 & doc_type !=51 & doc_type !=52 & doc_type !=53 & doc_type !=54 & doc_type !=58 & doc_type !=59 & doc_type !=60 & doc_type !=61 & doc_type !=62 & doc_type !=63 & doc_type !=64 & doc_type !=65){
       for(j in I){
         if(resolution=="Mois"){
           z = as.character(j)
@@ -2205,20 +2206,20 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           
-          if(doc_type == 65){
-            if(resolution=="Mois"){
-              z = as.character(j)
-              if(nchar(z)<2){z<-str_c("0",z)}
-              beginning = str_c(y,z,"01")
-              end = str_c(y,z,end_of_month[j])
-              url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",end,"&query=",mot1,"&sort=best&startDate=",beginning,"&types=article")
-              url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",end,"&query=have&sort=best&startDate=",beginning,"&types=article")
-              }
-            if (resolution=="Année"){
-              url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=",mot1,"&sort=best&startDate=",y,"0101&types=article")
-              url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=have&sort=best&startDate=",y,"0101&types=article")
-            }
-          }
+          # if(doc_type == 65){
+          #   if(resolution=="Mois"){
+          #     z = as.character(j)
+          #     if(nchar(z)<2){z<-str_c("0",z)}
+          #     beginning = str_c(y,z,"01")
+          #     end = str_c(y,z,end_of_month[j])
+          #     url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",end,"&query=",mot1,"&sort=best&startDate=",beginning,"&types=article")
+          #     url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",end,"&query=have&sort=best&startDate=",beginning,"&types=article")
+          #     }
+          #   if (resolution=="Année"){
+          #     url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=",mot1,"&sort=best&startDate=",y,"0101&types=article")
+          #     url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=have&sort=best&startDate=",y,"0101&types=article")
+          #   }
+          # }
           
           
           
@@ -2850,20 +2851,20 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           }
           
           
-          if(input$doc_type == 65){
-            ngram<-read_html(RETRY("GET",url,times = 6))
-            ngram<-html_node(ngram,'#site-content > div.css-1wa7u5r > div.css-1npexfx > div.css-nhmgdh > p')
-            ngram<-html_text(ngram)
-            ngram<-str_replace_all(ngram,"[:punct:]","")
-            a<-str_extract(ngram,"[:digit:]+")
-            if(incr_mot==1){
-              ngram_base<-read_html(RETRY("GET",url_base,times = 6))
-              ngram_base<-html_node(ngram_base,'#site-content > div.css-1wa7u5r > div.css-1npexfx > div.css-nhmgdh > p')
-              ngram_base<-html_text(ngram_base)
-              ngram_base<-str_replace_all(ngram_base,"[:punct:]","")
-              b<-str_extract(ngram_base,"[:digit:]+")
-            }
-          }
+          # if(input$doc_type == 65){
+          #   ngram<-read_html(RETRY("GET",url,times = 6))
+          #   ngram<-html_node(ngram,'#site-content > div.css-1wa7u5r > div.css-1npexfx > div.css-nhmgdh > p')
+          #   ngram<-html_text(ngram)
+          #   ngram<-str_replace_all(ngram,"[:punct:]","")
+          #   a<-str_extract(ngram,"[:digit:]+")
+          #   if(incr_mot==1){
+          #     ngram_base<-read_html(RETRY("GET",url_base,times = 6))
+          #     ngram_base<-html_node(ngram_base,'#site-content > div.css-1wa7u5r > div.css-1npexfx > div.css-nhmgdh > p')
+          #     ngram_base<-html_text(ngram_base)
+          #     ngram_base<-str_replace_all(ngram_base,"[:punct:]","")
+          #     b<-str_extract(ngram_base,"[:digit:]+")
+          #   }
+          # }
           
           if(length(b)==0L){b=0}
           tableau[nrow(tableau)+1,] = NA
@@ -2993,6 +2994,59 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     tableau$url[length(tableau$url)]="https://trends.google.fr/trends/"
     tableau$date<-str_replace_all(tableau$date,"-","/")
   }
+  ####NYT
+  if(doc_type==65){
+    base=read.csv("base_presse_annees_nyt.csv",encoding = "UTF-8",sep = ",")
+    base$date=as.integer(base$date)
+    base$base=as.integer(base$base)
+    base=base[base$date>=input$beginning & base$date<=input$end,]
+    nyt = function(y,mot){
+      url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=",mot,"&sort=best&startDate=",y,"0101&types=article")
+      #tryCatch({
+      ngram<-read_html(URLencode(url))
+      ngram<-html_node(ngram,'#site-content > div.css-1wa7u5r > div.css-1npexfx > div.css-nhmgdh > p')
+      ngram<-html_text(ngram)
+      ngram<-str_replace_all(ngram,"[:punct:]","")
+      z = (c(y,str_extract(ngram,"[:digit:]+")))
+      return(z)
+    }
+    period = input$beginning:input$end
+    for (mot in mots){
+      cl <- detectCores()  %>% makeCluster
+      registerDoParallel(cl)
+      
+      foreach(y=(period),.combine=rbind,.errorhandling = 'pass',
+              .packages = c("stringr","rvest","httr"),
+              .verbose = T) %dopar% nyt(y,mot) -> result
+      z = which(is.na(as.integer(result[,1])))
+      foreach(y=(period[z]),.combine=rbind,.errorhandling = 'pass',
+              .packages = c("stringr","rvest","httr"),
+              .verbose = T) %dopar% nyt(y,mot) -> result2
+      result[z,] = result2
+      foreach(i=1:length(period),.combine = "c") %do% return(result[i,2]=="0" & as.integer(result[i-1,2])>5) -> z
+      foreach(y=(period[z]),.combine=rbind,.errorhandling = 'pass',
+              .packages = c("stringr","rvest","httr"),
+              .verbose = T) %dopar% nyt(y,mot) -> result2
+      result[z,] = result2
+      stopCluster(cl=cl)
+      print(result)
+      result=as.data.frame(result)
+      colnames(result)=c("date","count")
+      result$date=as.integer(result$date)
+      result$count=as.integer(result$count)
+      result=left_join(result,base,by="date")
+      result$ratio=result$count/result$base
+      result$mot=mot
+      
+      if(mot==mots[1]){tableau=result}
+      else{tableau=rbind(tableau,result)}
+      
+    }
+    tableau$date=as.character(tableau$date)
+    result$url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",tableau$date,"1231&query=",tableau$mot,"&sort=best&startDate=",tableau$date,"0101&types=article")
+    print(tableau)
+  }
+  ####
   
   if(doc_type==50 | doc_type==51 | doc_type==52 | doc_type==53 | doc_type==54){
     jjj=as.character(min(input$dateRange))
