@@ -252,7 +252,7 @@ Plot <- function(data,input){
     tableau$loess[tableau$loess<0]<-0
   }
   dn<-as.character(max(format(tableau$ratio,scientific=FALSE)))
-  if(max(tableau$ratio)>=0.1){digit_number=".1%"}
+  if(max(tableau$ratio, na.rm = TRUE)>=0.1){digit_number=".1%"}
   else{
     digit_number=str_extract(dn,"\\..+")
     digit_number=str_replace(digit_number,"\\.","")
@@ -3044,7 +3044,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       
     }
     tableau$date=as.character(tableau$date)
-    result$url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",tableau$date,"1231&query=",tableau$mot,"&sort=best&startDate=",tableau$date,"0101&types=article")
+    tableau$url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",tableau$date,"1231&query=",tableau$mot,"&sort=best&startDate=",tableau$date,"0101&types=article")
     print(tableau)
   }
   ####
