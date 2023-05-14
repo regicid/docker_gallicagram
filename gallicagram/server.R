@@ -3016,23 +3016,24 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       registerDoParallel(cl)
       
       foreach(y=(period),.combine=rbind,.errorhandling = 'pass',
-              .packages = c("stringr","rvest","httr"),
-              .verbose = T) %dopar% nyt(y,mot) -> result
+              .packages = c("stringr","rvest","httr")) %dopar% nyt(y,mot) -> result
       z = which(is.na(as.integer(result[,1])))
       foreach(y=(period[z]),.combine=rbind,.errorhandling = 'pass',
               .packages = c("stringr","rvest","httr"),
               .verbose = T) %dopar% nyt(y,mot) -> result2
       result[z,] = result2
-      foreach(i=1:length(period),.combine = "c") %do% return(result[i,2]=="0" & as.integer(result[i-1,2])>5) -> z
-      foreach(y=(period[z]),.combine=rbind,.errorhandling = 'pass',
-              .packages = c("stringr","rvest","httr"),
-              .verbose = T) %dopar% nyt(y,mot) -> result2
-      result[z,] = result2
+      #foreach(i=1:length(period),.combine = "c") %do% return(result[i,2]=="0" & as.integer(result[i-1,2])>5) -> z
+      #foreach(y=(period[z]),.combine=rbind,.errorhandling = 'pass',
+      #        .packages = c("stringr","rvest","httr"),
+      #        .verbose = T) %dopar% nyt(y,mot) -> result2
+      #result[z,] = result2
       stopCluster(cl=cl)
       print(result)
       result=as.data.frame(result)
       colnames(result)=c("date","count")
       result$date=as.integer(result$date)
+      z = is.na(result$date)
+      result$count[z] = NA
       result$count=as.integer(result$count)
       result=left_join(result,base,by="date")
       result$ratio=result$count/result$base
