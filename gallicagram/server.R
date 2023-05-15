@@ -3001,7 +3001,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     base$base=as.integer(base$base)
     base=base[base$date>=input$beginning & base$date<=input$end,]
     nyt = function(y,mot){
-      url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=",mot,"&sort=best&startDate=",y,"0101&types=article")
+      if(str_detect(mot," "){url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=%20",mot,"%20&sort=best&startDate=",y,"0101&types=article")
+        }else{url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=",mot,"&sort=best&startDate=",y,"0101&types=article")}
       #tryCatch({
       ngram<-read_html(URLencode(url))
       ngram<-html_node(ngram,'#site-content > div.css-1wa7u5r > div.css-1npexfx > div.css-nhmgdh > p')
@@ -3011,7 +3012,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       return(z)
     }
     period = input$beginning:input$end
-    show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/6)*length(mots))," secondes..."))
+    show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/6)*length(mots))," secondes...<br>Attention : le moteur de recherche du NYT produit parfois d'étranges pics et creux, auquel cas il faut relancer les calculs quelques minutes plus tard."))
     for (mot in mots){
       cl <- detectCores()  %>% makeCluster
       registerDoParallel(cl)
@@ -4577,7 +4578,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type==44){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://trends.google.fr//', target=\'_blank\'> ","trends.google.fr","</a>"),sep = ""))}
     if(input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48  | input$doc_type == 49){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.musixmatch.com/', target=\'_blank\'> ","musixmatch.com","</a>"),sep = ""))}
     if(input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53  | input$doc_type == 54){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://mediacloud.org/', target=\'_blank\'> ","mediacloud.org","</a>"),sep = ""))}
-    if(input$doc_type==55){output$legende=renderText(HTML(paste("SourPatientezce : ","<a href = 'https://lemarin.ouest-france.fr/', target=\'_blank\'> ","lemarin.ouest-france.fr","</a>"),sep = ""))}
+    if(input$doc_type==55){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://lemarin.ouest-france.fr/', target=\'_blank\'> ","lemarin.ouest-france.fr","</a>"),sep = ""))}
     if(input$doc_type==57){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://eluxemburgensia.lu/', target=\'_blank\'> ","eluxemburgensia.fr","</a>"),sep = ""))}
     if(input$doc_type==58 | input$doc_type==59 | input$doc_type==60 | input$doc_type==61 | input$doc_type==62 | input$doc_type==63 | input$doc_type==64){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://trends.google.fr//', target=\'_blank\'> ","trends.google.fr","</a>"),sep = ""))}
     if(input$doc_type==65){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.nytimes.com/', target=\'_blank\'> ","nytimes.com","</a>"),sep = ""))}
