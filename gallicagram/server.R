@@ -3030,6 +3030,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       result$count[z] = NA
       #foreach(i=1:length(period),.combine = "c") %do% return(result[i+1,2]=="0" & as.integer(result[i,2])>5) -> z
       z = as.logical((result$count=="0")*(as.integer(c(0,result$count[0:(nrow(result)-1)]))>5))
+      z[is.na(z)] = FALSE
       foreach(y=(period[z]),.combine=rbind,.errorhandling = 'pass',
               .packages = c("stringr","rvest","httr"),
               .verbose = T) %dopar% nyt(y,mot) -> result2
