@@ -3051,7 +3051,11 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       
     }
     tableau$date=as.character(tableau$date)
-    tableau$url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",tableau$date,"1231&query=",tableau$mot,"&sort=best&startDate=",tableau$date,"0101&types=article")
+    mot_nyt_url = tableau$mot
+    zzz = str_detect(mot_nyt_url," ")
+    mot_nyt_url[zzz] = str_c('"',mot_nyt_url[zzz],'"')
+    tableau$url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",tableau$date,'1231&query=',mot_nyt_url,'&sort=best&startDate=',tableau$date,"0101&types=article")
+    
     print(tableau)
   }
   ####
