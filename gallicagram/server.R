@@ -3011,7 +3011,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       return(z)
     }
     period = input$beginning:input$end
-    show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/4))," secondes..."))
+    show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/5)*length(mots))," secondes..."))
     for (mot in mots){
       cl <- detectCores()  %>% makeCluster
       registerDoParallel(cl)
