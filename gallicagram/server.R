@@ -4516,7 +4516,7 @@ shinyServer(function(input, output,session){
     }
     else if(input$doc_type==65){
       nb_mots<-length(unique(df[["tableau"]]$mot))
-      output$legende2 <- renderText(str_c("Documents épluchées : ", as.character(sum(df[["tableau"]]$base,na.rm=T)/nb_mots)))
+      output$legende2 <- renderText(str_c("Documents épluchées : ", as.character(as.integer(sum(df[["tableau"]]$base,na.rm=T)/nb_mots))))
       output$legende3<-renderText(str_c("Résultats trouvés : ", as.character(sum(df[["tableau"]]$count,na.rm=T))))
     }
     else if (input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12| input$doc_type==44| input$doc_type==58| input$doc_type==59| input$doc_type==60| input$doc_type==61| input$doc_type==62| input$doc_type==63| input$doc_type==64){
