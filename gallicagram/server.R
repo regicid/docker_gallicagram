@@ -3037,7 +3037,9 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       remove_modal_spinner()
       print(result)
       result$count=as.integer(result$count)
+      result$date=as.integer(result$date)
       result=left_join(result,base,by="date")
+      
       result$ratio=result$count/result$base
       result$mot=mot
       
