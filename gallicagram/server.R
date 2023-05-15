@@ -1,5 +1,7 @@
 library(shiny)
 library(plotly)
+library(cartogram)
+library(sf)
 library(stringr)
 #library(Hmisc)
 library(xml2)
@@ -19,8 +21,6 @@ library(RColorBrewer)
 library(cowplot)
 library(leaflet)
 library(scales)
-library(cartogram)
-library(sf)
 library(gtrendsR)
 library(timetk)
 library(jsonlite)
@@ -3011,6 +3011,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       return(z)
     }
     period = input$beginning:input$end
+    show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/4))," secondes..."))
     for (mot in mots){
       cl <- detectCores()  %>% makeCluster
       registerDoParallel(cl)
@@ -3022,18 +3023,19 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               .packages = c("stringr","rvest","httr"),
               .verbose = T) %dopar% nyt(y,mot) -> result2
       result[z,] = result2
-      #foreach(i=1:length(period),.combine = "c") %do% return(result[i,2]=="0" & as.integer(result[i-1,2])>5) -> z
-      #foreach(y=(period[z]),.combine=rbind,.errorhandling = 'pass',
-      #        .packages = c("stringr","rvest","httr"),
-      #        .verbose = T) %dopar% nyt(y,mot) -> result2
-      #result[z,] = result2
-      stopCluster(cl=cl)
-      print(result)
       result=as.data.frame(result)
       colnames(result)=c("date","count")
       result$date=as.integer(result$date)
       z = is.na(result$date)
       result$count[z] = NA
+      foreach(i=1:length(period),.combine = "c") %do% return(result[i,2]=="0" & as.integer(result[i-1,2])>5) -> z
+      foreach(y=(period[z]),.combine=rbind,.errorhandling = 'pass',
+              .packages = c("stringr","rvest","httr"),
+              .verbose = T) %dopar% nyt(y,mot) -> result2
+      result[z,] = result2
+      stopCluster(cl=cl)
+      remove_modal_spinner()
+      print(result)
       result$count=as.integer(result$count)
       result=left_join(result,base,by="date")
       result$ratio=result$count/result$base
@@ -4507,6 +4509,12 @@ shinyServer(function(input, output,session){
       nb_mots<-length(unique(df[["tableau_volume"]]$mot))
       output$legende2<-renderText(str_c("Documents épluchées : ", as.character(sum(df[["tableau_volume"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Résultats trouvés : ", as.character(sum(df[["tableau_volume"]]$count))))
+    }
+    else if(input$doc_type==65){
+      nb_mots<-length(unique(df[["tableau"]]$mot))
+      output$legende2 <- renderText(str_c("Documents épluchées : ", as.character(sum(df[["tableau"]]$base)/nb_mots)))
+      print(names(df))
+      output$legende3<-renderText(str_c("Résultats trouvés : ", as.character(sum(df[["tableau"]]$count))))
     }
     else if (input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12| input$doc_type==44| input$doc_type==58| input$doc_type==59| input$doc_type==60| input$doc_type==61| input$doc_type==62| input$doc_type==63| input$doc_type==64){
       output$legende2<-NULL
