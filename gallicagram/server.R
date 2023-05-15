@@ -3001,7 +3001,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     base$base=as.integer(base$base)
     base=base[base$date>=input$beginning & base$date<=input$end,]
     nyt = function(y,mot){
-      if(str_detect(mot," "){url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=%20",mot,"%20&sort=best&startDate=",y,"0101&types=article")
+      if(str_detect(mot," ")){url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=%20",mot,"%20&sort=best&startDate=",y,"0101&types=article")
         }else{url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=",mot,"&sort=best&startDate=",y,"0101&types=article")}
       #tryCatch({
       ngram<-read_html(URLencode(url))
