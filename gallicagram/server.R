@@ -1,7 +1,7 @@
 library(shiny)
 library(plotly)
-library(cartogram)
-library(sf)
+#library(cartogram)
+#library(sf)
 library(stringr)
 #library(Hmisc)
 library(xml2)
@@ -3000,43 +3000,34 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     base$date=as.integer(base$date)
     base$base=as.integer(base$base)
     base=base[base$date>=input$beginning & base$date<=input$end,]
-    nyt = function(y,mot){
-      if(str_detect(mot," ")){url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,'1231&query="',mot,'"&sort=best&startDate=',y,"0101&types=article")
-        }else{url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=",mot,"&sort=best&startDate=",y,"0101&types=article")}
-      #tryCatch({
-      ngram<-read_html(URLencode(url))
-      ngram<-html_node(ngram,'#site-content > div.css-1wa7u5r > div.css-1npexfx > div.css-nhmgdh > p')
-      ngram<-html_text(ngram)
-      ngram<-str_replace_all(ngram,"[:punct:]","")
-      z = (c(y,str_extract(ngram,"[:digit:]+")))
-      return(z)
-    }
     period = input$beginning:input$end
     show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/6)*length(mots))," secondes...\n Attention : le moteur de recherche du NYT produit parfois d'étranges pics et creux, auquel cas il faut relancer les calculs quelques minutes plus tard."))
-    for (mot in mots){
-      cl <- detectCores()  %>% makeCluster
-      registerDoParallel(cl)
-      
-      foreach(y=(period),.combine=rbind,.errorhandling = 'pass',
-              .packages = c("stringr","rvest","httr")) %dopar% nyt(y,mot) -> result
-      z = which(is.na(as.integer(result[,1])))
-      foreach(y=(period[z]),.combine=rbind,.errorhandling = 'pass',
-              .packages = c("stringr","rvest","httr"),
-              .verbose = T) %dopar% nyt(y,mot) -> result2
-      result[z,] = result2
-      result=as.data.frame(result)
-      colnames(result)=c("date","count")
-      result$date=as.integer(result$date)
-      z = is.na(result$date)
-      result$count[z] = NA
-      #foreach(i=1:length(period),.combine = "c") %do% return(result[i+1,2]=="0" & as.integer(result[i,2])>5) -> z
-      z = as.logical((result$count=="0")*(as.integer(c(0,result$count[0:(nrow(result)-1)]))>5))
-      z[is.na(z)] = FALSE
-      foreach(y=(period[z]),.combine=rbind,.errorhandling = 'pass',
-              .packages = c("stringr","rvest","httr"),
-              .verbose = T) %dopar% nyt(y,mot) -> result2
-      result[z,] = result2
-      stopCluster(cl=cl)
+    library(crul)
+    for(mot in mots){
+    nyt_scraper = function(period){
+      reqlist = list()
+      for(i in 1:length(period)){reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}
+      responses <- AsyncQueue$new(.list = reqlist,bucket_size=30,sleep=0)
+      responses$request()
+      result = data.frame(date=period,count=NA)
+      z = vector()
+      for(i in 1:length(period)){
+        count = str_split(responses$responses()[[i]]$parse(),'totalCount":')[[1]][2]
+        result[i,"count"] = str_split(count,",")[[1]][1]
+      }
+      return(result)}
+      result = nyt_scraper(period)
+      row.names(result) = result$date
+      #if(1980 %in% period){
+      #  a = read_html(str_c('https://www.nytimes.com/search?dropmab=false&endDate=19801231&query=',mot,'&sort=best&startDate=19800101&types=article'))
+      #  count = str_split(html_text(a),'totalCount":')[[1]][2]
+      #  result["1980","count"] = str_split(count,",")[[1]][1]
+      #}
+      z = c(which(is.na(result$count)),which(as.logical((result$count=="0")*(as.integer(c(0,result$count[0:(nrow(result)-1)]))>5))))
+      print(z)
+      if(length(z)>0){
+        result2 = nyt_scraper(period[z])
+        result[as.character(result2$date),] = result2}
       remove_modal_spinner()
       print(result)
       result$count=as.integer(result$count)
