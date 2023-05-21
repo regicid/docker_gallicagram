@@ -1,7 +1,7 @@
 library(shiny)
 library(plotly)
-#library(cartogram)
-#library(sf)
+library(cartogram)
+library(sf)
 library(stringr)
 #library(Hmisc)
 library(xml2)
@@ -3018,16 +3018,35 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       return(result)}
       result = nyt_scraper(period)
       row.names(result) = result$date
-      #if(1980 %in% period){
-      #  a = read_html(str_c('https://www.nytimes.com/search?dropmab=false&endDate=19801231&query=',mot,'&sort=best&startDate=19800101&types=article'))
-      #  count = str_split(html_text(a),'totalCount":')[[1]][2]
-      #  result["1980","count"] = str_split(count,",")[[1]][1]
-      #}
-      z = c(which(is.na(result$count)),which(as.logical((result$count=="0")*(as.integer(c(0,result$count[0:(nrow(result)-1)]))>5))))
-      print(z)
-      if(length(z)>0){
-        result2 = nyt_scraper(period[z])
-        result[as.character(result2$date),] = result2}
+      result$count = as.integer(result$count)
+      z = which(is.na(result$count))
+      zz  =which(as.logical((result$count==0)*c(0,result$count[0:(nrow(result)-1)])>5))
+      zzz = which(as.logical((result$count>3*c(result$count[1],result$count[0:(nrow(result)-1)]))*(result$count>3*c(result$count[2:(nrow(result))],result$count[nrow(result)]))))
+      if(length(z)+length(zz)+length(zzz)>0){
+        reqlist = list()
+        print("aaa")
+        for(i in z){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}
+        for(i in c(zz,zzz)){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'0531&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()
+        reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0601&types=article"))$get()}
+        responses <- AsyncQueue$new(.list = reqlist,bucket_size=30,sleep=0)
+        responses$request()
+        print("b")
+        r = vector()
+        for(i in 1:length(responses$responses())){
+          count = str_split(responses$responses()[[i]]$parse(),'totalCount":')[[1]][2]
+          r[i] = str_split(count,",")[[1]][1]
+        }
+        r= as.integer(r)
+        #result2 = nyt_scraper(period[z])
+        result[z,"count"] = as.integer(r[1:length(z)])
+        result[c(zz,zzz),"count"] = as.integer(r[(length(z)+1):length(r)][c(T,F)])+as.integer(r[(length(z)+1):length(r)][c(F,T)])##Sum every two
+      }
+        
+    
+    
+    
+      
+      ### Gérer les zeros
       remove_modal_spinner()
       print(result)
       result$count=as.integer(result$count)
