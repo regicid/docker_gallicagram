@@ -3002,9 +3002,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/6)*length(mots))," secondes...\n Attention : le moteur de recherche du NYT produit parfois d'étranges pics et creux, auquel cas il faut relancer les calculs quelques minutes plus tard."))
     library(crul)
     for(mot in mots){
+      quote_marks=c(1860:1865,1905,1970:1979,1981:2023)
     nyt_scraper = function(period){
       reqlist = list()
-      for(i in 1:length(period)){reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}
+      for(i in 1:length(period)){
+        if(str_detect(mot," ") & period[i] %in% quote_marks){reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=%22',mot,'%22&sort=best&startDate=',period[i],"0101&types=article"))$get()
+        }else{reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}}
       responses <- AsyncQueue$new(.list = reqlist,bucket_size=30,sleep=0)
       responses$request()
       result = data.frame(date=period,count=NA)
