@@ -2997,8 +2997,6 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   ####NYT
   if(doc_type==65){
     base=read.csv("base_presse_annees_nyt.csv",encoding = "UTF-8",sep = ",")
-    base$date=as.integer(base$date)
-    base$base=as.integer(base$base)
     base=base[base$date>=input$beginning & base$date<=input$end,]
     period = input$beginning:input$end
     show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/6)*length(mots))," secondes...\n Attention : le moteur de recherche du NYT produit parfois d'étranges pics et creux, auquel cas il faut relancer les calculs quelques minutes plus tard."))
