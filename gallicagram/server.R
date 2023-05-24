@@ -3002,14 +3002,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/15)*length(mots))," secondes...\n Attention : le moteur de recherche du NYT produit parfois d'étranges pics et creux, auquel cas il faut relancer les calculs quelques minutes plus tard."))
     library(crul)
     for(mot in mots){
-    url_nyt = function(mot,y){
-      return(str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))
-    }
-    nyt_scraper = function(period){
+ 
+    #nyt_scraper = function(period){
       reqlist = list()
       for(i in 1:length(period)){
-        reqlist[[i]] = HttpRequest$new(url = url_nyt(mot,period[i]))$get()}
-      responses <- AsyncQueue$new(.list = reqlist,bucket_size=30,sleep=0)
+        reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}
+      responses <- AsyncQueue$new(.list = reqlist,bucket_size=20,sleep=0)
       responses$request()
       result = data.frame(date=period,count=NA)
       z = vector()
@@ -3017,20 +3015,22 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
         count = str_split(responses$responses()[[i]]$parse(),'totalCount":')[[1]][2]
         result[i,"count"] = str_split(count,",")[[1]][1]
       }
-      return(result)}
-      result = nyt_scraper(period)
+      print(result)
+      #return(result)}
+      #result = nyt_scraper(period)
       row.names(result) = result$date
       result$count = as.integer(result$count)
+      for(bla in 1:2){
       z = which(is.na(result$count))
       zz  =which(as.logical((result$count==0)*c(0,result$count[0:(nrow(result)-1)])>5))
       zzz = which(as.logical((result$count>3*c(result$count[1],result$count[0:(nrow(result)-1)]))*(result$count>3*c(result$count[2:(nrow(result))],result$count[nrow(result)]))))
       if(length(z)+length(zz)+length(zzz)>0){
         reqlist = list()
         print("aaa")
-        for(i in z){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = url_nyt(mot,period[i]))$get()}
-        for(i in c(zz,zzz)){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = url_nyt(mot,period[i]))$get()
-        reqlist[[length(reqlist)+1]] = HttpRequest$new(url = url_nyt(mot,period[i]))$get()}
-        responses <- AsyncQueue$new(.list = reqlist,bucket_size=30,sleep=0)
+        for(i in z){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}
+        for(i in c(zz,zzz)){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'0531&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()
+        reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0601&types=article"))$get()}
+        responses <- AsyncQueue$new(.list = reqlist,bucket_size=20,sleep=0)
         responses$request()
         print("b")
         r = vector()
@@ -3042,14 +3042,14 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
         #result2 = nyt_scraper(period[z])
         result[z,"count"] = as.integer(r[1:length(z)])
         result[c(zz,zzz),"count"] = as.integer(r[(length(z)+1):length(r)][c(T,F)])+as.integer(r[(length(z)+1):length(r)][c(F,T)])##Sum every two
-      }
+      }}
         
     
     
     
       
       
-      print(result)
+      #print(result)
       result$count=as.integer(result$count)
       result$date=as.integer(result$date)
       result=left_join(result,base,by="date")
@@ -3064,8 +3064,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     remove_modal_spinner()
     tableau$date=as.character(tableau$date)
     mot_nyt_url = tableau$mot
-    zzz = str_detect(mot_nyt_url," ")
-    mot_nyt_url[zzz] = str_c('"',mot_nyt_url[zzz],'"')
+    #zzz = str_detect(mot_nyt_url," ")
+    #mot_nyt_url[zzz] = str_c('"',mot_nyt_url[zzz],'"')
     tableau$url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",tableau$date,'1231&query=',mot_nyt_url,'&sort=best&startDate=',tableau$date,"0101&types=article")
     
     print(tableau)
