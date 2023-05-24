@@ -2999,15 +2999,16 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     base=read.csv("base_presse_annees_nyt.csv",encoding = "UTF-8",sep = ",")
     base=base[base$date>=input$beginning & base$date<=input$end,]
     period = input$beginning:input$end
-    show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/6)*length(mots))," secondes...\n Attention : le moteur de recherche du NYT produit parfois d'étranges pics et creux, auquel cas il faut relancer les calculs quelques minutes plus tard."))
+    show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/15)*length(mots))," secondes...\n Attention : le moteur de recherche du NYT produit parfois d'étranges pics et creux, auquel cas il faut relancer les calculs quelques minutes plus tard."))
     library(crul)
     for(mot in mots){
-      quote_marks=c(1860:1865,1905,1970:1979,1981:2023)
+    url_nyt = function(mot,y){
+      return(str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))
+    }
     nyt_scraper = function(period){
       reqlist = list()
       for(i in 1:length(period)){
-        if(str_detect(mot," ") & period[i] %in% quote_marks){reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=%22',mot,'%22&sort=best&startDate=',period[i],"0101&types=article"))$get()
-        }else{reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}}
+        reqlist[[i]] = HttpRequest$new(url = url_nyt(mot,period[i]))$get()}
       responses <- AsyncQueue$new(.list = reqlist,bucket_size=30,sleep=0)
       responses$request()
       result = data.frame(date=period,count=NA)
@@ -3026,9 +3027,9 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       if(length(z)+length(zz)+length(zzz)>0){
         reqlist = list()
         print("aaa")
-        for(i in z){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}
-        for(i in c(zz,zzz)){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'0531&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()
-        reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0601&types=article"))$get()}
+        for(i in z){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = url_nyt(mot,period[i]))$get()}
+        for(i in c(zz,zzz)){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = url_nyt(mot,period[i]))$get()
+        reqlist[[length(reqlist)+1]] = HttpRequest$new(url = url_nyt(mot,period[i]))$get()}
         responses <- AsyncQueue$new(.list = reqlist,bucket_size=30,sleep=0)
         responses$request()
         print("b")
