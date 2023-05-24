@@ -3003,7 +3003,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     library(crul)
     for(mot in mots){
     url_nyt = function(mot,y){
-      return(str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))
+      return(str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))
     }
     nyt_scraper = function(period){
       reqlist = list()
@@ -3048,8 +3048,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     
     
       
-      ### Gérer les zeros
-      remove_modal_spinner()
+      
       print(result)
       result$count=as.integer(result$count)
       result$date=as.integer(result$date)
@@ -3062,6 +3061,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       else{tableau=rbind(tableau,result)}
       
     }
+    remove_modal_spinner()
     tableau$date=as.character(tableau$date)
     mot_nyt_url = tableau$mot
     zzz = str_detect(mot_nyt_url," ")
