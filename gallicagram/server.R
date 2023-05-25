@@ -3806,7 +3806,11 @@ willisation <- function(input,will){
                  contexte_droit=character(), 
                  stringsAsFactors=FALSE) 
     for (i in 1:length(a$records.paper_title)) {
+      print(i)
       url_titre=str_c("<a href='",a$records.context[[i]]$page_url,"' target='_blank'>",a$records.paper_title[i],"</a>")
+      if(is.null(a$records.context[[i]]$pivot)){
+        a$records.context[[i]] = data.frame(pivot="",left_context="",right_context="",page_url="",page_num="")
+      }
       b=rbind(b,cbind(url_titre,a$records.date[i],a$records.context[[i]]$left_context,a$records.context[[i]]$pivot,a$records.context[[i]]$right_context))
     }
     for (j in 1:length(b$V1)) {
