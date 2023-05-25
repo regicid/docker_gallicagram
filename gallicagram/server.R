@@ -232,7 +232,8 @@ Plot <- function(data,input){
         for(i in 1:length(z)){
           j = max(i-floor(input$span/2),0)
           k = i+ceiling(input$span/2)
-          tableau$loess[z][i] = sum(tableau$count[z][j:k],na.rm=T)/sum(tableau$base[z][j:k][!is.na(tableau[z,"count"][j:k])],na.rm = T)
+          pond = tableau$base[z][j:k]
+          tableau$loess[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm = T)
         }}
     }
     if(input$loess==T){
