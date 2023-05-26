@@ -3007,7 +3007,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       reqlist = list()
       for(i in 1:length(period)){
         reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}
-      responses <- AsyncQueue$new(.list = reqlist,bucket_size=20,sleep=0)
+      responses <- AsyncQueue$new(.list = reqlist,bucket_size=30,sleep=0)
       responses$request()
       result = data.frame(date=period,count=NA)
       z = vector()
