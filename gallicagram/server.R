@@ -3024,6 +3024,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       z = which(is.na(result$count))
       zz  =which(as.logical((result$count==0)*c(0,result$count[0:(nrow(result)-1)])>5))
       zzz = which(as.logical((result$count>3*c(result$count[1],result$count[0:(nrow(result)-1)]))*(result$count>3*c(result$count[2:(nrow(result))],result$count[nrow(result)]))))
+      argmax = which.max(result$count)
+      if((!argmax %in% zzz) & max(result$count,na.rm = T) > 3*max(result$count[-argmax],na.rm = T)){zzz = c(zzz,argmax)}
       if(length(z)+length(zz)+length(zzz)>0){
         reqlist = list()
         print("aaa")
