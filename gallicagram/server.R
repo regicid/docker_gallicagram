@@ -461,7 +461,7 @@ Plot <- function(data,input){
           j = max(i-floor(12/2),0)
           k = i+ceiling(12/2)
           pond = tableau$base[z][j:k]
-          tableau$trend[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm = T)
+          tableau$trend[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond[!is.na(tableau$ratio[z][j:k])],na.rm = T),na.rm = T)
         }
       }
       tableau$loess=tableau$ratio-tableau$trend
