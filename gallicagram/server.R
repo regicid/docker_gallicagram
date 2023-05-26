@@ -3057,6 +3057,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       result=left_join(result,base,by="date")
       
       result$ratio=result$count/result$base
+      result$ratio[result$ratio>2] = NA
       result$mot=mot
       
       if(mot==mots[1]){tableau=result}
