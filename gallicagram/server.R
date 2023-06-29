@@ -3,7 +3,6 @@ library(plotly)
 library(cartogram)
 library(sf)
 library(stringr)
-#library(Hmisc)
 library(xml2)
 library(markdown)
 library(shinythemes)
@@ -13,7 +12,6 @@ library(dplyr)
 library(htmltools)
 library(purrr)
 library(rvest)
-#library(RSelenium)
 library(tidytext)
 library(shinybusy)
 library(ggthemes)
@@ -27,7 +25,6 @@ library(jsonlite)
 library(ggwordcloud)
 library(shinyalert)
 library(bezier)
-library(doParallel)
 
 httr::set_config(config(ssl_verifypeer = 0L))
 
@@ -2996,31 +2993,40 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   }
   ####NYT
   if(doc_type==65){
-    base=read.csv("base_presse_annees_nyt.csv",encoding = "UTF-8",sep = ",")
-    base=base[base$date>=input$beginning & base$date<=input$end,]
+    if(input$resolution=="Année"){base=read.csv("base_presse_annees_nyt.csv",encoding = "UTF-8",sep = ",")}
+    if(input$resolution=="Mois"){base=read.csv("base_presse_mois_nyt.csv",encoding = "UTF-8",sep = ",")}
+    base=base[base$annee>=input$beginning & base$annee<=input$end,]
     period = input$beginning:input$end
-    show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/15)*length(mots))," secondes...\n Attention : le moteur de recherche du NYT produit parfois d'étranges pics et creux, auquel cas il faut relancer les calculs quelques minutes plus tard."))
+    show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/12)*length(mots)*(1+11*(input$resolution=="Mois")))," secondes...\n Attention : le moteur de recherche du NYT produit parfois d'étranges pics et creux, auquel cas il faut relancer les calculs quelques minutes plus tard."))
     library(crul)
     for(mot in mots){
- 
     #nyt_scraper = function(period){
       reqlist = list()
       for(i in 1:length(period)){
-        reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}
+        if(input$resolution=="Année"){reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$retry("get")}
+        if(input$resolution=="Mois"){
+          end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
+          months = c("01","02","03","04","05","06","07","08","09","10","11","12")
+          for(month in 1:12){
+            reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],months[month],end_of_month[month],'&query=',mot,'&sort=best&startDate=',period[i],months[month],"01&types=article"))$retry("get")}
+        }
+      }
       responses <- AsyncQueue$new(.list = reqlist,bucket_size=30,sleep=0)
       responses$request()
-      result = data.frame(date=period,count=NA)
+      if(input$resolution=="Année"){result = data.frame(date=period,count=NA)}
+      if(input$resolution=="Mois"){result = data.frame(annee = rep(period,each=12),mois= rep(months,length(period)),count = NA)
+      result$date = paste(result$annee,result$mois,sep="/")}
       z = vector()
-      for(i in 1:length(period)){
+      for(i in 1:length(reqlist)){
         count = str_split(responses$responses()[[i]]$parse(),'totalCount":')[[1]][2]
         result[i,"count"] = str_split(count,",")[[1]][1]
+        result[i,"url"] = reqlist[[i]]$url
       }
-      print(result)
       #return(result)}
       #result = nyt_scraper(period)
       row.names(result) = result$date
       result$count = as.integer(result$count)
-      for(bla in 1:2){
+      for(b in 1:2){
       z = which(is.na(result$count))
       zz  =which(as.logical((result$count==0)*c(0,result$count[0:(nrow(result)-1)])>5))
       zzz = which(as.logical((result$count>3*c(result$count[1],result$count[0:(nrow(result)-1)]))*(result$count>3*c(result$count[2:(nrow(result))],result$count[nrow(result)]))))
@@ -3028,10 +3034,19 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       if((!argmax %in% zzz) & max(result$count,na.rm = T) > 3*max(result$count[-argmax],na.rm = T)){zzz = c(zzz,argmax)}
       if(length(z)+length(zz)+length(zzz)>0){
         reqlist = list()
-        print("aaa")
-        for(i in z){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}
-        for(i in c(zz,zzz)){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'0531&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()
-        reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0601&types=article"))$get()}
+        for(i in z){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = result$url[i])$retry("get")}
+        
+          for(i in c(zz,zzz)){
+            if(input$resolution=="Année"){
+            reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'0531&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$retry("get")
+            reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0601&types=article"))$retry("get")
+          }
+        if(input$resolution=="Mois"){
+          reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",result$annee[i],result$mois[i],'14&query=',mot,'&sort=best&startDate=',result$annee[i],result$mois[i],"01&types=article"))$retry("get")
+          reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",result$annee[i],result$mois[i],end_of_month[as.integer(result$mois[i])],'&query=',mot,'&sort=best&startDate=',result$annee[i],result$mois[i],"15&types=article"))$retry("get")
+        }
+        }
+        
         responses <- AsyncQueue$new(.list = reqlist,bucket_size=20,sleep=0)
         responses$request()
         print("b")
@@ -3044,18 +3059,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
         #result2 = nyt_scraper(period[z])
         result[z,"count"] = as.integer(r[1:length(z)])
         result[c(zz,zzz),"count"] = as.integer(r[(length(z)+1):length(r)][c(T,F)])+as.integer(r[(length(z)+1):length(r)][c(F,T)])##Sum every two
-      }}
-        
-    
-    
-    
-      
-      
-      #print(result)
+      }
+      }
+
       result$count=as.integer(result$count)
-      result$date=as.integer(result$date)
-      result=left_join(result,base,by="date")
-      
+      if(input$resolution=="Année"){result$date=as.integer(result$date)}
+      result=left_join(result,base[c("date","base")],by="date")
       result$ratio=result$count/result$base
       result$ratio[result$ratio>2] = NA
       result$mot=mot
@@ -3067,9 +3076,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     remove_modal_spinner()
     tableau$date=as.character(tableau$date)
     mot_nyt_url = tableau$mot
-    #zzz = str_detect(mot_nyt_url," ")
-    #mot_nyt_url[zzz] = str_c('"',mot_nyt_url[zzz],'"')
-    tableau$url<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",tableau$date,'1231&query=',mot_nyt_url,'&sort=best&startDate=',tableau$date,"0101&types=article")
+  
     
     print(tableau)
   }
@@ -3879,7 +3886,7 @@ gallicapresse<-function(input){
     summarise(count = sum(count))
   plot1=plot_ly(data=c,x=~count,y=~reorder(ville,count),type = "bar",orientation="h")%>%
     layout(xaxis = list(title = ""),yaxis = list(title =""),showlegend = F)
-  plot=subplot(plot,plot1)
+  plot=subplot(plot,plot1,nrows = 2)
   
   hide_spinner(spin_id="gpresse")
   return(onRender(plot,js))
@@ -4367,9 +4374,9 @@ shinyServer(function(input, output,session){
   fru$val=fri$val
   fru$count=fri$count
   fru$base=fri$base
-  output$carto<-renderLeaflet({cartoPlot(input,fru)})
-  output$carto2<-renderPlotly({ggplotly(cartoGramme(fru,"Général Boulanger","1885-01-01","1890-01-01",F))})
-  output$top_presse<-renderPlotly({gallicapresse(input)})
+  #output$carto<-renderLeaflet({cartoPlot(input,fru)})
+  #output$carto2<-renderPlotly({ggplotly(cartoGramme(fru,"Général Boulanger","1885-01-01","1890-01-01",F))})
+  #output$top_presse<-renderPlotly({gallicapresse(input)})
   
   observeEvent(input$colorscale,{
     if(iscarto==F){
