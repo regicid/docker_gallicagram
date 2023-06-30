@@ -2997,7 +2997,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     if(input$resolution=="Mois"){base=read.csv("base_presse_mois_nyt.csv",encoding = "UTF-8",sep = ",")}
     base=base[base$annee>=input$beginning & base$annee<=input$end,]
     period = input$beginning:input$end
-    show_modal_spinner(text=str_c("Patientez environ ",as.character(ceil(as.integer(length(period)/12))*length(mots)*(1+11*(input$resolution=="Mois")))," secondes...\n Attention : le moteur de recherche du NYT produit parfois d'étranges pics et creux, auquel cas il faut relancer les calculs quelques minutes plus tard."))
+    show_modal_spinner(text=str_c("Patientez environ ",as.character(ceiling(as.integer(length(period)/12))*length(mots)*(1+11*(input$resolution=="Mois")))," secondes...\n Attention : le moteur de recherche du NYT produit parfois d'étranges pics et creux, auquel cas il faut relancer les calculs quelques minutes plus tard."))
     library(crul)
     for(mot in mots){
       reqlist = list()
