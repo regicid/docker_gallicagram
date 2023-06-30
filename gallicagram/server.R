@@ -3000,15 +3000,14 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     show_modal_spinner(text=str_c("Patientez environ ",as.character(as.integer(length(period)/12)*length(mots)*(1+11*(input$resolution=="Mois")))," secondes...\n Attention : le moteur de recherche du NYT produit parfois d'étranges pics et creux, auquel cas il faut relancer les calculs quelques minutes plus tard."))
     library(crul)
     for(mot in mots){
-    #nyt_scraper = function(period){
       reqlist = list()
       for(i in 1:length(period)){
-        if(input$resolution=="Année"){reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$retry("get")}
+        if(input$resolution=="Année"){reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}
         if(input$resolution=="Mois"){
           end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
           months = c("01","02","03","04","05","06","07","08","09","10","11","12")
           for(month in 1:12){
-            reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],months[month],end_of_month[month],'&query=',mot,'&sort=best&startDate=',period[i],months[month],"01&types=article"))$retry("get")}
+            reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],months[month],end_of_month[month],'&query=',mot,'&sort=best&startDate=',period[i],months[month],"01&types=article"))$get()}
         }
       }
       responses <- AsyncQueue$new(.list = reqlist,bucket_size=30,sleep=0)
@@ -3034,16 +3033,16 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       if((!argmax %in% zzz) & max(result$count,na.rm = T) > 3*max(result$count[-argmax],na.rm = T)){zzz = c(zzz,argmax)}
       if(length(z)+length(zz)+length(zzz)>0){
         reqlist = list()
-        for(i in z){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = result$url[i])$retry("get")}
+        for(i in z){reqlist[[length(reqlist)+1]] = HttpRequest$new(url = result$url[i])$get()}
         
           for(i in c(zz,zzz)){
             if(input$resolution=="Année"){
-            reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'0531&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$retry("get")
-            reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0601&types=article"))$retry("get")
+            reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'0531&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()
+            reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0601&types=article"))$get()
           }
         if(input$resolution=="Mois"){
-          reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",result$annee[i],result$mois[i],'14&query=',mot,'&sort=best&startDate=',result$annee[i],result$mois[i],"01&types=article"))$retry("get")
-          reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",result$annee[i],result$mois[i],end_of_month[as.integer(result$mois[i])],'&query=',mot,'&sort=best&startDate=',result$annee[i],result$mois[i],"15&types=article"))$retry("get")
+          reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",result$annee[i],result$mois[i],'14&query=',mot,'&sort=best&startDate=',result$annee[i],result$mois[i],"01&types=article"))$get()
+          reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",result$annee[i],result$mois[i],end_of_month[as.integer(result$mois[i])],'&query=',mot,'&sort=best&startDate=',result$annee[i],result$mois[i],"15&types=article"))$get()
         }
         }
         
