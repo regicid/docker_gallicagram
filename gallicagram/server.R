@@ -4229,6 +4229,10 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
+    if(input$doc_type == 43){
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par ngramme" = 3),selected = 3)
+      updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Mois",inline = T)
+    }
     if(input$doc_type == 5 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 12){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
