@@ -3025,7 +3025,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     base = base[base$year %in% period,]
     result$base = base$count
     #result$date = as.Date(paste(result$year,result$month,sep = "-","01"),format = "%Y-%m-%d")
-    result$date = paste(result$year,result$month,sep="/")}
+    result$date = paste(result$year,result$month,sep="/")
     result$ratio = result$count/result$base
     if(mot==mots[1]){tableau=result}
     else{tableau=rbind(tableau,result)}
