@@ -2862,13 +2862,13 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           #     b<-str_extract(ngram_base,"[:digit:]+")
           #   }
           # }
-          
+          if(doc_type != 43){
           if(length(b)==0L){b=0}
           tableau[nrow(tableau)+1,] = NA
           date=y
           if(resolution=="Mois"){date = paste(y,z,sep="/")}
           tableau[nrow(tableau),]<-c(date,a,b,mot,url)
-          progress$inc(1/((to-from+1)*length(I)*length(mots)), detail = paste("Gallicagram ratisse l'an", i))
+          progress$inc(1/((to-from+1)*length(I)*length(mots)), detail = paste("Gallicagram ratisse l'an", i))}
         }
       }
       
@@ -4265,7 +4265,7 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
-    if( input$doc_type == 6 | input$doc_type == 7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 43 | input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48 | input$doc_type == 49){
+    if( input$doc_type == 6 | input$doc_type == 7 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48 | input$doc_type == 49){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
@@ -4498,7 +4498,7 @@ shinyServer(function(input, output,session){
         input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | 
         input$doc_type == 21 | input$doc_type == 22 | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | 
         input$doc_type == 32 | input$doc_type == 33 | input$doc_type == 34 | input$doc_type == 35 | input$doc_type == 36 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | 
-        input$doc_type == 42 | (input$doc_type == 43 & input&search_mode == 1) | input$doc_type == 44 | ((input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) |
+        input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 44 | ((input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) |
         input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48  | input$doc_type == 49 |
         input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53  | input$doc_type == 54 |
         input$doc_type == 55 | (input$doc_type == 56 & input$search_mode==1)| input$doc_type == 57 | input$doc_type == 58 |
