@@ -2999,7 +2999,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     period = input$beginning:input$end
     end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
     for(mot in mots){
-    result = data.frame(year = rep(period,each=12),month= rep(1:12,length(period)),count = 0,n_page = NA,mot = mot)
+    result = data.frame(year = rep(period,each=12),month= rep(1:12,length(period)),count = 0,n_page = NA,mot = mot,url=NA)
     for(year in period){
       reqlist = list()
       for(month in 1:12){
@@ -3009,7 +3009,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           year2 = year+1
           month2=1
         }
-        reqlist[[length(reqlist)+1]] = HttpRequest$new(url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=plainpagefulltext:{mot}%20AND%20publication_date:%5b{year}-{month}-01T00:00:00.000Z%20TO%20{year2}-{month2}-01T00:00:00.000Z%5d&rows=1000000000&fl=termfreq(plainpagefulltext,{mot})")),progress = httr::progress())$retry("get")
+        url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=plainpagefulltext:{mot}%20AND%20publication_date:%5b{year}-{month}-01T00:00:00.000Z%20TO%20{year2}-{month2}-01T00:00:00.000Z%5d&rows=1000000000&fl=termfreq(plainpagefulltext,{mot})"))
+        reqlist[[length(reqlist)+1]] = HttpRequest$new(url = url,progress = httr::progress())$retry("get")
+        i = which(result$year == year & result$month == month)
+        result$url[i] = url
       }
       responses <- AsyncQueue$new(.list = reqlist,bucket_size=100,sleep=0,verbose=True)
       responses$request()
@@ -3030,7 +3033,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     if(mot==mots[1]){tableau=result}
     else{tableau=rbind(tableau,result)}
     }
-    
+    print(tableau)
   }
   
   
