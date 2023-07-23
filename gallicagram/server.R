@@ -2140,7 +2140,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               url_base<-str_c("https://chroniclingamerica.loc.gov/search/pages/results/?state=&dateFilterType=range&date1=01%2F01%2F",y,"&date2=12%2F31%2F",y,"&language=eng&ortext=&andtext=&proxtext=&proxdistance=5&rows=1&searchType=advanced&sort=date&format=json")
             }
           }
-          if(doc_type == 43){
+          if(doc_type == 43 & input$search_mode == 1){
             if(resolution=="Mois"){
               z = as.character(j)
               if(nchar(z)<2){z<-str_c("0",z)}
@@ -2802,7 +2802,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           
-          if(input$doc_type == 43){
+          if(input$doc_type == 43 & input$search_mode == 1){
             ngram<-read_html(RETRY("GET",url,times = 6))
             ngram<-as.character(ngram)
             ngram<-str_replace_all(ngram,"[:space:]","")
@@ -2991,6 +2991,46 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     tableau$url[length(tableau$url)]="https://trends.google.fr/trends/"
     tableau$date<-str_replace_all(tableau$date,"-","/")
   }
+  
+  ####Zeitungsportal
+  if(doc_type == 43 & input$search_mode == 3){
+    period = input$beginning:input$end
+    end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
+    for(mot in mots){
+    result = data.frame(year = rep(period,each=12),month= rep(1:12,length(period)),count = 0,n_page = NA,mot = mot)
+    for(year in period){
+      reqlist = list()
+      for(month in 1:12){
+        year2 = year
+        month2 = month+1
+        if(month==12){
+          year2 = year+1
+          month2=1
+        }
+        reqlist[[length(reqlist)+1]] = HttpRequest$new(url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=plainpagefulltext:{mot}%20AND%20publication_date:%5b{year}-{month}-01T00:00:00.000Z%20TO%20{year2}-{month2}-01T00:00:00.000Z%5d&rows=1000000000&fl=termfreq(plainpagefulltext,{mot})")),progress = httr::progress())$retry("get")
+      }
+      responses <- AsyncQueue$new(.list = reqlist,bucket_size=100,sleep=0,verbose=True)
+      responses$request()
+      for(month in 1:12){
+        page = fromJSON(responses$responses()[[month]]$parse("UTF-8"))
+        z = which(result$year==year & result$month == month)
+        if(page$response$numFound>0){result$count[z] = sum(page$response$docs)}
+        print(result[z,])
+      }
+      print(year)
+    }
+    base = read.csv("base_presse_ddb_mois_und.csv")
+    base = base[base$year %in% period,]
+    result$base = base$count
+    result$date = as.Date(paste(result$year,result$month,sep = "-","01"),format = "%Y-%m-%d")
+    result$ratio = result$count/result$base
+    if(mot==mots[1]){tableau=result}
+    else{tableau=rbind(tableau,result)}
+    }
+    
+  }
+  
+  
   ####NYT
   if(doc_type==65){
     if(input$resolution=="Année"){base=read.csv("base_presse_annees_nyt.csv",encoding = "UTF-8",sep = ",")}
