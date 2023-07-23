@@ -2995,6 +2995,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   ####Zeitungsportal
   if(doc_type == 43 & input$search_mode == 3){
     library(crul)
+    library(glue)
     period = input$beginning:input$end
     end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
     for(mot in mots){
