@@ -3012,7 +3012,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
         url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=plainpagefulltext:{mot}%20AND%20publication_date:%5b{year}-{month}-01T00:00:00.000Z%20TO%20{year2}-{month2}-01T00:00:00.000Z%5d&rows=1000000000&fl=termfreq(plainpagefulltext,{mot})"))
         reqlist[[length(reqlist)+1]] = HttpRequest$new(url = url,progress = httr::progress())$retry("get")
         i = which(result$year == year & result$month == month)
-        result$url[i] = url
+        result$url[i] = glue("https://www.deutsche-digitale-bibliothek.de/search/newspaper?fromDay=1&toYear={year}&fromYear={year}&toDay={end_of_month[month]}&toMonth={month}&fromMonth={month}&language=ger&rows=100&query={mot}")
       }
       responses <- AsyncQueue$new(.list = reqlist,bucket_size=100,sleep=0,verbose=True)
       responses$request()
