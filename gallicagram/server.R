@@ -1434,6 +1434,18 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           if(input$doc_type==71){ngram_file="/mnt/persistent/_temps.db"
           base=read.csv("")}
         }
+        base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
+        base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
+        if(input$resolution=="Année"){
+          base<-base%>%group_by(annee)%>%summarise(n = sum(n))
+          colnames(base)<-c("date","base")}
+        if(input$resolution=="Mois"){
+          base<-base%>%group_by(annee,mois)%>%summarise(n = sum(n))
+          base<-cbind(str_c(base$annee,"/",base$mois),base$n)
+          colnames(base)<-c("date","base")}
+        if(input$resolution=="Semaine"){
+          base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
+          colnames(base)<-c("date","base")}
       }
       
       
