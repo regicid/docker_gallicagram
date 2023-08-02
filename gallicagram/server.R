@@ -3975,7 +3975,7 @@ willisation <- function(input,will){
 }
 
 gptiseur<-function(input){
-  
+  print(str_c("Context length : ",str_length(gpt_context)))
   if(input$apikey==""){return("")}
   api_key <- input$apikey
   
@@ -3985,7 +3985,7 @@ gptiseur<-function(input){
     content_type_json(),
     encode = "json",
     body = list(
-      model = "gpt-3.5-turbo-16k-0613",
+      model = "gpt-3.5-turbo-16k",
       messages = list(list(role = "system", content = "Tu es un robot historien. A partir d\'extraits de journaux tu dois trouver dans quel contexte historique ils ont été écrits. Tu dois expliquer en détail ce qu\'il s\'est passé durant la période que tu vas identifier. Sois précis, détaille le contexte historique, les évènements, les acteurs en présence, les enjeux politiques, sociaux ou économiques. Les extraits peuvent faire référence à plusieurs évènements, distingue les. Réponds de façon concise. Ecris au présent de l'indicatif ou au passé composé. Réponds par une liste à tiret pour distinguer ces évènements. Ne fais pas de conclusion."),
                       list(role = "user", content = str_c('Voilà des extraits de journaux parus durant la période ',gpt_start,' - ',gpt_end,' et contenant le mot ',gpt_word,'. Trouve dans quel contexte historique ce mot a été écrit. Explique en détail ce qu\'il s\'est passé durant cette période là. 400 mots maximum, pas de phrase de conclusion, pas de résumé de ta réponse. Réponse au présent. \n Extraits de journaux : \n <|startoftext|> ',gpt_context,' <|endoftext|>'))
                       ),
@@ -3996,6 +3996,7 @@ gptiseur<-function(input){
   chatGPT_answer <- stringr::str_trim(chatGPT_answer)
   cat(chatGPT_answer)
   chatGPT_answer<-str_replace_all(chatGPT_answer,"\n","<br>")
+  chatGPT_answer<-str_c("<b>Synthèse du contexte proposée par ChatGPT </b> <br>",chatGPT_answer)
   chatGPT_answer<-HTML(chatGPT_answer)
   
   
