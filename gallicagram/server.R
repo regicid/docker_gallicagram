@@ -1501,6 +1501,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           if(input$resolution=="Semaine"){
             base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
             colnames(base)<-c("date","base")}
+          print(base)
         }
         if(nb>4){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
@@ -1538,7 +1539,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        if(input$doc_type==30){
+        if(input$doc_type==30 | input$doc_type %in% 66:71){
           w<-w[,-2]
           w<-w[,-3]
           
