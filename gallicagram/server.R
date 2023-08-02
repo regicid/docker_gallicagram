@@ -4862,7 +4862,7 @@ shinyServer(function(input, output,session){
     updateCheckboxInput(session,"correlation_test",value=FALSE)
     
     
-    if(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56)){
+    if(isolate(input$contextualisation)==T & (isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56))){
       will<<-""
       b=willisation(input,will)
       if(is.null(b)==F){
