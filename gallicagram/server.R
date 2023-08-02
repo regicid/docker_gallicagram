@@ -3919,46 +3919,59 @@ willisation <- function(input,will){
     gpt_end<<-too
     gpt_word<<-word
   }
-  if(isolate(input$doc_type==1)){
-    will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
-  }
-  if(isolate(input$doc_type==2)){
-    will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
-  }
-  if(isolate(input$doc_type)==56){
-    will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
-  }
-  will_url=URLencode(will_url)
-  wurl<<-will_url
-  show_spinner(spin_id = "contexte")
-  a<-tryCatch({fromJSON(will_url)%>%data.frame()},error=function(cond){return(NULL)})
-  if(is.null(a)==F){
-    b=data.frame(titre_journal=character(),
-                 date=character(),
-                 contexte_gauche=character(),
-                 pivot=character(), 
-                 contexte_droit=character(), 
-                 stringsAsFactors=FALSE) 
-    for (i in 1:length(a$records.paper_title)) {
-      url_titre=str_c("<a href='",a$records.context[[i]]$page_url,"' target='_blank'>",a$records.paper_title[i],"</a>")
-      if(is.null(a$records.context[[i]]$pivot)){
-        a$records.context[[i]] = data.frame(pivot="",left_context="",right_context="",page_url="",page_num="")
-      }
-      b=rbind(b,cbind(url_titre,a$records.date[i],a$records.context[[i]]$left_context,a$records.context[[i]]$pivot,a$records.context[[i]]$right_context))
-    }
-    for (j in 1:length(b$V1)) {
-      b$V1[j]=HTML(b$V1[j])
-    }
-    colnames(b)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
-    b=b[,-6]
-  }
-  else{b=NULL}
+  c=data.frame(titre_journal=character(),
+               date=character(),
+               contexte_gauche=character(),
+               pivot=character(), 
+               contexte_droit=character(), 
+               stringsAsFactors=FALSE) 
+  colnames(c)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
   
-  gpt_context<<-paste(b[,2],b[,3],b[,4],b[,5])
+  for (i in 0:3) {
+    
+    if(isolate(input$doc_type==1)){
+      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
+    }
+    if(isolate(input$doc_type==2)){
+      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
+    }
+    if(isolate(input$doc_type)==56){
+      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
+    }
+    will_url=URLencode(will_url)
+    wurl<<-will_url
+    show_spinner(spin_id = "contexte")
+    a<-tryCatch({fromJSON(will_url)%>%data.frame()},error=function(cond){return(NULL)})
+    if(is.null(a)==F){
+      b=data.frame(titre_journal=character(),
+                   date=character(),
+                   contexte_gauche=character(),
+                   pivot=character(), 
+                   contexte_droit=character(), 
+                   stringsAsFactors=FALSE) 
+      for (i in 1:length(a$records.paper_title)) {
+        url_titre=str_c("<a href='",a$records.context[[i]]$page_url,"' target='_blank'>",a$records.paper_title[i],"</a>")
+        if(is.null(a$records.context[[i]]$pivot)){
+          a$records.context[[i]] = data.frame(pivot="",left_context="",right_context="",page_url="",page_num="")
+        }
+        b=rbind(b,cbind(url_titre,a$records.date[i],a$records.context[[i]]$left_context,a$records.context[[i]]$pivot,a$records.context[[i]]$right_context))
+      }
+      for (j in 1:length(b$V1)) {
+        b$V1[j]=HTML(b$V1[j])
+      }
+      colnames(b)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
+      b=b[,-6]
+      c=bind_rows(c,b)
+    }
+    else{b=NULL
+         c=NULL}
+  
+}
+  gpt_context<<-paste(c[,2],c[,3],c[,4],c[,5])
   gpt_context<<- str_replace_all(gpt_context, "\\s+", " ")
   gpt_context<<- str_replace_all(gpt_context, "[^A-Za-z0-9.,?!;:()/ ]", "")
   gpt_context<<-paste(gpt_context,collapse = "\n")
-  return(b)
+  return(c)
 }
 
 gptiseur<-function(input){
@@ -4076,22 +4089,22 @@ shinyServer(function(input, output,session){
   wurl<<-""
   observe({
     data$e <- event_data("plotly_click")
-    if(is.null(data$e)==F&(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56))){
-    will<<-as.character(unlist(data$e$customdata))
-    b=willisation(input,will)
-    output$gpt=renderUI(HTML(gptiseur(input)))
-      if(is.null(b)==F){
-      wurl=str_replace(wurl,"https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords","https://www.gallicagrapher.com/context")
-      wurl=str_remove_all(wurl,"&row_split=true&cursor=0")
-      output$lien=renderUI(HTML(str_c("<b><font size=\"5\">Contexte</font><br>Crédit : Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a></b></font>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>",
-                                      "<br><a href='",wurl,"' target='_blank'>","Plus de contexte","</a>")))
-      require("DT")
-      output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
-  
-      
-      shinyjs::runjs("const target = document.querySelector('#legende');
-                                                   target.scrollIntoView(behavior='smooth');")
-      }
+    if(is.null(data$e)==F& isolate(input$contextualisation)==T&(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56))){
+      will<<-as.character(unlist(data$e$customdata))
+      b=willisation(input,will)
+      output$gpt=renderUI(HTML(gptiseur(input)))
+        if(is.null(b)==F){
+        wurl=str_replace(wurl,"https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords","https://www.gallicagrapher.com/context")
+        wurl=str_remove_all(wurl,"&row_split=true&cursor=0")
+        output$lien=renderUI(HTML(str_c("<b><font size=\"5\">Contexte</font><br>Crédit : Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a></b></font>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>",
+                                        "<br><a href='",wurl,"' target='_blank'>","Plus de contexte","</a>")))
+        require("DT")
+        output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+    
+        
+        shinyjs::runjs("const target = document.querySelector('#legende');
+                                                     target.scrollIntoView(behavior='smooth');")
+        }
     }
     hide_spinner(spin_id = "contexte")
   })

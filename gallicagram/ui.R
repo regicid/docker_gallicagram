@@ -129,6 +129,7 @@ shinyUI(bootstrapPage(
                                                                                                                                 separator="à", startview = "decade")),
                                                 div(style="display: inline-block;vertical-align:top;width: 49%;",radioButtons("resolution", label = "Résolution", choices = c("Année","Mois"),inline=T)),
                                                 div(style="display: inline-block;vertical-align:top;width: 49%;",conditionalPanel(condition="input.doc_type == 2 && input.search_mode==1",uiOutput("theme"))),
+                                                conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",materialSwitch("contextualisation","Recherche du contexte",inline = T,status = 'success',value = T)),
                                                 actionButton("do","Générer le graphique")
                                                 # conditionalPanel(condition="input.search_mode == 3 || input.doc_type == 1 || (input.doc_type == 3 && input.search_mode == 1) || input.doc_type == 5 || input.doc_type == 6 || input.doc_type == 7 || input.doc_type == 8 || input.doc_type == 9 || input.doc_type == 10 || input.doc_type == 11 || input.doc_type == 12 || input.doc_type == 13 || input.doc_type == 14 || input.doc_type == 15 || input.doc_type == 16 || input.doc_type == 17 || input.doc_type == 18 || input.doc_type == 19 || input.doc_type == 20 || input.doc_type == 21 || input.doc_type == 22 || input.doc_type == 23 || input.doc_type == 24 || input.doc_type == 25 || input.doc_type == 26 || input.doc_type == 27 || input.doc_type == 28 || input.doc_type == 29 || input.doc_type == 30 || input.doc_type == 31 || input.doc_type == 32 ||input.doc_type == 33 ||input.doc_type == 34 ||input.doc_type == 35 ||input.doc_type == 36 ||input.doc_type == 37 ||input.doc_type == 38 ||input.doc_type == 39 ||input.doc_type == 40 ||input.doc_type == 42 ||input.doc_type == 43 || input.doc_type == 44 || input.doc_type == 45 || input.doc_type == 46 || input.doc_type == 47 || input.doc_type == 48 || input.doc_type == 49 || input.doc_type == 50 || input.doc_type == 51 || input.doc_type == 52 || input.doc_type == 53 || input.doc_type == 54 || input.doc_type == 55 || input.doc_type == 56 || input.doc_type == 57 || input.doc_type == 58 || input.doc_type == 59 || input.doc_type == 60 || input.doc_type == 61 || input.doc_type == 62 || input.doc_type == 63 || input.doc_type == 64 || input.doc_type == 65 || (input.doc_type == 2 && input.search_mode == 1) || (input.doc_type == 4 && output.avertissement.includes('Modifiez')==false) || ((input.doc_type == 2 || (input.doc_type == 3  && input.titres.length <= 15)) && input.search_mode == 2 && output.avertissement.includes('Modifiez')==false)",actionButton("do","Générer le graphique"))
                                                 
@@ -208,14 +209,15 @@ shinyUI(bootstrapPage(
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right"))
                                                      )),
                             fluidRow(column(12,
-                                    conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",htmlOutput("lien")),         
+                                    conditionalPanel(condition="input.contextualisation==true && (input.doc_type==1 || input.doc_type==2 || input.doc_type==56)",htmlOutput("lien")),         
                                    #conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",htmlOutput("frame")),
-                                   conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",dataTableOutput("frame")),
+                                   conditionalPanel(condition="input.contextualisation==true && (input.doc_type==1 || input.doc_type==2 || input.doc_type==56)",dataTableOutput("frame")),
                                    useShinyjs(),
                                    extendShinyjs(text = "const target = document.querySelector('#legende');
                                                  target.scrollIntoView(behavior='smooth');", functions = c()),
-                                   conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",textInput("apikey",label = "OpenAI API key")),
-                                   conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",htmlOutput("gpt")),
+                                   conditionalPanel(condition="input.contextualisation==true && (input.doc_type==1 || input.doc_type==2 || input.doc_type==56)",textInput("apikey",label = "OpenAI API key")),
+                                   conditionalPanel(condition="input.contextualisation==true && (input.doc_type==1 || input.doc_type==2 || input.doc_type==56)",htmlOutput("gpt")))),
+                            fluidRow(column(12, 
                                    h6(textOutput("currentTime"), style="color:white")))
                                               ),
                    tabPanel("Analyse",
