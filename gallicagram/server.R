@@ -1418,8 +1418,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       mot<-table$ngram[1]
       if(nb>1){for(x in 2:nb){mot<-str_c(mot," ",table$ngram[x])}}
       
-      if(input$doc_type==66 | input$doc_type==67 | input$doc_type==68 | 
-         input$doc_type==69 | input$doc_type==70 | input$doc_type==71 ){
+      if(input$doc_type==66 | input$doc_type==68 | 
+         input$doc_type==70 | input$doc_type==71 ){
         if(nb>1){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
         if(nb==1){
