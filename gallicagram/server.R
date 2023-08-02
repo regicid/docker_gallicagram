@@ -1221,6 +1221,8 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
   names(data) = c("tableau_volume","tableau_page","mot","resolution")
   return(data)
 }
+
+
 cloudify<-function(input){
   show_spinner(spin_id = "ngram")
   # 
@@ -3908,6 +3910,10 @@ willisation <- function(input,will){
     word=str_remove_all(word,"%22%20.+")
     mois=""
     if(isolate(input$resolution=="Mois")){mois=str_c("&month=",str_extract(str_remove(fromm,"....."),".."))}
+  
+    gpt_start<<-fromm
+    gpt_end<<-too
+    gpt_word<<-word
   }
   if(isolate(input$doc_type==1)){
     will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=0")
@@ -3930,7 +3936,6 @@ willisation <- function(input,will){
                  contexte_droit=character(), 
                  stringsAsFactors=FALSE) 
     for (i in 1:length(a$records.paper_title)) {
-      print(i)
       url_titre=str_c("<a href='",a$records.context[[i]]$page_url,"' target='_blank'>",a$records.paper_title[i],"</a>")
       if(is.null(a$records.context[[i]]$pivot)){
         a$records.context[[i]] = data.frame(pivot="",left_context="",right_context="",page_url="",page_num="")
@@ -3944,8 +3949,40 @@ willisation <- function(input,will){
     b=b[,-6]
   }
   else{b=NULL}
+  
+  gpt_context<<-paste(b[,2],b[,3],b[,4],b[,5])
+  gpt_context<<- str_replace_all(gpt_context, "\\s+", " ")
+  gpt_context<<- str_replace_all(gpt_context, "[^A-Za-z0-9.,?!;:()/ ]", "")
+  gpt_context<<-paste(gpt_context,collapse = "\n")
   return(b)
 }
+
+gptiseur<-function(input){
+  
+  if(input$apikey==""){return("")}
+  api_key <- input$apikey
+  
+  response <- POST(
+    url = "https://api.openai.com/v1/chat/completions",
+    add_headers(Authorization = paste("Bearer", api_key)),
+    content_type_json(),
+    encode = "json",
+    body = list(
+      model = "gpt-3.5-turbo-16k-0613",
+      messages = list(list(role = "system", content = "Tu es un robot historien. A partir d\'extraits de journaux tu dois trouver dans quel contexte historique ils ont été écrits. Tu dois expliquer en détail ce qu\'il s\'est passé durant la période que tu vas identifier. Sois précis, détaille le contexte historique, les évènements, les acteurs en présence, les enjeux politiques, sociaux ou économiques."),
+                      list(role = "user", content = str_c('Voilà des extraits de journaux parus durant la période ',gpt_start,' - ',gpt_end,' et contenant le mot ',gpt_word,'. Trouve dans quel contexte historique ce mot a été écrit. Explique en détail ce qu\'il s\'est passé durant cette période là. \n Extraits de journaux : \n <|startoftext|> ',gpt_context,' <|endoftext|>'))
+                      ),
+      max_tokens=600
+    )
+  )
+  chatGPT_answer <- content(response)$choices[[1]]$message$content
+  chatGPT_answer <- stringr::str_trim(chatGPT_answer)
+  cat(chatGPT_answer)
+  
+  return(chatGPT_answer)
+}
+
+
 
 gallicapresse<-function(input){
   show_spinner(spin_id="gpresse")
@@ -4035,18 +4072,20 @@ shinyServer(function(input, output,session){
     if(is.null(data$e)==F&(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56))){
     will<<-as.character(unlist(data$e$customdata))
     b=willisation(input,will)
-    if(is.null(b)==F){
-    wurl=str_replace(wurl,"https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords","https://www.gallicagrapher.com/context")
-    wurl=str_remove_all(wurl,"&row_split=true&cursor=0")
-    output$lien=renderUI(HTML(str_c("<b><font size=\"5\">Contexte</font><br>Crédit : Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a></b></font>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>",
-                                    "<br><a href='",wurl,"' target='_blank'>","Plus de contexte","</a>")))
-    require("DT")
-    output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
-
-    
-    shinyjs::runjs("const target = document.querySelector('#legende');
-                                                 target.scrollIntoView(behavior='smooth');")
-    }}
+    output$gpt=renderText(gptiseur(input))
+      if(is.null(b)==F){
+      wurl=str_replace(wurl,"https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords","https://www.gallicagrapher.com/context")
+      wurl=str_remove_all(wurl,"&row_split=true&cursor=0")
+      output$lien=renderUI(HTML(str_c("<b><font size=\"5\">Contexte</font><br>Crédit : Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a></b></font>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>",
+                                      "<br><a href='",wurl,"' target='_blank'>","Plus de contexte","</a>")))
+      require("DT")
+      output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+  
+      
+      shinyjs::runjs("const target = document.querySelector('#legende');
+                                                   target.scrollIntoView(behavior='smooth');")
+      }
+    }
     hide_spinner(spin_id = "contexte")
   })
   observeEvent(input$visualiseur,{

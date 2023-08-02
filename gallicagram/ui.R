@@ -214,6 +214,8 @@ shinyUI(bootstrapPage(
                                    useShinyjs(),
                                    extendShinyjs(text = "const target = document.querySelector('#legende');
                                                  target.scrollIntoView(behavior='smooth');", functions = c()),
+                                   conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",textInput("apikey",label = "OpenAI API key")),
+                                   conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",textOutput("gpt")),
                                    h6(textOutput("currentTime"), style="color:white")))
                                               ),
                    tabPanel("Analyse",
