@@ -1727,23 +1727,23 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     z$langue="Français"
     z$bibli="Le Figaro"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==66){z$corpus="Presse"
+    if(input$doc_type==67){z$corpus="Presse"
     z$langue="Français"
     z$bibli="L'Humanité"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==66){z$corpus="Presse"
+    if(input$doc_type==68){z$corpus="Presse"
     z$langue="Français"
     z$bibli="Le Constitutionnel"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==66){z$corpus="Presse"
+    if(input$doc_type==69){z$corpus="Presse"
     z$langue="Français"
     z$bibli="Le Journal de Paris"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==66){z$corpus="Presse"
+    if(input$doc_type==70){z$corpus="Presse"
     z$langue="Français"
     z$bibli="Le Moniteur Universel"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==66){z$corpus="Presse"
+    if(input$doc_type==71){z$corpus="Presse"
     z$langue="Français"
     z$bibli="Le Temps"
     z$search_mode<-"N-gramme"}
