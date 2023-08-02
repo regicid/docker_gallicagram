@@ -3992,10 +3992,15 @@ gptiseur<-function(input){
       max_tokens=600
     )
   )
+  print(str_c("Prompt tokens : ",content(response)$usage$prompt_tokens))
+  print(str_c("Completion tokens : ",content(response)$usage$completion_tokens))
+  
   chatGPT_answer <- content(response)$choices[[1]]$message$content
   chatGPT_answer <- stringr::str_trim(chatGPT_answer)
   chatGPT_answer<-str_replace_all(chatGPT_answer,"\n","<br>")
-  chatGPT_answer<-str_c("<b>Synthèse du contexte proposée par ChatGPT </b> <br>",chatGPT_answer)
+  chatGPT_answer<-str_c('<font color="#ffffff">',str_c("Context length : ",str_length(gpt_context)),str_c(" Prompt tokens : ",content(response)$usage$prompt_tokens),str_c(" Completion tokens : ",content(response)$usage$completion_tokens),'</font> <br>',chatGPT_answer)
+  chatGPT_answer<-str_c("<b>Synthèse du contexte proposée par ChatGPT </b>",chatGPT_answer)
+  
   chatGPT_answer<-HTML(chatGPT_answer)
   
   
