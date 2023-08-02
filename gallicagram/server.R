@@ -1481,9 +1481,9 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       
       if(input$doc_type==30 | gallicagram==2 | input$doc_type == 67 | input$doc_type == 69){
         if(nb<=4){
+          gram<-"gram"
           if(input$doc_type==30 | gallicagram==2){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
-          gram<-"gram"
           base<-read.csv(str_c("lemonde",nb,".csv"))}
           if(input$doc_type==67){ngram_file<-str_c("/mnt/persistent/",nb,"gram_huma.db")
             base <- read.csv(str_c("humanite",nb,".csv"))}
@@ -1532,7 +1532,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           (input$doc_type==56 & agregator==1)) & input$resolution=="Année"){
         #q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
-        if(input$doc_type==30){
+        if(input$doc_type==30 | input$doc_type==67 | input$doc_type==69){
           q=str_c('SELECT sum(n),gram,annee,mois FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
           
         }
