@@ -1728,23 +1728,23 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     z$langue="Français"
     z$bibli="Le Figaro"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==66){z$corpus="Presse"
+    if(input$doc_type==67){z$corpus="Presse"
     z$langue="Français"
     z$bibli="L'Humanité"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==66){z$corpus="Presse"
+    if(input$doc_type==68){z$corpus="Presse"
     z$langue="Français"
     z$bibli="Le Constitutionnel"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==66){z$corpus="Presse"
+    if(input$doc_type==69){z$corpus="Presse"
     z$langue="Français"
     z$bibli="Le Journal de Paris"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==66){z$corpus="Presse"
+    if(input$doc_type==70){z$corpus="Presse"
     z$langue="Français"
     z$bibli="Le Moniteur Universel"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==66){z$corpus="Presse"
+    if(input$doc_type==71){z$corpus="Presse"
     z$langue="Français"
     z$bibli="Le Temps"
     z$search_mode<-"N-gramme"}
@@ -3973,8 +3973,8 @@ gptiseur<-function(input){
     encode = "json",
     body = list(
       model = "gpt-3.5-turbo-16k-0613",
-      messages = list(list(role = "system", content = "Tu es un robot historien. A partir d\'extraits de journaux tu dois trouver dans quel contexte historique ils ont été écrits. Tu dois expliquer en détail ce qu\'il s\'est passé durant la période que tu vas identifier. Sois précis, détaille le contexte historique, les évènements, les acteurs en présence, les enjeux politiques, sociaux ou économiques."),
-                      list(role = "user", content = str_c('Voilà des extraits de journaux parus durant la période ',gpt_start,' - ',gpt_end,' et contenant le mot ',gpt_word,'. Trouve dans quel contexte historique ce mot a été écrit. Explique en détail ce qu\'il s\'est passé durant cette période là. \n Extraits de journaux : \n <|startoftext|> ',gpt_context,' <|endoftext|>'))
+      messages = list(list(role = "system", content = "Tu es un robot historien. A partir d\'extraits de journaux tu dois trouver dans quel contexte historique ils ont été écrits. Tu dois expliquer en détail ce qu\'il s\'est passé durant la période que tu vas identifier. Sois précis, détaille le contexte historique, les évènements, les acteurs en présence, les enjeux politiques, sociaux ou économiques. Les extraits peuvent faire référence à plusieurs évènements, distingue les. Réponds de façon concise. Réponds par une liste à tiret pour distinguer ces évènements. Ne fais pas de conclusion."),
+                      list(role = "user", content = str_c('Voilà des extraits de journaux parus durant la période ',gpt_start,' - ',gpt_end,' et contenant le mot ',gpt_word,'. Trouve dans quel contexte historique ce mot a été écrit. Explique en détail ce qu\'il s\'est passé durant cette période là. 400 mots maximum, pas de phrase de conclusion. \n Extraits de journaux : \n <|startoftext|> ',gpt_context,' <|endoftext|>'))
                       ),
       max_tokens=600
     )
@@ -3982,6 +3982,9 @@ gptiseur<-function(input){
   chatGPT_answer <- content(response)$choices[[1]]$message$content
   chatGPT_answer <- stringr::str_trim(chatGPT_answer)
   cat(chatGPT_answer)
+  chatGPT_answer<-str_replace_all(chatGPT_answer,"\n","<br>")
+  chatGPT_answer<-HTML(chatGPT_answer)
+  
   
   return(chatGPT_answer)
 }
@@ -4076,7 +4079,7 @@ shinyServer(function(input, output,session){
     if(is.null(data$e)==F&(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56))){
     will<<-as.character(unlist(data$e$customdata))
     b=willisation(input,will)
-    output$gpt=renderText(gptiseur(input))
+    output$gpt=renderUI(HTML(gptiseur(input)))
       if(is.null(b)==F){
       wurl=str_replace(wurl,"https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords","https://www.gallicagrapher.com/context")
       wurl=str_remove_all(wurl,"&row_split=true&cursor=0")
