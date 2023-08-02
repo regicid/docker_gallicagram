@@ -1426,8 +1426,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           gram="gram"
           if(input$doc_type==66){ngram_file="/mnt/persistent/_figaro.db"
           base=read.csv("")}
-          if(input$doc_type==67){ngram_file="/mnt/persistent/1gram_huma.db"
-          base=read.csv("humanite1.csv")}
           if(input$doc_type==68){ngram_file="/mnt/persistent/_constitutionnel.db"}
           if(input$doc_type==69){ngram_file="/mnt/persistent/_paris.db"
           base=read.csv("")}
@@ -1481,11 +1479,16 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         next}
       }
       
-      if(input$doc_type==30 | gallicagram==2){
+      if(input$doc_type==30 | gallicagram==2 | input$doc_type == 67 | input$doc_type == 69){
         if(nb<=4){
+          if(input$doc_type==30 | gallicagram==2){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
           gram<-"gram"
-          base<-read.csv(str_c("lemonde",nb,".csv"))
+          base<-read.csv(str_c("lemonde",nb,".csv"))}
+          if(input$doc_type==67){ngram_file<-str_c("/mnt/persistent/",nb,"gram_huma.db")
+            base <- read.csv(str_c("humanite",nb,".csv"))}
+          if(input$doc_type==69){ngram_file <-str_c ("/mnt/persistent/",nb,"gram_paris.db")
+          base <- read.csv(str_c("paris",nb,".csv"))}
           base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
           base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
           if(input$resolution=="Année"){
