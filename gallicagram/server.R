@@ -3994,7 +3994,6 @@ gptiseur<-function(input){
   )
   chatGPT_answer <- content(response)$choices[[1]]$message$content
   chatGPT_answer <- stringr::str_trim(chatGPT_answer)
-  cat(chatGPT_answer)
   chatGPT_answer<-str_replace_all(chatGPT_answer,"\n","<br>")
   chatGPT_answer<-str_c("<b>Synthèse du contexte proposée par ChatGPT </b> <br>",chatGPT_answer)
   chatGPT_answer<-HTML(chatGPT_answer)
