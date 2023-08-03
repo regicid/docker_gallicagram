@@ -3098,7 +3098,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           month2=1
         }
         search = paste(str_c("plainpagefulltext:",str_split(mot,"\\+")[[1]]),collapse = " OR ")
-        url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=search%20AND%20publication_date:%5b{year}-01-01T00:00:00.000Z%20TO%20{year+1}-01-01T00:00:00.000Z%5d&rows=1000000000&fl="))
+        url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q={search}%20AND%20publication_date:%5b{year}-01-01T00:00:00.000Z%20TO%20{year+1}-01-01T00:00:00.000Z%5d&rows=1000000000&fl="))
         for(mot1 in str_split(mot,"\\+")[[1]]){
           url = glue("{url}termfreq(plainpagefulltext,{mot1}),")}
         url = URLencode(url)
@@ -3131,7 +3131,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
         reqlist = list()
         for(year in period){
           search = paste(str_c("plainpagefulltext:",str_split(mot,"\\+")[[1]]),collapse = " OR ")
-          url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=plainpagefulltext:{search}%20AND%20publication_date:%5b{year}-01-01T00:00:00.000Z%20TO%20{year+1}-01-01T00:00:00.000Z%5d&rows=1000000000&fl="))
+          url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q={search}%20AND%20publication_date:%5b{year}-01-01T00:00:00.000Z%20TO%20{year+1}-01-01T00:00:00.000Z%5d&rows=1000000000&fl="))
           for(mot1 in str_split(mot,"\\+")[[1]]){
           url = glue("{url}termfreq(plainpagefulltext,{mot1}),")}
           url = URLencode(url)
