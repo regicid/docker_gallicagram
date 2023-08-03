@@ -3083,6 +3083,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     library(crul)
     library(glue)
     period = input$beginning:input$end
+    if(input$resolution=="Mois"){
     end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
     for(mot in mots){
     result = data.frame(year = rep(period,each=12),month= rep(1:12,length(period)),count = 0,n_page = NA,mot = mot,url=NA)
@@ -3111,7 +3112,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       print(year)
       progress$inc(1/((to-from+1)*length(mots)), detail = paste("Gallicagram ratisse l'an", year))
     }
-    base = read.csv("base_presse_ddb_mois_und.csv")
+    base = read.csv("base_presse_ddb_mois_und.csv") 
     base = base[base$year %in% period,]
     result$base = base$count
     #result$date = as.Date(paste(result$year,result$month,sep = "-","01"),format = "%Y-%m-%d")
@@ -3119,6 +3120,35 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     result$ratio = result$count/result$base
     if(mot==mots[1]){tableau=result}
     else{tableau=rbind(tableau,result)}
+    }
+    }
+    if(input$resolution=="Année"){
+      for(mot in mots){
+        result = data.frame(year = period,count = 0,mot = mot,url=NA)
+        reqlist = list()
+        for(year in period){
+          url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=plainpagefulltext:{mot}%20AND%20publication_date:%5b{year}-01-01T00:00:00.000Z%20TO%20{year+1}-01-01T00:00:00.000Z%5d&rows=1000000000&fl=termfreq(plainpagefulltext,{mot})"))
+          reqlist[[length(reqlist)+1]] = HttpRequest$new(url = url,progress = httr::progress())$retry("get")
+          i = which(result$year == year)
+          result$url[i] = glue("https://www.deutsche-digitale-bibliothek.de/search/newspaper?fromDay=1&toYear={year}&fromYear={year}&toDay=31&toMonth=12&fromMonth=1&language=ger&rows=100&query={mot}")
+          }
+          responses <- AsyncQueue$new(.list = reqlist,bucket_size=100,sleep=0,verbose=True)
+          responses$request()
+          for(year in period){
+            i = which(result$year == year)
+            page = fromJSON(responses$responses()[[i]]$parse("UTF-8"))
+            if(page$response$numFound>0){result$count[i] = sum(page$response$docs)}
+            print(result[i,])
+          }
+        base = read.csv("base_presse_ddb_mois_und.csv") %>% group_by(year) %>% summarise(count = sum(count))
+        base = base[base$year %in% period,]
+        result$base = base$count
+        #result$date = as.Date(paste(result$year,result$month,sep = "-","01"),format = "%Y-%m-%d")
+        result$date = as.character(result$year)
+        result$ratio = result$count/result$base
+        if(mot==mots[1]){tableau=result}
+        else{tableau=rbind(tableau,result)}
+      }
     }
   }
   
