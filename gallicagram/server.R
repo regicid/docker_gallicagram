@@ -229,7 +229,7 @@ Plot <- function(data,input){
         for(i in 1:length(z)){
           j = max(i-floor(input$span/2),0)
           k = i+ceiling(input$span/2)
-          if(tableau$ratio[i] == 0){
+          if(is.na(tableau$ratio[i])){
             next
           }
           pond = tableau$base[z][j:k]
@@ -462,7 +462,7 @@ Plot <- function(data,input){
         for(i in 1:length(z)){
           j = max(i-floor(12/2),0)
           k = i+ceiling(12/2)
-          if(tableau$ratio[i] == 0){
+          if(is.na(tableau$ratio[i])){
             next
           }
           pond = tableau$base[z][j:k]
@@ -741,6 +741,9 @@ SPlot <- function(data,input){
         for(i in 1:length(z)){
           j = max(i-floor(input$span/2),0)
           k = i+ceiling(input$span/2)
+          if(is.na(tableau$ratio[i])){
+            next
+          }
           pond = tableau$base[z][j:k]
           tableau$loess[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm=T)
           ##Si ça bug, remettre le na.rm=T
