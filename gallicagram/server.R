@@ -3086,9 +3086,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     if(input$resolution=="Mois"){
     end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
     for(mot in mots){
+    show_modal_spinner(text=str_c("Patientez environ ",as.character(ceiling(as.integer(length(period)/12))*length(mots)*(1+11*(input$resolution=="Mois")))))
     result = data.frame(year = rep(period,each=12),month= rep(1:12,length(period)),count = 0,n_page = NA,mot = mot,url=NA)
+    reqlist = list()
     for(year in period){
-      reqlist = list()
       for(month in 1:12){
         year2 = year
         month2 = month+1
@@ -3100,18 +3101,14 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
         reqlist[[length(reqlist)+1]] = HttpRequest$new(url = url,progress = httr::progress())$retry("get")
         i = which(result$year == year & result$month == month)
         result$url[i] = glue("https://www.deutsche-digitale-bibliothek.de/search/newspaper?fromDay=1&toYear={year}&fromYear={year}&toDay={end_of_month[month]}&toMonth={month}&fromMonth={month}&language=ger&rows=100&query={mot}")
-      }
+      }}
       responses <- AsyncQueue$new(.list = reqlist,bucket_size=100,sleep=0,verbose=True)
       responses$request()
-      for(month in 1:12){
-        page = fromJSON(responses$responses()[[month]]$parse("UTF-8"))
-        z = which(result$year==year & result$month == month)
+      for(z in 1:length(reqlist)){
+        page = fromJSON(responses$responses()[[z]]$parse("UTF-8"))
         if(page$response$numFound>0){result$count[z] = sum(page$response$docs)}
         print(result[z,])
       }
-      print(year)
-      progress$inc(1/((to-from+1)*length(mots)), detail = paste("Gallicagram ratisse l'an", year))
-    }
     base = read.csv("base_presse_ddb_mois_und.csv") 
     base = base[base$year %in% period,]
     result$base = base$count
@@ -3121,8 +3118,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     if(mot==mots[1]){tableau=result}
     else{tableau=rbind(tableau,result)}
     }
+    remove_modal_spinner()
     }
     if(input$resolution=="Année"){
+      show_modal_spinner(text=str_c("Patientez environ ",as.character(ceiling(as.integer(length(period)/5))*length(mots))," secondes..."))
       for(mot in mots){
         result = data.frame(year = period,count = 0,mot = mot,url=NA)
         reqlist = list()
@@ -3150,6 +3149,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
         else{tableau=rbind(tableau,result)}
       }
     }
+    remove_modal_spinner()
   }
   
   
@@ -4456,7 +4456,7 @@ shinyServer(function(input, output,session){
     }
     if(input$doc_type == 43){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par ngramme" = 3),selected = 3)
-      updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Mois",inline = T)
+      updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
     if(input$doc_type == 5 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 12){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
