@@ -229,8 +229,11 @@ Plot <- function(data,input){
         for(i in 1:length(z)){
           j = max(i-floor(input$span/2),0)
           k = i+ceiling(input$span/2)
+          if(tableau$ratio[i] == 0){
+            next
+          }
           pond = tableau$base[z][j:k]
-          tableau$loess[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T))
+          tableau$loess[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm=T)
             #sum(tableau$ratio[z][j:k]*pond/sum(pond[!is.na(tableau$ratio[z][j:k])],na.rm = T))
           ##Si ça bug, remettre le na.rm=T
         }}
@@ -459,6 +462,9 @@ Plot <- function(data,input){
         for(i in 1:length(z)){
           j = max(i-floor(12/2),0)
           k = i+ceiling(12/2)
+          if(tableau$ratio[i] == 0){
+            next
+          }
           pond = tableau$base[z][j:k]
           tableau$trend[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond[!is.na(tableau$ratio[z][j:k])],na.rm = T),na.rm = T)
         }
@@ -736,7 +742,7 @@ SPlot <- function(data,input){
           j = max(i-floor(input$span/2),0)
           k = i+ceiling(input$span/2)
           pond = tableau$base[z][j:k]
-          tableau$loess[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T))
+          tableau$loess[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond,na.rm = T),na.rm=T)
           ##Si ça bug, remettre le na.rm=T
         }}
     }
