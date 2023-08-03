@@ -4115,7 +4115,7 @@ shinyServer(function(input, output,session){
       output$gpt=renderUI(HTML(gptiseur(input)))
         if(is.null(b)==F){
         wurl=str_replace(wurl,"https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords","https://www.gallicagrapher.com/context")
-        wurl=str_remove_all(wurl,"&row_split=true&cursor=0")
+        wurl=str_remove_all(wurl,"&row_split=true&cursor=00")
         output$lien=renderUI(HTML(str_c("<b><font size=\"5\">Contexte</font><br>Crédit : Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a></b></font>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>",
                                         "<br><a href='",wurl,"' target='_blank'>","Plus de contexte","</a>")))
         require("DT")
