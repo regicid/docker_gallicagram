@@ -230,7 +230,8 @@ Plot <- function(data,input){
           j = max(i-floor(input$span/2),0)
           k = i+ceiling(input$span/2)
           pond = tableau$base[z][j:k]
-          tableau$loess[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond[!is.na(tableau$ratio[z][j:k])],na.rm = T),na.rm = T)
+          tableau$loess[z][i] = sum(tableau$ratio[z][j:k]*pond/sum(pond[!is.na(tableau$ratio[z][j:k])],na.rm = T))
+          ##Si ça bug, remettre le na.rm=T
         }}
     }
     if(input$loess==T){
