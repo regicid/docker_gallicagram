@@ -3086,7 +3086,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     if(input$resolution=="Mois"){
     end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
     for(mot in mots){
-    show_modal_spinner(text=str_c("Patientez environ ",as.character(ceiling(as.integer(length(period)/12))*length(mots)*(1+11*(input$resolution=="Mois")))))
+    show_modal_spinner(text=str_c("Patientez environ ",as.character(ceiling(as.integer(length(period)/2.5))*length(mots)*(1+11*(input$resolution=="Mois")))," secondes"))
     result = data.frame(year = rep(period,each=12),month= rep(1:12,length(period)),count = 0,n_page = NA,mot = mot,url=NA)
     reqlist = list()
     for(year in period){
@@ -3097,7 +3097,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           year2 = year+1
           month2=1
         }
-        url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=plainpagefulltext:{mot}%20AND%20publication_date:%5b{year}-{month}-01T00:00:00.000Z%20TO%20{year2}-{month2}-01T00:00:00.000Z%5d&rows=1000000000&fl=termfreq(plainpagefulltext,{mot})"))
+        url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=plainpagefulltext:{mot}%20AND%20publication_date:%5b{year}-01-01T00:00:00.000Z%20TO%20{year+1}-01-01T00:00:00.000Z%5d&rows=1000000000&fl="))
+        for(mot1 in str_split(mot,"\\+")[[1]]){
+          url = glue("{url}termfreq(plainpagefulltext,{mot1}),")}
+        url = URLencode(url)
         reqlist[[length(reqlist)+1]] = HttpRequest$new(url = url,progress = httr::progress())$retry("get")
         i = which(result$year == year & result$month == month)
         result$url[i] = glue("https://www.deutsche-digitale-bibliothek.de/search/newspaper?fromDay=1&toYear={year}&fromYear={year}&toDay={end_of_month[month]}&toMonth={month}&fromMonth={month}&language=ger&rows=100&query={mot}")
@@ -3121,12 +3124,15 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     remove_modal_spinner()
     }
     if(input$resolution=="Année"){
-      show_modal_spinner(text=str_c("Patientez environ ",as.character(ceiling(as.integer(length(period)/5))*length(mots))," secondes..."))
+      show_modal_spinner(text=str_c("Patientez environ ",as.character(ceiling(as.integer(length(period)/2.5))*length(mots))," secondes..."))
       for(mot in mots){
         result = data.frame(year = period,count = 0,mot = mot,url=NA)
         reqlist = list()
         for(year in period){
-          url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=plainpagefulltext:{mot}%20AND%20publication_date:%5b{year}-01-01T00:00:00.000Z%20TO%20{year+1}-01-01T00:00:00.000Z%5d&rows=1000000000&fl=termfreq(plainpagefulltext,{mot})"))
+          url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=plainpagefulltext:{mot}%20AND%20publication_date:%5b{year}-01-01T00:00:00.000Z%20TO%20{year+1}-01-01T00:00:00.000Z%5d&rows=1000000000&fl="))
+          for(mot1 in str_split(mot,"\\+")[[1]]){
+          url = glue("{url}termfreq(plainpagefulltext,{mot1}),")}
+          url = URLencode(url)
           reqlist[[length(reqlist)+1]] = HttpRequest$new(url = url,progress = httr::progress())$retry("get")
           i = which(result$year == year)
           result$url[i] = glue("https://www.deutsche-digitale-bibliothek.de/search/newspaper?fromDay=1&toYear={year}&fromYear={year}&toDay=31&toMonth=12&fromMonth=1&language=ger&rows=100&query={mot}")
