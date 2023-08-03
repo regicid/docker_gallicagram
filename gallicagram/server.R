@@ -1514,7 +1514,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           if(input$resolution=="Semaine"){
             base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
             colnames(base)<-c("date","base")}
-          print(base)
         }
         if(nb>4){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
@@ -3110,6 +3109,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
         print(result[z,])
       }
       print(year)
+      progress$inc(1/((to-from+1)*length(mots)), detail = paste("Gallicagram ratisse l'an", year))
     }
     base = read.csv("base_presse_ddb_mois_und.csv")
     base = base[base$year %in% period,]
@@ -3120,7 +3120,6 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     if(mot==mots[1]){tableau=result}
     else{tableau=rbind(tableau,result)}
     }
-    print(tableau)
   }
   
   
@@ -4115,7 +4114,7 @@ shinyServer(function(input, output,session){
       output$gpt=renderUI(HTML(gptiseur(input)))
         if(is.null(b)==F){
         wurl=str_replace(wurl,"https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords","https://www.gallicagrapher.com/context")
-        wurl=str_remove_all(wurl,"&row_split=true&cursor=00")
+        wurl=str_remove_all(wurl,"&row_split=true&cursor=00t")
         output$lien=renderUI(HTML(str_c("<b><font size=\"5\">Contexte</font><br>Crédit : Will Gleason avec <a href='","https://www.gallicagrapher.com/","' target='_blank'>","Gallicagrapher","</a></b></font>","<br><a href='",will,"' target='_blank'>","Ouvrir la recherche dans Gallica","</a>",
                                         "<br><a href='",wurl,"' target='_blank'>","Plus de contexte","</a>")))
         require("DT")
