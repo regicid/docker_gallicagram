@@ -1635,7 +1635,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w$date<-str_replace_all(w$date,"-","/")
       }
       w$ratio=w$count/w$base
-      w$ratio[is.na(w$ratio)]<-0
+      #On laisse les NA
+      #w$ratio[is.na(w$ratio)]<-0
       w$ratio[is.infinite(w$ratio)]<-0
       if(increment2==1){z=w}
       else
