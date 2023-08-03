@@ -3940,8 +3940,9 @@ willisation <- function(input,will){
                contexte_droit=character(), 
                stringsAsFactors=FALSE) 
   colnames(c)=c("Titre du journal","Date de publication","Contexte gauche","Pivot","Contexte droit")
-  
-  for (i in 0:3) {
+  pages = 0
+  if(nchar(input$apikey)>0){pages = 0:3}
+  for (i in pages) {
     
     if(isolate(input$doc_type==1)){
       will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
