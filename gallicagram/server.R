@@ -1637,7 +1637,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       w$ratio=w$count/w$base
       #On laisse les NA
       #w$ratio[is.na(w$ratio)]<-0
-      w$ratio[is.infinite(w$ratio)]<-0
+      #w$ratio[is.infinite(w$ratio)]<-0
       if(increment2==1){z=w}
       else
       {
@@ -1649,8 +1649,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       increment2=increment2+1
     }
     
-    z$ratio[is.na(z$ratio)]<-0
-    z$ratio[is.infinite(z$ratio)]<-0
+    #z$ratio[is.na(z$ratio)]<-0
+    #z$ratio[is.infinite(z$ratio)]<-0
     z$mot<-mot1
     mot2<-mot1
     or<-""
