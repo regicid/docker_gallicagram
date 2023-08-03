@@ -1182,7 +1182,8 @@ page_search <- function(mot,from,to,resolution,tot_df,doc_type,search_mode,titre
   
   tableau$ratio<-tableau$count/tableau$base
   tableau$ratio_page<-tableau$page_count/tableau$page_base
-  tableau$ratio[is.na(tableau$ratio)]<-0
+  ## On laisse les NA quand il n'y a pas d'archives
+  #tableau$ratio[is.na(tableau$ratio)]<-0
   tableau$ratio_page[is.na(tableau$ratio_page)]<-0
   tableau$date<-str_replace_all(tableau$date,"-","/")
   
