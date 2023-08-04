@@ -1442,8 +1442,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           if(input$doc_type==68){ngram_file="/mnt/persistent/_constitutionnel.db"}
           if(input$doc_type==69){ngram_file="/mnt/persistent/_paris.db"
           base=read.csv("")}
-          if(input$doc_type==70){ngram_file="/mnt/persistent/_moniteur.db"
-          base=read.csv("")}
           if(input$doc_type==71){ngram_file="/mnt/persistent/_temps.db"
           base=read.csv("")}
         }
@@ -1502,6 +1500,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
             base <- read.csv(str_c("humanite",nb,".csv"))}
           if(input$doc_type==69){ngram_file <-str_c ("/mnt/persistent/",nb,"gram_paris.db")
           base <- read.csv(str_c("paris",nb,".csv"))}
+          if(input$doc_type==70){ngram_file=str_c("/mnt/persistent/",nb,"gram_moniteur.db")
+          base=read.csv(str_c("moniteur",nb,".csv"))}
           base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
           base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
           if(input$resolution=="Année"){
@@ -1545,7 +1545,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           (input$doc_type==56 & agregator==1)) & input$resolution=="Année"){
         #q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
-        if(input$doc_type==30 | input$doc_type==67 | input$doc_type==69){
+        if(input$doc_type==30 | input$doc_type %in% 66:71){
           q=str_c('SELECT sum(n),gram,annee,mois FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
           
         }
