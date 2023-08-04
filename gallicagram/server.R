@@ -1501,7 +1501,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           if(input$doc_type==69){ngram_file <-str_c ("/mnt/persistent/",nb,"gram_paris.db")
           base <- read.csv(str_c("paris",nb,".csv"))}
           if(input$doc_type==70){ngram_file=str_c("/mnt/persistent/",nb,"gram_moniteur.db")
-          base=read.csv(str_c("moniteur",nb,".csv"))}
+          base=read.csv(str_c("moniteur",nb,".csv"))
+          print(base)}
           base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
           base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
           if(input$resolution=="Année"){
