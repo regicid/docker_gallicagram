@@ -1496,6 +1496,9 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           if(input$doc_type==30 | gallicagram==2){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
           base<-read.csv(str_c("lemonde",nb,".csv"))}
+          if(input$doc_type==66){ngram_file=str_c("/mnt/persistent/",nb,"gram_figaro.db")
+          base=read.csv(str_c("figaro",nb,".csv"))
+          print(base)}
           if(input$doc_type==67){ngram_file<-str_c("/mnt/persistent/",nb,"gram_huma.db")
             base <- read.csv(str_c("humanite",nb,".csv"))}
           if(input$doc_type==69){ngram_file <-str_c ("/mnt/persistent/",nb,"gram_paris.db")
