@@ -1490,7 +1490,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         next}
       }
       
-      if(input$doc_type==30 | gallicagram==2 | input$doc_type == 67 | input$doc_type == 69){
+      if(input$doc_type==30 | gallicagram==2 | input$doc_type %in% 66:71){
         if(nb<=4){
           gram<-"gram"
           if(input$doc_type==30 | gallicagram==2){
