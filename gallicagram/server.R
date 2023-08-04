@@ -1430,36 +1430,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       nb<-length(table$ngram)
       mot<-table$ngram[1]
       if(nb>1){for(x in 2:nb){mot<-str_c(mot," ",table$ngram[x])}}
-      
-      if(input$doc_type==66 | input$doc_type==68 | 
-         input$doc_type==70 | input$doc_type==71 ){
-        if(nb>1){z=data.frame(date=from:to, count=0, base=0,ratio=0)
-        next}
-        if(nb==1){
-          gram="gram"
-          if(input$doc_type==66){ngram_file="/mnt/persistent/_figaro.db"
-          base=read.csv("")}
-          if(input$doc_type==68){ngram_file="/mnt/persistent/_constitutionnel.db"}
-          if(input$doc_type==69){ngram_file="/mnt/persistent/_paris.db"
-          base=read.csv("")}
-          if(input$doc_type==71){ngram_file="/mnt/persistent/_temps.db"
-          base=read.csv("")}
-        }
-        base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
-        base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
-        if(input$resolution=="Année"){
-          base<-base%>%group_by(annee)%>%summarise(n = sum(n))
-          colnames(base)<-c("date","base")}
-        if(input$resolution=="Mois"){
-          base<-base%>%group_by(annee,mois)%>%summarise(n = sum(n))
-          base<-cbind(str_c(base$annee,"/",base$mois),base$n)
-          colnames(base)<-c("date","base")}
-        if(input$resolution=="Semaine"){
-          base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
-          colnames(base)<-c("date","base")}
-      }
-      
-      
       if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
         if(nb>5){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
