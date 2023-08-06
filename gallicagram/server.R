@@ -1516,8 +1516,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w = dbFetch(query)
       }
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 |
-          input$doc_type==66 | input$doc_type==67 | input$doc_type==68 | 
-          input$doc_type==69 | input$doc_type==70 | input$doc_type==71 |
+          input$doc_type %in% 66:72 |
           (input$doc_type==56 & agregator==1)) & input$resolution=="Année"){
         #q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
@@ -1537,8 +1536,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w$annee = as.integer(w$annee)
       }
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 |
-          input$doc_type==66 | input$doc_type==67 | input$doc_type==68 | 
-          input$doc_type==69 | input$doc_type==70 | input$doc_type==71 ) & input$resolution=="Mois"){
+          input$doc_type %in% 66:72) & input$resolution=="Mois"){
         # q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee,mois FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee,mois')
         if(input$doc_type==30){
@@ -1559,8 +1557,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w<-w[,-3]
       }
       
-      if((input$doc_type==30 | input$doc_type==66 | input$doc_type==67 | input$doc_type==68 | 
-          input$doc_type==69 | input$doc_type==70 | input$doc_type==71 ) &
+      if((input$doc_type==30 | input$doc_type %in% 66:72 ) &
           input$resolution=="Semaine"){
         q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',str_split(from,"/")[[1]][1]," AND ",str_split(to,"/")[[1]][1] ,' AND ',gram,'="',mot,'"')
         query = dbSendQuery(con,q)
@@ -1681,8 +1678,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       #z<-z[z$date<="2022/08/31",]
     }
     
-    if(input$doc_type==66 | input$doc_type==67 | input$doc_type==68 | 
-      input$doc_type==69 | input$doc_type==70 | input$doc_type==71){
+    if(input$doc_type %in% 66:72){
       z$url<-str_c("https://gallica.bnf.fr")
     }
     if(input$resolution=="Année"){z$resolution<-"Année"}
@@ -1736,6 +1732,10 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     if(input$doc_type==71){z$corpus="Presse"
     z$langue="Français"
     z$bibli="Le Temps"
+    z$search_mode<-"N-gramme"}
+    if(input$doc_type==72){z$corpus="Presse"
+    z$langue="Français"
+    z$bibli="Le Petit Journal"
     z$search_mode<-"N-gramme"}
     
     if(increment==1){tableau=z}
@@ -4787,7 +4787,7 @@ shinyServer(function(input, output,session){
       output$legende3<-renderText(str_c("Pages correspondant à la recherche : ", as.character(sum(df[["tableau_page"]]$count))))
     }
     
-    if(input$doc_type==1 | input$doc_type==2 | (input$doc_type == 3 & input$theme_presse==1) | input$doc_type==4 | input$doc_type==56 | input$doc_type==66 | input$doc_type==67 | input$doc_type==68 | input$doc_type==69 | input$doc_type==70 | input$doc_type==71){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/', target=\'_blank\'> ","gallica.bnf.fr","</a>"),sep = ""))}
+    if(input$doc_type==1 | input$doc_type==2 | (input$doc_type == 3 & input$theme_presse==1) | input$doc_type==4 | input$doc_type==56 | input$doc_type %in% 66:72){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://gallica.bnf.fr/', target=\'_blank\'> ","gallica.bnf.fr","</a>"),sep = ""))}
     if(input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://books.google.com/ngrams/', target=\'_blank\'> ","books.google.com/ngrams","</a>"),sep = ""))}
     if(input$doc_type==6 | input$doc_type==7){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.europeana.eu/', target=\'_blank\'> ","europeana.eu","</a>"),sep = ""))}
     if(input$doc_type==8){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.britishnewspaperarchive.co.uk/', target=\'_blank\'> ","britishnewspaperarchive.co.uk","</a>"),sep = ""))}
@@ -4827,13 +4827,13 @@ shinyServer(function(input, output,session){
     if(input$doc_type==58 | input$doc_type==59 | input$doc_type==60 | input$doc_type==61 | input$doc_type==62 | input$doc_type==63 | input$doc_type==64){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://trends.google.fr//', target=\'_blank\'> ","trends.google.fr","</a>"),sep = ""))}
     if(input$doc_type==65){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.nytimes.com/', target=\'_blank\'> ","nytimes.com","</a>"),sep = ""))}
     
-    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 44| input$doc_type == 45| input$doc_type == 50| input$doc_type == 55 | input$doc_type==56| input$doc_type==57 | input$doc_type==66 | input$doc_type==67 | input$doc_type==68 | input$doc_type==69 | input$doc_type==70 | input$doc_type==71){output$legende4=renderText("Langue : français")}
+    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 44| input$doc_type == 45| input$doc_type == 50| input$doc_type == 55 | input$doc_type==56| input$doc_type==57 | input$doc_type %in% 66:72){output$legende4=renderText("Langue : français")}
     if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16 |input$doc_type==29|input$doc_type==43|input$doc_type==47| input$doc_type == 52 | input$doc_type == 62 | input$doc_type == 63){output$legende4=renderText("Langue : allemand")}
     if(input$doc_type==7 | input$doc_type==14|input$doc_type==48| input$doc_type == 53| input$doc_type == 64){output$legende4=renderText("Langue : néerlandais")}
     if(input$doc_type==8 | input$doc_type==10| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40|input$doc_type==42|input$doc_type==46| input$doc_type == 51 | input$doc_type == 58 | input$doc_type == 59 | input$doc_type == 60 | input$doc_type == 65){output$legende4=renderText("Langue : anglais")}
     if(input$doc_type==11 | input$doc_type==12|input$doc_type==49| input$doc_type == 54 | input$doc_type == 61){output$legende4=renderText("Langue : espagnol")}
     
-    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 30 | input$doc_type == 31| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53 | input$doc_type == 54 | input$doc_type == 55| input$doc_type==57  | input$doc_type == 65 | input$doc_type==66 | input$doc_type==67 | input$doc_type==68 | input$doc_type==69 | input$doc_type==70 | input$doc_type==71){output$legende1<-renderText("Corpus : presse")}
+    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 30 | input$doc_type == 31| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53 | input$doc_type == 54 | input$doc_type == 55| input$doc_type==57  | input$doc_type == 65 | input$doc_type %in% 66:72){output$legende1<-renderText("Corpus : presse")}
     if(input$doc_type==2 | input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){output$legende1<-renderText("Corpus : livres")}
     if(input$doc_type==4){output$legende1<-renderText("Corpus : personnalisé")}
     if(input$doc_type==56){output$legende1<-renderText("Corpus : presse et livres")}
