@@ -1460,7 +1460,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         next}
       }
       
-      if(input$doc_type==30 | gallicagram==2 | input$doc_type %in% 66:71){
+      if(input$doc_type==30 | gallicagram==2 | input$doc_type %in% 66:72){
         if(nb<=4){
           gram<-"gram"
           if(input$doc_type==30 | gallicagram==2){
@@ -1476,6 +1476,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           base=read.csv(str_c("moniteur",nb,".csv"))}
           if(input$doc_type==71){ngram_file=str_c("/mnt/persistent/",nb,"gram_temps.db")
           base=read.csv(str_c("temps",nb,".csv"))}
+          if(input$doc_type==71){ngram_file=str_c("/mnt/persistent/",nb,"gram_petit_journal.db")
+          base=read.csv(str_c("petit_journal",nb,".csv"))}
           base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
           base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
           if(input$resolution=="Année"){
@@ -1519,13 +1521,13 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           (input$doc_type==56 & agregator==1)) & input$resolution=="Année"){
         #q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
-        if(input$doc_type==30 | input$doc_type %in% 66:71){
+        if(input$doc_type==30 | input$doc_type %in% 66:72){
           q=str_c('SELECT sum(n),gram,annee,mois FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
           
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        if(input$doc_type==30 | input$doc_type %in% 66:71){
+        if(input$doc_type==30 | input$doc_type %in% 66:72){
           w<-w[,-2]
           w<-w[,-3]
           
@@ -4374,7 +4376,7 @@ shinyServer(function(input, output,session){
                                                                       "Corpus personnalisé / Gallica"=4, "Livres+Presse / Gallica"=56,
                                                                       "Le Figaro (1854-1952)"=66,"L'Humanité (1904-1952)"=67,"Le Constitutionnel (1821-1913)"=68,
                                                                       "Le Journal de Paris (1777-1827)"=69,"Le Moniteur universel (1789-1901)"=70,
-                                                                      "Le Temps (1861-1942)"=71),selected = 1)
+                                                                      "Le Temps (1861-1942)"=71,"Le Petit Journal (1863-1942)"=72),selected = 1)
       }
       else if(input$language == 1 & input$bibli==2){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15, "Presse wallonne / KBR"=13, "Presse québécoise / BAnQ"=28),selected = 15)
