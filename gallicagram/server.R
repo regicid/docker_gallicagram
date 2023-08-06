@@ -1467,15 +1467,15 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
           base<-read.csv(str_c("lemonde",nb,".csv"))}
           if(input$doc_type==66){ngram_file=str_c("/mnt/persistent/",nb,"gram_figaro.db")
-          base=read.csv(str_c("figaro",nb,".csv"))
-          print(base)}
+          base=read.csv(str_c("figaro",nb,".csv"))}
           if(input$doc_type==67){ngram_file<-str_c("/mnt/persistent/",nb,"gram_huma.db")
             base <- read.csv(str_c("humanite",nb,".csv"))}
           if(input$doc_type==69){ngram_file <-str_c ("/mnt/persistent/",nb,"gram_paris.db")
           base <- read.csv(str_c("paris",nb,".csv"))}
           if(input$doc_type==70){ngram_file=str_c("/mnt/persistent/",nb,"gram_moniteur.db")
-          base=read.csv(str_c("moniteur",nb,".csv"))
-          print(base)}
+          base=read.csv(str_c("moniteur",nb,".csv"))}
+          if(input$doc_type==71){ngram_file=str_c("/mnt/persistent/",nb,"gram_temps.db")
+          base=read.csv(str_c("temps",nb,".csv"))}
           base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
           base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
           if(input$resolution=="Année"){
