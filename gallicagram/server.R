@@ -1476,7 +1476,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           base=read.csv(str_c("moniteur",nb,".csv"))}
           if(input$doc_type==71){ngram_file=str_c("/mnt/persistent/",nb,"gram_temps.db")
           base=read.csv(str_c("temps",nb,".csv"))}
-          if(input$doc_type==71){ngram_file=str_c("/mnt/persistent/",nb,"gram_petit_journal.db")
+          if(input$doc_type==72){ngram_file=str_c("/mnt/persistent/",nb,"gram_petit_journal.db")
           base=read.csv(str_c("petit_journal",nb,".csv"))}
           base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
           base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
