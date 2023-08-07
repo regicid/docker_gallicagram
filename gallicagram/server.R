@@ -1711,11 +1711,11 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     z$langue="Français"
     z$bibli="Gallica"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==66){z$corpus="Presse"
+    if(input$doc_type==66){z$corpus="Le Figaro"
     z$langue="Français"
     z$bibli="Le Figaro"
     z$search_mode<-"N-gramme"}
-    if(input$doc_type==67){z$corpus="Presse"
+    if(input$doc_type==67){z$corpus="L'Humanité"
     z$langue="Français"
     z$bibli="L'Humanité"
     z$search_mode<-"N-gramme"}
