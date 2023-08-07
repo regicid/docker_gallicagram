@@ -1470,6 +1470,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           base=read.csv(str_c("figaro",nb,".csv"))}
           if(input$doc_type==67){ngram_file<-str_c("/mnt/persistent/",nb,"gram_huma.db")
             base <- read.csv(str_c("humanite",nb,".csv"))}
+          if(input$doc_type==68){ngram_file<-str_c("/mnt/persistent/",nb,"gram_constitutionnel.db")
+          base <- read.csv(str_c("constitutionnel",nb,".csv"))}
           if(input$doc_type==69){ngram_file <-str_c ("/mnt/persistent/",nb,"gram_paris.db")
           base <- read.csv(str_c("paris",nb,".csv"))}
           if(input$doc_type==70){ngram_file=str_c("/mnt/persistent/",nb,"gram_moniteur.db")
