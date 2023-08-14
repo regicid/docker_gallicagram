@@ -1516,7 +1516,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         next}
       }
       base<-as.data.frame(base)
-      print(base)
+
       if(input$resolution=="Année"){
         base<-base[base$date<=to,]
         base<-base[base$date>=from,]
@@ -1530,7 +1530,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         base<-base[base[,"date"]<=to,]
         base<-base[base[,"date"]>=from,]
       }
-      print(base)
+
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
       
       if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
@@ -1628,15 +1628,10 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       colnames(w)=c("date","count")
       w$count[is.na(w$count)]<-0
       w<-w%>%group_by(date)%>%summarise(count = sum(count))
-      print(w)
-      
-      print(base)
-      print(class(base$date))
-      print(class(w$date))
+
       
       w = left_join(w,as.data.frame(base),by="date")
       
-      print(w)
       w$base<-as.numeric(w$base)
       if(input$resolution=="Semaine"){
         w$date<-as.Date(w$date)
@@ -1650,7 +1645,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w$date<-str_replace_all(w$date,"-","/")
       }
       w$ratio=w$count/w$base
-      print(3)
       #On laisse les NA
       #w$ratio[is.na(w$ratio)]<-0
       #w$ratio[is.infinite(w$ratio)]<-0
@@ -1664,7 +1658,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       }
       increment2=increment2+1
     }
-    print(4)
     #z$ratio[is.na(z$ratio)]<-0
     #z$ratio[is.infinite(z$ratio)]<-0
     z$mot<-mot1
@@ -1716,7 +1709,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     if(input$doc_type %in% 77:78){
       z$url<-str_c("https://www.opensubtitles.org/")
     }
-    print(5)
+
     if(input$resolution=="Année"){z$resolution<-"Année"}
     if(input$resolution=="Mois"){z$resolution<-"Mois"}
     if(input$resolution=="Semaine"){z$resolution<-"Semaine"}
