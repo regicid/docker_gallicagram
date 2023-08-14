@@ -1351,7 +1351,6 @@ jokerize<-function(input){
       query = dbSendQuery(con,str_c('select sum(n) as tot, gram from gram_mois where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where gram'," match '",'"',mot,'"', "') group by ",gram,' order by tot desc limit ',3000+input$nbJoker+input$stpw))
     }
   }
-  print(query)
   w = dbFetch(query)
   dbDisconnect(con)
   
@@ -1467,7 +1466,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         if(input$doc_type==78){ngram_file=str_c("/mnt/persistent/",nb,"gram_subtitles_en.db")
         base=read.csv(str_c("subtitles_en",nb,".csv"))}
         colnames(base)<-c("date","base")
-        print(base)
         }
         else{z=data.frame(date=from:to, count=0, base=0,ratio=0)
           next}
@@ -1531,7 +1529,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         base<-base[base[,"date"]<=to,]
         base<-base[base[,"date"]>=from,]
       }
-      print(ngram_file)
+      
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
       
       if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
@@ -1549,7 +1547,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        print(w)
         if(input$doc_type==30 | input$doc_type %in% 66:76){
           w<-w[,-2]
           w<-w[,-3]
@@ -1558,7 +1555,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         colnames(w)<-c("n","annee")
         w = group_by(w,annee) %>% summarise(n = sum(as.integer(n)))
         w$annee = as.integer(w$annee)
-        print(w)
       }
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 |
           input$doc_type %in% 66:76) & input$resolution=="Mois"){
@@ -1600,6 +1596,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       
       dbDisconnect(con)
       
+      print(w)
+      
       if(input$resolution=="Année"){
         y=data.frame(annee=from:to, n=0)
       }
@@ -1622,13 +1620,16 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         y=data.frame(annee=seq(as.Date(from),as.Date(to),by="day"), n=0)
         y$annee<-str_replace_all(y$annee,"-","/")
       }
+      print(y)
       w=left_join(y,w,by="annee")
-      
+      print("----------")
+      print(w)
       w<-w[,-2]
       w<-w[,-3]
       colnames(w)=c("date","count")
       w$count[is.na(w$count)]<-0
       w<-w%>%group_by(date)%>%summarise(count = sum(count))
+      print(2)
       
       w = left_join(w,as.data.frame(base),by="date")
       w$base<-as.numeric(w$base)
@@ -1644,6 +1645,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w$date<-str_replace_all(w$date,"-","/")
       }
       w$ratio=w$count/w$base
+      print(3)
       #On laisse les NA
       #w$ratio[is.na(w$ratio)]<-0
       #w$ratio[is.infinite(w$ratio)]<-0
@@ -1657,7 +1659,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       }
       increment2=increment2+1
     }
-    
+    print(4)
     #z$ratio[is.na(z$ratio)]<-0
     #z$ratio[is.infinite(z$ratio)]<-0
     z$mot<-mot1
@@ -1709,6 +1711,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     if(input$doc_type %in% 77:78){
       z$url<-str_c("https://www.opensubtitles.org/")
     }
+    print(5)
     if(input$resolution=="Année"){z$resolution<-"Année"}
     if(input$resolution=="Mois"){z$resolution<-"Mois"}
     if(input$resolution=="Semaine"){z$resolution<-"Semaine"}
