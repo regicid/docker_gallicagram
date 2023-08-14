@@ -1580,7 +1580,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w<-w[,-3]
       }
       
-      if((input$doc_type==30 | input$doc_type %in% 66:76 ) &
+      if((input$doc_type==30 | input$doc_type %in% 66:76 | input$doc_type %in% 77:78 ) &
           input$resolution=="Semaine"){
         q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',str_split(from,"/")[[1]][1]," AND ",str_split(to,"/")[[1]][1] ,' AND ',gram,'="',mot,'"')
         query = dbSendQuery(con,q)
