@@ -1557,6 +1557,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         colnames(w)<-c("n","annee")
         w = group_by(w,annee) %>% summarise(n = sum(as.integer(n)))
         w$annee = as.integer(w$annee)
+        print(w)
       }
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 |
           input$doc_type %in% 66:76) & input$resolution=="Mois"){
@@ -1580,7 +1581,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w<-w[,-3]
       }
       
-      if((input$doc_type==30 | input$doc_type %in% 66:76 | input$doc_type %in% 77:78 ) &
+      if((input$doc_type==30 | input$doc_type %in% 66:76 ) &
           input$resolution=="Semaine"){
         q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',str_split(from,"/")[[1]][1]," AND ",str_split(to,"/")[[1]][1] ,' AND ',gram,'="',mot,'"')
         query = dbSendQuery(con,q)
