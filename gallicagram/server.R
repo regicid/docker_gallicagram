@@ -1465,7 +1465,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         base=read.csv(str_c("subtitles",nb,".csv"))}
         if(input$doc_type==78){ngram_file=str_c("/mnt/persistent/",nb,"gram_subtitles_en.db")
         base=read.csv(str_c("subtitles_en",nb,".csv"))}
-        colnames(base)<-c("date","base")
+        colnames(base)<-c("base","date")
         }
         else{z=data.frame(date=from:to, count=0, base=0,ratio=0)
           next}
@@ -1516,6 +1516,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         next}
       }
       base<-as.data.frame(base)
+      print(base)
       if(input$resolution=="Année"){
         base<-base[base$date<=to,]
         base<-base[base$date>=from,]
@@ -1529,7 +1530,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         base<-base[base[,"date"]<=to,]
         base<-base[base[,"date"]>=from,]
       }
-      
+      print(base)
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
       
       if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
