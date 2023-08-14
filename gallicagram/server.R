@@ -1467,8 +1467,10 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         if(input$doc_type==78){ngram_file=str_c("/mnt/persistent/",nb,"gram_subtitles_en.db")
         base=read.csv(str_c("subtitles_en",nb,".csv"))}
         colnames(base)<-c("date","base")
+        print(base)
         }
-        else{next}
+        else{z=data.frame(date=from:to, count=0, base=0,ratio=0)
+          next}
       }
       if(input$doc_type==30 | gallicagram==2 | input$doc_type %in% 66:76){
         if(nb<=4){
