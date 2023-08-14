@@ -1549,7 +1549,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        if(input$doc_type==30 | input$doc_type %in% 66:76 | input$doc_type %in% 77:78){
+        print(w)
+        if(input$doc_type==30 | input$doc_type %in% 66:76){
           w<-w[,-2]
           w<-w[,-3]
           
