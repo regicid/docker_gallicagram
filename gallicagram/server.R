@@ -1459,8 +1459,18 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         if(nb>3){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
-      
-      if(input$doc_type==30 | gallicagram==2 | input$doc_type %in% 66:76 | input$doc_type %in% 77:78){
+      if(input$doc_type %in% 77:78){
+        if(nb<3){
+        gram<-"gram"
+        if(input$doc_type==77){ngram_file=str_c("/mnt/persistent/",nb,"gram_subtitles.db")
+        base=read.csv(str_c("subtitles",nb,".csv"))}
+        if(input$doc_type==78){ngram_file=str_c("/mnt/persistent/",nb,"gram_subtitles_en.db")
+        base=read.csv(str_c("subtitles_en",nb,".csv"))}
+        colnames(base)<-c("date","base")
+        }
+        else{next}
+      }
+      if(input$doc_type==30 | gallicagram==2 | input$doc_type %in% 66:76){
         if(nb<=4){
           gram<-"gram"
           if(input$doc_type==30 | gallicagram==2){
@@ -1488,10 +1498,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           base=read.csv(str_c("journal_des_debats",nb,".csv"))}
           if(input$doc_type==76){ngram_file=str_c("/mnt/persistent/",nb,"gram_la_presse.db")
           base=read.csv(str_c("la_presse",nb,".csv"))}
-          if(input$doc_type==77){ngram_file=str_c("/mnt/persistent/",nb,"gram_subtitles.db")
-          base=read.csv(str_c("subtitles",nb,".csv"))}
-          if(input$doc_type==78){ngram_file=str_c("/mnt/persistent/",nb,"gram_subtitles_en.db")
-          base=read.csv(str_c("subtitles_en",nb,".csv"))}
+          
           base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
           base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
           if(input$resolution=="Année"){
@@ -1508,7 +1515,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         if(nb>4){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
-      
       base<-as.data.frame(base)
       if(input$resolution=="Année"){
         base<-base[base$date<=to,]
@@ -1523,6 +1529,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         base<-base[base[,"date"]<=to,]
         base<-base[base[,"date"]>=from,]
       }
+      
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
       
       if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
