@@ -1460,7 +1460,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         next}
       }
       
-      if(input$doc_type==30 | gallicagram==2 | input$doc_type %in% 66:76){
+      if(input$doc_type==30 | gallicagram==2 | input$doc_type %in% 66:76 | input$doc_type %in% 77:78){
         if(nb<=4){
           gram<-"gram"
           if(input$doc_type==30 | gallicagram==2){
@@ -1488,6 +1488,10 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           base=read.csv(str_c("journal_des_debats",nb,".csv"))}
           if(input$doc_type==76){ngram_file=str_c("/mnt/persistent/",nb,"gram_la_presse.db")
           base=read.csv(str_c("la_presse",nb,".csv"))}
+          if(input$doc_type==77){ngram_file=str_c("/mnt/persistent/",nb,"gram_subtitles.db")
+          base=read.csv(str_c("subtitles",nb,".csv"))}
+          if(input$doc_type==78){ngram_file=str_c("/mnt/persistent/",nb,"gram_subtitles_en.db")
+          base=read.csv(str_c("subtitles_en",nb,".csv"))}
           base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
           base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
           if(input$resolution=="Année"){
@@ -1526,7 +1530,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w = dbFetch(query)
       }
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 |
-          input$doc_type %in% 66:76 |
+          input$doc_type %in% 66:76 | input$doc_type %in% 77:78 |
           (input$doc_type==56 & agregator==1)) & input$resolution=="Année"){
         #q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
@@ -1536,7 +1540,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        if(input$doc_type==30 | input$doc_type %in% 66:76){
+        if(input$doc_type==30 | input$doc_type %in% 66:76 | input$doc_type %in% 77:78){
           w<-w[,-2]
           w<-w[,-3]
           
@@ -1691,6 +1695,9 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     if(input$doc_type %in% 66:76){
       z$url<-str_c("https://gallica.bnf.fr")
     }
+    if(input$doc_type %in% 77:78){
+      z$url<-str_c("https://www.opensubtitles.org/")
+    }
     if(input$resolution=="Année"){z$resolution<-"Année"}
     if(input$resolution=="Mois"){z$resolution<-"Mois"}
     if(input$resolution=="Semaine"){z$resolution<-"Semaine"}
@@ -1746,6 +1753,14 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     if(input$doc_type==72){z$corpus="Presse"
     z$langue="Français"
     z$bibli="Le Petit Journal"
+    z$search_mode<-"N-gramme"}
+    if(input$doc_type==77){z$corpus="Films"
+    z$langue="Français"
+    z$bibli="Opensubtitles / Films en français"
+    z$search_mode<-"N-gramme"}
+    if(input$doc_type==78){z$corpus="Films"
+    z$langue="Français"
+    z$bibli="Opensubtitles / Films en anglais"
     z$search_mode<-"N-gramme"}
     
     if(increment==1){tableau=z}
@@ -4406,6 +4421,9 @@ shinyServer(function(input, output,session){
       if(input$language == 1 & input$bibli==8){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Livres / Ngram Viewer - Google Books" = 5, "Google Trends / France"=44),selected = 5)
       }
+      if(input$language == 1 & input$bibli==9){
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Opensubtitles / Films en français"=77, "Opensubtitles / Films en anglais"=78),selected = 77)
+      }
       else if(input$language == 2){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse allemande / Deutsche digitale bibliothek" = 43,"Presse allemande / Europeana" = 6, "Presse austro-hongroise / ANNO"=29, "Presse suisse-allemande / Bibliothèque nationale suisse"=16 ,"Presse germanophone / MediaCloud"=52, "Livres / Ngram Viewer Allemand" = 9,"MusixMatch / Allemand"=47,"Google Trends / Allemagne"=62,"Google Trends / Autriche"=63),selected = 43)
       }else if(input$language == 3){
@@ -4431,6 +4449,10 @@ shinyServer(function(input, output,session){
     if( input$doc_type == 30 | input$doc_type == 66 | input$doc_type == 67 | input$doc_type == 68 | input$doc_type == 69 | input$doc_type == 70 | input$doc_type == 71 ){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Année",inline = T)
+    }
+    if( input$doc_type == 77 | input$doc_type == 78 ){
+      updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
+      updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
     if( input$doc_type == 0 ){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
@@ -4836,6 +4858,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type==57){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://eluxemburgensia.lu/', target=\'_blank\'> ","eluxemburgensia.fr","</a>"),sep = ""))}
     if(input$doc_type==58 | input$doc_type==59 | input$doc_type==60 | input$doc_type==61 | input$doc_type==62 | input$doc_type==63 | input$doc_type==64){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://trends.google.fr//', target=\'_blank\'> ","trends.google.fr","</a>"),sep = ""))}
     if(input$doc_type==65){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.nytimes.com/', target=\'_blank\'> ","nytimes.com","</a>"),sep = ""))}
+    if(input$doc_type==77 | input$doc_type==78){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.opensubtitles.org/', target=\'_blank\'> ","opensubtitles.org","</a>"),sep = ""))}
     
     if(input$doc_type==0 | input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 44| input$doc_type == 45| input$doc_type == 50| input$doc_type == 55 | input$doc_type==56| input$doc_type==57 | input$doc_type %in% 66:76){output$legende4=renderText("Langue : français")}
     if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16 |input$doc_type==29|input$doc_type==43|input$doc_type==47| input$doc_type == 52 | input$doc_type == 62 | input$doc_type == 63){output$legende4=renderText("Langue : allemand")}
@@ -4850,6 +4873,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type==32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36){output$legende1<-renderText("Corpus : scientifique")}
     if(input$doc_type==44 | input$doc_type==58 | input$doc_type==59 | input$doc_type==60 | input$doc_type==61 | input$doc_type==62 | input$doc_type==63 | input$doc_type==64){output$legende1<-renderText("Corpus : web")}
     if(input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48  | input$doc_type == 49){output$legende1<-renderText("Corpus : paroles de chansons")}
+    if(input$doc_type == 77 | input$doc_type == 78){output$legende1<-renderText("Corpus : films")}
     if(input$doc_type == 3 & input$theme_presse == 1){
       liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
       title<-liste_journaux$title[liste_journaux$ark==input$titres[1]]
