@@ -1596,8 +1596,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       
       dbDisconnect(con)
       
-      print(w)
-      
+
       if(input$resolution=="Année"){
         y=data.frame(annee=from:to, n=0)
       }
@@ -1620,18 +1619,19 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         y=data.frame(annee=seq(as.Date(from),as.Date(to),by="day"), n=0)
         y$annee<-str_replace_all(y$annee,"-","/")
       }
-      print(y)
+
       w=left_join(y,w,by="annee")
-      print("----------")
-      print(w)
+      
       w<-w[,-2]
       w<-w[,-3]
       colnames(w)=c("date","count")
       w$count[is.na(w$count)]<-0
       w<-w%>%group_by(date)%>%summarise(count = sum(count))
-      print(2)
+      print(w)
       
       w = left_join(w,as.data.frame(base),by="date")
+      print(2)
+      print(w)
       w$base<-as.numeric(w$base)
       if(input$resolution=="Semaine"){
         w$date<-as.Date(w$date)
