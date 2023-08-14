@@ -1629,8 +1629,12 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       w<-w%>%group_by(date)%>%summarise(count = sum(count))
       print(w)
       
+      print(base)
+      print(class(base$date))
+      print(class(w$date))
+      
       w = left_join(w,as.data.frame(base),by="date")
-      print(2)
+      
       print(w)
       w$base<-as.numeric(w$base)
       if(input$resolution=="Semaine"){
