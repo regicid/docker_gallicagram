@@ -11,6 +11,11 @@
 "Le Journal de Paris (1777-1827)","Presse ancienne","Français","N-gramme offline",69
 "Le Moniteur universel (1789-1901)","Presse ancienne","Français","N-gramme offline",70
 "Le Temps (1861-1942) ","Presse ancienne","Français","N-gramme offline",71
+"Le Petit Journal (1863-1942)","Presse ancienne","Français","N-gramme offline",72
+"Le Petit Parisien (1876-1944)","Presse ancienne","Français","N-gramme offline",73
+"Le Journal Officiel (1869-1952)","Presse ancienne","Français","N-gramme offline",74
+"Le Journal des Débats (1805-1944)","Presse ancienne","Français","N-gramme offline",75
+"La Presse (1836-1930)","Presse ancienne","Français","N-gramme offline",76
 "Le Monde","Presse contemporaine","Français","N-gramme offline",30
 "Le Figaro","Presse contemporaine","Français","Article online",31
 "Presse française – MediaCloud","Presse contemporaine","Français","Article online",50
@@ -35,6 +40,8 @@
 "Theses.fr","Travaux de recherche","Français","Document online",33
 "Persée","Travaux de recherche","Français","Document online",34
 "MusixMatch – Français","Paroles de chansons","Français","Document online",45
+"Opensubtitles / Films en français","Sous-titres de films","Français","N-gramme offline",77
+"Opensubtitles / Films en anglais","Sous-titres de films","Français","N-gramme offline",78
 "Presse allemande – Deutsche digitale bibliothek","Presse ancienne","Allemand","Document online",43
 "Presse allemande – Europeana","Presse ancienne","Allemand","Document online",6
 "Presse austro-hongroise – ANNO","Presse ancienne","Allemand","Document online",29

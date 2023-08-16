@@ -4434,7 +4434,7 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Livres / Ngram Viewer - Google Books" = 5, "Google Trends / France"=44),selected = 5)
       }
       if(input$language == 1 & input$bibli==9){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Opensubtitles / Films en français"=77, "Opensubtitles / Films en anglais"=78),selected = 77)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Opensubtitles / Films en français"=77, "Opensubtitles / Films en anglais"=78),selected = 78)
       }
       else if(input$language == 2){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse allemande / Deutsche digitale bibliothek" = 43,"Presse allemande / Europeana" = 6, "Presse austro-hongroise / ANNO"=29, "Presse suisse-allemande / Bibliothèque nationale suisse"=16 ,"Presse germanophone / MediaCloud"=52, "Livres / Ngram Viewer Allemand" = 9,"MusixMatch / Allemand"=47,"Google Trends / Allemagne"=62,"Google Trends / Autriche"=63),selected = 43)
