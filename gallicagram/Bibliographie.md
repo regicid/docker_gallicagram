@@ -1,76 +1,88 @@
 # Bibliographie
 
 ## Articles décrivant Gallicagram
-- Benoît de Courson, Benjamin Azoulay, Clara de Courson, Laurent Vanni et Étienne Brunet, « Gallicagram : les archives de presse sous les rotatives de la statistique textuelle », _Corpus_, 2023, https://doi.org/10.4000/corpus.7944
-- Benjamin Azoulay et Benoît de Courson, « Gallicagram, un outil de lexicométrie pour la recherche », 2021, https://doi.org/10.31235/osf.io/84bf3
-- « Actualités - Gallicagram : un outil de lexicométrie pour la recherche », novembre 2021, https://odhn.ens.psl.eu/newsroom/gallicagram-un-outil-de-lexicometrie-pour-la-recherche
-- « Utiliser les API de Gallica : L'exemple de Gallicagram », https://api.bnf.fr/fr/gallicagram-un-outil-de-lexicographie
-- Anne Bugner, « Présentation critique d’un outil numérique à destination de la recherche en SHS : Gallicagram », Mémoire de master, 2022, Ecole nationale des chartes - PSL
+
+* Benoît de Courson, Benjamin Azoulay, Clara de Courson, Laurent Vanni et Étienne Brunet, « Gallicagram : les archives de presse sous les rotatives de la statistique textuelle », Corpus, 2023, <https://doi.org/10.4000/corpus.7944>
+* Benjamin Azoulay et Benoît de Courson, « Gallicagram, un outil de lexicométrie pour la recherche », 2021, <https://doi.org/10.31235/osf.io/84bf3>
+* Benjamin Azoulay, Benoît de Courson et Will Gleason, « Compter les mots pour remonter le temps : Gallicagram et Gallicagrapher, deux outils d’exploration des archives numérisées de la BnF », Culture et Recherche, n°144, printemps-été 2023, p. 82, <https://u-picardie.hal.science/public/Culture_et_Recherche_144_La_science_ouverte.pdf>
+* « Actualités - Gallicagram : un outil de lexicométrie pour la recherche », novembre 2021, <https://odhn.ens.psl.eu/newsroom/gallicagram-un-outil-de-lexicometrie-pour-la-recherche>
+* « Utiliser les API de Gallica : L’exemple de Gallicagram », <https://api.bnf.fr/fr/gallicagram-un-outil-de-lexicographie>
+* Anne Bugner, « Présentation critique d’un outil numérique à destination de la recherche en SHS : Gallicagram », Mémoire de master, 2022, Ecole nationale des chartes - PSL
 
 
 ## Travaux utilisant Gallicagram
-- Olivier Ritz, « Gallicagram: un outil d’exploration pour l’histoire littéraire de la Révolution », Littérature et Révolution, 7 novembre 2022, https://litrev.hypotheses.org/2449
-- Alexandre Grit, « Gallicagram : un outil pour comprendre les enjeux d’opinion à propos de la soutenabilité budgétaire ? », Mémoire de master, Ecole normale supérieure Paris-Saclay, 2022, https://hal.archives-ouvertes.fr/hal-03845936
-- Benjamin Azoulay, _Abel Bonnard, Plume de la Collaboration_, Perrin, Paris, 2023, 384p., https://www.lisez.com/livre-grand-format/abel-bonnard/9782262095376
-- Elise Meyer, _La mémoire de la bataille de Valmy, de 1792 à nos jours_, thèse de doctorat dirigée par Philippe Buton, Université de Reims Champagne-Ardenne, 2022, https://www.theses.fr/s147190
-- François Jacquesson, « L'auto et le vélo », Caramel, Sciences du langage et monde contemporain, 7 décembre 2022, https://caramel.hypotheses.org/24021
-- François Jacquesson, « Le bel aujourd’hui », Caramel, Sciences du langage et monde contemporain, 30 décembre 2022, https://caramel.hypotheses.org/25103
-- Madeleine Leroy. « „Bäder bauen heißt Spitäler sparen“. Piscines et bains-douches publics de « Vienne la rouge » (1919-1934) comme éléments d’une politique urbaine d’hygiène sociale », 2021, https://dumas.ccsd.cnrs.fr/dumas-03416702
-- Erwan Le Gall, « A propos de l’antimilitarisme des Sârs et de la rougeole politique (1913) », Ar Brezel, 5 janvier 2022, https://arbrezel.hypotheses.org/4804
-- Erwan Le Gall, « Février 1918 : l’estuaire de la Loire au bord de la Révolution ? », Ar Brezel, 2 février 2022, https://arbrezel.hypotheses.org/4963
-- Erwan Le Gall, « La Grande Guerre comme rupture ? A propos de César Chabrun », Ar Brezel, 18 mai 2022, https://arbrezel.hypotheses.org/6355
-- Erwan Le Gall, « À propos de la peur du maquis », Ar Brezel, 12 février 2023, https://arbrezel.hypotheses.org/8879
-- Olivier Jacquot, «Le « novohispanisme », champ impensé des sciences sociales», Amoxcalli, 26 mai 2022, https://amoxcalli.hypotheses.org/42495
-- Feargal McKay, « Mythologies: Alphonse Steinès and the Invention of the Pyrénées », Podium Cafe, 20 mars 2022, https://www.podiumcafe.com/book-corner/2022/3/20/22925846/alphonse-steines-tourmalet-aubisque-tour-de-france
-- Jana Altmanova, Emmanuel Cartier, Jimmy Luzzi, Sarah Pinto et Sergio Piscopo, « Innovations lexicales dans le domaine de l’environnement et de la biodiversité : le cas de bio en français et en italien », Neologica, n° 16, 2022, Néologie et environnement, p. 85-110, https://dx.doi.org/10.48611/isbn.978-2-406-13219-6.p.0085
-- K. Bender, « A voyage to Cythera (3): among publishers and their fake imprints », 23 octobre 2022, https://kbender.blogspot.com/2022/10/111-voyage-to-cythera-3-among.html?view=classic
-- Benoît Roux, « FAIR Way : approches éthique et épistémologique », Eveille, 16 mai 2022, https://eveille.hypotheses.org/2565
-- Noé Leroy, « Étude sémantico-historique du terme seruus entre le 9e et le 13e siècle : essai de diplomatique numérique », Université catholique de Louvain, 2022, https://dial.uclouvain.be/memoire/ucl/en/object/thesis%3A37571
-- Franck Antoni, « De ces exemples tout à fait banaux… »,25 novembre 2022, https://franckantoni.com/pluriel-banals-ou-banaux/
-- Alban Lannéhoa, « Une histoire de la frégate », 28 mars 2023, https://tribord-amure.fr/2023/03/28/une-histoire-de-la-fregate/?fbclid=IwAR05B8cwGaDb7bsXB9-n6zAlBLYjsvPj3dNrkH27Dm3puJKLfIU02967oHg
-- Edmée Garcia-Mariller, « Dire son "Mood" : une nouvelle forme de la narration de soi. Étude linguistique et sémiologique de la sous-culture du "Mood" », Mémoire de Master, 2022, SU CELSA - Sorbonne Université, https://dumas.ccsd.cnrs.fr/dumas-04033748v1
-- Gaëtan Bonnot, « Des traces aux échos d'une révolte : études sur la Jacquerie de 1358 », Thèse de doctorat, 2022, Université Paris I - Panthéon Sorbonne, Ecole doctorale d'histoire, LAMOP - Laboratoire de Médiévistique Occidentale de Paris, https://hal.science/tel-04043231v1
-- Arnaud Laborderie, Florence Tfibel, « Ouvrir les données de la Bibliothèque nationale de France pour la recherche », 2023, https://hal-bnf.archives-ouvertes.fr/hal-04074665
+
+* Olivier Ritz, « Gallicagram: un outil d’exploration pour l’histoire littéraire de la Révolution », Littérature et Révolution, 7 novembre 2022, <https://litrev.hypotheses.org/2449>
+* Alexandre Grit, « Gallicagram : un outil pour comprendre les enjeux d’opinion à propos de la soutenabilité budgétaire ? », Mémoire de master, Ecole normale supérieure Paris-Saclay, 2022, <https://hal.archives-ouvertes.fr/hal-03845936>
+* Benjamin Azoulay, Abel Bonnard, Plume de la Collaboration, Perrin, Paris, 2023, 384p., <https://www.lisez.com/livre-grand-format/abel-bonnard/9782262095376>
+* Elise Meyer, La mémoire de la bataille de Valmy, de 1792 à nos jours, thèse de doctorat dirigée par Philippe Buton, Université de Reims Champagne-Ardenne, 2022, <https://www.theses.fr/s147190>
+* Pearl Pandya, Armin Pournaki, Jean-Philippe Cointet, "What’s the news on Muslims in India?", juillet 2023, <https://pearlpandya.com/public/np_poster_web.pdf>
+* Nicolas Perreaux, « L’avenir d’un féodalisme incertain ? Ruptures, paradigmes scientifiques et enjeux théoriques », L'atelier du Centre de Recherches Historiques, 2023, n°27, <https://doi.org/10.4000/acrh.28121>
+* François Jacquesson, « L’auto et le vélo », Caramel, Sciences du langage et monde contemporain, 7 décembre 2022, <https://caramel.hypotheses.org/24021>
+* François Jacquesson, « Le bel aujourd’hui », Caramel, Sciences du langage et monde contemporain, 30 décembre 2022, <https://caramel.hypotheses.org/25103>
+* François Jacquesson, « Ciels ! », Caramel, Sciences du langage et monde contemporain, 13 juin 2023, <https://caramel.hypotheses.org/31634>
+* François Jacquesson, « Connaissez-vous le code ? », Caramel, Sciences du langage et monde contemporain, 18 juin 2023, <https://caramel.hypotheses.org/31984>
+* François Jacquesson, « Euthanasie », Caramel, Sciences du langage et monde contemporain, 4 juillet 2023, <https://caramel.hypotheses.org/32701>
+* François Jacquesson, « Place de l’Utopie, allez tout droit ! », Caramel, Sciences du langage et monde contemporain, 15 juillet 2023, <https://caramel.hypotheses.org/33066>
+* François Jacquesson, « L’espion pris dans la guerre », Caramel, Sciences du langage et monde contemporain, 10 août 2023, <https://caramel.hypotheses.org/34168>
+* Madeleine Leroy. « „Bäder bauen heißt Spitäler sparen“. Piscines et bains-douches publics de « Vienne la rouge » (1919-1934) comme éléments d’une politique urbaine d’hygiène sociale », 2021, <https://dumas.ccsd.cnrs.fr/dumas-03416702>
+* Erwan Le Gall, « A propos de l’antimilitarisme des Sârs et de la rougeole politique (1913) », Ar Brezel, 5 janvier 2022, <https://arbrezel.hypotheses.org/4804>
+* Erwan Le Gall, « Février 1918 : l’estuaire de la Loire au bord de la Révolution ? », Ar Brezel, 2 février 2022, <https://arbrezel.hypotheses.org/4963>
+* Erwan Le Gall, « La Grande Guerre comme rupture ? A propos de César Chabrun », Ar Brezel, 18 mai 2022, <https://arbrezel.hypotheses.org/6355>
+* Erwan Le Gall, « À propos de la peur du maquis », Ar Brezel, 12 février 2023, <https://arbrezel.hypotheses.org/8879>
+* Olivier Jacquot, «Le « novohispanisme », champ impensé des sciences sociales», Amoxcalli, 26 mai 2022, <https://amoxcalli.hypotheses.org/42495>
+* Feargal McKay, « Mythologies: Alphonse Steinès and the Invention of the Pyrénées », Podium Cafe, 20 mars 2022, <https://www.podiumcafe.com/book-corner/2022/3/20/22925846/alphonse-steines-tourmalet-aubisque-tour-de-france>
+* Jana Altmanova, Emmanuel Cartier, Jimmy Luzzi, Sarah Pinto et Sergio Piscopo, « Innovations lexicales dans le domaine de l’environnement et de la biodiversité : le cas de bio en français et en italien », Neologica, n° 16, 2022, Néologie et environnement, p. 85-110, <https://dx.doi.org/10.48611/isbn.978-2-406-13219-6.p.0085>
+* K. Bender, « A voyage to Cythera (3): among publishers and their fake imprints », 23 octobre 2022, <https://kbender.blogspot.com/2022/10/111-voyage-to-cythera-3-among.html?view=classic>
+* Benoît Roux, « FAIR Way : approches éthique et épistémologique », Eveille, 16 mai 2022, <https://eveille.hypotheses.org/2565>
+* Noé Leroy, « Étude sémantico-historique du terme seruus entre le 9e et le 13e siècle : essai de diplomatique numérique », Université catholique de Louvain, 2022, <https://dial.uclouvain.be/memoire/ucl/en/object/thesis%3A37571>
+* Franck Antoni, « De ces exemples tout à fait banaux… », 25 novembre 2022, <https://franckantoni.com/pluriel-banals-ou-banaux/>
+* Alban Lannéhoa, « Une histoire de la frégate », 28 mars 2023, <https://tribord-amure.fr/2023/03/28/une-histoire-de-la-fregate/?fbclid=IwAR05B8cwGaDb7bsXB9-n6zAlBLYjsvPj3dNrkH27Dm3puJKLfIU02967oHg>
+* Edmée Garcia-Mariller, « Dire son “Mood” : une nouvelle forme de la narration de soi. Étude linguistique et sémiologique de la sous-culture du “Mood” », Mémoire de Master, 2022, SU CELSA - Sorbonne Université, <https://dumas.ccsd.cnrs.fr/dumas-04033748v1>
+* Gaëtan Bonnot, « Des traces aux échos d’une révolte : études sur la Jacquerie de 1358 », Thèse de doctorat, 2022, Université Paris I - Panthéon Sorbonne, Ecole doctorale d’histoire, LAMOP - Laboratoire de Médiévistique Occidentale de Paris, <https://hal.science/tel-04043231v1>
+* Arnaud Laborderie, Florence Tfibel, « Ouvrir les données de la Bibliothèque nationale de France pour la recherche », 2023, <https://hal-bnf.archives-ouvertes.fr/hal-04074665>
 
 
 ## Conférences de présentation de Gallicagram
-- Séminaire Digital Humanities / Artificial Intelligence (DHAI) - Ecole normale supérieure, 11 mai 2021 : http://savoirs.ens.fr/expose.php?id=3989
-- Séminaire Numapresse, 14 février 2022 : http://www.numapresse.org/2022/01/24/le-seminaire-numapresse-reprend-rendez-vous-le-14-fevrier-a-14h/
-- Formation à Gallicagram au DataLab - Bibliothèque nationale de France, 16 mai 2022
-- Congrès Média 19, 30 mai 2022 : https://bnf.hypotheses.org/12916
-- Séminaire Quantitativisme réflexif, 28 octobre 2022 : https://www.idhes.cnrs.fr/seminaire-quantitativisme-reflexif-2022-23/
-- Séminaire Méthodologie de la recherche, Master Lettres - Sorbonne Université, 21 octobre 2022
-- Séminaire du laboratoire Econophysix - Ecole Polytechnique, 27 octobre 2022
-- Séminaire Evolution, Cognition and Culture Conference - ENS Ulm, 28 novembre 2022
-- Présentation de l'outil de lexicométrie Gallicagram, ADEMEC - Ecole des Chartes, 23 janvier 2023 : https://www.eventbrite.fr/e/billets-atelier-n4-presentation-de-loutil-de-lexicometrie-gallicagram-505923700407
-- Séminaire MédiaLab - SciencesPo, 28 février 2023
-- Séminaire IMAREV, Gallicagram : impressions de la Révolution - Université Paris Cité, 24 mars 2023 : https://imarev.hypotheses.org/366
-- Séminaire ISOCO Indices d’opinion sociaux économiques - Université Paris Nanterre, 6 juillet
+
+* Séminaire Digital Humanities / Artificial Intelligence (DHAI) - Ecole normale supérieure, 11 mai 2021 : <http://savoirs.ens.fr/expose.php?id=3989>
+* Séminaire Numapresse, 14 février 2022 : <http://www.numapresse.org/2022/01/24/le-seminaire-numapresse-reprend-rendez-vous-le-14-fevrier-a-14h/>
+* Formation à Gallicagram au DataLab - Bibliothèque nationale de France, 16 mai 2022
+* Congrès Média 19, 30 mai 2022 : <https://bnf.hypotheses.org/12916>
+* Séminaire Quantitativisme réflexif, 28 octobre 2022 : <https://www.idhes.cnrs.fr/seminaire-quantitativisme-reflexif-2022-23/>
+* Séminaire Méthodologie de la recherche, Master Lettres - Sorbonne Université, 21 octobre 2022
+* Séminaire du laboratoire Econophysix - Ecole Polytechnique, 27 octobre 2022
+* Séminaire Evolution, Cognition and Culture Conference - ENS Ulm, 28 novembre 2022
+* Présentation de l’outil de lexicométrie Gallicagram, ADEMEC - Ecole des Chartes, 23 janvier 2023 : <https://www.eventbrite.fr/e/billets-atelier-n4-presentation-de-loutil-de-lexicometrie-gallicagram-505923700407>
+* Séminaire MédiaLab - SciencesPo, 28 février 2023
+* Séminaire IMAREV, Gallicagram : impressions de la Révolution - Université Paris Cité, 24 mars 2023 : <https://imarev.hypotheses.org/366>
+* Séminaire ISOCO Indices d’opinion sociaux économiques - Université Paris Nanterre, 6 juillet 2023 : <https://calenda.org/1052826>
 
 
 ## Projets fondés sur Gallicagram
-- Pyllicagram (API Python) par Benoît de Courson : https://github.com/regicid/pyllicagram
-- Ruby Gem Gallicagram par Nicolas Le Roux : https://github.com/nicolrx/gallicagram
+
+* Pyllicagram (API Python) par Benoît de Courson : <https://github.com/regicid/pyllicagram>
+* Ruby Gem Gallicagram par Nicolas Le Roux : <https://github.com/nicolrx/gallicagram>
 
 
 ## Projets utilisant Gallicagram
-- Gallibase par Etienne Brunet et Laurent Vanni : http://ancilla.unice.fr/pages/bases/
-- Gallica Grapher par Will Gleason : https://d32d5ops9ui5td.cloudfront.net/
-- La Langue Française par Nicolas Le Roux : https://www.lalanguefrancaise.com/dictionnaire
-- Aide à la recherche sur Gallica par Thomas Fressin (à venir)
-- CNRTL, Lexicographie : https://www.cnrtl.fr/definition/ (à venir)
+* Gallibase par Etienne Brunet et Laurent Vanni : <http://ancilla.unice.fr/pages/bases/>
+* Gallica Grapher par Will Gleason : <https://d32d5ops9ui5td.cloudfront.net/>
+* La Langue Française par Nicolas Le Roux : <https://www.lalanguefrancaise.com/dictionnaire>
+* Aide à la recherche sur Gallica par Thomas Fressin (à venir)
+* CNRTL, Lexicographie : <https://www.cnrtl.fr/definition/> (à venir)
 
 
 ## Sites référençant Gallicagram comme outil
-- https://www.wikidata.org/wiki/Q115121837
-- http://www.bis-sorbonne.fr/sid/spip.php?article898
-- https://marketplace.sshopencloud.eu/tool-or-service/bSv19B
-- https://bu.univ-lyon2.fr/fle-sc-du-langage → ressources complémentaires
-- https://numrha.hypotheses.org/2840
-- https://numrha.hypotheses.org/4886
-- https://www.fabula.org/actualites/111893/gallicagram.html
-- https://lasciem.hypotheses.org/
-- https://current.ndl.go.jp/en/e2533_en
-- http://blog.ac-versailles.fr/starter/index.php/post/24/02/2022/GALLICAGRAM
-- https://www.bases-netsources.com/component/flexicontent/category/conseil-semaine
 
+* <https://www.wikidata.org/wiki/Q115121837>
+* <http://www.bis-sorbonne.fr/sid/spip.php?article898>
+* <https://marketplace.sshopencloud.eu/tool-or-service/bSv19B>
+* <https://bu.univ-lyon2.fr/fle-sc-du-langage> → ressources complémentaires
+* <https://numrha.hypotheses.org/2840>
+* <https://numrha.hypotheses.org/4886>
+* <https://www.fabula.org/actualites/111893/gallicagram.html>
+* <https://lasciem.hypotheses.org/>
+* <https://current.ndl.go.jp/en/e2533_en>
+* <http://blog.ac-versailles.fr/starter/index.php/post/24/02/2022/GALLICAGRAM>
+* <https://www.bases-netsources.com/component/flexicontent/category/conseil-semaine>
