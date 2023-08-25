@@ -1525,7 +1525,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
             #base$date = as.character(base$date)
           } else{
           zz = base$mois < 10
-          base$mois[zz] = paste("0",base$mois[z],sep="")
+          base$mois[zz] = paste("0",base$mois[zz],sep="")
           base$date = paste(base$annee,base$mois,sep="/")
           base = base[c("n","date")]
           colnames(base)[1] = "base"}
