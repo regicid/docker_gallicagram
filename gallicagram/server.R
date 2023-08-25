@@ -1332,8 +1332,7 @@ jokerize<-function(input){
     if(nb>2){next}
   }
   
-  
-  
+ 
   con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
   
   if(pos=="apres"){
@@ -1515,6 +1514,14 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         if(nb>4){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
+      if(input$doc_type == 43 & input$search_mode == 3){
+        if(nb<=2){
+          ngram_file<-str_c("/mnt/persistent/",nb,"gram_ddb.db")
+          gram<-"gram"
+          base<-read.csv(str_c("ddb",nb,".csv"))
+        }
+      }
+      
       base<-as.data.frame(base)
 
       if(input$resolution=="Année"){
@@ -1533,7 +1540,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
 
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
       
-      if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
+      if(input$doc_type==2 | (input$doc_type==56 & agregator==2) | (input$doc_type==43 & input$search_mode == 3)){
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
         w = dbFetch(query)
       }
@@ -3092,7 +3099,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   }
   
   ####Zeitungsportal
-  if(doc_type == 43 & input$search_mode == 3){
+  if(doc_type == 43 & input$search_mode == 5){
     library(crul)
     library(glue)
     period = input$beginning:input$end
@@ -4483,7 +4490,7 @@ shinyServer(function(input, output,session){
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
     if(input$doc_type == 43){
-      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par ngramme" = 3),selected = 3)
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par ngramme" = 3, "Par API" = 4),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
     if(input$doc_type == 5 | input$doc_type == 9 | input$doc_type == 10 | input$doc_type == 12){
