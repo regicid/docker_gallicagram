@@ -1718,8 +1718,12 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&end_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&search_sort=relevance_desc")
       #z<-z[z$date<="2022/08/31",]
     }
+    if(input$doc_type==43 & input$resolution=="Année"){
+      z$url = str_c("https://www.deutsche-digitale-bibliothek.de/search/newspaper?query=%22",mot1,"%22&language=ger&fromDay=1&fromMonth=1","&fromYear=",z$date,"&toDay=31&toMonth=12&toYear=",z$date)
+    }
     
     if(input$doc_type %in% 66:76){
+      
       z$url<-str_c("https://gallica.bnf.fr")
     }
     if(input$doc_type %in% 77:78){
