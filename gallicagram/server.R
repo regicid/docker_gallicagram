@@ -1519,6 +1519,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_ddb.db")
           gram<-"gram"
           base<-read.csv(str_c("ddb",nb,".csv"))
+          base$date = paste(base$annee,base$mois,sep="/")
         }
       }
       
