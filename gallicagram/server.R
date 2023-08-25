@@ -1544,6 +1544,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       if(input$doc_type==2 | (input$doc_type==56 & agregator==2) | (input$doc_type==43 & input$search_mode == 3)){
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
         w = dbFetch(query)
+        print(w)
       }
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 |
           input$doc_type %in% 66:76 | input$doc_type %in% 77:78 |
