@@ -1514,7 +1514,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         if(nb>4){z=data.frame(date=from:to, count=0, base=0,ratio=0)
         next}
       }
-      if(input$doc_type == 43 & input$search_mode == 3){
+      if(input$doc_type == 43){
         if(nb<=2){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_ddb.db")
           gram<-"gram"
@@ -1524,6 +1524,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
             colnames(base)[1] = "date"
             #base$date = as.character(base$date)
           } else{
+          z = base$mois < 10
+          base$mois[z] = paste("0",base$mois[z],sep="")
           base$date = paste(base$annee,base$mois,sep="/")
           base = base[c("n","date")]
           colnames(base)[1] = "base"}
