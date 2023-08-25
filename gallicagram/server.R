@@ -1569,11 +1569,10 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w = group_by(w,annee) %>% summarise(n = sum(as.integer(n)))
         w$annee = as.integer(w$annee)
       }
-      if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 |
-          input$doc_type %in% 66:76) | input$doc_type==43 & input$resolution=="Mois"){
+      if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 | input$doc_type==43| input$doc_type %in% 66:76)  & input$resolution=="Mois"){
         # q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee,mois FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee,mois')
-        if(input$doc_type==30){
+        if(input$doc_type==30 | input$doc_type %in% 66:76){
           q=str_c('SELECT * FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
           
         }
