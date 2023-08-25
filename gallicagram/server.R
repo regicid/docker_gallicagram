@@ -1387,7 +1387,7 @@ jokerize<-function(input){
 }
 
 ngramize<-function(input,nouvrequette,gallicagram,agregator){
-  
+  print("blaaa")
   show_spinner(spin_id="ngram")
   require("RSQLite")
   require("DBI")
@@ -3101,7 +3101,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   }
   
   ####Zeitungsportal
-  if(doc_type == 43 & input$search_mode == 5){
+  if(doc_type == 43 & input$search_mode == 4){
     library(crul)
     library(glue)
     period = input$beginning:input$end
@@ -4720,7 +4720,7 @@ shinyServer(function(input, output,session){
         input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | 
         input$doc_type == 21 | input$doc_type == 22 | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | 
         input$doc_type == 32 | input$doc_type == 33 | input$doc_type == 34 | input$doc_type == 35 | input$doc_type == 36 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | 
-        input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 44 | ((input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) |
+        input$doc_type == 42 | (input$doc_type == 43 & input$search_mode %in% c(1,4)) | input$doc_type == 44 | ((input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) |
         input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48  | input$doc_type == 49 |
         input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53  | input$doc_type == 54 |
         input$doc_type == 55 | (input$doc_type == 56 & input$search_mode==1)| input$doc_type == 57 | input$doc_type == 58 |
@@ -4741,6 +4741,7 @@ shinyServer(function(input, output,session){
       df=page_search(input$mot,input$beginning,input$end,input$resolution,tot_df,input$doc_type,input$search_mode,input$titres)
     }
     else if(input$search_mode==3){
+      print("here")
       agregator=0
       if(input$gallicloud==T){
         cloudplot=cloudify(input)
@@ -4758,6 +4759,12 @@ shinyServer(function(input, output,session){
             m<-str_c(m,"&",l[h])
           }}
         nouvrequette=m
+        df=ngramize(input,nouvrequette,gallicagram,agregator)
+      }
+      if(input$doc_type == 43 & input$search_mode==3){
+        gallicagram=0
+        nouvrequette=NA
+        agregator=0
         df=ngramize(input,nouvrequette,gallicagram,agregator)
       }
       else if(input$joker==F & input$doc_type!=0 & input$doc_type!=56){df=ngramize(input,nouvrequette,gallicagram,agregator)}
