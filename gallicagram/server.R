@@ -1522,7 +1522,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           if(input$resolution == "Année"){
             base = base %>% group_by(annee) %>% summarise(base=sum(n))
             colnames(base)[1] = "date"
-            base$date = as.character(base$date)
+            #base$date = as.character(base$date)
           } else{
           base$date = paste(base$annee,base$mois,sep="/")
           base = base[c("n","date")]
