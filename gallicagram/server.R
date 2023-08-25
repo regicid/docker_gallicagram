@@ -1520,6 +1520,9 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           gram<-"gram"
           base<-read.csv(str_c("ddb",nb,".csv"))
           base$date = paste(base$annee,base$mois,sep="/")
+          base = base[c("n","date")]
+          colnames(base)[1] = "base"
+          
         }
       }
       
@@ -1541,7 +1544,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
 
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
       
-      if(input$doc_type==2 | (input$doc_type==56 & agregator==2) | (input$doc_type==43 & input$search_mode == 3)){
+      if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
         w = dbFetch(query)
         print(w)
@@ -1567,7 +1570,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         w$annee = as.integer(w$annee)
       }
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 |
-          input$doc_type %in% 66:76) & input$resolution=="Mois"){
+          input$doc_type %in% 66:76) | input$doc_type==43 & input$resolution=="Mois"){
         # q=str_c('SELECT * FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee,mois FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee,mois')
         if(input$doc_type==30){
