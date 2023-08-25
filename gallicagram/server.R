@@ -1519,10 +1519,14 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_ddb.db")
           gram<-"gram"
           base<-read.csv(str_c("ddb",nb,".csv"))
+          if(input$resolution == "Année"){
+            base = base %>% group_by(annee) %>% summarise(base=sum(n))
+            colnames(base)[1] = "date"
+          } else{
           base$date = paste(base$annee,base$mois,sep="/")
           base = base[c("n","date")]
-          colnames(base)[1] = "base"
-          
+          colnames(base)[1] = "base"}
+          print(base)
         }
       }
       
