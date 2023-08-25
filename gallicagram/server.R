@@ -1705,20 +1705,20 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"/01%22%20and%20gallicapublication_date%3C=%22",z$date,"/31%22)&suggest=10&keywords=",mot1,or_end)
     }
     if((input$doc_type==30 | gallicagram==2) & input$resolution=="Année"){
-      #z$url<-str_c("https://www.google.fr/search?q=inurl%3Alemonde.fr+%22",mot1,"%22&source=lnt&tbs=cdr%3A1%2Ccd_min%3A01%2F01%2F",z$date,"%2Ccd_max%3A12%2F31%2F",z$date,"&tbm=")
       z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F01%2F",z$date,"&end_at=31%2F12%2F",z$date,"&search_sort=relevance_desc")
     }
     if((input$doc_type==30 | gallicagram==2) & input$resolution=="Mois"){
-      #z$url<-str_c("https://www.google.fr/search?q=inurl%3Alemonde.fr+%22",mot1,"%22&source=lnt&tbs=cdr%3A1%2Ccd_min%3A",str_extract(z$date,"..$"),"%2F01%2F",str_extract(z$date,"...."),"%2Ccd_max%3A",str_extract(z$date,"..$"),"%2F31%2F",str_extract(z$date,"...."),"&tbm=")
       z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=01%2F",str_extract(z$date,"..$"),"%2F",str_extract(z$date,"...."),"&end_at=31%2F",str_extract(z$date,"..$"),"%2F",str_extract(z$date,"...."),"&search_sort=relevance_desc")
       #z<-z[z$date<="2022/08",]
     }
     if(input$doc_type==30 & input$resolution=="Semaine"){
-      #z$url<-str_c("https://www.google.fr/search?q=inurl%3Alemonde.fr+%22",mot1,"%22&source=lnt&tbs=cdr%3A1%2Ccd_min%3A",substr(z$date,6,7),"%2F",substr(z$date,9,10),"%2F",str_extract(z$date,"...."),"%2Ccd_max%3A",substr(z$date,6,7),"%2F",substr(z$date,9,10),"%2F",str_extract(z$date,"...."),"&tbm=")
       z$url<-str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",mot1,"%22&start_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&end_at=",substr(z$date,9,10),"%2F",substr(z$date,6,7),"%2F",str_extract(z$date,"...."),"&search_sort=relevance_desc")
       #z<-z[z$date<="2022/08/31",]
     }
     if(input$doc_type==43 & input$resolution=="Année"){
+      z$url = str_c("https://www.deutsche-digitale-bibliothek.de/search/newspaper?query=%22",mot1,"%22&language=ger&fromDay=1&fromMonth=1","&fromYear=",z$date,"&toDay=31&toMonth=12&toYear=",z$date)
+    }
+    if(input$doc_type==43 & input$resolution=="Mois"){
       z$url = str_c("https://www.deutsche-digitale-bibliothek.de/search/newspaper?query=%22",mot1,"%22&language=ger&fromDay=1&fromMonth=1","&fromYear=",z$date,"&toDay=31&toMonth=12&toYear=",z$date)
     }
     
@@ -1749,6 +1749,10 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     if(input$doc_type==30){z$corpus="Presse"
     z$langue="Français"
     z$bibli="Le Monde"
+    z$search_mode<-"N-gramme"}
+    if(input$doc_type==43){z$corpus="Presse"
+    z$langue="Allemand"
+    z$bibli="Deutsche Digitale Bibliothek"
     z$search_mode<-"N-gramme"}
     if((input$doc_type==0 & gallicagram==2)){z$corpus="Presse"
     z$langue="Français"
