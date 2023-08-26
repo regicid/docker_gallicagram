@@ -4036,6 +4036,7 @@ willisation <- function(input,will){
     
     will_url=URLencode(will_url)
     wurl<<-will_url
+    print(will_url)
     show_spinner(spin_id = "contexte")
     a<-tryCatch({fromJSON(will_url)%>%data.frame()},error=function(cond){return(NULL)})
     if(is.null(a)==F){
