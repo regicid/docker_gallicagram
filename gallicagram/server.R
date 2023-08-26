@@ -1529,7 +1529,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           base$date = paste(base$annee,base$mois,sep="/")
           base = base[c("n","date")]
           colnames(base)[1] = "base"}
-          print(base)
         }
       }
       
@@ -3137,7 +3136,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           month2=1
         }
         search = paste(str_c("plainpagefulltext:",str_split(mot,"\\+")[[1]]),collapse = " OR ")
-        url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=paper_title:%22Deutsche%20allgemeine%20Zeitung%22%20AND%20{search}%20AND%20publication_date:%5b{year}-{month}-01T00:00:00.000Z%20TO%20{year2}-{month2}-01T00:00:00.000Z%5d&rows=1000000000&fl="))
+        url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q={search}%20AND%20publication_date:%5b{year}-{month}-01T00:00:00.000Z%20TO%20{year2}-{month2}-01T00:00:00.000Z%5d&rows=1000000000&fl="))
         for(mot1 in str_split(mot,"\\+")[[1]]){
           url = glue("{url}termfreq(plainpagefulltext,{mot1}),")}
         url = URLencode(url)
@@ -4185,7 +4184,7 @@ shinyServer(function(input, output,session){
   wurl<<-""
   observe({
     data$e <- event_data("plotly_click")
-    if(is.null(data$e)==F& isolate(input$contextualisation)==T&(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56))){
+    if(is.null(data$e)==F& isolate(input$contextualisation)==T&(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56) | isolate(input$doc_type %in% 66:76))){
       will<<-as.character(unlist(data$e$customdata))
       b=willisation(input,will)
       output$gpt=renderUI(HTML(gptiseur(input)))
@@ -4468,7 +4467,8 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse néerlandaise / Europeana" = 7,"Presse flamande / KBR"=14, "Presse néerlandophone / MediaCloud"=53, "MusixMatch / Néerlandais"=48,"Google Trends / Pays-Bas"=64),selected = 7)
       }else if(input$language == 4){
         #updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse britannique / BNA" = 8,"Presse australienne / Trove"=35,"Presse américaine / newspapers.com"=37,"Presse canadienne / newspapers.com"=38,"Presse britannique / newspapers.com"=39,"Presse australienne / newspapers.com"=40,"Presse américaine / Library of Congress"=42, "Livres / Ngram Viewer Anglais" = 10),selected = 8)
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("The New York Times"=65,"Presse britannique / BNA" = 8,"Presse australienne / Trove"=35,"Presse américaine / Library of Congress"=42, "Presse anglophone / MediaCloud"=51, "Livres / Ngram Viewer Anglais" = 10,"MusixMatch / Anglais"=46,"Google Trends / Grande-Bretagne"=58,"Google Trends / Etats-Unis"=59,"Google Trends / Australie"=60),selected = 65)
+        ## readd "The New York Times"=65, when it works again
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse britannique / BNA" = 8,"Presse australienne / Trove"=35,"Presse américaine / Library of Congress"=42, "Presse anglophone / MediaCloud"=51, "Livres / Ngram Viewer Anglais" = 10,"MusixMatch / Anglais"=46,"Google Trends / Grande-Bretagne"=58,"Google Trends / Etats-Unis"=59,"Google Trends / Australie"=60),selected = 65)
       }else if(input$language == 5){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse espagnole / BNE"=11, "Presse hispanophone / MediaCloud"=54, "Livres / Ngram Viewer Espagnol"=12,"MusixMatch / Espagnol"=49,"Google Trends / Espagne"=61),selected = 11)
       }
