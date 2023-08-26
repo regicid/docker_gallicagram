@@ -148,7 +148,7 @@ Plot <- function(data,input){
       }
       plot=ggplotly(bb)
     }
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   if(input$visualiseur==7){
@@ -192,7 +192,7 @@ Plot <- function(data,input){
     plot=ggplotly(plot,tooltip = "text")%>%
       layout(xaxis = list(autorange = TRUE),
              yaxis = list(autorange = TRUE))
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -308,7 +308,7 @@ Plot <- function(data,input){
                 xaxis=list(range=c(tableau$date[1],tableau$date[length(tableau$date)]),title=""),
                 yaxis=list(type = "log",showticklabels = FALSE,showgrid = FALSE,title=""))
     
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -324,7 +324,7 @@ Plot <- function(data,input){
     if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$count,y=reorder(total$mot,total$count),type="bar",customdata=total$url)}
     plot<-layout(plot,xaxis=list(title="Nombre d'occurrences dans le corpus"))
     plot = layout(plot,showlegend=F)
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -369,7 +369,7 @@ Plot <- function(data,input){
         legend.position="none"
       )
     plot=ggplotly(plot)
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -381,7 +381,7 @@ Plot <- function(data,input){
     if(length(unique(tableau$mot))>9){plot<-plot_ly(x=~total$date,y=reorder(total$mot, total$count, sum),type = 'scatter', mode = 'markers',customdata=total$url, color=~total$mot,size = ~total$ratio,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.3),text=~total$hovers,hoverinfo="text")}
     plot<-layout(plot,xaxis=list(title=""))
     plot = layout(plot,showlegend=F)
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   if(input$visualiseur==4 & isolate(input$resolution=="Mois") & input$saisons==T){
@@ -396,7 +396,7 @@ Plot <- function(data,input){
     plot<-plot_ly(x=~tableau$date,y=reorder(tableau$mot, tableau$loess, sum),type = 'scatter', mode = 'markers', color=~tableau$mot,colors=customPalette,size = ~tableau$loess,sizes = c(0, 50),marker = list( sizemode = "diameter", opacity = 0.6))
     plot<-layout(plot,xaxis=list(title="",tickformat="%b"))
     plot = layout(plot,showlegend=F)
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -410,7 +410,7 @@ Plot <- function(data,input){
         theme(plot.background = element_rect(fill = 'white', colour = 'white'),panel.margin.y = unit(0, "lines"),axis.line.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),strip.background = element_blank(), strip.text.x = element_blank(),axis.line.x = element_line(colour = "black"),legend.title= element_blank(), legend.box = "horizontal",legend.text = element_text(size=8),legend.justification="left", legend.margin=margin(0,0,0,0),legend.box.margin=margin(-10,-10,0,-10),legend.key.height = unit(.5, 'lines'))+guides(color=guide_legend(nrow=2, byrow=TRUE))
     }
     plot=ggplotly(plot,tooltip = c("text"))
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -451,7 +451,7 @@ Plot <- function(data,input){
     tableau$date=as.Date.character(str_c("2000-",tableau$date,"-01"))
     plot = plot_ly(data=tableau,x=~date,y=~loess,color=~mot,type='scatter',mode='spline',line = list(shape = "spline"),colors=customPalette,legendgroup=~mot)
     plot=layout(plot,xaxis = list(tickformat="%b"))
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -510,7 +510,7 @@ Plot <- function(data,input){
                     ticks = ''
                   )
                 ))
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -567,12 +567,12 @@ Plot <- function(data,input){
     plot= plot%>%add_lines()
     plot = plotly::subplot(plot,plot1,nrows = 2,legend=NULL,shareX = T)
     plot=plot %>%  layout(xaxis = list(autorange = TRUE),  yaxis = list(autorange = TRUE))
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   } else{
     plot=layout(plot)
     plot=plot %>%  layout(xaxis = list(autorange = TRUE),  yaxis = list(autorange = TRUE))
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -1529,7 +1529,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           base$date = paste(base$annee,base$mois,sep="/")
           base = base[c("n","date")]
           colnames(base)[1] = "base"}
-          
         }
       }
       
@@ -1585,7 +1584,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
-        if(input$doc_type==30){
+        if(input$doc_type==30 | input$doc_type %in% 66:76){
           w<-w[,-2]
         }
         colnames(w)<-c("n","annee","mois")
@@ -1723,10 +1722,11 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     if(input$doc_type==43 & input$resolution=="Mois"){
       z$url = str_c("https://www.deutsche-digitale-bibliothek.de/search/newspaper?query=%22",mot1,"%22&language=ger&fromDay=1&fromMonth=1","&fromYear=",z$date,"&toDay=31&toMonth=12&toYear=",z$date)
     }
-    
     if(input$doc_type %in% 66:76){
-      
-      z$url<-str_c("https://gallica.bnf.fr")
+      codes = c("cb34355551z","cb327877302","cb32747578p","cb327986698","cb34452336z","cb34431794k","cb32895690j","cb34419111x","cb34378481r","cb39294634r","cb34448033b")
+      names(codes) = as.character(66:76)
+      if(input$resolution=="Année"){z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"%22%20and%20gallicapublication_date%3C=%22",z$date,"%22%20and%20arkPress%20adj",codes[as.character(input$doc_type)],"_date)&suggest=10&keywords=",mot1,or_end)}
+      if(input$resolution=="Mois"){z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"/01%22%20and%20gallicapublication_date%3C=%22",z$date,"/31%22%20and%20arkPress%20adj",codes[as.character(input$doc_type)],"_date)&suggest=10&keywords=",mot1,or_end)}
     }
     if(input$doc_type %in% 77:78){
       z$url<-str_c("https://www.opensubtitles.org/")
@@ -3137,7 +3137,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           month2=1
         }
         search = paste(str_c("plainpagefulltext:",str_split(mot,"\\+")[[1]]),collapse = " OR ")
-        url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=paper_title:%22Deutsche%20allgemeine%20Zeitung%22%20AND%20{search}%20AND%20publication_date:%5b{year}-{month}-01T00:00:00.000Z%20TO%20{year2}-{month2}-01T00:00:00.000Z%5d&rows=1000000000&fl="))
+        url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q={search}%20AND%20publication_date:%5b{year}-{month}-01T00:00:00.000Z%20TO%20{year2}-{month2}-01T00:00:00.000Z%5d&rows=1000000000&fl="))
         for(mot1 in str_split(mot,"\\+")[[1]]){
           url = glue("{url}termfreq(plainpagefulltext,{mot1}),")}
         url = URLencode(url)
@@ -4021,16 +4021,25 @@ willisation <- function(input,will){
   for (i in pages) {
     
     if(isolate(input$doc_type==1)){
-      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
+      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=%22",word,"%22&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
     }
     if(isolate(input$doc_type==2)){
-      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
+      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=%22",word,"%22&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
     }
     if(isolate(input$doc_type)==56){
-      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
+      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=%22",word,"%22&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
+    }
+    if(isolate(input$doc_type) %in% 66:76){
+      codes = c("cb34355551z","cb327877302","cb32747578p","cb327986698","cb34452336z","cb34431794k","cb32895690j","cb34419111x","cb34378481r","cb39294634r","cb34448033b")
+      names(codes) = as.character(66:76)
+      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0&codes=",codes[as.character(input$doc_type)])
+      print(word)
+      print(fromm)
+      print(mois)
     }
     will_url=URLencode(will_url)
     wurl<<-will_url
+    print(will_url)
     show_spinner(spin_id = "contexte")
     a<-tryCatch({fromJSON(will_url)%>%data.frame()},error=function(cond){return(NULL)})
     if(is.null(a)==F){
@@ -4185,7 +4194,7 @@ shinyServer(function(input, output,session){
   wurl<<-""
   observe({
     data$e <- event_data("plotly_click")
-    if(is.null(data$e)==F& isolate(input$contextualisation)==T&(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56))){
+    if(is.null(data$e)==F& isolate(input$contextualisation)==T&(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56) | isolate(input$doc_type %in% 66:76))){
       will<<-as.character(unlist(data$e$customdata))
       b=willisation(input,will)
       output$gpt=renderUI(HTML(gptiseur(input)))
@@ -4975,7 +4984,7 @@ shinyServer(function(input, output,session){
     updateCheckboxInput(session,"correlation_test",value=FALSE)
     
     
-    if(isolate(input$contextualisation)==T & (isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56))){
+    if(isolate(input$contextualisation)==T & (isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56)| isolate(input$doc_type %in% 66:76))){
       will<<-""
       b=willisation(input,will)
       if(is.null(b)==F){
