@@ -1529,6 +1529,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           base$date = paste(base$annee,base$mois,sep="/")
           base = base[c("n","date")]
           colnames(base)[1] = "base"}
+          
         }
       }
       
@@ -3136,7 +3137,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           month2=1
         }
         search = paste(str_c("plainpagefulltext:",str_split(mot,"\\+")[[1]]),collapse = " OR ")
-        url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q={search}%20AND%20publication_date:%5b{year}-{month}-01T00:00:00.000Z%20TO%20{year2}-{month2}-01T00:00:00.000Z%5d&rows=1000000000&fl="))
+        url = URLencode(glue("https://api.deutsche-digitale-bibliothek.de/search/index/newspaper-issues/select?q=paper_title:%22Deutsche%20allgemeine%20Zeitung%22%20AND%20{search}%20AND%20publication_date:%5b{year}-{month}-01T00:00:00.000Z%20TO%20{year2}-{month2}-01T00:00:00.000Z%5d&rows=1000000000&fl="))
         for(mot1 in str_split(mot,"\\+")[[1]]){
           url = glue("{url}termfreq(plainpagefulltext,{mot1}),")}
         url = URLencode(url)
@@ -4028,8 +4029,6 @@ willisation <- function(input,will){
     if(isolate(input$doc_type)==56){
       will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
     }
-    
-    
     will_url=URLencode(will_url)
     wurl<<-will_url
     show_spinner(spin_id = "contexte")
@@ -4186,7 +4185,7 @@ shinyServer(function(input, output,session){
   wurl<<-""
   observe({
     data$e <- event_data("plotly_click")
-    if(is.null(data$e)==F& isolate(input$contextualisation)==T&(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56) | isolate(input$doc_type %in% 66:76))){
+    if(is.null(data$e)==F& isolate(input$contextualisation)==T&(isolate(input$doc_type==1) | isolate(input$doc_type==2) | isolate(input$doc_type==56))){
       will<<-as.character(unlist(data$e$customdata))
       b=willisation(input,will)
       output$gpt=renderUI(HTML(gptiseur(input)))
