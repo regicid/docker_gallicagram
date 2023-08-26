@@ -4032,8 +4032,10 @@ willisation <- function(input,will){
       codes = c("cb34355551z","cb327877302","cb32747578p","cb327986698","cb34452336z","cb34431794k","cb32895690j","cb34419111x","cb34378481r","cb39294634r","cb34448033b")
       names(codes) = as.character(66:76)
       will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0&codes=",codes[as.character(input$doc_type)])
+      print(word)
+      print(fromm)
+      print(mois)
     }
-    
     will_url=URLencode(will_url)
     wurl<<-will_url
     print(will_url)
