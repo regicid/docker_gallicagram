@@ -192,7 +192,7 @@ Plot <- function(data,input){
     plot=ggplotly(plot,tooltip = "text")%>%
       layout(xaxis = list(autorange = TRUE),
              yaxis = list(autorange = TRUE))
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type %in% 66:76)){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
@@ -1724,7 +1724,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     }
     
     if(input$doc_type %in% 66:76){
-      z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"/01%22%20and%20gallicapublication_date%3C=%22",z$date,"/31%22)&suggest=10&keywords=",mot1,or_end)
+      
+      z$url<-str_c("https://gallica.bnf.fr")
     }
     if(input$doc_type %in% 77:78){
       z$url<-str_c("https://www.opensubtitles.org/")
@@ -4031,13 +4032,10 @@ willisation <- function(input,will){
       codes = c("cb34355551z","cb327877302","cb32747578p","cb327986698","cb34452336z","cb34431794k","cb32895690j","cb34419111x","cb34378481r","cb39294634r","cb34448033b")
       names(codes) = as.character(66:76)
       will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0&codes=",codes[as.character(input$doc_type)])
-      print(word)
-      print(fromm)
-      print(mois)
     }
+    
     will_url=URLencode(will_url)
     wurl<<-will_url
-    print(will_url)
     show_spinner(spin_id = "contexte")
     a<-tryCatch({fromJSON(will_url)%>%data.frame()},error=function(cond){return(NULL)})
     if(is.null(a)==F){
