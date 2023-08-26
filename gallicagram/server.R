@@ -1722,14 +1722,12 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     if(input$doc_type==43 & input$resolution=="Mois"){
       z$url = str_c("https://www.deutsche-digitale-bibliothek.de/search/newspaper?query=%22",mot1,"%22&language=ger&fromDay=1&fromMonth=1","&fromYear=",z$date,"&toDay=31&toMonth=12&toYear=",z$date)
     }
-    
     if(input$doc_type %in% 66:76){
       codes = c("cb34355551z","cb327877302","cb32747578p","cb327986698","cb34452336z","cb34431794k","cb32895690j","cb34419111x","cb34378481r","cb39294634r","cb34448033b")
       names(codes) = as.character(66:76)
-      print("cgvhjbklmokjihg")
+      z$url = "https://gallica.bnf.fr"
       if(input$resolution=="Année"){z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"%22%20and%20gallicapublication_date%3C=%22",z$date,"%22%20and%20arkPress%20adj",codes[as.character(input$doc_type)],"_date)&suggest=10&keywords=",mot1,or_end)}
-      if(input$resolution=="Mois"){z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"/01%22%20and%20gallicapublication_date%3C=%22",z$date,"/31%22%20and%20arkPress%20adj",codes[as.character(input$doc_type)],"_date)&suggest=10&keywords=",mot1,or_end)}
-      print(z$url)
+      #if(input$resolution=="Mois"){z$url<-str_c("https://gallica.bnf.fr/services/engine/search/sru?operation=searchRetrieve&exactSearch=true&maximumRecords=20&startRecord=0&collapsing=false&version=1.2&query=(dc.language%20all%20%22fre%22)%20and%20(text%20adj%20%22",mot1,"%22%20",or,")%20%20and%20(dc.type%20all%20%22fascicule%22)%20and%20(ocr.quality%20all%20%22Texte%20disponible%22)%20and%20(gallicapublication_date%3E=%22",z$date,"/01%22%20and%20gallicapublication_date%3C=%22",z$date,"/31%22%20and%20arkPress%20adj",codes[as.character(input$doc_type)],"_date)&suggest=10&keywords=",mot1,or_end)}
     }
     if(input$doc_type %in% 77:78){
       z$url<-str_c("https://www.opensubtitles.org/")
@@ -4030,7 +4028,7 @@ willisation <- function(input,will){
       will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=%22",word,"%22&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
     }
     if(isolate(input$doc_type)==56){
-      will_url=str_c("https://gallica-grapher.eVw.r.appspot.com/api/gallicaRecords?terms=%22",word,"%22&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
+      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=%22",word,"%22&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
     }
     if(isolate(input$doc_type) %in% 66:76){
       codes = c("cb34355551z","cb327877302","cb32747578p","cb327986698","cb34452336z","cb34431794k","cb32895690j","cb34419111x","cb34378481r","cb39294634r","cb34448033b")
