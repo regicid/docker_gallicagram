@@ -211,7 +211,7 @@ shinyUI(bootstrapPage(
                                                       conditionalPanel(condition="input.correlation_test",fluidRow(textOutput("pvalue"),align="right"))
                                                      )),
                             fluidRow(column(12,
-                                    conditionalPanel(condition="input.contextualisation==true && (input.doc_type==1 || input.doc_type==2 || input.doc_type==56)",htmlOutput("lien")),         
+                                    conditionalPanel(condition="input.contextualisation==true && (input.doc_type==1 || input.doc_type==2 || input.doc_type==56|| input.doc_type==66 || input.doc_type==67 || input.doc_type==68 || input.doc_type==69 || input.doc_type==70 || input.doc_type==71 || input.doc_type==72 || input.doc_type==73 || input.doc_type==74 || input.doc_type==75 || input.doc_type==76)",htmlOutput("lien")),         
                                    #conditionalPanel(condition="input.doc_type==1 || input.doc_type==2 || input.doc_type==56",htmlOutput("frame")),
                                    conditionalPanel(condition="input.contextualisation==true && (input.doc_type==1 || input.doc_type==2 || input.doc_type==56 || input.doc_type==66 || input.doc_type==67 || input.doc_type==68 || input.doc_type==69 || input.doc_type==70 || input.doc_type==71 || input.doc_type==72 || input.doc_type==73 || input.doc_type==74 || input.doc_type==75 || input.doc_type==76)",dataTableOutput("frame")),
                                    useShinyjs(),
