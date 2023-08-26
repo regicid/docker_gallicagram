@@ -192,7 +192,7 @@ Plot <- function(data,input){
     plot=ggplotly(plot,tooltip = "text")%>%
       layout(xaxis = list(autorange = TRUE),
              yaxis = list(autorange = TRUE))
-    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type %in% 66:76)){return(onRender(plot,jsg))}
+    if(isolate(input$doc_type)==1 | isolate(input$doc_type)==2 | isolate(input$doc_type)==56 | isolate(input$doc_type) %in% 66:76){return(onRender(plot,jsg))}
     else{return(onRender(plot,js))}
   }
   
