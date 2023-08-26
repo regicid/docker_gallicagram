@@ -4022,13 +4022,13 @@ willisation <- function(input,will){
   for (i in pages) {
     
     if(isolate(input$doc_type==1)){
-      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
+      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=%22",word,"%22&source=periodical&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
     }
     if(isolate(input$doc_type==2)){
-      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
+      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=%22",word,"%22&source=book&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
     }
     if(isolate(input$doc_type)==56){
-      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=",word,"&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
+      will_url=str_c("https://gallica-grapher.ew.r.appspot.com/api/gallicaRecords?terms=%22",word,"%22&sort=relevance&year=",str_extract(fromm,"...."),mois,"&row_split=true&cursor=",i,"0")
     }
     if(isolate(input$doc_type) %in% 66:76){
       codes = c("cb34355551z","cb327877302","cb32747578p","cb327986698","cb34452336z","cb34431794k","cb32895690j","cb34419111x","cb34378481r","cb39294634r","cb34448033b")
