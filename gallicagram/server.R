@@ -1722,7 +1722,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     }
     if(input$doc_type==43 & input$resolution=="Mois"){
       end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
-      z$url = str_c("https://www.deutsche-digitale-bibliothek.de/search/newspaper?query=%22",mot1,"%22&language=ger&fromDay=1&fromMonth=1","&fromYear=",z$annee,"&toDay=",end_of_month[z$mois],"&toMonth=",z$mois,"&toYear=",z$year)
+      mois = as.integer(str_extract(z$date,"..$"))
+      z$url = str_c("https://www.deutsche-digitale-bibliothek.de/search/newspaper?query=%22",mot1,"%22&language=ger&fromDay=1&fromMonth=",mois,"&fromYear=",str_extract(z$date,"...."),"&toDay=",end_of_month[mois],"&toMonth=",mois,"&toYear=",str_extract(z$date,"...."))
     }
     if(input$doc_type %in% 66:76){
       codes = c("cb34355551z","cb327877302","cb32747578p","cb327986698","cb34452336z","cb34431794k","cb32895690j","cb34419111x","cb34378481r","cb39294634r","cb34448033b")
