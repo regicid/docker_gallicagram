@@ -25,6 +25,7 @@
 * François Jacquesson, « Euthanasie », Caramel, Sciences du langage et monde contemporain, 4 juillet 2023, <https://caramel.hypotheses.org/32701>
 * François Jacquesson, « Place de l’Utopie, allez tout droit ! », Caramel, Sciences du langage et monde contemporain, 15 juillet 2023, <https://caramel.hypotheses.org/33066>
 * François Jacquesson, « L’espion pris dans la guerre », Caramel, Sciences du langage et monde contemporain, 10 août 2023, <https://caramel.hypotheses.org/34168>
+* François Jacquesson, « Le dernier homme », Caramel, Sciences du langage et monde contemporain, 21 août 2023, <https://caramel.hypotheses.org/34526>
 * Madeleine Leroy. « „Bäder bauen heißt Spitäler sparen“. Piscines et bains-douches publics de « Vienne la rouge » (1919-1934) comme éléments d’une politique urbaine d’hygiène sociale », 2021, <https://dumas.ccsd.cnrs.fr/dumas-03416702>
 * Erwan Le Gall, « A propos de l’antimilitarisme des Sârs et de la rougeole politique (1913) », Ar Brezel, 5 janvier 2022, <https://arbrezel.hypotheses.org/4804>
 * Erwan Le Gall, « Février 1918 : l’estuaire de la Loire au bord de la Révolution ? », Ar Brezel, 2 février 2022, <https://arbrezel.hypotheses.org/4963>
