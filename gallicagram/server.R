@@ -4444,7 +4444,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$language,{
     observeEvent(input$bibli,{
       if(input$language == 1 & input$bibli==0){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0,"Presse française / Gallica" = 1,"Livres / Gallica" = 2, "Livres+Presse / Gallica"=56,"Le Monde"=30),selected = 1)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0,"Presse française / Gallica" = 1,"Livres / Gallica" = 2, "Livres+Presse / Gallica"=56,"Le Monde"=30,"L'Humanité (1904-1952)"=67),selected = 67)
       }
       else if(input$language == 1 & input$bibli==1){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse française / Gallica" = 1,"Recherche par titre de presse / Gallica" = 3, "Livres / Gallica" = 2, 
