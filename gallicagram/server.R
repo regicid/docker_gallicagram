@@ -4041,7 +4041,7 @@ willisation <- function(input,will){
       print(mois)
     }
     will_url=URLencode(will_url)
-    will_url = str_replace(" ","%20")
+    will_url = str_replace(will_url,pattern=" ",replacement = "%20")
     wurl<<-will_url
     print(will_url)
     show_spinner(spin_id = "contexte")
