@@ -424,7 +424,7 @@ Plot <- function(data,input){
   tableau$ribbon_up[z] = 3/base[z]
   tableau$ribbon_up[is.na(tableau$ribbon_up)] <- max(tableau$ribbon_up,na.rm=T)
   tableau$ribbon_down[is.na(tableau$ribbon_down)] <- 0
-  tableau$ribbon_up[tableau$ribbon_up>max(loess,na.rm=T)] = max(loess,na.rm=T)*1.1
+  tableau$ribbon_up[tableau$ribbon_up>1.1*max(loess,na.rm=T)] = max(loess,na.rm=T)*1.1
   if(length(unique(tableau$date))<=20){
     plot = plot_ly(tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='lines+markers',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text",connectgaps = FALSE)
     if(isolate(input$doc_type)!=5 & isolate(input$doc_type)!=9 & isolate(input$doc_type)!=10 & isolate(input$doc_type)!=12 & isolate(input$doc_type)!=44 & isolate(input$doc_type)!=58 & isolate(input$doc_type)!=59 & isolate(input$doc_type)!=60 & isolate(input$doc_type)!=61 & isolate(input$doc_type)!=62 & isolate(input$doc_type)!=63 & isolate(input$doc_type)!=64 & input$scale==F & input$multicourbes==F){
