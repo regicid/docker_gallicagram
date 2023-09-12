@@ -4455,7 +4455,8 @@ shinyServer(function(input, output,session){
                                                                       "Le Temps (1861-1942)"=71,"Le Petit Journal (1863-1942)"=72,"Le Petit Parisien (1876-1944)"=73,"Le Journal Officiel (1869-1952)"=74,"Le Journal des Débats (1805-1944)"=75,"La Presse (1836-1930)"=76),selected = 1)
       }
       else if(input$language == 1 & input$bibli==2){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15, "Presse wallonne / KBR"=13, "Presse québécoise / BAnQ"=28),selected = 15)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15),selected = 15)
+        #, "Presse wallonne / KBR"=13, "Presse québécoise / BAnQ"=28
       }
       else if(input$language == 1 & input$bibli==3){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse Auvergne-Rhône-Alpes / Lectura"=17, "Presse du sillon lorrain / Limedia"=18, "Presse méridionale / Mémonum"=19, "Presse de Saint-Denis / Commun-Patrimoine"=20, "Presse de Brest / Yroise"=21, "Presse des Pyrénées / Pireneas"=22, "Presse toulousaine / Rosalis"=23, "Presse diplomatique / Bibliothèque diplomatique numérique"=24, "Presse francophone / RFN"=25, "Presse alsacienne / Numistral"=26, "Presse de Roubaix / BN-R"=27),selected = 17)
