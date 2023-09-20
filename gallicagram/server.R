@@ -1579,7 +1579,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
         if(input$doc_type==30 | input$doc_type %in% 66:76){
           q=str_c('SELECT sum(n),gram,annee,mois FROM gram_mois',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
-          
         }
         query = dbSendQuery(con,q)
         w = dbFetch(query)
