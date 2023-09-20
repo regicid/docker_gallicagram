@@ -1542,6 +1542,12 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           colnames(base)[1] = "base"}
         }
       }
+      if(input$doc_type == 99){
+        ngram_file<-str_c("/mnt/persistent/",nb,"gram_american_stories.db")
+        gram<-"gram"
+        base<-read.csv(str_c("american_stories",nb,".csv"))
+        colnames(base) = c("base","date")
+      }
       
       base<-as.data.frame(base)
 
@@ -1567,7 +1573,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         print(w)
       }
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 |
-          input$doc_type %in% 66:76 | input$doc_type %in% 77:78 | input$doc_type==43 |
+          input$doc_type %in% 66:76 | input$doc_type %in% 77:78 | input$doc_type==43 | input$doc_type==99|
           (input$doc_type==56 & agregator==1)) & input$resolution=="Année"){
         #q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
@@ -5653,7 +5659,7 @@ shinyServer(function(input, output,session){
       }else if(input$d_language == 3){
         updateSelectInput(session,"distribution", "Corpus",choices = list("Presse néerlandaise / Europeana" = 7,"Presse flamande / KBR"=14),selected = 7)
       }else if(input$d_language == 4){
-        updateSelectInput(session,"distribution", "Corpus",choices = list("Presse britannique / BNA" = 8, "Livres / Ngram Viewer Anglais" = 10),selected = 8)
+        updateSelectInput(session,"distribution", "Corpus",choices = list("American Stories (1798-1963)"=99,"Presse britannique / BNA" = 8, "Livres / Ngram Viewer Anglais" = 10),selected = 99)
       }else if(input$d_language == 5){
         updateSelectInput(session,"distribution", "Corpus",choices = list("Presse espagnole / BNE"=11, "Livres / Ngram Viewer Espagnol"=12),selected = 11)
       }
