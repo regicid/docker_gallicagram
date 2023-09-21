@@ -1749,6 +1749,9 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     if(input$doc_type %in% 77:78){
       z$url<-str_c("https://www.opensubtitles.org/")
     }
+    if(input$doc_type == 99){
+      z$url = "https://huggingface.co/datasets/dell-research-harvard/AmericanStories"
+    }
 
     if(input$resolution=="Année"){z$resolution<-"Année"}
     if(input$resolution=="Mois"){z$resolution<-"Mois"}
@@ -1817,6 +1820,10 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     if(input$doc_type==78){z$corpus="Films"
     z$langue="Français"
     z$bibli="Opensubtitles / Films en anglais"
+    z$search_mode<-"N-gramme"}
+    if(input$doc_type==99){z$corpus="American Stories"
+    z$langue="Anglais"
+    z$bibli=""
     z$search_mode<-"N-gramme"}
     
     if(increment==1){tableau=z}
