@@ -4514,6 +4514,10 @@ shinyServer(function(input, output,session){
   
   
   observeEvent(input$doc_type,{
+    if(input$doc_type == 99){
+      updateSelectInput(session,"search_mode",choices = list("Par n-gramme"=3),selected = 3)
+      updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
+    }
     if(input$doc_type == 2 | input$doc_type == 56){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
