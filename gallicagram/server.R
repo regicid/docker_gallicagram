@@ -5658,7 +5658,7 @@ shinyServer(function(input, output,session){
       }else if(input$d_language == 3){
         updateSelectInput(session,"distribution", "Corpus",choices = list("Presse néerlandaise / Europeana" = 7,"Presse flamande / KBR"=14),selected = 7)
       }else if(input$d_language == 4){
-        updateSelectInput(session,"distribution", "Corpus",choices = list("American Stories (1798-1963)"=99,"Presse britannique / BNA" = 8, "Livres / Ngram Viewer Anglais" = 10),selected = 99)
+        updateSelectInput(session,"distribution", "Corpus",choices = list("Presse britannique / BNA" = 8, "Livres / Ngram Viewer Anglais" = 10),selected = 8)
       }else if(input$d_language == 5){
         updateSelectInput(session,"distribution", "Corpus",choices = list("Presse espagnole / BNE"=11, "Livres / Ngram Viewer Espagnol"=12),selected = 11)
       }
