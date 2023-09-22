@@ -1823,7 +1823,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     z$search_mode<-"N-gramme"}
     if(input$doc_type==99){z$corpus="American Stories"
     z$langue="Anglais"
-    z$bibli=""
+    z$bibli="American Stories"
     z$search_mode<-"N-gramme"}
     
     if(increment==1){tableau=z}
