@@ -1547,7 +1547,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         gram<-"gram"
         base<-read.csv(str_c("american_stories",nb,".csv"))
         colnames(base) = c("base","date")
-        if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=NA)
+        if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=NA)}
       }
       
       base<-as.data.frame(base)
