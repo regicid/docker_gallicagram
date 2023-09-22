@@ -1543,11 +1543,12 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         }
       }
       if(input$doc_type == 99){
+        if(nb>2){
         ngram_file<-str_c("/mnt/persistent/",nb,"gram_american_stories.db")
         gram<-"gram"
         base<-read.csv(str_c("american_stories",nb,".csv"))
-        colnames(base) = c("base","date")
-        if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=NA)}
+        colnames(base) = c("base","date")}
+        else{z=data.frame(date=from:to, count=0, base=0,ratio=NA)}
       }
       
       base<-as.data.frame(base)
