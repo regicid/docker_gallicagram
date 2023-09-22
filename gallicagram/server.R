@@ -1440,7 +1440,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       mot<-table$ngram[1]
       if(nb>1){for(x in 2:nb){mot<-str_c(mot," ",table$ngram[x])}}
       if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
-        if(nb>5){z=data.frame(date=from:to, count=0, base=0,ratio=0)
+        if(nb>5){z=data.frame(date=from:to, count=0, base=0,ratio=NA)
         next}
         if(nb<=5){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram.db")
@@ -1522,7 +1522,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
             base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
             colnames(base)<-c("date","base")}
         }
-        if(nb>4){z=data.frame(date=from:to, count=0, base=0,ratio=0)
+        if(nb>4){z=data.frame(date=from:to, count=0, base=0,ratio=NA)
         next}
       }
       if(input$doc_type == 43){
@@ -1547,6 +1547,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         gram<-"gram"
         base<-read.csv(str_c("american_stories",nb,".csv"))
         colnames(base) = c("base","date")
+        if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=NA)
       }
       
       base<-as.data.frame(base)
