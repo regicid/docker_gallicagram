@@ -1477,7 +1477,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         base=read.csv(str_c("subtitles_en",nb,".csv"))}
         colnames(base)<-c("base","date")
         }
-        else{z=data.frame(date=from:to, count=0, base=0,ratio=0)
+        else{z=data.frame(date=from:to, count=0, base=0,ratio=NA)
           next}
       }
       if(input$doc_type==30 | gallicagram==2 | input$doc_type %in% 66:76){
@@ -1548,7 +1548,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         gram<-"gram"
         base<-read.csv(str_c("american_stories",nb,".csv"))
         colnames(base) = c("base","date")}
-        else{z=data.frame(date=from:to, count=0, base=0,ratio=NA)}
+        else{z=data.frame(date=from:to, count=0, base=0,ratio=NA)
+        next}
       }
       
       base<-as.data.frame(base)
