@@ -1543,7 +1543,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         }
       }
       if(input$doc_type == 99){
-        if(nb>2){
+        if(nb<3){
         ngram_file<-str_c("/mnt/persistent/",nb,"gram_american_stories.db")
         gram<-"gram"
         base<-read.csv(str_c("american_stories",nb,".csv"))
