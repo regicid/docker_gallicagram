@@ -87,3 +87,5 @@
 * <https://current.ndl.go.jp/en/e2533_en>
 * <http://blog.ac-versailles.fr/starter/index.php/post/24/02/2022/GALLICAGRAM>
 * <https://www.bases-netsources.com/component/flexicontent/category/conseil-semaine>
+* <https://injs-bordeaux.org/blog/lexicometrie/>
+* <https://eduscol.education.fr/3915/veille-education-numerique-2023-2024#VEN21092023>
