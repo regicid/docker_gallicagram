@@ -1576,7 +1576,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         print(w)
       }
       if((input$doc_type==1 | input$doc_type==30 | input$doc_type==0 |
-          input$doc_type %in% 66:76 | input$doc_type %in% 77:78 | input$doc_type==43 | (input$doc_type==99&nb<3)|
+          input$doc_type %in% 66:76 | input$doc_type %in% 77:78 | input$doc_type==43 | (input$doc_type==99&nb<4)|
           (input$doc_type==56 & agregator==1)) & input$resolution=="Année"){
         #q=str_c('SELECT n,annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"')
         q=str_c('SELECT sum(n),annee FROM gram',' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'" group by annee')
