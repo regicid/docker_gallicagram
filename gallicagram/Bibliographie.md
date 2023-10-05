@@ -42,6 +42,7 @@
 * Edmée Garcia-Mariller, « Dire son “Mood” : une nouvelle forme de la narration de soi. Étude linguistique et sémiologique de la sous-culture du “Mood” », Mémoire de Master, 2022, SU CELSA - Sorbonne Université, <https://dumas.ccsd.cnrs.fr/dumas-04033748v1>
 * Gaëtan Bonnot, « Des traces aux échos d’une révolte : études sur la Jacquerie de 1358 », Thèse de doctorat, 2022, Université Paris I - Panthéon Sorbonne, Ecole doctorale d’histoire, LAMOP - Laboratoire de Médiévistique Occidentale de Paris, <https://hal.science/tel-04043231v1>
 * Arnaud Laborderie, Florence Tfibel, « Ouvrir les données de la Bibliothèque nationale de France pour la recherche », 2023, <https://hal-bnf.archives-ouvertes.fr/hal-04074665>
+* Benjamin Bober, « Les haches de pierre en contexte gallo-romain - Au delà de la pierre de foudre », Septembre 2023, <https://www.researchgate.net/publication/374199024_Les_haches_de_pierre_en_contexte_gallo-romain_-_Au_dela_de_la_pierre_de_foudre>
 
 
 ## Conférences de présentation de Gallicagram
@@ -64,11 +65,12 @@
 
 * Pyllicagram (API Python) par Benoît de Courson : <https://github.com/regicid/pyllicagram>
 * Ruby Gem Gallicagram par Nicolas Le Roux : <https://github.com/nicolrx/gallicagram>
+* Rallicagram (package R) par Vincent Bagilet : <https://github.com/vincentbagilet/rallicagram>
 
 
 ## Projets utilisant Gallicagram
 * Gallibase par Etienne Brunet et Laurent Vanni : <http://ancilla.unice.fr/pages/bases/>
-* Gallica Grapher par Will Gleason : <https://d32d5ops9ui5td.cloudfront.net/>
+* Gallica Grapher par Will Gleason : <https://www.gallicagrapher.com/>
 * La Langue Française par Nicolas Le Roux : <https://www.lalanguefrancaise.com/dictionnaire>
 * Aide à la recherche sur Gallica par Thomas Fressin (à venir)
 * CNRTL, Lexicographie : <https://www.cnrtl.fr/definition/> (à venir)
