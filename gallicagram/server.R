@@ -1484,7 +1484,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
           next}
       }
       if(input$doc_type==30 | gallicagram==2 | input$doc_type %in% 66:76){
-        if(nb<=4){
+        if(nb<=2){
           gram<-"gram"
           if(input$doc_type==30 | gallicagram==2){
           ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
@@ -1525,7 +1525,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
             base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
             colnames(base)<-c("date","base")}
         }
-        if(nb>4){z=data.frame(date=from:to, count=0, base=0,ratio=NA)
+        if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=NA)
         next}
       }
       if(input$doc_type == 43){
