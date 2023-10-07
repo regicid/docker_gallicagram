@@ -1343,8 +1343,11 @@ jokerize<-function(input){
     if(nb>2){next}
   }
   
- 
+  
   con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
+  if(!dbExistsTable(con,"gram")){
+    next
+  }
   
   if(pos=="apres"){
     query = dbSendQuery(con,str_c('select sum(n) as tot, ',gram,' from ',gram,' where annee between ',input$beginning,' and ',input$end,' and rowid in (select rowid from full_text where gram'," match '^",'"',mot,'"',"') group by ",gram,' order by tot desc limit ',20+input$nbJoker+input$stpw))
@@ -1569,6 +1572,10 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       }
 
       con=dbConnect(RSQLite::SQLite(),dbname = ngram_file)
+      if(!dbExistsTable(con,"gram")){
+        z=data.frame(date=from:to, count=0, base=0,ratio=NA)
+        next
+      }
       
       if(input$doc_type==2 | (input$doc_type==56 & agregator==2)){
         query = dbSendQuery(con,str_c('SELECT n,annee FROM ',gram,' WHERE annee BETWEEN ',from," AND ",to ,' AND ',gram,'="',mot,'"'))
