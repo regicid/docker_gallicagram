@@ -4462,6 +4462,7 @@ shinyServer(function(input, output,session){
   if(nrow(data$tableau)==346){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://nytimes.com/', target=\'_blank\'> ","nytimes.com","</a>"),sep = ""))}
   if(nrow(data$tableau)==226){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://huggingface.co/datasets/dell-research-harvard/AmericanStories', target=\'_blank\'> ","American Stories dataset","</a>"),sep = ""))}
   if(nrow(data$tableau)==188){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://lemonde.fr/', target=\'_blank\'> ","lemonde.fr","</a>"),sep = ""))}
+  if(nrow(data$tableau)==3264){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.deutsche-digitale-bibliothek.de/', target=\'_blank\'> ","deutsche-digitale-bibliothek.de","</a>"),sep = ""))}
   output$legende0=renderText("Affichage : Gallicagram par B. Azoulay et B. de Courson")
   nb_mots<-length(unique(data[["tableau"]]$mot))
   output$legende2<-renderText(str_c(""))
