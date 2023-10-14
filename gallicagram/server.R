@@ -2758,7 +2758,6 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             }
           }
           if(doc_type ==36){
-            
             ngram<-tryCatch(
               {ngram<-read_html(url)},error=function(cond){
                 ngram<-tryCatch(
@@ -2789,7 +2788,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
                 )
               }
             )
-            if(class(ngram)=="numeric"){a=0}
+            if(class(ngram[1])=="numeric"){a=0}
             else{
               ngram<-as.character(ngram)
               ngram<-str_extract(ngram,"items.+")
@@ -2828,9 +2827,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
                   )
                 }
               )
-              if(class(ngram_base)=="numeric"){b=0}
+              if(class(ngram_base[1])=="numeric"){b=0}
               else{
-                
                 ngram_base<-as.character(ngram_base)
                 ngram_base<-str_extract(ngram_base,"items.+")
                 ngram_base<-str_remove_all(ngram_base,"[:space:]")
@@ -2841,10 +2839,8 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             if (input$isidore=="_"){
               url<-str_c("https://isidore.science/s?q=%22",mot1,"%22&date=",y,"&type=http%3A%2F%2Fisidore.science%2Fontology%23thesis&type=http%3A%2F%2Fisidore.science%2Fontology%23seminar&type=http%3A%2F%2Fisidore.science%2Fontology%23recension&type=http%3A%2F%2Fisidore.science%2Fontology%23memorandum&type=http%3A%2F%2Fisidore.science%2Fontology%23preprint&type=http%3A%2F%2Fisidore.science%2Fontology%23periodical&type=http%3A%2F%2Fisidore.science%2Fontology%23course&type=http%3A%2F%2Fisidore.science%2Fontology%23conference&type=http%3A%2F%2Fisidore.science%2Fontology%23book&type=http%3A%2F%2Fisidore.science%2Fontology%23blogPost&type=http%3A%2F%2Fisidore.science%2Fontology%23article")}
             else{url<-str_c("https://isidore.science/s?q=%22",mot1,"%22&date=",y,"&type=http%3A%2F%2Fisidore.science%2Fontology%23thesis&type=http%3A%2F%2Fisidore.science%2Fontology%23seminar&type=http%3A%2F%2Fisidore.science%2Fontology%23recension&type=http%3A%2F%2Fisidore.science%2Fontology%23memorandum&type=http%3A%2F%2Fisidore.science%2Fontology%23preprint&type=http%3A%2F%2Fisidore.science%2Fontology%23periodical&type=http%3A%2F%2Fisidore.science%2Fontology%23course&type=http%3A%2F%2Fisidore.science%2Fontology%23conference&type=http%3A%2F%2Fisidore.science%2Fontology%23book&type=http%3A%2F%2Fisidore.science%2Fontology%23blogPost&type=http%3A%2F%2Fisidore.science%2Fontology%23article&discipline=http%3A%2F%2Faurehal.archives-ouvertes.fr%2Fsubject%2Fshs.",input$isidore)}
-            
-            
           }
-          
+
           if(input$doc_type == 30){
             
             page<-read_html(RETRY("GET",url,times = 6))
