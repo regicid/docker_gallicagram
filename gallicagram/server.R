@@ -1525,7 +1525,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
             base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
             colnames(base)<-c("date","base")}
         }
-        if(nb>2 & input$doc_type !=n30){z=data.frame(date=from:to, count=0, base=0,ratio=NA)
+        if(nb>2 & input$doc_type != 30){z=data.frame(date=from:to, count=0, base=0,ratio=NA)
         next}
       }
       if(input$doc_type == 43){
