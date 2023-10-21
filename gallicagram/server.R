@@ -1483,12 +1483,30 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         else{z=data.frame(date=from:to, count=0, base=0,ratio=NA)
           next}
       }
-      if(input$doc_type==30 | gallicagram==2 | input$doc_type %in% 66:76){
+      if(input$doc_type==30 | gallicagram==2){
+        if(nb<=4){
+        gram<-"gram"
+        ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
+        base<-read.csv(str_c("lemonde",nb,".csv"))
+        }
+        base$mois[str_length(base$mois)==1]<-str_c("0",base$mois[str_length(base$mois)==1])
+        base$jour[str_length(base$jour)==1]<-str_c("0",base$jour[str_length(base$jour)==1])
+        if(input$resolution=="Année"){
+          base<-base%>%group_by(annee)%>%summarise(n = sum(n))
+          colnames(base)<-c("date","base")}
+        if(input$resolution=="Mois"){
+          base<-base%>%group_by(annee,mois)%>%summarise(n = sum(n))
+          base<-cbind(str_c(base$annee,"/",base$mois),base$n)
+          colnames(base)<-c("date","base")}
+        if(input$resolution=="Semaine"){
+          base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
+          colnames(base)<-c("date","base")}
+      if(nb>4){z=data.frame(date=from:to, count=0, base=0,ratio=NA)
+      next}
+      }
+      if( input$doc_type %in% 66:76){
         if(nb<=2){
           gram<-"gram"
-          if(input$doc_type==30 | gallicagram==2){
-          ngram_file<-str_c("/mnt/persistent/",nb,"gram_lemonde.db")
-          base<-read.csv(str_c("lemonde",nb,".csv"))}
           if(input$doc_type==66){ngram_file=str_c("/mnt/persistent/",nb,"gram_figaro.db")
           base=read.csv(str_c("figaro",nb,".csv"))}
           if(input$doc_type==67){ngram_file<-str_c("/mnt/persistent/",nb,"gram_huma.db")
@@ -1525,7 +1543,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
             base<-cbind(str_c(base$annee,"/",base$mois,"/",base$jour),base$n)
             colnames(base)<-c("date","base")}
         }
-        if(nb>2 & input$doc_type != 30){z=data.frame(date=from:to, count=0, base=0,ratio=NA)
+        if(nb>2){z=data.frame(date=from:to, count=0, base=0,ratio=NA)
         next}
       }
       if(input$doc_type == 43){
