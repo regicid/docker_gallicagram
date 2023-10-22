@@ -3341,7 +3341,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   ####
   
   if(doc_type==79){
-    show_modal_spinner("Attention : les accents et signes diacritiques produisent un bug sur les années 2009-2010, qui ne sont pas interprétables.")
+    show_modal_spinner(text = "Attention : les accents et signes diacritiques produisent un bug sur les années 2009-2010, qui ne sont pas interprétables.")
     library(glue)
     library(rvest)
     library(crul)
