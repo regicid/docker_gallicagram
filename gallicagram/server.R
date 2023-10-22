@@ -3340,6 +3340,58 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   }
   ####
   
+  if(doc_type==79){
+    show_modal_spinner("Attention : les accents et signes diacritiques produisent un bug sur les années 2009-2010, qui ne sont pas interprétables.")
+    library(glue)
+    library(rvest)
+    library(crul)
+    period = input$beginning:input$end
+    end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
+    for (word in mots){
+      if(input$resolution=="Année"){result = data.frame(year = period,month=1,count = 0,base=NA,mot = word,url=NA)}
+      if(input$resolution=="Mois"){result = data.frame(year = rep(period,each=12),month= rep(1:12,length(period)),count = 0,base = NA,mot = word,url=NA)}
+      reqlist = list()
+      reqlist_total = list()
+      for(i in 1:nrow(result)){
+        year = result$year[i]
+        month = result$month[i]
+        end_month = 12*(input$resolution=="Année") + month*(input$resolution=="Mois")
+        url = glue("https://www.lorientlejour.com/archives?action=search&title=&q={word}&method=exact&author=&category=all&dateFrom=01-{month}-{year}&dateTo={end_of_month[end_month]}-{end_month}-{year}") %>% URLencode()
+        url_total = glue("https://www.lorientlejour.com/archives?action=search&title=&q=&method=and&author=&category=all&dateFrom=01-{month}-{year}&dateTo={end_of_month[end_month]}-{end_month}-{year}") %>% URLencode()
+        if(year==year(Sys.Date()) & input$resolution=="Année"){ # In the current year, we have to stop the search at today, otherwise there is a bug
+          url = glue("https://www.lorientlejour.com/archives?action=search&title=&q={word}&method=exact&author=&category=all&dateFrom=01-{month}-{year}&dateTo={day(Sys.Date())}-{month(Sys.Date())}-{year}") %>% URLencode()
+          url_total = glue("https://www.lorientlejour.com/archives?action=search&title=&q=&method=and&author=&category=all&dateFrom=01-{month}-{year}&dateTo={day(Sys.Date())}-{month(Sys.Date())}-{year}") %>% URLencode()
+        }
+        if(year==year(Sys.Date()) & month==month(Sys.Date()) & input$resolution=="Mois"){#Stop at current day to avoid bug
+          url = glue("https://www.lorientlejour.com/archives?action=search&title=&q={word}&method=exact&author=&category=all&dateFrom=01-{month}-{year}&dateTo={day(Sys.Date())}-{end_month}-{year}") %>% URLencode()
+          url_total = glue("https://www.lorientlejour.com/archives?action=search&title=&q=&method=and&author=&category=all&dateFrom=01-{month}-{year}&dateTo={day(Sys.Date())}-{end_month}-{year}") %>% URLencode()
+        }
+        if((year==year(Sys.Date()) & month>month(Sys.Date())) | year > year(Sys.Date())){#Skip if the time step is in the future
+          next}
+        reqlist[[i]] = HttpRequest$new(url = url)$get()
+        reqlist_total[[i]] = HttpRequest$new(url = url_total)$get()
+        responses <- AsyncQueue$new(.list = reqlist,bucket_size=50,sleep=0)
+      }
+      
+      responses <- AsyncQueue$new(.list = reqlist,bucket_size=50,sleep=0)
+      responses$request()
+      responses_total <- AsyncQueue$new(.list = reqlist_total,bucket_size=30,sleep=0)
+      responses_total$request()
+      
+      for(i in 1:length(reqlist)){
+        count = responses$responses()[[i]]$parse() %>% read_html() %>% html_node("h4") %>% html_text()
+        result[i,"count"] = max(0,as.integer(str_split(count," ")[[1]][6]),na.rm=T)
+        total = responses_total$responses()[[i]]$parse() %>% read_html() %>% html_node("h4") %>% html_text()
+        result[i,"base"] = as.integer(str_split(total," ")[[1]][6])
+        result[i,"url"] = reqlist[[i]]$url
+      }
+      result$date = paste(result$year,result$month,sep="/")
+      if(word==mots[1]){tableau=result}
+      else{tableau=rbind(tableau,result)}
+    }
+    tableau$ratio = tableau$count/tableau$base
+    remove_modal_spinner()
+  }
   if(doc_type==50 | doc_type==51 | doc_type==52 | doc_type==53 | doc_type==54){
     jjj=as.character(min(input$dateRange))
     kkk=as.character(max(input$dateRange))
@@ -4512,7 +4564,7 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse Auvergne-Rhône-Alpes / Lectura"=17, "Presse du sillon lorrain / Limedia"=18, "Presse méridionale / Mémonum"=19, "Presse de Saint-Denis / Commun-Patrimoine"=20, "Presse de Brest / Yroise"=21, "Presse des Pyrénées / Pireneas"=22, "Presse toulousaine / Rosalis"=23, "Presse diplomatique / Bibliothèque diplomatique numérique"=24, "Presse francophone / RFN"=25, "Presse alsacienne / Numistral"=26, "Presse de Roubaix / BN-R"=27),selected = 17)
       }
       else if(input$language == 1 & input$bibli==4){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Le Monde (1944-2022)"=30, "Le Figaro (2006-)"=31, "L'Orient-Le Jour"=79,"Presse française / MediaCloud"=50),selected = 30)#Le Marin 55
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Le Monde (1944-2022)"=30, "Le Figaro (2006-)"=31, "L'Orient-Le Jour (1997-)"=79,"Presse française / MediaCloud"=50),selected = 30)#Le Marin 55
       }
       else if(input$language == 1 & input$bibli==5){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Isidore"=36,"Cairn.info"=32,"Theses.fr"=33,"Persée"=34),selected = 36)
