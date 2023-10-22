@@ -1897,7 +1897,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     if(resolution=="Mois"){I=1:12} #Pour faire ensuite une boucle sur les mois
     
     
-    if(doc_type !=5 & doc_type !=9 & doc_type !=10 & doc_type !=12 & doc_type !=44 & doc_type !=50 & doc_type !=51 & doc_type !=52 & doc_type !=53 & doc_type !=54 & doc_type !=58 & doc_type !=59 & doc_type !=60 & doc_type !=61 & doc_type !=62 & doc_type !=63 & doc_type !=64 & doc_type !=65){
+    if(doc_type !=5 & doc_type !=9 & doc_type !=10 & doc_type !=12 & doc_type !=44 & doc_type !=50 & doc_type !=51 & doc_type !=52 & doc_type !=53 & doc_type !=54 & doc_type !=58 & doc_type !=59 & doc_type !=60 & doc_type !=61 & doc_type !=62 & doc_type !=63 & doc_type !=64 & doc_type !=65 & doc_type !=79){
       for(j in I){
         if(resolution=="Mois"){
           z = as.character(j)
@@ -2377,7 +2377,6 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
           #     url_base<-str_c("https://www.nytimes.com/search?dropmab=false&endDate=",y,"1231&query=have&sort=best&startDate=",y,"0101&types=article")
           #   }
           # }
-          
           
           
           if(doc_type == 1 | doc_type==56 | doc_type==19 | doc_type==20 | doc_type==21 | doc_type==22 | doc_type==23 | doc_type==24 | doc_type==25){
@@ -3634,7 +3633,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$langue="Anglais"
   tableau$bibli="New York Times"
   tableau$search_mode<-"Article"}
-  
+  if(doc_type==79){tableau$corpus="Presse"
+  tableau$langue="Français"
+  tableau$bibli="L'Orient-Le Jour"
+  tableau$search_mode<-"Article"}
   
 
   memoire<<-bind_rows(tableau,memoire)
@@ -4485,15 +4487,14 @@ shinyServer(function(input, output,session){
                                                                       "Le Temps (1861-1942)"=71,"Le Petit Journal (1863-1942)"=72,"Le Petit Parisien (1876-1944)"=73,"Le Journal Officiel (1869-1952)"=74,"Le Journal des Débats (1805-1944)"=75,"La Presse (1836-1930)"=76),selected = 1)
       }
       else if(input$language == 1 & input$bibli==2){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15
-        ),selected = 15)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse suisse-romande / Bibliothèque nationale suisse"=15),selected = 15)
         #, "Presse wallonne / KBR"=13, "Presse québécoise / BAnQ"=28
       }
       else if(input$language == 1 & input$bibli==3){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse Auvergne-Rhône-Alpes / Lectura"=17, "Presse du sillon lorrain / Limedia"=18, "Presse méridionale / Mémonum"=19, "Presse de Saint-Denis / Commun-Patrimoine"=20, "Presse de Brest / Yroise"=21, "Presse des Pyrénées / Pireneas"=22, "Presse toulousaine / Rosalis"=23, "Presse diplomatique / Bibliothèque diplomatique numérique"=24, "Presse francophone / RFN"=25, "Presse alsacienne / Numistral"=26, "Presse de Roubaix / BN-R"=27),selected = 17)
       }
       else if(input$language == 1 & input$bibli==4){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Le Monde (1944-2022)"=30, "Le Figaro (2006-)"=31,"Presse française / MediaCloud"=50),selected = 30)#Le Marin 55
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Le Monde (1944-2022)"=30, "Le Figaro (2006-)"=31, "L'Orient-Le Jour"=79,"Presse française / MediaCloud"=50),selected = 30)#Le Marin 55
       }
       else if(input$language == 1 & input$bibli==5){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Isidore"=36,"Cairn.info"=32,"Theses.fr"=33,"Persée"=34),selected = 36)
@@ -4574,7 +4575,7 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par page" = 2),selected = 2)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
-    if(input$doc_type == 8 | input$doc_type == 15 | input$doc_type == 16| input$doc_type == 35| input$doc_type == 57| input$doc_type == 65){
+    if(input$doc_type == 8 | input$doc_type == 15 | input$doc_type == 16| input$doc_type == 35| input$doc_type == 57| input$doc_type == 65 | input$doc_type == 79){
       updateSelectInput(session,"search_mode",choices = list("Par article" = 4),selected = 4)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
@@ -4792,7 +4793,7 @@ shinyServer(function(input, output,session){
         input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53  | input$doc_type == 54 |
         input$doc_type == 55 | (input$doc_type == 56 & input$search_mode==1)| input$doc_type == 57 | input$doc_type == 58 |
         input$doc_type == 59 | input$doc_type == 60 | input$doc_type == 61 | input$doc_type == 62 | input$doc_type == 63 | input$doc_type == 64| 
-        input$doc_type == 65){
+        input$doc_type == 65 | input$doc_type == 79){
       df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
@@ -4902,7 +4903,7 @@ shinyServer(function(input, output,session){
       output$legende2<-renderText(str_c("Pages épluchées : ", as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Pages correspondant à la recherche : ", as.character(sum(df[["tableau"]]$count))))
     }
-    else if (input$doc_type==8 | input$doc_type==15 | input$doc_type==16 | input$doc_type==31| input$doc_type == 35 | input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53 | input$doc_type == 54| input$doc_type == 57| input$doc_type == 65) {
+    else if (input$doc_type==8 | input$doc_type==15 | input$doc_type==16 | input$doc_type==31| input$doc_type == 35 | input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53 | input$doc_type == 54| input$doc_type == 57| input$doc_type == 65 | input$doc_type == 79) {
       nb_mots<-length(unique(df[["tableau"]]$mot))
       output$legende2<-renderText(str_c("Articles épluchés : ", as.character(sum(df[["tableau"]]$base)/nb_mots)))
       output$legende3<-renderText(str_c("Articles correspondant à la recherche : ", as.character(sum(df[["tableau"]]$count))))
@@ -4955,12 +4956,19 @@ shinyServer(function(input, output,session){
     if(input$doc_type==65){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.nytimes.com/', target=\'_blank\'> ","nytimes.com","</a>"),sep = ""))}
     if(input$doc_type==77 | input$doc_type==78){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.opensubtitles.org/', target=\'_blank\'> ","opensubtitles.org","</a>"),sep = ""))}
     if(input$doc_type==99){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://huggingface.co/datasets/dell-research-harvard/AmericanStories', target=\'_blank\'> ","https://huggingface.co/datasets/dell-research-harvard/AmericanStories","</a>"),sep = ""))}
-    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 44| input$doc_type == 45| input$doc_type == 50| input$doc_type == 55 | input$doc_type==56| input$doc_type==57 | input$doc_type %in% 66:76){output$legende4=renderText("Langue : français")}
+    if(input$doc_type==79){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.lorientlejour.com/', target=\'_blank\'> ","lorientlejour.com","</a>"),sep = ""))}
+    
+    
+    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 44| input$doc_type == 45| input$doc_type == 50| input$doc_type == 55 | input$doc_type==56| input$doc_type==57 | input$doc_type %in% 66:76 | input$doc_type==79){output$legende4=renderText("Langue : français")}
     if(input$doc_type==6 | input$doc_type==9 | input$doc_type==16 |input$doc_type==29|input$doc_type==43|input$doc_type==47| input$doc_type == 52 | input$doc_type == 62 | input$doc_type == 63){output$legende4=renderText("Langue : allemand")}
     if(input$doc_type==7 | input$doc_type==14|input$doc_type==48| input$doc_type == 53| input$doc_type == 64){output$legende4=renderText("Langue : néerlandais")}
     if(input$doc_type==8 | input$doc_type==10| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40|input$doc_type==42|input$doc_type==46| input$doc_type == 51 | input$doc_type == 58 | input$doc_type == 59 | input$doc_type == 60 | input$doc_type == 65){output$legende4=renderText("Langue : anglais")}
     if(input$doc_type==11 | input$doc_type==12|input$doc_type==49| input$doc_type == 54 | input$doc_type == 61){output$legende4=renderText("Langue : espagnol")}
-    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 30 | input$doc_type == 31| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53 | input$doc_type == 54 | input$doc_type == 55| input$doc_type==57  | input$doc_type == 65 | input$doc_type %in% 66:76){output$legende1<-renderText("Corpus : presse")}
+    
+    
+    
+    
+    if(input$doc_type==0 | input$doc_type==1 | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type==11 | input$doc_type==13 | input$doc_type==14 | input$doc_type==15 | input$doc_type==16 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26  | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | input$doc_type == 30 | input$doc_type == 31| input$doc_type==35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53 | input$doc_type == 54 | input$doc_type == 55| input$doc_type==57  | input$doc_type == 65 | input$doc_type %in% 66:76 | input$doc_type == 79 ){output$legende1<-renderText("Corpus : presse")}
     if(input$doc_type==2 | input$doc_type==5 | input$doc_type==9 | input$doc_type==10 | input$doc_type==12){output$legende1<-renderText("Corpus : livres")}
     if(input$doc_type==4){output$legende1<-renderText("Corpus : personnalisé")}
     if(input$doc_type==56){output$legende1<-renderText("Corpus : presse et livres")}
