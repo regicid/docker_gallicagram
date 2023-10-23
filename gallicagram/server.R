@@ -3385,11 +3385,15 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
         result[i,"base"] = as.integer(str_split(total," ")[[1]][6])
         result[i,"url"] = reqlist[[i]]$url
       }
+      z = which((result$year==year(Sys.Date()) & result$month>month(Sys.Date())) | result$year > year(Sys.Date()))
+      result$count[z] = 0
+      result$base[z] = 0
       result$date = paste(result$year,result$month,sep="/")
       if(word==mots[1]){tableau=result}
       else{tableau=rbind(tableau,result)}
     }
     tableau$ratio = tableau$count/tableau$base
+    print(tableau)
     remove_modal_spinner()
   }
   if(doc_type==50 | doc_type==51 | doc_type==52 | doc_type==53 | doc_type==54){
@@ -3456,7 +3460,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   
   tableau$resolution<-resolution
   
-  if(tableau$resolution[1]=="Mois"){
+  if(tableau$resolution[1]=="Mois" & doc_type != 79){
     auj<-Sys.Date()
     auj<-str_extract(auj,".......")
     auj<-str_replace(auj,"-","/")
@@ -4864,7 +4868,8 @@ shinyServer(function(input, output,session){
         input$doc_type == 55 | (input$doc_type == 56 & input$search_mode==1)| input$doc_type == 57 | input$doc_type == 58 |
         input$doc_type == 59 | input$doc_type == 60 | input$doc_type == 61 | input$doc_type == 62 | input$doc_type == 63 | input$doc_type == 64| 
         input$doc_type == 65 | input$doc_type == 79){
-      df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)}
+      df = get_data(input$mot,input$beginning,input$end,input$resolution,input$doc_type,input$titres,input,input$cooccurrences,input$prox)
+      print(df)}
     else if(input$doc_type==4){
       inFile<-input$target_upload
       tot_df<- read.csv(inFile$datapath, header = TRUE,sep = ";",encoding = "UTF-8")
