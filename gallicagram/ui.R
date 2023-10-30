@@ -41,10 +41,12 @@ shinyUI(bootstrapPage(
                                 div(style="display: inline-block;vertical-align:top;",id="menumob2",actionButton("showSidebar2", "",icon = icon("bars"))),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 78%;",textInput("mot","Recherche","liberté&république")),
                                                 div(style="display: inline-block;vertical-align:bottom;width: 20%;",
-                                                    conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",numericInput("prox","Distance",20))
+                                                    conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",numericInput("prox","Distance",20)),
+                                                    conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 30)",
+                                                                     selectInput("scale_cooccur","Echelle",choices = list("Article","2gram","3gram","4gram")))
                                                     ),
-                                                conditionalPanel(condition="(input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",div(style = "margin-top: -20px")),
-                                                conditionalPanel(condition="(input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",checkboxInput("cooccurrences", "Explorer les cooccurrences", value = FALSE)),
+                                                conditionalPanel(condition="((input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1) || (input.doc_type == 30 && input.search_mode ==3)",div(style = "margin-top: -20px")),
+                                                conditionalPanel(condition="((input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1) || (input.doc_type == 30 && input.search_mode ==3)",checkboxInput("cooccurrences", "Explorer les cooccurrences", value = FALSE)),
                                                 
                                                 conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2 || input.doc_type==30) && input.search_mode == 3 && input.joker == 1",
                                                                  div(style="display: inline-block;vertical-align:bottom;width: 38%;",numericInput("stpw","Mots vides ignorés",500)),
