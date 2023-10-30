@@ -8,6 +8,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   if(input$doc_type==30 & input$cooccurrences){
     print("hihi")
     url_base = "https://shiny.ens-paris-saclay.fr/guni"
+    if(Sys.info()["nodename"]=="shiny"){url_base = "http://127.0.0.1:8000"} #Use localhost when on shiny server
     mots = str_split(input$mot,"&")[[1]]
     for(mot_cooccur in mots){
       if(str_detect(mot_cooccur,"\\*")){
