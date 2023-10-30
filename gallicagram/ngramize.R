@@ -6,6 +6,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   to<-input$end
   
   if(input$doc_type==30 & input$cooccurrences){
+    library(glue)
     print("hihi")
     url_base = "https://shiny.ens-paris-saclay.fr/guni"
     if(Sys.info()["nodename"]=="shiny"){url_base = "http://127.0.0.1:8000"} #Use localhost when on shiny server
