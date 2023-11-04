@@ -275,7 +275,7 @@ Plot <- function(data,input){
     customPalette = customPalette[c(2,1)]
   }
   if(length(unique(tableau$mot))>9){customPalette=NULL}
-  
+  if(input$daltonien){customPalette = brewer.pal(numGroups, "Set2")}
   if(input$visualiseur==10){
     total<-select(tableau,mot,ratio)
     total=total%>%group_by(mot)%>%summarise_all(sum)

@@ -4,25 +4,27 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   require("DBI")
   from<-input$beginning
   to<-input$end
-  
+  url_base = "https://shiny.ens-paris-saclay.fr/guni"
+  if(Sys.info()["nodename"]=="shiny"){url_base = "http://127.0.0.1:8000"} #Use localhost when on shiny server
   if(input$doc_type==30 & input$cooccurrences){
     library(glue)
-    print("hihi")
-    url_base = "https://shiny.ens-paris-saclay.fr/guni"
-    if(Sys.info()["nodename"]=="shiny"){url_base = "http://127.0.0.1:8000"} #Use localhost when on shiny server
     mots = str_split(input$mot,"&")[[1]]
     for(mot_cooccur in mots){
       if(str_detect(mot_cooccur,"\\*")){
         resolution = recode(input$resolution,"Mois"="mois","Année"="annee")
         mot1 = str_split(mot_cooccur,"\\*")[[1]][1]
         mot2 = str_split(mot_cooccur,"\\*")[[1]][2]
-        if(input$scale_cooccur=="Article"){df = read.csv(glue("{url_base}/cooccur?mot1={mot1}&mot2={mot2}&from={from}&to={to}&resolution={resolution}"))}
+        if(input$scale_cooccur==1){df = read.csv(glue("{url_base}/cooccur?mot1={mot1}&mot2={mot2}&from={from}&to={to}&resolution={resolution}"))
+        df = dplyr::rename(df,count=nb_articles_cooccur,base = nb_total_article)
+        }else{df = read.csv(glue("{url_base}/contain?mot1={mot1}&mot2={mot2}&from={from}&to={to}&resolution={resolution}"))
+        df = dplyr::rename(df,count=n,base=total)
+        }
       }
       df$mot = mot_cooccur
       if(mot_cooccur==mots[1]){tableau = df
       }else{tableau = rbind(tableau,df)}
     }
-    tableau = dplyr::rename(tableau,count=nb_articles_cooccur,base = nb_total_article)
+    
     if(input$resolution=="Mois"){tableau$date = paste(tableau$annee,tableau$mois,sep="/")}
     if(input$resolution=="Année"){tableau$date = tableau$annee}
     tableau$url = "https://www.lemonde.fr/"

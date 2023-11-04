@@ -43,7 +43,7 @@ shinyUI(bootstrapPage(
                                                 div(style="display: inline-block;vertical-align:bottom;width: 20%;",
                                                     conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",numericInput("prox","Distance",20)),
                                                     conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 30)",
-                                                                     selectInput("scale_cooccur","Echelle",choices = list("Article","2gram","3gram","4gram")))
+                                                                     selectInput("scale_cooccur","Echelle",choices = list("Article"=1,"4gram"=4)))
                                                     ),
                                                 conditionalPanel(condition="((input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1) || (input.doc_type == 30 && input.search_mode ==3)",div(style = "margin-top: -20px")),
                                                 conditionalPanel(condition="((input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1) || (input.doc_type == 30 && input.search_mode ==3)",checkboxInput("cooccurrences", "Explorer les cooccurrences", value = FALSE)),
@@ -174,6 +174,8 @@ shinyUI(bootstrapPage(
                                                                      div(style = "margin-top: -15px"),
                                                                      checkboxInput("points", "Points dans le graphe scientifique", value = TRUE),
                                                                      div(style = "margin-top: -15px"),
+                                                                    checkboxInput("daltonien", "Couleurs adaptées au daltonisme", value = FALSE),
+                                                                    div(style = "margin-top: -15px"),
                                                                      actionButton("lemmatiseur","Formes fléchies"),
                                                                      downloadButton("data_session","Données de la session"),
                                                                      circle = TRUE, status = "default",
