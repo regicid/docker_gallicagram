@@ -1290,7 +1290,8 @@ cloudify<-function(input){
 jokerize<-function(input){
   
   show_spinner(spin_id="ngram")
-  
+  require("RSQLite")
+  require("DBI")
   mot<-str_remove_all(input$mot,"&.+")
   mot<-str_remove_all(mot,"[+].+")
   mot<-str_remove_all(mot,"[+]")
