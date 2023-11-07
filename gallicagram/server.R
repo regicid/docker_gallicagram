@@ -275,7 +275,9 @@ Plot <- function(data,input){
     customPalette = customPalette[c(2,1)]
   }
   if(length(unique(tableau$mot))>9){customPalette=NULL}
-  if(input$daltonien){customPalette = brewer.pal(numGroups, "Set2")}
+  if(input$daltonien){
+    linetype = tableau$mot
+  }else{linetype=NULL}
   if(input$visualiseur==10){
     total<-select(tableau,mot,ratio)
     total=total%>%group_by(mot)%>%summarise_all(sum)
@@ -426,13 +428,13 @@ Plot <- function(data,input){
   tableau$ribbon_down[is.na(tableau$ribbon_down)] <- 0
   tableau$ribbon_up[tableau$ribbon_up>1.1*max(loess,na.rm=T)] = max(loess,na.rm=T)*1.1
   if(length(unique(tableau$date))<=20){
-    plot = plot_ly(tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='lines+markers',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text",connectgaps = FALSE)
+    plot = plot_ly(tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='lines+markers',line = list(shape = "spline"),linetype = linetype,customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text",connectgaps = FALSE)
     if(isolate(input$doc_type)!=5 & isolate(input$doc_type)!=9 & isolate(input$doc_type)!=10 & isolate(input$doc_type)!=12 & isolate(input$doc_type)!=44 & isolate(input$doc_type)!=58 & isolate(input$doc_type)!=59 & isolate(input$doc_type)!=60 & isolate(input$doc_type)!=61 & isolate(input$doc_type)!=62 & isolate(input$doc_type)!=63 & isolate(input$doc_type)!=64 & input$scale==F & input$multicourbes==F){
       plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,fillcolor=~mot,showlegend=F,opacity=.2)
     }
     plot = plot %>% add_trace(x=~date,y=~loess,color=~mot,legendgroup=~mot,showlegend=F,connectgaps = FALSE)
   }  else{
-    plot = plot_ly(data=tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='lines',line = list(shape = "spline"),customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text",connectgaps = FALSE)
+    plot = plot_ly(data=tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='lines',line = list(shape = "spline"),linetype = linetype,customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text",connectgaps = FALSE)
     if(isolate(input$doc_type)!=5 & isolate(input$doc_type)!=9 & isolate(input$doc_type)!=10 & isolate(input$doc_type)!=12 & isolate(input$doc_type)!=44 & isolate(input$doc_type)!=58 & isolate(input$doc_type)!=59 & isolate(input$doc_type)!=60 & isolate(input$doc_type)!=61 & isolate(input$doc_type)!=62 & isolate(input$doc_type)!=63 & isolate(input$doc_type)!=64 & input$scale==F & input$multicourbes==F){
       plot=plot%>%add_ribbons(data=tableau,x=~date,ymin=~ribbon_down,ymax=~ribbon_up,legendgroup=~mot,showlegend=F,fillcolor=~mot,opacity=.2)
     }
@@ -1288,7 +1290,6 @@ cloudify<-function(input){
 
 
 jokerize<-function(input){
-  
   show_spinner(spin_id="ngram")
   require("RSQLite")
   require("DBI")

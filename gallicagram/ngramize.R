@@ -289,8 +289,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       }
       
       dbDisconnect(con)
-      
-
+    
       if(input$resolution=="Année"){
         y=data.frame(annee=from:to, n=0)
       }
