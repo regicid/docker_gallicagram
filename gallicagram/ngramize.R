@@ -12,8 +12,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     for(mot_cooccur in mots){
       if(str_detect(mot_cooccur,"\\*")){
         resolution = recode(input$resolution,"Mois"="mois","Année"="annee")
-        mot1 = str_split(mot_cooccur,"\\*")[[1]][1]
-        mot2 = str_split(mot_cooccur,"\\*")[[1]][2]
+        mot1 = str_split(mot_cooccur,"\\*")[[1]][1] %>% tolower()
+        mot2 = str_split(mot_cooccur,"\\*")[[1]][2] %>% tolower()
         if(input$scale_cooccur==1){df = read.csv(glue("{url_base}/cooccur?mot1={mot1}&mot2={mot2}&from={from}&to={to}&resolution={resolution}"))
         df = dplyr::rename(df,count=n,base = total)
         }else{df = read.csv(glue("{url_base}/contain?mot1={mot1}&mot2={mot2}&from={from}&to={to}&resolution={resolution}"))
