@@ -37,7 +37,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       mots2 = str_split(mots1,"[+]")[[1]]
       for(mot in mots2){
         mot = tolower(mot)
-        df = read.csv(glue("{url_base}/query_persee?mot={URLencode(mot)}&from={from}&to={to}&revue=all"))
+        df = read.csv(glue("{url_base}/query_persee?mot={URLencode(mot)}&from={from}&to={to}&revue=",paste(input$rev_persee,collapse="+")))
         df = dplyr::rename(df,count=n,base = total,mot=gram)
         print(df)
         if(mot == mots2[1]){df_long=df
