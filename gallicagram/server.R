@@ -3949,6 +3949,11 @@ shinyServer(function(input, output,session){
   counter<<-0
   output$themes_presse<- renderUI({selectizeInput("theme_presse","Thématique",choices = list("Liste de titres personnalisée"=1))})
   output$theme<- renderUI({selectizeInput("dewey","Thématique",choices = list("-"="999"))})
+  
+  revues_persee = fromJSON("revues_persee.json")
+  codes_revues=unique(str_remove(str_extract(unique(names(unlist(revues_persee))),"\\..+"),"\\."))
+  output$persee<-renderUI({pickerInput("persee","Discipline",choices = setNames(as.character(names(revues_persee)),names(revues_persee)), multiple=T,selected=names(revues_persee),options = list(`actions-box` = TRUE))})
+  output$rev_persee<-renderUI({pickerInput("rev_persee","Revues",choices = setNames(codes_revues,unique(unlist(revues_persee))), multiple=T,selected=codes_revues,options = list(`actions-box` = TRUE))})
   options(warn = -1)
   set.seed(42)
   initcloud=data.frame(mot=c("liberté","république"), count=c(168035,226300))
@@ -4010,6 +4015,10 @@ shinyServer(function(input, output,session){
       output$themes_presse<-renderUI({pickerInput("theme_presse","Presse locale",choices = setNames(as.character(liste_departements$num),as.character(liste_departements$titre)), options = list(`actions-box` = TRUE),multiple = T, selected = 51)})
     }
   })})
+  observeEvent(input$persee,{
+    codes_revues=unique(str_remove(str_extract(unique(names(unlist(revues_persee[input$persee]))),"\\..+"),"\\."))
+    output$rev_persee<-renderUI({pickerInput("rev_persee","Revues",choices = setNames(codes_revues,unique(unlist(revues_persee[input$persee]))), multiple=T,selected=codes_revues,options = list(`actions-box` = TRUE))})
+  })
   
   observeEvent(input$lemmatiseur, {
     if(exists("lemme_table")==F){lemme_table<-read.csv("morphalou.csv",encoding="UTF-8")}
