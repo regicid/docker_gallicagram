@@ -33,13 +33,20 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   ##Persée
   if(input$doc_type == 34){
     mots = str_split(input$mot,"&")[[1]]
-    for(mot in mots){
-      mot = tolower(mot)
-      df = read.csv(glue("{url_base}/query_persee?mot={URLencode(mot)}&from={from}&to={to}&revue=all"))
-      df = dplyr::rename(df,count=n,base = total,mot=gram)
-      print(df)
-      if(mot==mots[1]){tableau = df
-      }else{tableau = rbind(tableau,df)}
+    for(mots1 in mots){
+      mots2 = str_split(mots1,"[+]")[[1]]
+      for(mot in mots2){
+        mot = tolower(mot)
+        df = read.csv(glue("{url_base}/query_persee?mot={URLencode(mot)}&from={from}&to={to}&revue=all"))
+        df = dplyr::rename(df,count=n,base = total,mot=gram)
+        print(df)
+        if(mot == mots2[1]){df_long=df
+        }else{df_long = rbind(df_long,df)}
+      }
+      df_sum = df_long %>% dplyr::group_by(annee) %>% dplyr::summarise(count=sum(count),base = sum(base))
+      df_sum$mot = mots1
+      if(mots1==mots[1]){tableau = df_sum
+      }else{tableau = rbind(tableau,df_sum)}
     }
     tableau$url = url<-str_c("https://www.persee.fr/search?l=fre&da=",tableau$annee,"&q=%22",mot,"%22")
     tableau$corpus="Presse"
@@ -518,5 +525,4 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   
   
   return(data)
-  
 }
