@@ -1,4 +1,5 @@
 ngramize<-function(input,nouvrequette,gallicagram,agregator){
+  library(glue)
   show_spinner(spin_id="ngram")
   require("RSQLite")
   require("DBI")
@@ -7,7 +8,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   url_base = "https://shiny.ens-paris-saclay.fr/guni"
   if(Sys.info()["nodename"]=="shiny"){url_base = "http://127.0.0.1:8000"} #Use localhost when on shiny server
   if(input$doc_type==30 & input$cooccurrences){
-    library(glue)
     mots = str_split(input$mot,"&")[[1]]
     for(mot_cooccur in mots){
       if(str_detect(mot_cooccur,"\\*")){
@@ -24,13 +24,31 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       if(mot_cooccur==mots[1]){tableau = df
       }else{tableau = rbind(tableau,df)}
     }
-    
-    if(input$resolution=="Mois"){tableau$date = paste(tableau$annee,tableau$mois,sep="/")}
-    if(input$resolution=="Année"){tableau$date = tableau$annee}
     tableau$url = "https://www.lemonde.fr/"
     tableau$corpus="Presse"
     tableau$langue="Français"
     tableau$bibli="Le Monde"
+  }
+  
+  ##Persée
+  if(input$doc_type == 34){
+    mots = str_split(input$mot,"&")[[1]]
+    for(mot in mots){
+      mot = tolower(mot)
+      df = read.csv(glue("{url_base}/query_persee?mot={URLencode(mot)}&from={from}&to={to}&revue=all"))
+      df = dplyr::rename(df,count=n,base = total,mot=gram)
+      print(df)
+      if(mot==mots[1]){tableau = df
+      }else{tableau = rbind(tableau,df)}
+    }
+    tableau$url = url<-str_c("https://www.persee.fr/search?l=fre&da=",tableau$annee,"&q=%22",mot,"%22")
+    tableau$corpus="Presse"
+    tableau$langue="Français"
+    tableau$bibli="Persée"
+  }
+  if((input$doc_type==30 & input$cooccurrences) | input$doc_type==34){
+    if(input$resolution=="Mois"){tableau$date = paste(tableau$annee,tableau$mois,sep="/")}
+    if(input$resolution=="Année"){tableau$date = tableau$annee}
     tableau$search_mode<-"N-gramme"
     print(tableau)
     tableau$ratio = tableau$count/tableau$base

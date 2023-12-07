@@ -2292,7 +2292,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
             if(input$resolution=="Année"){url=str_c("https://trove.nla.gov.au/search/advanced/category/newspapers?keyword=",mot1,"&l-advArtType=newspapers&date.from=",y,"-01-01&date.to=",y,"-12-31")}
             if(input$resolution=="Mois"){url=str_c("https://trove.nla.gov.au/search/advanced/category/newspapers?keyword=",mot1,"&l-advArtType=newspapers&date.from=",y,"-",z,"-01&date.to=",y,"-",z,"-",end_of_month[j])}
           }
-          if(doc_type ==34){
+          if(doc_type ==34 & input$search_mode==1){
             ngram<-read_html(RETRY("GET",url,times = 3))
             a<-html_text(ngram)
             a<-str_extract(a,".+Résultats")
@@ -4084,7 +4084,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$language,{
     observeEvent(input$bibli,{
       if(input$language == 1 & input$bibli==0){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0,"Presse française / Gallica (~1789-1950)" = 1,"Livres / Gallica (~1600-1940)" = 2, "Livres+Presse / Gallica"=56,"Le Monde (1944-2022)"=30,"Le Journal des Débats (1789-1944)"=75,"L'Humanité (1904-1952)"=67,"Le Petit Journal (1863-1942)"=72,"Le Petit Parisien (1876-1944)"=73,"Le Journal de Paris (1777-1827)"=69,"Le Temps (1861-1942)"=71,"Le Figaro (1854-1952)"=66,"Le Moniteur universel (1789-1901)"=70),selected = 1)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0,"Presse française / Gallica (~1789-1950)" = 1,"Le Monde (1944-2022)"=30,"Persée"=34,"Livres / Gallica (~1600-1940)" = 2, "Livres+Presse / Gallica"=56,"Le Journal des Débats (1789-1944)"=75,"L'Humanité (1904-1952)"=67,"Le Petit Journal (1863-1942)"=72,"Le Petit Parisien (1876-1944)"=73,"Le Journal de Paris (1777-1827)"=69,"Le Temps (1861-1942)"=71,"Le Figaro (1854-1952)"=66,"Le Moniteur universel (1789-1901)"=70),selected = 1)
       }
       else if(input$language == 1 & input$bibli==1){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse française / Gallica (~1789-1950)" = 1,"Recherche par titre de presse / Gallica" = 3, "Livres / Gallica (~1600-1940)" = 2, 
@@ -4154,7 +4154,11 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Année",inline = T)
     }
-    if(input$doc_type == 32 | input$doc_type == 33 | input$doc_type == 34 | input$doc_type == 36){
+    if(input$doc_type == 34){
+      updateSelectInput(session,"search_mode",choices = list("Par document" = 1,"Par n-gramme"=3),selected = 3)
+      updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
+    }
+    if(input$doc_type == 32 | input$doc_type == 33  | input$doc_type == 36){
       updateSelectInput(session,"search_mode",choices = list("Par document" = 1),selected = 1)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
@@ -4394,7 +4398,7 @@ shinyServer(function(input, output,session){
     if ((input$doc_type==1 & input$search_mode==1) |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | 
         input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | 
         input$doc_type == 21 | input$doc_type == 22 | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | 
-        input$doc_type == 32 | input$doc_type == 33 | input$doc_type == 34 | input$doc_type == 35 | input$doc_type == 36 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | 
+        input$doc_type == 32 | input$doc_type == 33 | (input$doc_type == 34 & input$search_mode == 1) | input$doc_type == 35 | input$doc_type == 36 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | 
         input$doc_type == 42 | (input$doc_type == 43 & input$search_mode %in% c(1,4)) | input$doc_type == 44 | ((input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) |
         input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48  | input$doc_type == 49 |
         input$doc_type == 50 | input$doc_type == 51 | input$doc_type == 52 | input$doc_type == 53  | input$doc_type == 54 |
