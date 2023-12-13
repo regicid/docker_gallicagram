@@ -48,7 +48,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       if(mots1==mots[1]){tableau = df_sum
       }else{tableau = rbind(tableau,df_sum)}
     }
-    tableau$url = url<-str_c("https://www.persee.fr/search?l=fre&da=",tableau$annee,"&q=%22",mot,"%22")
+    tableau$url = url<-str_c("https://www.persee.fr/search?l=fre&da=",tableau$annee,"&q=%22",tableau$mot,"%22")
     if(length(input$rev_persee) < 362){tableau$url = str_c(tableau$url,paste(str_c("&c=",input$rev_persee),collapse=""))}
     #!identical(input$rev_persee,"all")
     tableau$corpus="Presse"

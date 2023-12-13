@@ -3952,8 +3952,8 @@ shinyServer(function(input, output,session){
   
   revues_persee = fromJSON("revues_persee.json")
   codes_revues=unique(str_remove(str_extract(unique(names(unlist(revues_persee))),"\\..+"),"\\."))
-  output$persee<-renderUI({pickerInput("persee","Discipline",choices = setNames(as.character(names(revues_persee)),names(revues_persee)), multiple=T,selected=names(revues_persee),options = list(`actions-box` = TRUE))})
-  output$rev_persee<-renderUI({pickerInput("rev_persee","Revues",choices = setNames(codes_revues,unique(unlist(revues_persee))), multiple=T,selected=codes_revues,options = list(`actions-box` = TRUE))})
+  output$persee<-renderUI({pickerInput("persee","Discipline",choices = setNames(as.character(names(revues_persee)),names(revues_persee)), multiple=T,selected=names(revues_persee),options = list(`actions-box` = TRUE,`live-search`=TRUE))})
+  output$rev_persee<-renderUI({pickerInput("rev_persee","Revues",choices = setNames(codes_revues,unique(unlist(revues_persee))), multiple=T,selected=codes_revues,options = list(`actions-box` = TRUE,`live-search`=TRUE))})
   options(warn = -1)
   set.seed(42)
   initcloud=data.frame(mot=c("liberté","république"), count=c(168035,226300))
@@ -4017,7 +4017,7 @@ shinyServer(function(input, output,session){
   })})
   observeEvent(input$persee,{
     codes_revues=unique(str_remove(str_extract(unique(names(unlist(revues_persee[input$persee]))),"\\..+"),"\\."))
-    output$rev_persee<-renderUI({pickerInput("rev_persee","Revues",choices = setNames(codes_revues,unique(unlist(revues_persee[input$persee]))), multiple=T,selected=codes_revues,options = list(`actions-box` = TRUE))})
+    output$rev_persee<-renderUI({pickerInput("rev_persee","Revues",choices = setNames(codes_revues,unique(unlist(revues_persee[input$persee]))), multiple=T,selected=codes_revues,options = list(`actions-box` = TRUE,`live-search`=TRUE))})
   })
   
   observeEvent(input$lemmatiseur, {
