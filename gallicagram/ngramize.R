@@ -40,7 +40,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         df = read.csv(glue("{url_base}/query_persee?mot={URLencode(mot)}&from={from}&to={to}&revue=",paste(input$rev_persee,collapse="+")))
         df = dplyr::rename(df,count=n,base = total,mot=gram)
         print(df)
-        if(mot == mots2[1]){df_long=df
+        if(mot == tolower(mots2[1])){df_long=df
         }else{df_long = rbind(df_long,df)}
       }
       df_sum = df_long %>% dplyr::group_by(annee) %>% dplyr::summarise(count=sum(count),base = sum(base))
