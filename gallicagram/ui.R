@@ -47,6 +47,7 @@ shinyUI(bootstrapPage(
                                                     ),
                                                 conditionalPanel(condition="((input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1) || (input.doc_type == 30 && input.search_mode ==3)",div(style = "margin-top: -20px")),
                                                 conditionalPanel(condition="((input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1) || (input.doc_type == 30 && input.search_mode ==3)",checkboxInput("cooccurrences", "Explorer les cooccurrences", value = FALSE)),
+                                conditionalPanel(condition="(input.doc_type == 34)",checkboxInput("persee_by_revue", "Ventiler les occurrences par revue", value = FALSE)),
                                                 
                                                 conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2 || input.doc_type==30) && input.search_mode == 3 && input.joker == 1",
                                                                  div(style="display: inline-block;vertical-align:bottom;width: 38%;",numericInput("stpw","Mots vides ignorés",500)),

@@ -5,7 +5,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   require("DBI")
   from<-input$beginning
   to<-input$end
-  url_base = "https://shiny.ens-paris-saclay.fr/guni"
+  url_base = "https://shiny.ens-paris-saclay.fr/guni" #If you are not on the gallicagram server
   if(Sys.info()["nodename"]=="shiny"){url_base = "http://127.0.0.1:8000"} #Use localhost when on shiny server
   if(input$doc_type==30 & input$cooccurrences){
     mots = str_split(input$mot,"&")[[1]]
@@ -37,13 +37,15 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       mots2 = str_split(mots1,"[+]")[[1]]
       for(mot in mots2){
         mot = tolower(mot)
-        df = read.csv(glue("{url_base}/query_persee?mot={URLencode(mot)}&from={from}&to={to}&revue=",paste(input$rev_persee,collapse="+")))
+        df = read.csv(glue("{url_base}/query_persee?mot={URLencode(mot)}&from={from}&to={to}&by_revue={str_to_title(tolower(input$persee_by_revue))}&revue=",paste(input$rev_persee,collapse="+")))
         df = dplyr::rename(df,count=n,base = total,mot=gram)
         print(df)
         if(mot == tolower(mots2[1])){df_long=df
         }else{df_long = rbind(df_long,df)}
       }
-      df_sum = df_long %>% dplyr::group_by(annee) %>% dplyr::summarise(count=sum(count),base = sum(base))
+      if(input$persee_by_revue){
+        df_sum = df_long %>% dplyr::group_by(annee,revue) %>% dplyr::summarise(count=sum(count),base = mean(base),revue=unique(revue))
+        }else{df_sum = df_long %>% dplyr::group_by(annee) %>% dplyr::summarise(count=sum(count),base = mean(base))}
       df_sum$mot = mots1
       if(mots1==mots[1]){tableau = df_sum
       }else{tableau = rbind(tableau,df_sum)}
