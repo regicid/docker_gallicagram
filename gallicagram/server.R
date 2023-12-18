@@ -61,6 +61,10 @@ Plot <- function(data,input){
   }
   if(input$doc_type==34 & input$persee_by_revue & "revue" %in% colnames(tableau)){
     tableau = tableau %>% group_by(revue,annee) %>% dplyr::summarise(count=sum(count))
+    tableau_sum = tableau %>% group_by(revue) %>% dplyr::summarise(count=sum(count))
+    tableau_sum = tableau_sum[tableau_sum$count > 0,]
+    tableau_sum = tableau_sum[order(tableau_sum$count,decreasing = T),][1:input$nb_max_revues,]
+    tableau = tableau[tableau$revue %in% tableau_sum$revue,]
     tableau$date = tableau$annee
     tableau$date<-str_c(tableau$date,"/01/01")
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
@@ -68,11 +72,21 @@ Plot <- function(data,input){
     names_revues = unique(unlist(revues_persee))
     codes_revues=unique(str_remove(str_extract(unique(names(unlist(revues_persee))),"\\..+"),"\\."))
     names(names_revues) = codes_revues
-    tableau$revue = names_revues[tableau$revue]
-    plot_persee_par_doc = ggplot(tableau,aes(date,count,fill=revue)) + geom_area() + theme_minimal()
+    if(input$visualiseur==1){
+      tableau$revue = names_revues[tableau$revue]
+    plot_persee_par_doc = ggplot(tableau,aes(date,count,fill=revue)) + 
+      geom_area() + theme_minimal() + xlab("Date") + ylab("Nombre d'occurrences")
     #plot_persee_par_doc = ggplot(tableau,aes(date,count,fill=revue)) + geom_bar(position="stack", stat="identity") + theme_minimal()
-    if(length(input$rev_persee)>10){plot_persee_par_doc = plot_persee_par_doc + guides(fill="none")}
+    if(length(unique(tableau$revue))>15){plot_persee_par_doc = plot_persee_par_doc + guides(fill="none")}
     plot_persee_par_doc = ggplotly(plot_persee_par_doc)
+    }
+    if(input$visualiseur==2){
+     tableau = tableau %>% group_by(revue) %>% summarise(count = sum(count)) 
+     #ggplot(tableau,aes(y=reorder(revue,x=count)) + geom_bar(stat = 'identity')
+     tableau$url = str_c("https://www.persee.fr/search?l=fre&da=",from,"-",to,"&q=%22",data$mot,"%22","&c=",tableau$revue)
+     tableau$revue = names_revues[tableau$revue]
+     plot_persee_par_doc<-plot_ly(x=~tableau$count,y=reorder(tableau$revue,tableau$count),type="bar",customdata=tableau$url)
+    }
     return(onRender(plot_persee_par_doc,js))
   }
   if(input$multicourbes==TRUE | isolate(input$doc_type)==0){
@@ -3946,6 +3960,11 @@ shinyServer(function(input, output,session){
   })
   observeEvent(input$joker, {
     if(input$joker==T & (input$doc_type==1 | input$doc_type==2 | input$doc_type==30) & input$search_mode==3){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Ctre de gravité"=10,"Rayures"=11),selected = 2)}
+    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Ctre de gravité"=10,"Rayures"=11),selected = 1)}
+    
+  })
+  observeEvent(input$persee_by_revue, {
+    if(input$persee_by_revue==T & input$doc_type==34){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Ctre de gravité"=10,"Rayures"=11),selected = 2)}
     else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Ctre de gravité"=10,"Rayures"=11),selected = 1)}
     
   })

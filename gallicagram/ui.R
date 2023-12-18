@@ -43,7 +43,9 @@ shinyUI(bootstrapPage(
                                                 div(style="display: inline-block;vertical-align:bottom;width: 20%;",
                                                     conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1",numericInput("prox","Distance",20)),
                                                     conditionalPanel(condition="input.cooccurrences==1 && (input.doc_type == 30)",
-                                                                     selectInput("scale_cooccur","Echelle",choices = list("Article"=1,"4gram"=4)))
+                                                                     selectInput("scale_cooccur","Echelle",choices = list("Article"=1,"4gram"=4))),
+                                                    conditionalPanel(condition="input.persee_by_revue && input.doc_type==34",
+                                                                     numericInput("nb_max_revues","Nombre max de revues",10))
                                                     ),
                                                 conditionalPanel(condition="((input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1) || (input.doc_type == 30 && input.search_mode ==3)",div(style = "margin-top: -20px")),
                                                 conditionalPanel(condition="((input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1) || (input.doc_type == 30 && input.search_mode ==3)",checkboxInput("cooccurrences", "Explorer les cooccurrences", value = FALSE)),
