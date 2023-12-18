@@ -64,6 +64,7 @@ Plot <- function(data,input){
     tableau$date = tableau$annee
     tableau$date<-str_c(tableau$date,"/01/01")
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
+    revues_persee = fromJSON("revues_persee.json")
     names_revues = unique(unlist(revues_persee))
     codes_revues=unique(str_remove(str_extract(unique(names(unlist(revues_persee))),"\\..+"),"\\."))
     names(names_revues) = codes_revues
@@ -3964,7 +3965,6 @@ shinyServer(function(input, output,session){
   counter<<-0
   output$themes_presse<- renderUI({selectizeInput("theme_presse","Thématique",choices = list("Liste de titres personnalisée"=1))})
   output$theme<- renderUI({selectizeInput("dewey","Thématique",choices = list("-"="999"))})
-  
   revues_persee = fromJSON("revues_persee.json")
   codes_revues=unique(str_remove(str_extract(unique(names(unlist(revues_persee))),"\\..+"),"\\."))
   output$persee<-renderUI({pickerInput("persee","Discipline",choices = setNames(as.character(names(revues_persee)),names(revues_persee)), multiple=T,selected=names(revues_persee),options = list(`actions-box` = TRUE,`live-search`=TRUE))})
