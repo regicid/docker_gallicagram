@@ -83,7 +83,7 @@ Plot <- function(data,input){
     if(input$visualiseur==2){
      tableau = tableau %>% group_by(revue) %>% summarise(count = sum(count)) 
      #ggplot(tableau,aes(y=reorder(revue,x=count)) + geom_bar(stat = 'identity')
-     tableau$url = str_c("https://www.persee.fr/search?l=fre&da=",from,"-",to,"&q=%22",data$mot,"%22","&c=",tableau$revue)
+     tableau$url = str_c("https://www.persee.fr/search?l=fre&da=",input$from,"-",input$to,"&q=%22",data$mot,"%22","&c=",tableau$revue)
      tableau$revue = names_revues[tableau$revue]
      plot_persee_par_doc<-plot_ly(x=~tableau$count,y=reorder(tableau$revue,tableau$count),type="bar",customdata=tableau$url)
     }
