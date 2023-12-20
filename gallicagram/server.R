@@ -81,7 +81,7 @@ Plot <- function(data,input){
     plot_persee_par_doc = ggplotly(plot_persee_par_doc)
     }
     if(input$visualiseur==2){
-     tableau = tableau %>% group_by(revue) %>% summarise(count = sum(count)) 
+     tableau = tableau %>% dplyr::group_by(revue) %>% dplyr::summarise(count = sum(count)) 
      #ggplot(tableau,aes(y=reorder(revue,x=count)) + geom_bar(stat = 'identity')
      tableau$url = str_c("https://www.persee.fr/search?l=fre&da=",input$from,"-",input$to,"&q=%22",data$mot,"%22","&c=",tableau$revue)
      tableau$revue = names_revues[tableau$revue]
@@ -4002,6 +4002,10 @@ shinyServer(function(input, output,session){
       observeEvent(input$gallicloud,{
       if(input$cooccurrences==T & ((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1))){
         output$instructions <- renderUI(HTML(str_c('<ul><li>Utiliser "a*b" pour rechercher a à ',input$prox,' mots maximum de b</li><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>')))
+      }else if(input$persee_by_revue==F & input$doc_type == 34){
+        output$instructions <- renderUI(HTML(str_c('<ul><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans Persée</li><li><a href = "https://regicid.github.io/persee", target=\'_blank\'>Notice du corpus Persée</a></ul>')))
+      }else if(input$persee_by_revue==T & input$doc_type == 34){
+        output$instructions <- renderUI(HTML(str_c('<ul><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans Persée</li><li><a href = "https://regicid.github.io/persee", target=\'_blank\'>Notice du corpus Persée</a></ul>')))
       }else if(input$cooccurrences==T & input$doc_type == 30){
         output$instructions <- renderUI(HTML(str_c('<ul><li>Utiliser "a*b" pour rechercher les cooccurrences de a et b</li><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>')))
       }else if(input$joker==T & ((input$doc_type == 1 & input$search_mode == 3)|(input$doc_type == 2 & input$search_mode == 3))){
