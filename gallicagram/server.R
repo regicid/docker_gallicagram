@@ -59,7 +59,7 @@ Plot <- function(data,input){
       tableau = data[["tableau_volume"]]
     }
   }
-  if(input$doc_type==34 & input$persee_by_revue & "revue" %in% colnames(tableau)){
+  if(input$doc_type==34 & isolate(input$persee_by_revue) & "revue" %in% colnames(tableau)){
     tableau = tableau %>% group_by(revue,annee) %>% dplyr::summarise(count=sum(count))
     tableau_sum = tableau %>% group_by(revue) %>% dplyr::summarise(count=sum(count))
     tableau_sum = tableau_sum[tableau_sum$count > 0,]
@@ -73,8 +73,22 @@ Plot <- function(data,input){
     codes_revues=unique(str_remove(str_extract(unique(names(unlist(revues_persee))),"\\..+"),"\\."))
     names(names_revues) = codes_revues
     if(input$visualiseur==1){
+      tableau$count_loess = tableau$count
+      for(revue in unique(tableau$revue)){
+        if(input$span>0){
+          z = which(tableau$revue==revue)
+          for(i in 1:length(z)){
+            j = max(i-floor(input$span/2),0)
+            k = i+ceiling(input$span/2)
+            if(is.na(tableau$count[i])){
+              next
+            }
+            tableau$count_loess[z][i] = mean(tableau$count[z][j:k],na.rm=T)
+          }}
+        }
+      
       tableau$revue = names_revues[tableau$revue]
-    plot_persee_par_doc = ggplot(tableau,aes(date,count,fill=revue)) + 
+    plot_persee_par_doc = ggplot(tableau,aes(date,count_loess,fill=revue)) + 
       geom_area() + theme_minimal() + xlab("Date") + ylab("Nombre d'occurrences")
     #plot_persee_par_doc = ggplot(tableau,aes(date,count,fill=revue)) + geom_bar(position="stack", stat="identity") + theme_minimal()
     if(length(unique(tableau$revue))>15){plot_persee_par_doc = plot_persee_par_doc + guides(fill="none")}
@@ -86,6 +100,7 @@ Plot <- function(data,input){
      tableau$url = str_c("https://www.persee.fr/search?l=fre&da=",input$from,"-",input$to,"&q=%22",data$mot,"%22","&c=",tableau$revue)
      tableau$revue = names_revues[tableau$revue]
      plot_persee_par_doc<-plot_ly(x=~tableau$count,y=reorder(tableau$revue,tableau$count),type="bar",customdata=tableau$url)
+     plot_persee_par_doc = plot_persee_par_doc %>% layout(yaxis = list(title = "Nombres d'occurrences"))
     }
     return(onRender(plot_persee_par_doc,js))
   }
@@ -3963,11 +3978,6 @@ shinyServer(function(input, output,session){
     else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Ctre de gravité"=10,"Rayures"=11),selected = 1)}
     
   })
-  observeEvent(input$persee_by_revue, {
-    if(input$persee_by_revue==T & input$doc_type==34){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Ctre de gravité"=10,"Rayures"=11),selected = 2)}
-    else{updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Ctre de gravité"=10,"Rayures"=11),selected = 1)}
-    
-  })
   
   hide(id="gallicloud")
   hideTab("#navbar","Gallicapresse")
@@ -4703,6 +4713,8 @@ shinyServer(function(input, output,session){
         output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
       }
       hide_spinner(spin_id = "contexte")}
+    if(isolate(input$persee_by_revue==T & input$doc_type==34)){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Ctre de gravité"=10,"Rayures"=11),selected = 2)}
+    
   })
   
   ###
