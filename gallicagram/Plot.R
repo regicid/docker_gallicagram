@@ -73,6 +73,7 @@ Plot <- function(data,input){
     if(input$visualiseur %in% c(6,9)){
       library(FactoMineR)
       library(factoextra)
+      library(tidyr)
       total = tableau %>% group_by(revue,mot) %>% dplyr::summarise(count=sum(count))
       a=data.frame(spread(total, mot,count))
       rownames(a)=names_revues[a$revue]
