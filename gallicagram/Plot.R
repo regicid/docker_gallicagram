@@ -77,6 +77,9 @@ Plot <- function(data,input){
       a=data.frame(spread(total, mot,count))
       rownames(a)=names_revues[a$revue]
       a = a[-1]
+      z = rowSums(a)
+      z = z[order(z,decreasing = T)][1:input$nb_max_revues]
+      a = a[row.names(a) %in% names(z),]
       if(input$visualiseur==6){
         res.pca=PCA(a,scale.unit = TRUE)
         rownames(res.pca$ind$coord)=rownames(a)
