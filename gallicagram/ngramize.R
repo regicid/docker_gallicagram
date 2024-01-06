@@ -1,3 +1,9 @@
+extract_mot = function(mot){
+  table<-unnest_tokens(as.data.frame(mot),ngram,mot, token = "ngrams", n = 1)
+  nb<-length(table$ngram)
+  return(paste(table$ngram,collapse=" "))
+}
+
 ngramize<-function(input,nouvrequette,gallicagram,agregator){
   library(glue)
   show_spinner(spin_id="ngram")
@@ -36,7 +42,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     for(mots1 in mots){
       mots2 = str_split(mots1,"[+]")[[1]]
       for(mot in mots2){
-        mot = tolower(mot)
+        mot = extract_mot(mot)
         df = read.csv(glue("{url_base}/query_persee?mot={URLencode(mot)}&from={from}&to={to}&by_revue={str_to_title(tolower(input$persee_by_revue))}&revue=",paste(input$rev_persee,collapse="+")))
         df = dplyr::rename(df,count=n,base = total,mot=gram)
         print(df)
@@ -50,7 +56,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       if(mots1==mots[1]){tableau = df_sum
       }else{tableau = rbind(tableau,df_sum)}
     }
-    tableau$url =str_c("https://www.persee.fr/search?l=fre&da=",tableau$annee,"&q=%22",tableau$mot,"%22")
+    tableau$url =str_c("https://www.persee.fr/search?l=fre&da=",tableau$annee,tableau$mot)
     if(length(input$rev_persee) < 362){tableau$url = str_c(tableau$url,paste(str_c("&c=",input$rev_persee),collapse=""))}
     #!identical(input$rev_persee,"all")
     tableau$corpus="Presse"
@@ -97,8 +103,6 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     print(mots2)
     increment2<-1
     for(mot in mots2){
-      
-      
       table<-unnest_tokens(as.data.frame(mot),ngram,mot, token = "ngrams", n = 1)
       nb<-length(table$ngram)
       mot<-table$ngram[1]
