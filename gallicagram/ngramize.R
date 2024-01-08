@@ -46,7 +46,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
         df = read.csv(glue("{url_base}/query_persee?mot={URLencode(mot)}&from={from}&to={to}&by_revue={str_to_title(tolower(input$persee_by_revue))}&revue=",paste(input$rev_persee,collapse="+")))
         df = dplyr::rename(df,count=n,base = total,mot=gram)
         print(df)
-        if(mot == tolower(mots2[1])){df_long=df
+        if(mot == extract_mot(mots2[1])){df_long=df
         }else{df_long = rbind(df_long,df)}
       }
       if(input$persee_by_revue){
