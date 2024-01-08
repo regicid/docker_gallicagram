@@ -89,7 +89,7 @@ Plot <- function(data,input){
       if(input$visualiseur==9){
         res.pca=CA(a)
         rownames(res.pca$row$coord)=rownames(a)
-        bb<-fviz_ca_biplot(res.pca,geom.col = c("text"),geom.row = c("text"), label="all",labelsize=3,col.col="black")+labs(title="") 
+        bb<-fviz_ca_biplot(res.pca,geom.col = c("text"),geom.row = c("text"), label="all",labelsize=3,col.col="red")+labs(title="") 
       }
       plot_persee_par_doc = ggplotly(bb)
     }
