@@ -30,7 +30,7 @@ Plot <- function(data,input){
     tableau$date<-str_c(tableau$date,"/01/01")
     tableau$date<-as.Date.character(tableau$date,format = c("%Y/%m/%d"))
     if(!input$visualiseur %in% c(6,9)){
-      tableau = tableau %>% group_by(revue,annee) %>% dplyr::summarise(count=sum(count))
+      tableau = tableau %>% group_by(revue,date) %>% dplyr::summarise(count=sum(count))
       tableau_sum = tableau %>% group_by(revue) %>% dplyr::summarise(count=sum(count))
       tableau_sum = tableau_sum[tableau_sum$count > 0,]
       tableau_sum = tableau_sum[order(tableau_sum$count,decreasing = T),][1:input$nb_max_revues,]
