@@ -167,7 +167,7 @@ SPlot <- function(data,input){
     z = which(tableau$mot==mot)
     tableau$scale[z]=scale(tableau$scale[z],center = F,scale = T)
   }
-  if(input$scale==TRUE |input$multicourbes==TRUE){tableau$ratio = tableau$scale}
+  if(input$scale==TRUE){tableau$ratio = tableau$scale}
   
   if(input$delta==T | input$fraction==T){
     mots<-str_split(input$mot,"&")
@@ -2346,15 +2346,15 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
         year = result$year[i]
         month = result$month[i]
         end_month = 12*(input$resolution=="Année") + month*(input$resolution=="Mois")
-        url = glue("https://www.lorientlejour.com/archives?action=search&title=&q={word}&method=exact&author=&category=all&dateFrom=01-{month}-{year}&dateTo={end_of_month[end_month]}-{end_month}-{year}") %>% URLencode()
-        url_total = glue("https://www.lorientlejour.com/archives?action=search&title=&q=&method=and&author=&category=all&dateFrom=01-{month}-{year}&dateTo={end_of_month[end_month]}-{end_month}-{year}") %>% URLencode()
+        url = glue("https://www.lorientlejour.com/archives?action=search&title=&keyword={word}&method=exact&author=&category=all&date_from=01-{month}-{year}&date_to={end_of_month[end_month]}-{end_month}-{year}") %>% URLencode()
+        url_total = glue("https://www.lorientlejour.com/archives?action=search&title=&keyword=&method=and&author=&category=all&date_from=01-{month}-{year}&date_to={end_of_month[end_month]}-{end_month}-{year}") %>% URLencode()
         if(year==year(Sys.Date()) & input$resolution=="Année"){ # In the current year, we have to stop the search at today, otherwise there is a bug
-          url = glue("https://www.lorientlejour.com/archives?action=search&title=&q={word}&method=exact&author=&category=all&dateFrom=01-{month}-{year}&dateTo={day(Sys.Date())}-{month(Sys.Date())}-{year}") %>% URLencode()
-          url_total = glue("https://www.lorientlejour.com/archives?action=search&title=&q=&method=and&author=&category=all&dateFrom=01-{month}-{year}&dateTo={day(Sys.Date())}-{month(Sys.Date())}-{year}") %>% URLencode()
+          url = glue("https://www.lorientlejour.com/archives?action=search&title=&keyword={word}&method=exact&author=&category=all&date_from=01-{month}-{year}&date_to={day(Sys.Date())}-{month(Sys.Date())}-{year}") %>% URLencode()
+          url_total = glue("https://www.lorientlejour.com/archives?action=search&title=&keyword=&method=and&author=&category=all&date_from=01-{month}-{year}&date_to={day(Sys.Date())}-{month(Sys.Date())}-{year}") %>% URLencode()
         }
         if(year==year(Sys.Date()) & month==month(Sys.Date()) & input$resolution=="Mois"){#Stop at current day to avoid bug
-          url = glue("https://www.lorientlejour.com/archives?action=search&title=&q={word}&method=exact&author=&category=all&dateFrom=01-{month}-{year}&dateTo={day(Sys.Date())}-{end_month}-{year}") %>% URLencode()
-          url_total = glue("https://www.lorientlejour.com/archives?action=search&title=&q=&method=and&author=&category=all&dateFrom=01-{month}-{year}&dateTo={day(Sys.Date())}-{end_month}-{year}") %>% URLencode()
+          url = glue("https://www.lorientlejour.com/archives?action=search&title=&keyword={word}&method=exact&author=&category=all&date_from=01-{month}-{year}&date_to={day(Sys.Date())}-{end_month}-{year}") %>% URLencode()
+          url_total = glue("https://www.lorientlejour.com/archives?action=search&title=&keyword=&method=and&author=&category=all&date_from=01-{month}-{year}&date_to={day(Sys.Date())}-{end_month}-{year}") %>% URLencode()
         }
         if((year==year(Sys.Date()) & month>month(Sys.Date())) | year > year(Sys.Date())){#Skip if the time step is in the future
           next}
@@ -3613,7 +3613,7 @@ shinyServer(function(input, output,session){
       updateRadioButtons(session,"resolution",choices = c("Année","Mois"),selected = "Mois",inline = T)
     }
     if( input$doc_type == 30 | input$doc_type == 66 | input$doc_type == 67 | input$doc_type == 68 | input$doc_type == 69 | input$doc_type == 70 | input$doc_type == 71 ){
-      updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
+      updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3,"Par article" = 4),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Année",inline = T)
     }
     if( input$doc_type == 77 | input$doc_type == 78 ){
@@ -3868,7 +3868,7 @@ shinyServer(function(input, output,session){
     
     if ((input$doc_type==1 & input$search_mode==1) |(input$doc_type == 3 & input$search_mode==1) | input$doc_type==5 | (input$doc_type==2 & input$search_mode==1) | input$doc_type==6 | input$doc_type==7 | input$doc_type==8 | input$doc_type == 9 | input$doc_type == 10 | 
         input$doc_type == 11 | input$doc_type == 12 | input$doc_type == 13 | input$doc_type == 14 | input$doc_type == 15 | input$doc_type == 16 | input$doc_type == 17 | input$doc_type == 18 | input$doc_type == 19 | input$doc_type == 20 | 
-        input$doc_type == 21 | input$doc_type == 22 | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | 
+        input$doc_type == 21 | input$doc_type == 22 | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 29 | (input$doc_type == 30 & input$search_mode == 4) |
         input$doc_type == 32 | input$doc_type == 33 | (input$doc_type == 34 & input$search_mode == 1) | input$doc_type == 35 | input$doc_type == 36 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | 
         input$doc_type == 42 | (input$doc_type == 43 & input$search_mode %in% c(1,4)) | input$doc_type == 44 | ((input$doc_type==31)&(input$resolution=="Mois"|input$resolution=="Année") ) |
         input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48  | input$doc_type == 49 |

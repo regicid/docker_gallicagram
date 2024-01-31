@@ -238,7 +238,7 @@ Plot <- function(data,input){
     z = which(tableau$mot==mot)
     tableau$scale[z]=scale(tableau$scale[z],center = F,scale = T)
   }
-  if(input$scale==TRUE |input$multicourbes==TRUE){tableau$ratio = tableau$scale}
+  if(input$scale==TRUE){tableau$ratio = tableau$scale}
   
   if(input$delta==T | input$fraction==T){
     mots<-str_split(input$mot,"&")
