@@ -26,6 +26,11 @@
 * François Jacquesson, « Place de l’Utopie, allez tout droit ! », Caramel, Sciences du langage et monde contemporain, 15 juillet 2023, <https://caramel.hypotheses.org/33066>
 * François Jacquesson, « L’espion pris dans la guerre », Caramel, Sciences du langage et monde contemporain, 10 août 2023, <https://caramel.hypotheses.org/34168>
 * François Jacquesson, « Le dernier homme », Caramel, Sciences du langage et monde contemporain, 21 août 2023, <https://caramel.hypotheses.org/34526>
+* François Jacquesson, « Les mots manquent », Caramel, Sciences du langage et monde contemporain, 5 décembre 2023, <https://caramel.hypotheses.org/39263>
+* François Jacquesson, « Le songe, le rêve, et Prospero », Caramel, Sciences du langage et monde contemporain, 30 novembre 2023, <https://caramel.hypotheses.org/39086>
+* François Jacquesson, « Le monde, le vrai, et l’intelligence artificielle », Caramel, Sciences du langage et monde contemporain, 18 octobre 2023, <https://caramel.hypotheses.org/37169>
+* François Jacquesson, « L'air du temps », Caramel, Sciences du langage et monde contemporain, 14 novembre 2023, <https://caramel.hypotheses.org/38342>
+* François Jacquesson, « L'actu a disparu », Caramel, Sciences du langage et monde contemporain, 19 novembre 2023, <https://caramel.hypotheses.org/38561>
 * Madeleine Leroy. « „Bäder bauen heißt Spitäler sparen“. Piscines et bains-douches publics de « Vienne la rouge » (1919-1934) comme éléments d’une politique urbaine d’hygiène sociale », 2021, <https://dumas.ccsd.cnrs.fr/dumas-03416702>
 * Erwan Le Gall, « A propos de l’antimilitarisme des Sârs et de la rougeole politique (1913) », Ar Brezel, 5 janvier 2022, <https://arbrezel.hypotheses.org/4804>
 * Erwan Le Gall, « Février 1918 : l’estuaire de la Loire au bord de la Révolution ? », Ar Brezel, 2 février 2022, <https://arbrezel.hypotheses.org/4963>
@@ -51,6 +56,9 @@
 * Romain Jalabert, « Le "grand tapage de journaux" autour de Chateaubriand en 1831 », La Revue des lettres modernes, 2023, vol. 2023, p. 155-170, <https://classiques-garnier.com/sociabilites-litteraires-2023-7-le-grand-tapage-de-journaux-autour-de-chateaubriand-en-1831.html>
 * David Aubin « Popularizing precision: cultures of exactness at the Paris observatory, 1667–1742 », Annals of Science, 2024, 81:1-2, 139-159, <https://doi.org/10.1080/00033790.2023.2282783>
 * Corentin Marion, « Nationalism and Internationalism Intertwined. A European History of Concepts Beyond the Nation State, New York, Oxford (Berghahn) 2022 », Francia-Recensio, 2023, <https://journals.ub.uni-heidelberg.de/index.php/frrec/article/view/101586>
+* Marc Nikitin, « Le mot comptabilité s’est répandu à la fin du XVIIIe siècle pour désigner une technique de gouvernement», Comptabilité(s), revue d'histoire des comptabilités, 2023, n°15, <https://journals.openedition.org/comptabilites/6513>
+* Marie Lucie Bougon, SÉMINAIRE LPCM – SÉANCE 3, JEUDI 11 JANVIER 2023, 17H-19H : “PROSPECTIVE ET SCIENCE-FICTION : ENJEUX MÉTHODOLOGIQUES ”, <https://lpcm.hypotheses.org/31380>
+
 
 ## Conférences de présentation de Gallicagram
 
@@ -66,6 +74,7 @@
 * Séminaire MédiaLab - SciencesPo, 28 février 2023
 * Séminaire IMAREV, Gallicagram : impressions de la Révolution - Université Paris Cité, 24 mars 2023 : <https://imarev.hypotheses.org/366>
 * Séminaire ISOCO Indices d’opinion sociaux économiques - Université Paris Nanterre, 6 juillet 2023 : <https://calenda.org/1052826>
+* Laetitia Gonon : « Frantext et gallicagram », Journée d'accueil et de formation des doctorants du CÉRÉDI - Université de Rouen, 21 novembre 2023 : <https://ceredi.hypotheses.org/8056>
 
 
 ## Projets fondés sur Gallicagram
