@@ -83,6 +83,11 @@
 * Ruby Gem Gallicagram par Nicolas Le Roux : <https://github.com/nicolrx/gallicagram>
 * Rallicagram (package R) par Vincent Bagilet : <https://github.com/vincentbagilet/rallicagram>
 
+## Bases de données pour l'entrainement de LLM
+
+* HuggingFace, French Public Domain Newspapers : <https://huggingface.co/datasets/PleIAs/French-PD-Newspapers>
+* HuggingFace, French Public Domain Book : <https://huggingface.co/datasets/PleIAs/French-PD-Books>
+
 
 ## Projets utilisant Gallicagram
 * Gallibase par Etienne Brunet et Laurent Vanni : <http://ancilla.unice.fr/pages/bases/>
