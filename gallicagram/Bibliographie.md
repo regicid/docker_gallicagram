@@ -43,7 +43,14 @@
 * Gaëtan Bonnot, « Des traces aux échos d’une révolte : études sur la Jacquerie de 1358 », Thèse de doctorat, 2022, Université Paris I - Panthéon Sorbonne, Ecole doctorale d’histoire, LAMOP - Laboratoire de Médiévistique Occidentale de Paris, <https://hal.science/tel-04043231v1>
 * Arnaud Laborderie, Florence Tfibel, « Ouvrir les données de la Bibliothèque nationale de France pour la recherche », 2023, <https://hal-bnf.archives-ouvertes.fr/hal-04074665>
 * Benjamin Bober, « Les haches de pierre en contexte gallo-romain - Au delà de la pierre de foudre », Septembre 2023, <https://www.researchgate.net/publication/374199024_Les_haches_de_pierre_en_contexte_gallo-romain_-_Au_dela_de_la_pierre_de_foudre>
-
+* Claire-Lise Gaillard, « Feuilleter la presse ancienne par gigaoctets », Studies in Digital History and Hermeneutics, 2022, p. 113, <https://library.oapen.org/bitstream/handle/20.500.12657/61093/9783110729214.pdf?sequence=1#page=122>
+* Jules Verne, Famille-Sans-Nom, Introduction - « Mon pays de prédilection »: le Canada de Jules Verne, 2024, <https://classiques-garnier.com/famille-sans-nom-le-canada-de-jules-verne-ii-introduction.html>
+* Nicolas Chachereau et Cédric Humair, « Méthodes informatiques et quantitatives en histoire du tourisme: apports et limites », Mondes du Tourisme, 2023, no 24, <https://journals.openedition.org/tourisme/6201>
+* Béatrice Joyeux-Prunel, Marie Barras et Nicola Carboni, « Une Europe par les arts ? Les périodiques illustrés au-delà du Musée imaginaire », Artl@s Bulletin, 2023, vol. 12, no 1, p. 12, <https://docs.lib.purdue.edu/artlas/vol12/iss1/12/>
+* Laurent Vanni, « Hyperbase Web.(Hyper) », Bases Corpus, Langage. Corpus, 2023, no 25, <https://journals.openedition.org/corpus/8770>
+* Romain Jalabert, « Le "grand tapage de journaux" autour de Chateaubriand en 1831 », La Revue des lettres modernes, 2023, vol. 2023, p. 155-170, <https://classiques-garnier.com/sociabilites-litteraires-2023-7-le-grand-tapage-de-journaux-autour-de-chateaubriand-en-1831.html>
+* David Aubin « Popularizing precision: cultures of exactness at the Paris observatory, 1667–1742 », Annals of Science, 2024, 81:1-2, 139-159, <https://doi.org/10.1080/00033790.2023.2282783>
+* Corentin Marion, « Nationalism and Internationalism Intertwined. A European History of Concepts Beyond the Nation State, New York, Oxford (Berghahn) 2022 », Francia-Recensio, 2023, <https://journals.ub.uni-heidelberg.de/index.php/frrec/article/view/101586>
 
 ## Conférences de présentation de Gallicagram
 
