@@ -3554,7 +3554,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$language,{
     observeEvent(input$bibli,{
       if(input$language == 1 & input$bibli==0){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0,"Presse française / Gallica (~1789-1950)" = 1,"Le Monde (1944-2022)"=30,"Libération (1998-2023)" = 80,"Persée"=34,"Livres / Gallica (~1600-1940)" = 2, "Livres+Presse / Gallica"=56,"Le Journal des Débats (1789-1944)"=75,"L'Humanité (1904-1952)"=67,"Le Petit Journal (1863-1942)"=72,"Le Petit Parisien (1876-1944)"=73,"Le Journal de Paris (1777-1827)"=69,"Le Temps (1861-1942)"=71,"Le Figaro (1854-1952)"=66,"Le Moniteur universel (1789-1901)"=70),selected = 1)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0,"Presse française / Gallica (~1789-1950)" = 1,"Le Monde (1944-2022)"=30,"Rap (1989-2024)"=81,"Persée"=34,"Livres / Gallica (~1600-1940)" = 2, "Livres+Presse / Gallica"=56,"Le Journal des Débats (1789-1944)"=75,"L'Humanité (1904-1952)"=67,"Le Petit Journal (1863-1942)"=72,"Le Petit Parisien (1876-1944)"=73,"Le Journal de Paris (1777-1827)"=69,"Le Temps (1861-1942)"=71,"Le Figaro (1854-1952)"=66,"Le Moniteur universel (1789-1901)"=70),selected = 1)
       }
       else if(input$language == 1 & input$bibli==1){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse française / Gallica (~1789-1950)" = 1,"Recherche par titre de presse / Gallica" = 3, "Livres / Gallica (~1600-1940)" = 2, 
@@ -4778,7 +4778,6 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"distribution", "Corpus",choices = list("Presse espagnole / BNE"=11, "Livres / Ngram Viewer Espagnol"=12),selected = 11)
       }
       else if(input$d_language == 1 & input$d_bibli==4){
-        updateSelectInput(session,"distribution", "Corpus",choices = list("Le Monde"=30, "Le Figaro"=31),selected = 30)
       }
       else if(input$d_language == 1 & input$d_bibli==5){
         updateSelectInput(session,"distribution", "Corpus",choices = list("Isidore"=36),selected = 36)

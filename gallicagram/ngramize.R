@@ -63,13 +63,13 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     tableau$langue="Français"
     tableau$bibli="Persée"
   }
-  if(input$doc_type == 80){
+  if(input$doc_type == 81){
     mots = str_split(input$mot,"&")[[1]]
     for(mots1 in mots){
       mots2 = str_split(mots1,"[+]")[[1]]
       for(mot in mots2){
         mot = extract_mot(mot)
-        corpus = recode(input$doc_type,`80`="libe")
+        corpus = recode(input$doc_type,`81`="rap")
         df = read.csv(glue("{url_base}/query?corpus={corpus}&mot={URLencode(mot)}&from={from}&to={to}"))
         df = dplyr::rename(df,count=n,base = total,mot=gram)
         print(df)
@@ -81,14 +81,13 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       if(mots1==mots[1]){tableau = df_sum
       }else{tableau = rbind(tableau,df_sum)}
     }
-    tableau$url =str_c("https://www.persee.fr/search?l=fre&da=",tableau$annee,"&q=",tableau$mot)
-    if(length(input$rev_persee) < 362){tableau$url = str_c(tableau$url,paste(str_c("&c=",input$rev_persee),collapse=""))}
+    tableau$url ="https://huggingface.co/datasets/regicid/LRFAF"
     #!identical(input$rev_persee,"all")
-    tableau$corpus="Presse"
+    tableau$corpus="Rap"
     tableau$langue="Français"
-    tableau$bibli="Persée"
+    tableau$bibli="Genius"
   }
-  if((input$doc_type==30 & input$cooccurrences) | input$doc_type==34){
+  if((input$doc_type==30 & input$cooccurrences) | input$doc_type==34 | input$doc_type == 81){
     if(input$resolution=="Mois"){tableau$date = paste(tableau$annee,tableau$mois,sep="/")}
     if(input$resolution=="Année"){tableau$date = tableau$annee}
     tableau$search_mode<-"N-gramme"
