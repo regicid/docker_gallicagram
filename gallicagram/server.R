@@ -4067,6 +4067,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type==44 | input$doc_type==58 | input$doc_type==59 | input$doc_type==60 | input$doc_type==61 | input$doc_type==62 | input$doc_type==63 | input$doc_type==64){output$legende1<-renderText("Corpus : web")}
     if(input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48  | input$doc_type == 49){output$legende1<-renderText("Corpus : paroles de chansons")}
     if(input$doc_type == 77 | input$doc_type == 78){output$legende1<-renderText("Corpus : films")}
+    if(input$doc_type == 81){output$legende1<-renderText("Corpus : Rap français")}
     if(input$doc_type == 3 & input$theme_presse == 1){
       liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
       title<-liste_journaux$title[liste_journaux$ark==input$titres[1]]
