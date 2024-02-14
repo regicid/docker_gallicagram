@@ -2701,6 +2701,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$langue="Français"
   tableau$bibli="L'Orient-Le Jour"
   tableau$search_mode<-"Article"}
+  if(doc_type==81){tableau$corpus="Rap"
+  tableau$langue="Français"
+  tableau$bibli="Genius"
+  tableau$search_mode<-"Ngram"}
   
 
   memoire<<-bind_rows(tableau,memoire)
@@ -3554,7 +3558,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$language,{
     observeEvent(input$bibli,{
       if(input$language == 1 & input$bibli==0){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0,"Presse française / Gallica (~1789-1950)" = 1,"Le Monde (1944-2022)"=30,"Rap (1989-2024)"=81,"Persée"=34,"Livres / Gallica (~1600-1940)" = 2, "Livres+Presse / Gallica"=56,"Le Journal des Débats (1789-1944)"=75,"L'Humanité (1904-1952)"=67,"Le Petit Journal (1863-1942)"=72,"Le Petit Parisien (1876-1944)"=73,"Le Journal de Paris (1777-1827)"=69,"Le Temps (1861-1942)"=71,"Le Figaro (1854-1952)"=66,"Le Moniteur universel (1789-1901)"=70),selected = 1)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0,"Presse française / Gallica (~1789-1950)" = 1,"Le Monde (1944-2022)"=30,"Rap français/Genius (1989-2023)"=81,"Persée"=34,"Livres / Gallica (~1600-1940)" = 2, "Livres+Presse / Gallica"=56,"Le Journal des Débats (1789-1944)"=75,"L'Humanité (1904-1952)"=67,"Le Petit Journal (1863-1942)"=72,"Le Petit Parisien (1876-1944)"=73,"Le Journal de Paris (1777-1827)"=69,"Le Temps (1861-1942)"=71,"Le Figaro (1854-1952)"=66,"Le Moniteur universel (1789-1901)"=70),selected = 1)
       }
       else if(input$language == 1 & input$bibli==1){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse française / Gallica (~1789-1950)" = 1,"Recherche par titre de presse / Gallica" = 3, "Livres / Gallica (~1600-1940)" = 2, 
@@ -3577,7 +3581,7 @@ shinyServer(function(input, output,session){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Isidore"=36,"Cairn.info"=32,"Theses.fr"=33,"Persée"=34),selected = 36)
       }
       else if(input$language == 1 & input$bibli==7){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("MusixMatch / Français"=45),selected = 45)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Rap français/Genius (1989-2023)"=81, "MusixMatch / Français"=45),selected = 45)
       }
       if(input$language == 1 & input$bibli==8){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Livres / Ngram Viewer - Google Books" = 5, "Google Trends / France"=44),selected = 5)
