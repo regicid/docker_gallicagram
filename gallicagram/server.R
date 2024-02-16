@@ -3313,6 +3313,16 @@ shinyServer(function(input, output,session){
                                                      target.scrollIntoView(behavior='smooth');")
         }
     }
+    if(is.null(data$e)==F & isolate(input$contextualisation)==T & isolate(input$doc_type==81)){
+      print(as.character(unlist(data$e$customdata)))
+      rapgame<<-as.character(unlist(data$e$customdata))
+      b=read.csv(rapgame,encoding = "UTF-8")
+      require("DT")
+      output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+      shinyjs::runjs("const target = document.querySelector('#legende');
+                                                     target.scrollIntoView(behavior='smooth');")
+      
+    }
     hide_spinner(spin_id = "contexte")
   })
   observeEvent(input$visualiseur,{
