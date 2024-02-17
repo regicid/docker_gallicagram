@@ -81,8 +81,8 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       if(mots1==mots[1]){tableau = df_sum
       }else{tableau = rbind(tableau,df_sum)}
     }
-    mot_url = str_replace(tableau$mot," ","%20")
-    mot_url = str_replace(mot_url,"\\+","\\|")
+    mot_url = str_replace_all(tableau$mot," ","%20")
+    mot_url = str_replace_all(mot_url,"\\+","\\|")
     tableau$url =str_c("https://shiny.ens-paris-saclay.fr/guni/source_rap?mot=",mot_url,"&year=",tableau$annee)
     #!identical(input$rev_persee,"all")
     tableau$corpus="Rap"
