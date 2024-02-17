@@ -81,7 +81,10 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
       if(mots1==mots[1]){tableau = df_sum
       }else{tableau = rbind(tableau,df_sum)}
     }
-    tableau$url =str_c("https://shiny.ens-paris-saclay.fr/guni/source_rap?mot=",str_replace(tableau$mot," ","%20"),"&year=",tableau$annee)
+    mot_url = str_replace(tableau$mot," ","%20")
+    mot_url = str_replace(mot_url,"\\+","\b\\|\b")
+    mot_url = str_c("\b",mot_url,"\b")
+    tableau$url =str_c("https://shiny.ens-paris-saclay.fr/guni/source_rap?mot=",mot_url,"&year=",tableau$annee)
     #!identical(input$rev_persee,"all")
     tableau$corpus="Rap"
     tableau$langue="Français"
