@@ -4146,6 +4146,22 @@ shinyServer(function(input, output,session){
         output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
       }
       hide_spinner(spin_id = "contexte")}
+    
+    if(isolate(input$contextualisation)==T & isolate(input$doc_type==81)){
+      rap_word = str_split(input$mot,"&")[[1]]
+      rap_word =rap_word[1]
+      rap_word = str_split(rap_word,"[+]")[[1]]
+      rap_word =rap_word[1]
+      rap_word=str_replace_all(rap_word," ","%20")
+      rapgame<<-str_c("https://shiny.ens-paris-saclay.fr/guni/source_rap?mot=",rap_word,"&year=",input$end)
+      b=read.csv(rapgame,encoding = "UTF-8")
+      b=b[order(-b$counts),]
+      require("DT")
+      output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+      shinyjs::runjs("const target = document.querySelector('#legende');
+                                                     target.scrollIntoView(behavior='smooth');")
+      
+    }
     if(isolate(input$persee_by_revue==T & input$doc_type==34)){updateSelectInput(session,"visualiseur", "",choices = list("Courbes"=1, "Sommes"=2, "Histogramme"=3, "Bulles"=4,"Aires"=5,"Nuage de mots"=7,"Polaires"=8,"ACP"=6,"AFC"=9,"Ctre de gravité"=10,"Rayures"=11),selected = 2)}
     
   })
