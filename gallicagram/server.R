@@ -3317,6 +3317,7 @@ shinyServer(function(input, output,session){
       print(as.character(unlist(data$e$customdata)))
       rapgame<<-as.character(unlist(data$e$customdata))
       b=read.csv(rapgame,encoding = "UTF-8")
+      b=b[order(-b$counts),]
       require("DT")
       output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
       shinyjs::runjs("const target = document.querySelector('#legende');
