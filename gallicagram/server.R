@@ -4826,6 +4826,10 @@ shinyServer(function(input, output,session){
                                     "<br><a href='","https://www.gallicagrapher.com/context?terms=libert%C3%A9&source=periodical&sort=relevance&year=1788","' target='_blank'>","Plus de contexte","</a>")))
     output$frame<-renderDataTable(read.csv("DTexemple.csv",header = T,encoding = "UTF-8",sep = ","),escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
   }
+  if(input$doc_type==81){
+    output$frame<-renderDataTable(read.csv("https://shiny.ens-paris-saclay.fr/guni/source_rap?mot=du%20sale&year=2023"),escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+  }
+  
   ##################
   
   shinyOptions(progress.style="old")
