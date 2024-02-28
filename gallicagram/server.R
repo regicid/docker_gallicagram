@@ -4157,8 +4157,10 @@ shinyServer(function(input, output,session){
       rapgame<<-str_c("https://shiny.ens-paris-saclay.fr/guni/source_rap?mot=",rap_word,"&year=",input$end)
       b=read.csv(rapgame,encoding = "UTF-8")
       b=b[order(-b$counts),]
+      row.names(b) = b$title
+      b = b[-1]
       require("DT")
-      output$frame<-renderDataTable(b,escape = F,options = list(pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
+      output$frame<-renderDataTable(b,escape = F,options = list(rownames=F,pageLength = 10, lengthChange = FALSE, columnDefs = list(list(className = 'dt-body-right', targets = 3))))
       shinyjs::runjs("const target = document.querySelector('#legende');
                                                      target.scrollIntoView(behavior='smooth');")
       
