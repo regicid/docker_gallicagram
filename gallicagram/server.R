@@ -1061,12 +1061,12 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
               end = str_c(y,"-",z,"-",end_of_month[j])
               url<-str_c("http://hemerotecadigital.bne.es/results.vm?o=",or,"&w=%22",mot1,"%22",or_end,"&f=text&d=creation&d=",y,"&d=",z,"&d=01&d=",y,"&d=",z,"&d=",end_of_month[j],"&t=%2Bcreation&l=700&s=0&view=&lang=fr")
               url_base<-str_c("http://hemerotecadigital.bne.es/results.vm?d=creation&d=",y,"&d=",z,"&d=01&d=",y,"&d=",z,"&d=",end_of_month[j],"&t=%2Bcreation&l=700&s=0&view=&lang=fr")
-              url=str_c("https://hemerotecadigital.bne.es/hd/es/results?o=&w=%22",mot1,"%22&f=text&o=o&w=&f=text&o=n&w=&f=text&o=&w=&f=text&o=o&w=&f=text&o=n&w=&f=text&p=0%7E0&g=p&d=date&d=",y,"-",z,"-01&d=",y,"-",z,"-",end_of_month[j],"&l=10&t=date-asc&g=e&upload=")
-              url_base=str_c("https://hemerotecadigital.bne.es/hd/es/results?o=&w=&f=text&o=o&w=&f=text&o=n&w=&f=text&o=&w=&f=text&o=o&w=&f=text&o=n&w=&f=text&p=0~0&g=p&d=date&d=",y,"-",z,"-01&d=",y,"-",z,"-",end_of_month[j],"&l=10&t=date-asc&g=e&upload=")
+              url=str_c("https://hemerotecadigital.bne.es/hd/es/results?o=&w=%22",mot1,"%22&f=text&o=o&w=&f=text&o=n&w=&f=text&o=&w=&f=text&o=o&w=&f=text&o=n&w=&f=text&p=0%7E0&g=p&g=o&d=date&d=",y,"-",z,"-01&d=",y,"-",z,"-",end_of_month[j],"&l=10&t=date-asc&g=e&upload=")
+              url_base=str_c("https://hemerotecadigital.bne.es/hd/es/results?o=&w=&f=text&o=o&w=&f=text&o=n&w=&f=text&o=&w=&f=text&o=o&w=&f=text&o=n&w=&f=text&p=0~0&g=p&g=o&d=date&d=",y,"-",z,"-01&d=",y,"-",z,"-",end_of_month[j],"&l=10&t=date-asc&g=e&upload=")
             }
             if(resolution=="Année"){
-              url=str_c("https://hemerotecadigital.bne.es/hd/es/results?o=&w=%22",mot1,"%22&f=text&o=o&w=&f=text&o=n&w=&f=text&o=&w=&f=text&o=o&w=&f=text&o=n&w=&f=text&p=0%7E0&g=p&d=date&d=",y,"-01-01&d=",y,"-12-31&l=10&t=date-asc&g=e&upload=")
-              url_base=str_c("https://hemerotecadigital.bne.es/hd/es/results?o=&w=&f=text&o=o&w=&f=text&o=n&w=&f=text&o=&w=&f=text&o=o&w=&f=text&o=n&w=&f=text&p=0~0&g=p&d=date&d=",y,"-01-01&d=",y,"-12-31&l=10&t=date-asc&g=e&upload=")
+              url=str_c("https://hemerotecadigital.bne.es/hd/es/results?o=&w=%22",mot1,"%22&f=text&o=o&w=&f=text&o=n&w=&f=text&o=&w=&f=text&o=o&w=&f=text&o=n&w=&f=text&p=0%7E0&g=p&g=o&d=date&d=",y,"-01-01&d=",y,"-12-31&l=10&t=date-asc&g=e&upload=")
+              url_base=str_c("https://hemerotecadigital.bne.es/hd/es/results?o=&w=&f=text&o=o&w=&f=text&o=n&w=&f=text&o=&w=&f=text&o=o&w=&f=text&o=n&w=&f=text&p=0~0&g=p&g=o&d=date&d=",y,"-01-01&d=",y,"-12-31&l=10&t=date-asc&g=e&upload=")
             }
           }
           if(doc_type == 13){beginning<-str_replace_all(beginning,"/","-")
