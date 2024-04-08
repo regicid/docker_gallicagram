@@ -58,6 +58,7 @@
 * Corentin Marion, « Nationalism and Internationalism Intertwined. A European History of Concepts Beyond the Nation State, New York, Oxford (Berghahn) 2022 », Francia-Recensio, 2023, <https://journals.ub.uni-heidelberg.de/index.php/frrec/article/view/101586>
 * Marc Nikitin, « Le mot comptabilité s’est répandu à la fin du XVIIIe siècle pour désigner une technique de gouvernement», Comptabilité(s), revue d'histoire des comptabilités, 2023, n°15, <https://journals.openedition.org/comptabilites/6513>
 * Marie Lucie Bougon, SÉMINAIRE LPCM – SÉANCE 3, JEUDI 11 JANVIER 2023, 17H-19H : “PROSPECTIVE ET SCIENCE-FICTION : ENJEUX MÉTHODOLOGIQUES ”, <https://lpcm.hypotheses.org/31380>
+* Podcast Paroles d'histoire, épisode 339, <https://parolesdhistoire.fr/index.php/2024/04/07/330-quand-le-monde-devint-mondial-avec-vincent-capdepuy/>
 
 
 ## Conférences de présentation de Gallicagram
