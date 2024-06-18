@@ -31,6 +31,11 @@
 * François Jacquesson, « Le monde, le vrai, et l’intelligence artificielle », Caramel, Sciences du langage et monde contemporain, 18 octobre 2023, <https://caramel.hypotheses.org/37169>
 * François Jacquesson, « L'air du temps », Caramel, Sciences du langage et monde contemporain, 14 novembre 2023, <https://caramel.hypotheses.org/38342>
 * François Jacquesson, « L'actu a disparu », Caramel, Sciences du langage et monde contemporain, 19 novembre 2023, <https://caramel.hypotheses.org/38561>
+* François Jacquesson, « Le songe, le rêve, et Prospero », Caramel, Sciences du langage et monde contemporain, 30 novembre 2023, <https://caramel.hypotheses.org/39086>
+* François Jacquesson, « Les mots manquent », Caramel, Sciences du langage et monde contemporain, 5 décembre 2023, <https://caramel.hypotheses.org/39263>
+* François Jacquesson, « Le fantôme d’Éléonore », Caramel, Sciences du langage et monde contemporain, 20 mars 2024, <https://caramel.hypotheses.org/43727>
+* François Jacquesson, « L’anglais et “nous” », Caramel, Sciences du langage et monde contemporain, 11 avril 2024, <https://caramel.hypotheses.org/44671>
+* François Jacquesson, « Alibi », Caramel, Sciences du langage et monde contemporain, 27 avril 2024, <https://caramel.hypotheses.org/45300>
 * Madeleine Leroy. « „Bäder bauen heißt Spitäler sparen“. Piscines et bains-douches publics de « Vienne la rouge » (1919-1934) comme éléments d’une politique urbaine d’hygiène sociale », 2021, <https://dumas.ccsd.cnrs.fr/dumas-03416702>
 * Erwan Le Gall, « A propos de l’antimilitarisme des Sârs et de la rougeole politique (1913) », Ar Brezel, 5 janvier 2022, <https://arbrezel.hypotheses.org/4804>
 * Erwan Le Gall, « Février 1918 : l’estuaire de la Loire au bord de la Révolution ? », Ar Brezel, 2 février 2022, <https://arbrezel.hypotheses.org/4963>
@@ -76,7 +81,9 @@
 * Séminaire IMAREV, Gallicagram : impressions de la Révolution - Université Paris Cité, 24 mars 2023 : <https://imarev.hypotheses.org/366>
 * Séminaire ISOCO Indices d’opinion sociaux économiques - Université Paris Nanterre, 6 juillet 2023 : <https://calenda.org/1052826>
 * Laetitia Gonon : « Frantext et gallicagram », Journée d'accueil et de formation des doctorants du CÉRÉDI - Université de Rouen, 21 novembre 2023 : <https://ceredi.hypotheses.org/8056>
-
+* Présentation de Gallicagram et TD au lycée Corot de Savigny, 23 mai 2024 : <https://x.com/gallicagram/status/1793618881833283925>
+* Les lundis de l'INED, Campus Condorcet, 27 mai 2024 : <https://www.ined.fr/fr/actualites/rencontres-scientifiques/les-lundis/gallicagram-un-outil-de-lexicometrie-pour-explorer-de-grands-corpus-diachroniques/>
+* Séminaire Capitalisme littoral et environnement, Institut LUDI, La Rochelle Université, 21 juin 2024, <https://x.com/pierre_labardin/status/1750254315598455145/photo/1>
 
 ## Projets fondés sur Gallicagram
 
@@ -95,7 +102,7 @@
 * Gallica Grapher par Will Gleason : <https://www.gallicagrapher.com/>
 * La Langue Française par Nicolas Le Roux : <https://www.lalanguefrancaise.com/dictionnaire>
 * Aide à la recherche sur Gallica par Thomas Fressin (à venir)
-* CNRTL, Lexicographie : <https://www.cnrtl.fr/definition/> (à venir)
+* CNRTL, Lexicographie : <https://www.cnrtl.fr/definition/> (à venir ; [version béta](https://portail-060524.atilf.fr/definition/chien))
 
 
 ## Sites référençant Gallicagram comme outil
