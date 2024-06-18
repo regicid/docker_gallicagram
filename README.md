@@ -84,7 +84,7 @@ Assurez-vous de suivre les normes de codage et de bien tester vos modifications 
 
 ## Licence
 
-Ce projet est sous licence GPL.
+Ce projet est sous licence [GPL-3.0](https://github.com/regicid/docker_gallicagram/tree/master?tab=GPL-3.0-1-ov-file#readme).
 
 ## Contact
 
