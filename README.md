@@ -91,7 +91,7 @@ Ce projet est sous licence [GPL-3.0](https://github.com/regicid/docker_gallicagr
 Pour toute question ou suggestion, n'hésitez pas à nous contacter :
 
 - Benjamin Azoulay : [benjamin.azoulay@ens-paris-saclay.fr](mailto:benjamin.azoulay@ens-paris-saclay.fr)
-- Benoît de Courson : [benoit.de.courson@mpicc.de](mailto:b.decourson@csl.mpg.de)
+- Benoît de Courson : [b.decourson@csl.mpg.de](mailto:b.decourson@csl.mpg.de)
 
 Nous espérons que vous trouverez Gallicagram utile pour vos recherches en sciences humaines et sociales !
 
