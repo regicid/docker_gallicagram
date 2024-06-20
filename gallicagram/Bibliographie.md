@@ -64,6 +64,9 @@
 * Marc Nikitin, « Le mot comptabilité s’est répandu à la fin du XVIIIe siècle pour désigner une technique de gouvernement», Comptabilité(s), revue d'histoire des comptabilités, 2023, n°15, <https://journals.openedition.org/comptabilites/6513>
 * Marie Lucie Bougon, SÉMINAIRE LPCM – SÉANCE 3, JEUDI 11 JANVIER 2023, 17H-19H : “PROSPECTIVE ET SCIENCE-FICTION : ENJEUX MÉTHODOLOGIQUES ”, <https://lpcm.hypotheses.org/31380>
 * Podcast Paroles d'histoire, épisode 339, <https://parolesdhistoire.fr/index.php/2024/04/07/330-quand-le-monde-devint-mondial-avec-vincent-capdepuy/>
+* Elie Allouche, « Digital Transformation of Education, Systems Approach and Applied Research », Arxiv, Computer Science, 10 avril 2024, <https://arxiv.org/abs/2406.11861>
+* Simon Apartis, « De quoi l’impact est-il le nom ? », Works of the Open Knowledge Cluster of the CNRS Center for Internet and Society, Paris, 17 juin 2024, <https://ok.hypotheses.org/4733>
+
 
 
 ## Conférences de présentation de Gallicagram
