@@ -5,6 +5,7 @@
 * Benoît de Courson, Benjamin Azoulay, Clara de Courson, Laurent Vanni et Étienne Brunet, « Gallicagram : les archives de presse sous les rotatives de la statistique textuelle », Corpus, 2023, <https://doi.org/10.4000/corpus.7944>
 * Benjamin Azoulay et Benoît de Courson, « Gallicagram, un outil de lexicométrie pour la recherche », 2021, <https://doi.org/10.31235/osf.io/84bf3>
 * Benjamin Azoulay, Benoît de Courson et Will Gleason, « Compter les mots pour remonter le temps : Gallicagram et Gallicagrapher, deux outils d’exploration des archives numérisées de la BnF », Culture et Recherche, n°144, printemps-été 2023, p. 82, <https://u-picardie.hal.science/public/Culture_et_Recherche_144_La_science_ouverte.pdf>
+* Benoît de Courson, « LRFAF : une exploration numérique du rap français depuis les années 1990 », 2024, <https://doi.org/10.31235/osf.io/d96tr>
 * « Actualités - Gallicagram : un outil de lexicométrie pour la recherche », novembre 2021, <https://odhn.ens.psl.eu/newsroom/gallicagram-un-outil-de-lexicometrie-pour-la-recherche>
 * « Utiliser les API de Gallica : L’exemple de Gallicagram », <https://api.bnf.fr/fr/gallicagram-un-outil-de-lexicographie>
 * Anne Bugner, « Présentation critique d’un outil numérique à destination de la recherche en SHS : Gallicagram », Mémoire de master, 2022, Ecole nationale des chartes - PSL
