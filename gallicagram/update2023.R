@@ -7,4 +7,4 @@ count = str_split(count,",")[[1]][1]
 system("head -n -1 base_presse_annees_nyt.csv > temp.csv") ##Delete last line
 system(str_c("echo 173,",count, ",2023 >> temp.csv"))
 system("mv temp.csv base_presse_annees_nyt.csv")
-system("bash ~/executor")
+#system("bash ~/executor")
