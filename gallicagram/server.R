@@ -4838,4 +4838,5 @@ shinyServer(function(input, output,session){
   shinyOptions(progress.style="old")
   
   remove_modal_spinner()
+  session$allowReconnect(TRUE)
 })
