@@ -65,9 +65,13 @@
 * Marc Nikitin, « Le mot comptabilité s’est répandu à la fin du XVIIIe siècle pour désigner une technique de gouvernement», Comptabilité(s), revue d'histoire des comptabilités, 2023, n°15, <https://journals.openedition.org/comptabilites/6513>
 * Marie Lucie Bougon, SÉMINAIRE LPCM – SÉANCE 3, JEUDI 11 JANVIER 2023, 17H-19H : “PROSPECTIVE ET SCIENCE-FICTION : ENJEUX MÉTHODOLOGIQUES ”, <https://lpcm.hypotheses.org/31380>
 * Podcast Paroles d'histoire, épisode 339, <https://parolesdhistoire.fr/index.php/2024/04/07/330-quand-le-monde-devint-mondial-avec-vincent-capdepuy/>
-* Elie Allouche, « Digital Transformation of Education, Systems Approach and Applied Research », Arxiv, Computer Science, 10 avril 2024, <https://arxiv.org/abs/2406.11861>
 * Simon Apartis, « De quoi l’impact est-il le nom ? », Works of the Open Knowledge Cluster of the CNRS Center for Internet and Society, Paris, 17 juin 2024, <https://ok.hypotheses.org/4733>
-
+* Elie Allouche « Transformation numérique de l’éducation, approche systémique et recherche appliquée », Médiations & médiatisations no. 17, p. 75–107, avril 2024, <https://doi.org/10.52358/mm.vi17.392>
+* Gerda Hassler. _Le contexte en question_, p.11, ISTE Group, 2024, <https://books.google.fr/books?hl=fr&lr=&id=t3oUEQAAQBAJ>
+* Géraldine Farges, et Szerdahelyi Loïc, « Renforcer, par la formation, l’attractivité du métier d’enseignant », Constructif, vol. 68, no. 2, 2024, pp. 64-66, <https://doi.org/10.3917/const.068.0064>
+* Christophe Gérard, « Approche discursive de la néologie-Proposition d’un cadre conceptuel », Neologica, 2024, vol. 2024, no 18, p. 17-75, <https://classiques-garnier.com/neologica-2024-n-18-pour-une-approche-discursive-de-la-neologie-approche-discursive-de-la-neologie.html>
+* Gildas Grimault, « « Brittophone » : aux origines d’un conflit terminologique », Cahiers internationaux de sociolinguistique, vol. 24, no. 1, 2024, pp. 71-89, <https://doi.org/10.3917/cisl.2401.0071>
+* Daniel Torres Salinas, et al. « Culturomics con Google Ngram Viewer & Wikipedia », 2024, <http://dx.doi.org/10.5281/zenodo.10842119>
 
 
 ## Conférences de présentation de Gallicagram
