@@ -37,6 +37,9 @@
 * François Jacquesson, « Le fantôme d’Éléonore », Caramel, Sciences du langage et monde contemporain, 20 mars 2024, <https://caramel.hypotheses.org/43727>
 * François Jacquesson, « L’anglais et “nous” », Caramel, Sciences du langage et monde contemporain, 11 avril 2024, <https://caramel.hypotheses.org/44671>
 * François Jacquesson, « Alibi », Caramel, Sciences du langage et monde contemporain, 27 avril 2024, <https://caramel.hypotheses.org/45300>
+* François Jacquesson, « Pauvre, politique, prolétaire, élections », Caramel, Sciences du langage et monde contemporain, 29 juin 2024, <https://caramel.hypotheses.org/48054>
+* François Jacquesson, « Jaune, Rouge : couleur de peau ? », Caramel, Sciences du langage et monde contemporain, 6 juillet 2024, <https://caramel.hypotheses.org/48154>
+* François Jacquesson, « Glamour : cœur solitaire en société », Caramel, Sciences du langage et monde contemporain, 24 juillet 2024, <https://caramel.hypotheses.org/49035>
 * Madeleine Leroy. « „Bäder bauen heißt Spitäler sparen“. Piscines et bains-douches publics de « Vienne la rouge » (1919-1934) comme éléments d’une politique urbaine d’hygiène sociale », 2021, <https://dumas.ccsd.cnrs.fr/dumas-03416702>
 * Erwan Le Gall, « A propos de l’antimilitarisme des Sârs et de la rougeole politique (1913) », Ar Brezel, 5 janvier 2022, <https://arbrezel.hypotheses.org/4804>
 * Erwan Le Gall, « Février 1918 : l’estuaire de la Loire au bord de la Révolution ? », Ar Brezel, 2 février 2022, <https://arbrezel.hypotheses.org/4963>
