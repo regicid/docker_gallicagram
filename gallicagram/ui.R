@@ -50,6 +50,7 @@ shinyUI(bootstrapPage(
                                                 conditionalPanel(condition="((input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1) || (input.doc_type == 30 && input.search_mode ==3)",div(style = "margin-top: -20px")),
                                                 conditionalPanel(condition="((input.doc_type == 1 || input.doc_type == 2 || input.doc_type == 3) && input.search_mode ==1) || (input.doc_type == 30 && input.search_mode ==3)",checkboxInput("cooccurrences", "Explorer les cooccurrences", value = FALSE)),
                                                 conditionalPanel(condition="(input.doc_type == 34)",checkboxInput("persee_by_revue", "Ventiler les occurrences par revue", value = FALSE)),
+                                                conditionalPanel(condition="(input.doc_type == 30)",checkboxInput("lemonde_by_rubrique", "Ventiler par rubrique", value = FALSE)),
                                                 
                                                 conditionalPanel(condition="(input.doc_type==1 || input.doc_type==2 || input.doc_type==30) && input.search_mode == 3 && input.joker == 1",
                                                                  div(style="display: inline-block;vertical-align:bottom;width: 38%;",numericInput("stpw","Mots vides ignorés",500)),
@@ -108,6 +109,7 @@ shinyUI(bootstrapPage(
                                                   div(style="display: inline-block;vertical-align:top;width: 49%;",conditionalPanel(condition="input.doc_type == 3",radioButtons("filtre", "",choices = list("Filtre thématique"=1,"Filtre géographique"=2),inline = T))),
                                                   div(style="display: inline-block;vertical-align:top;width: 49%;",conditionalPanel(condition="input.doc_type == 3",uiOutput("themes_presse"))),
                                                   conditionalPanel(condition="input.doc_type == 3",uiOutput("titres"))),
+                                                conditionalPanel(condition="input.doc_type == 30",uiOutput("rubrique_lemonde")),
                                                 
                                                 conditionalPanel(condition="input.doc_type == 34 || input.doc_type == 32 || input.doc_type == 33 || input.doc_type == 36 || input.doc_type == 45 || input.doc_type == 46 || input.doc_type == 47 || input.doc_type == 48 || input.doc_type == 49",
                                                   div(style="display: inline-block;vertical-align:top;width: 49%;",conditionalPanel(condition="input.doc_type == 34 && input.search_mode == 3",uiOutput("persee"))),

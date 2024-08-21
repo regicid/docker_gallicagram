@@ -2251,10 +2251,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       end_of_month = c(31,28,31,30,31,30,31,31,30,31,30,31)
       months = c("01","02","03","04","05","06","07","08","09","10","11","12")
       for(i in 1:length(period)){
-        if(input$resolution=="Année"){reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'1231&query=',mot,'&sort=best&startDate=',period[i],"0101&types=article"))$get()}
+        if(input$resolution=="Année"){reqlist[[i]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'-12-31&query=%22',mot,'%22&sort=best&startDate=',period[i],"-01-01&types=article"))$get()}
         if(input$resolution=="Mois"){
           for(month in 1:12){
-            reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],months[month],end_of_month[month],'&query=',mot,'&sort=best&startDate=',period[i],months[month],"01&types=article"))$get()}
+            reqlist[[length(reqlist)+1]] = HttpRequest$new(url = str_c("https://www.nytimes.com/search?dropmab=false&endDate=",period[i],'-',months[month],'-',end_of_month[month],'&query=%22',mot,'%22&sort=best&startDate=',period[i],'-',months[month],'-',"01&types=article"))$get()}
         }
       }
       responses <- AsyncQueue$new(.list = reqlist,bucket_size=30,sleep=0)
@@ -2272,7 +2272,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
       #result = nyt_scraper(period)
       row.names(result) = result$date
       result$count = as.integer(result$count)
-      for(b in 1:2){
+      for(b in c()){#repair scraping errors
       z = which(is.na(result$count))
       zz  =which(as.logical((result$count==0)*c(0,result$count[0:(nrow(result)-1)])>5))
       zzz = which(as.logical((result$count>3*c(result$count[1],result$count[0:(nrow(result)-1)]))*(result$count>3*c(result$count[2:(nrow(result))],result$count[nrow(result)]))))
@@ -3426,6 +3426,8 @@ shinyServer(function(input, output,session){
   codes_revues=unique(str_remove(str_extract(unique(names(unlist(revues_persee))),"\\..+"),"\\."))
   output$persee<-renderUI({pickerInput("persee","Discipline",choices = setNames(as.character(names(revues_persee)),names(revues_persee)), multiple=T,selected=names(revues_persee),options = list(`actions-box` = TRUE,`live-search`=TRUE))})
   output$rev_persee<-renderUI({pickerInput("rev_persee","Revues",choices = setNames(codes_revues,unique(unlist(revues_persee))), multiple=T,selected=codes_revues,options = list(`actions-box` = TRUE,`live-search`=TRUE))})
+  rubriques_lemonde = c("international","culture","politique","société","économie","sport","science/technologie","inclassable")
+  output$rubrique_lemonde <- renderUI({pickerInput("rubrique_lemonde","Rubrique",choices = rubriques_lemonde, multiple=T,selected=rubriques_lemonde,options = list(`actions-box` = TRUE,`live-search`=TRUE))})
   options(warn = -1)
   set.seed(42)
   initcloud=data.frame(mot=c("liberté","république"), count=c(168035,226300))
@@ -3607,7 +3609,7 @@ shinyServer(function(input, output,session){
       }else if(input$language == 4){
         #updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse britannique / BNA" = 8,"Presse australienne / Trove"=35,"Presse américaine / newspapers.com"=37,"Presse canadienne / newspapers.com"=38,"Presse britannique / newspapers.com"=39,"Presse australienne / newspapers.com"=40,"Presse américaine / Library of Congress"=42, "Livres / Ngram Viewer Anglais" = 10),selected = 8)
         ## readd "The New York Times"=65, when it works again
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("American Stories (1798-1963)"=99,"Presse britannique / BNA" = 8,"Presse australienne / Trove"=35,"Presse américaine / Library of Congress"=42, "Presse anglophone / MediaCloud"=51, "Livres / Ngram Viewer Anglais" = 10,"MusixMatch / Anglais"=46,"Google Trends / Grande-Bretagne"=58,"Google Trends / Etats-Unis"=59,"Google Trends / Australie"=60),selected = 99)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("New York Times (1851-)" = 65,"American Stories (1798-1963)"=99,"Presse britannique / BNA" = 8,"Presse australienne / Trove"=35,"Presse américaine / Library of Congress"=42, "Presse anglophone / MediaCloud"=51, "Livres / Ngram Viewer Anglais" = 10,"MusixMatch / Anglais"=46,"Google Trends / Grande-Bretagne"=58,"Google Trends / Etats-Unis"=59,"Google Trends / Australie"=60),selected = 99)
       }else if(input$language == 5){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse espagnole / BNE"=11, "Presse hispanophone / MediaCloud"=54, "Livres / Ngram Viewer Espagnol"=12,"MusixMatch / Espagnol"=49,"Google Trends / Espagne"=61),selected = 11)
       }
@@ -3934,7 +3936,9 @@ shinyServer(function(input, output,session){
         agregator=0
         df=ngramize(input,nouvrequette,gallicagram,agregator)
       }
-      else if(input$joker==F & input$doc_type!=0 & input$doc_type!=56){df=ngramize(input,nouvrequette,gallicagram,agregator)}
+      else if(input$joker==F & input$doc_type!=0 & input$doc_type!=56){
+        print("ngramize")
+        df=ngramize(input,nouvrequette,gallicagram,agregator)}
       else if(input$joker==F & input$doc_type==0){
         df = list()
         for(i in 1:2){

@@ -11,6 +11,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
   require("DBI")
   from<-input$beginning
   to<-input$end
+  resolution <- recode(input$resolution, "Année"="annee","Mois"="mois")
   url_base = "https://shiny.ens-paris-saclay.fr/guni" #If you are not on the gallicagram server
   if(Sys.info()["nodename"]=="shiny"){url_base = "http://127.0.0.1:8000"} #Use localhost when on shiny server
   if(input$doc_type==30 & input$cooccurrences){
@@ -63,6 +64,38 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     tableau$langue="Français"
     tableau$bibli="Persée"
   }
+  if(input$doc_type == 30){##LeMonde_rubriques
+    mots = str_split(input$mot,"&")[[1]]
+    for(mots1 in mots){
+      mots2 = str_split(mots1,"[+]")[[1]]
+      for(mot in mots2){
+        mot = extract_mot(mot)
+        df = read.csv(glue("{url_base}/query?corpus=lemonde_rubriques&mot={URLencode(mot)}&from={from}&to={to}&rubrique={paste(input$rubrique_lemonde,collapse='+')}&by_rubrique={str_to_title(tolower(input$lemonde_by_rubrique))}&resolution={resolution}"))
+        df = dplyr::rename(df,count=n,base = total,mot=gram)
+        print(df)
+        if(mot == extract_mot(mots2[1])){df_long=df
+        }else{df_long = rbind(df_long,df)}
+      }
+      if(input$lemonde_by_rubrique){
+        df_sum = df_long %>% dplyr::group_by_at(vars(intersect(c("annee","mois","rubrique"), names(df_long)))) %>%
+           dplyr::summarise(count=sum(count),base = mean(base),rubrique=unique(rubrique)) %>% ungroup()
+      }else{
+        group_cols <- c("annee", if ("mois" %in% colnames(df_long)) "mois" else NULL)
+        df_sum = df_long %>% dplyr::group_by(across(all_of(group_cols))) %>% dplyr::summarise(count=sum(count),base = mean(base))  %>% ungroup()}
+      df_sum$mot = mots1
+      if(mots1==mots[1]){tableau = df_sum
+      }else{tableau = rbind(tableau,df_sum)}
+    }
+    tableau$url =str_c("https://www.lemonde.fr/recherche/?search_keywords=%22",tableau$mot,"%22&start_at=01%2F01%2F",tableau$annee,"&end_at=31%2F12%2F",tableau$annee)
+    #!identical(input$rev_persee,"all")
+    if("mois" %in% colnames(tableau)){
+      z = tableau$mois < 10
+      tableau$mois[z] = str_c("0",tableau$mois[z])
+    }
+    tableau$corpus="Le Monde"
+    tableau$langue="Français"
+    tableau$bibli="Le Monde"
+  }
   if(input$doc_type == 81){
     mots = str_split(input$mot,"&")[[1]]
     for(mots1 in mots){
@@ -89,8 +122,9 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     tableau$langue="Français"
     tableau$bibli="Genius"
   }
-  if((input$doc_type==30 & input$cooccurrences) | input$doc_type==34 | input$doc_type == 81){
-    if(input$resolution=="Mois"){tableau$date = paste(tableau$annee,tableau$mois,sep="/")}
+  if((input$doc_type==30) | input$doc_type==34 | input$doc_type == 81){
+    if(input$resolution=="Mois"){tableau$date = paste(tableau$annee,tableau$mois,sep="/")
+    tableau = select(tableau,-annee,-mois)}
     if(input$resolution=="Année"){tableau$date = tableau$annee}
     tableau$search_mode<-"N-gramme"
     print(tableau)

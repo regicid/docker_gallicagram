@@ -253,11 +253,14 @@ Plot <- function(data,input){
   }
   
   Title = paste("")
+  
+  if("rubrique" %in% names(tableau)){
+    tableau$mot = str_c(tableau$rubrique," - ", tableau$mot)
+  }
+  
   tableau$loess=tableau$ratio
   width = length(unique(tableau$date))
   span = 2/width + input$span*(width-2)/(10*width)
-  
-  
   if(input$span >0){
     if(input$loess==F){
       for(mot in unique(tableau$mot)){
@@ -283,9 +286,6 @@ Plot <- function(data,input){
     }
     
   }
-  
-  
-  
   if(input$delta==F){
     tableau$loess[tableau$loess<0]<-0
   }
@@ -298,15 +298,14 @@ Plot <- function(data,input){
     digit_number<-str_length(digit_number)
     digit_number<-str_c(".",digit_number,"%")
   }
-  numGroups=3
-  if(length(unique(tableau$mot))>=3){numGroups <- length(unique(tableau$mot))}
+  numGroups <- length(unique(tableau$mot))
   customPalette <- brewer.pal(numGroups, "Set1")
-  customPalette = customPalette[c(2,1,3:numGroups)]
-  if(length(unique(tableau$mot))==1){
+  customPalette = customPalette[c(2,1,3:max(3,numGroups))]
+  if(numGroups==1){
     customPalette <- brewer.pal(numGroups, "Set1")
     customPalette = customPalette[c(2)]
   }
-  if(length(unique(tableau$mot))==2){
+  if(numGroups==2){
     customPalette <- brewer.pal(numGroups, "Set1")
     customPalette = customPalette[c(2,1)]
   }
@@ -463,6 +462,8 @@ Plot <- function(data,input){
   tableau$ribbon_up[is.na(tableau$ribbon_up)] <- max(tableau$ribbon_up,na.rm=T)
   tableau$ribbon_down[is.na(tableau$ribbon_down)] <- 0
   tableau$ribbon_up[tableau$ribbon_up>1.1*max(loess,na.rm=T)] = max(loess,na.rm=T)*1.1
+  tableau$date = as.Date(tableau$date)
+  print(tableau)
   if(length(unique(tableau$date))<=20){
     plot = plot_ly(tableau, x=~date,y=~loess,color =~mot,type='scatter',mode='lines+markers',line = list(shape = "spline"),linetype = linetype,customdata=tableau$url,colors=customPalette,legendgroup=~mot,text=~hovers,hoverinfo="text",connectgaps = FALSE)
     if(isolate(input$doc_type)!=5 & isolate(input$doc_type)!=9 & isolate(input$doc_type)!=10 & isolate(input$doc_type)!=12 & isolate(input$doc_type)!=44 & isolate(input$doc_type)!=58 & isolate(input$doc_type)!=59 & isolate(input$doc_type)!=60 & isolate(input$doc_type)!=61 & isolate(input$doc_type)!=62 & isolate(input$doc_type)!=63 & isolate(input$doc_type)!=64 & input$scale==F & input$multicourbes==F){
