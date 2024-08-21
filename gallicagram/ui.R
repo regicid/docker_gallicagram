@@ -29,6 +29,7 @@ shinyUI(bootstrapPage(
   uiOutput("style"),
   #tags$head(tags$script(src = "enter_button.js")),
   tags$head(includeHTML(("google-analytics.html"))),
+  tags$head(tags$link(rel="shortcut icon", href="favicon.png")),
   mobileDetect('isMobile'),
   useShinyjs(),
   navbarPage(id="#navbar",title=div(img(src="Logoo.png",

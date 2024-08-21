@@ -37,6 +37,9 @@
 * François Jacquesson, « Le fantôme d’Éléonore », Caramel, Sciences du langage et monde contemporain, 20 mars 2024, <https://caramel.hypotheses.org/43727>
 * François Jacquesson, « L’anglais et “nous” », Caramel, Sciences du langage et monde contemporain, 11 avril 2024, <https://caramel.hypotheses.org/44671>
 * François Jacquesson, « Alibi », Caramel, Sciences du langage et monde contemporain, 27 avril 2024, <https://caramel.hypotheses.org/45300>
+* François Jacquesson, « Pauvre, politique, prolétaire, élections », Caramel, Sciences du langage et monde contemporain, 29 juin 2024, <https://caramel.hypotheses.org/48054>
+* François Jacquesson, « Jaune, Rouge : couleur de peau ? », Caramel, Sciences du langage et monde contemporain, 6 juillet 2024, <https://caramel.hypotheses.org/48154>
+* François Jacquesson, « Glamour : cœur solitaire en société », Caramel, Sciences du langage et monde contemporain, 24 juillet 2024, <https://caramel.hypotheses.org/49035>
 * Madeleine Leroy. « „Bäder bauen heißt Spitäler sparen“. Piscines et bains-douches publics de « Vienne la rouge » (1919-1934) comme éléments d’une politique urbaine d’hygiène sociale », 2021, <https://dumas.ccsd.cnrs.fr/dumas-03416702>
 * Erwan Le Gall, « A propos de l’antimilitarisme des Sârs et de la rougeole politique (1913) », Ar Brezel, 5 janvier 2022, <https://arbrezel.hypotheses.org/4804>
 * Erwan Le Gall, « Février 1918 : l’estuaire de la Loire au bord de la Révolution ? », Ar Brezel, 2 février 2022, <https://arbrezel.hypotheses.org/4963>
@@ -55,6 +58,8 @@
 * Arnaud Laborderie, Florence Tfibel, « Ouvrir les données de la Bibliothèque nationale de France pour la recherche », 2023, <https://hal-bnf.archives-ouvertes.fr/hal-04074665>
 * Benjamin Bober, « Les haches de pierre en contexte gallo-romain - Au delà de la pierre de foudre », Septembre 2023, <https://www.researchgate.net/publication/374199024_Les_haches_de_pierre_en_contexte_gallo-romain_-_Au_dela_de_la_pierre_de_foudre>
 * Claire-Lise Gaillard, « Feuilleter la presse ancienne par gigaoctets », Studies in Digital History and Hermeneutics, 2022, p. 113, <https://library.oapen.org/bitstream/handle/20.500.12657/61093/9783110729214.pdf?sequence=1#page=122>
+* « E2533e – Release of the NDL Ngram Viewer: A Service to Visualize Full-Text Data», Current Awareness Portal, n°442, 1er septembre 2022, <https://current.ndl.go.jp/en/e2533_en>
+* Nicolas Ragonneau, « Pasticher sans peine », Le Coin des Assimilistes, 26 juillet 2023, <https://blog.assimil.com/pasticher-sans-peine/>
 * Jules Verne, Famille-Sans-Nom, Introduction - « Mon pays de prédilection »: le Canada de Jules Verne, 2024, <https://classiques-garnier.com/famille-sans-nom-le-canada-de-jules-verne-ii-introduction.html>
 * Nicolas Chachereau et Cédric Humair, « Méthodes informatiques et quantitatives en histoire du tourisme: apports et limites », Mondes du Tourisme, 2023, no 24, <https://journals.openedition.org/tourisme/6201>
 * Béatrice Joyeux-Prunel, Marie Barras et Nicola Carboni, « Une Europe par les arts ? Les périodiques illustrés au-delà du Musée imaginaire », Artl@s Bulletin, 2023, vol. 12, no 1, p. 12, <https://docs.lib.purdue.edu/artlas/vol12/iss1/12/>
@@ -65,9 +70,13 @@
 * Marc Nikitin, « Le mot comptabilité s’est répandu à la fin du XVIIIe siècle pour désigner une technique de gouvernement», Comptabilité(s), revue d'histoire des comptabilités, 2023, n°15, <https://journals.openedition.org/comptabilites/6513>
 * Marie Lucie Bougon, SÉMINAIRE LPCM – SÉANCE 3, JEUDI 11 JANVIER 2023, 17H-19H : “PROSPECTIVE ET SCIENCE-FICTION : ENJEUX MÉTHODOLOGIQUES ”, <https://lpcm.hypotheses.org/31380>
 * Podcast Paroles d'histoire, épisode 339, <https://parolesdhistoire.fr/index.php/2024/04/07/330-quand-le-monde-devint-mondial-avec-vincent-capdepuy/>
-* Elie Allouche, « Digital Transformation of Education, Systems Approach and Applied Research », Arxiv, Computer Science, 10 avril 2024, <https://arxiv.org/abs/2406.11861>
 * Simon Apartis, « De quoi l’impact est-il le nom ? », Works of the Open Knowledge Cluster of the CNRS Center for Internet and Society, Paris, 17 juin 2024, <https://ok.hypotheses.org/4733>
-
+* Elie Allouche « Transformation numérique de l’éducation, approche systémique et recherche appliquée », Médiations & médiatisations no. 17, p. 75–107, avril 2024, <https://doi.org/10.52358/mm.vi17.392>
+* Gerda Hassler. _Le contexte en question_, p.11, ISTE Group, 2024, <https://books.google.fr/books?hl=fr&lr=&id=t3oUEQAAQBAJ>
+* Géraldine Farges, et Szerdahelyi Loïc, « Renforcer, par la formation, l’attractivité du métier d’enseignant », Constructif, vol. 68, no. 2, 2024, pp. 64-66, <https://doi.org/10.3917/const.068.0064>
+* Christophe Gérard, « Approche discursive de la néologie-Proposition d’un cadre conceptuel », Neologica, 2024, vol. 2024, no 18, p. 17-75, <https://classiques-garnier.com/neologica-2024-n-18-pour-une-approche-discursive-de-la-neologie-approche-discursive-de-la-neologie.html>
+* Gildas Grimault, « « Brittophone » : aux origines d’un conflit terminologique », Cahiers internationaux de sociolinguistique, vol. 24, no. 1, 2024, pp. 71-89, <https://doi.org/10.3917/cisl.2401.0071>
+* Daniel Torres Salinas, et al. « Culturomics con Google Ngram Viewer & Wikipedia », 2024, <http://dx.doi.org/10.5281/zenodo.10842119>
 
 
 ## Conférences de présentation de Gallicagram
@@ -85,6 +94,7 @@
 * Séminaire IMAREV, Gallicagram : impressions de la Révolution - Université Paris Cité, 24 mars 2023 : <https://imarev.hypotheses.org/366>
 * Séminaire ISOCO Indices d’opinion sociaux économiques - Université Paris Nanterre, 6 juillet 2023 : <https://calenda.org/1052826>
 * Laetitia Gonon : « Frantext et gallicagram », Journée d'accueil et de formation des doctorants du CÉRÉDI - Université de Rouen, 21 novembre 2023 : <https://ceredi.hypotheses.org/8056>
+* Approche computationnelle de gros corpus de textes : Gallicagram, Pacte, Laboratoire de sciences sociales, Sciences Po Grenoble, 19 janvier 2024 : <https://www.pacte-grenoble.fr/fr/actualites/approche-computationnelle-gros-corpus-textes-gallicagram>
 * Présentation de Gallicagram et TD au lycée Corot de Savigny, 23 mai 2024 : <https://x.com/gallicagram/status/1793618881833283925>
 * Les lundis de l'INED, Campus Condorcet, 27 mai 2024 : <https://www.ined.fr/fr/actualites/rencontres-scientifiques/les-lundis/gallicagram-un-outil-de-lexicometrie-pour-explorer-de-grands-corpus-diachroniques/>
 * Séminaire Capitalisme littoral et environnement, Institut LUDI, La Rochelle Université, 21 juin 2024, <https://x.com/pierre_labardin/status/1750254315598455145/photo/1>
@@ -124,3 +134,4 @@
 * <https://www.bases-netsources.com/component/flexicontent/category/conseil-semaine>
 * <https://injs-bordeaux.org/blog/lexicometrie/>
 * <https://eduscol.education.fr/3915/veille-education-numerique-2023-2024#VEN21092023>
+* <https://pedagogie.ac-strasbourg.fr/lettres/enseigner-les-lettres-avec-le-numerique/outils-et-tutoriels/deux-outils-lexicometriques-pour-letude-de-mes-forets/>
