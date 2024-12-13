@@ -267,8 +267,8 @@ shinyUI(bootstrapPage(
                                  fluidPage(
                                    h3("Tutoriel et Séminaire de présentation"),
                                    div(style="display: inline-block;vertical-align:bottom",fluidRow(HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/SujS4t-ZGhQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'))),
-                                   div(style="display: inline-block;vertical-align:bottom", 
-                                      fluidRow(HTML('<figure class="wp-block-video"><video controls src="https://archive.org/download/2024-01-19-de-courson/2024-01-19-De%20Courson.mp4"></video></figure>'))),
+                                   div(style="display: inline-block;vertical-align:bottom",
+    fluidRow(HTML('<figure class="wp-block-video"><video controls width="560" height="315" src="https://archive.org/download/2024-01-19-de-courson/2024-01-19-De%20Courson.mp4"></video></figure>'))),
                                    h3("Présentation de Gallicagram"),
                                    fluidRow(uiOutput("pdfview"))
                                  )),
