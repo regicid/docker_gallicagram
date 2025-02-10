@@ -96,13 +96,13 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     tableau$langue="Français"
     tableau$bibli="Le Monde"
   }
-  if(input$doc_type == 81){
+  if(input$doc_type %in% c(81,82)){
     mots = str_split(input$mot,"&")[[1]]
     for(mots1 in mots){
       mots2 = str_split(mots1,"[+]")[[1]]
       for(mot in mots2){
         mot = extract_mot(mot)
-        corpus = recode(input$doc_type,`81`="rap")
+        corpus = recode(input$doc_type,`81`="rap",`82`="prenoms")
         df = read.csv(glue("{url_base}/query?corpus={corpus}&mot={URLencode(mot)}&from={from}&to={to}"))
         df = dplyr::rename(df,count=n,base = total,mot=gram)
         print(df)
@@ -122,7 +122,7 @@ ngramize<-function(input,nouvrequette,gallicagram,agregator){
     tableau$langue="Français"
     tableau$bibli="Genius"
   }
-  if((input$doc_type==30) | input$doc_type==34 | input$doc_type == 81){
+  if(input$doc_type %in% c(30,34,81,82)){
     if(input$resolution=="Mois"){tableau$date = paste(tableau$annee,tableau$mois,sep="/")
     tableau = select(tableau,-annee,-mois)}
     if(input$resolution=="Année"){tableau$date = tableau$annee}

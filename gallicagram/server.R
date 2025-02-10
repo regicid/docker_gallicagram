@@ -2705,6 +2705,10 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
   tableau$langue="Français"
   tableau$bibli="Genius"
   tableau$search_mode<-"Ngram"}
+  if(doc_type==82){tableau$corpus="Prénoms"
+  tableau$langue="Français"
+  tableau$bibli="Prénoms"
+  tableau$search_mode<-"Ngram"}
   
 
   memoire<<-bind_rows(tableau,memoire)
@@ -3451,7 +3455,7 @@ shinyServer(function(input, output,session){
       }else if(input$joker==T & ((input$doc_type == 1 & input$search_mode == 3)|(input$doc_type == 2 & input$search_mode == 3))){
         output$instructions <- renderUI(HTML(str_c('<ul><li>Utiliser "a _" ou "_ a" pour rechercher les n+1 grammes contenant a. "Napoléon _" renvoie Napoléon Ier, Napoléon III, etc. "_ Napoléon" renvoie Code Napoléon, etc. </li><li>Les mots vides sont les mots les plus fréquents de la langue française.</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>')))
         
-      }else if((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1)|(input$doc_type == 1 & input$search_mode == 3)|(input$doc_type == 2 & input$search_mode == 3)|input$doc_type == 5|input$doc_type == 6|input$doc_type == 7|input$doc_type == 8|input$doc_type == 9|input$doc_type == 10|input$doc_type == 11|input$doc_type == 12|input$doc_type == 15|input$doc_type == 16|input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 29 | input$doc_type==81){
+      }else if((input$doc_type == 1 & input$search_mode == 1)|(input$doc_type == 2 & input$search_mode == 1)|(input$doc_type == 3 & input$search_mode == 1)|(input$doc_type == 1 & input$search_mode == 3)|(input$doc_type == 2 & input$search_mode == 3)|input$doc_type == 5|input$doc_type == 6|input$doc_type == 7|input$doc_type == 8|input$doc_type == 9|input$doc_type == 10|input$doc_type == 11|input$doc_type == 12|input$doc_type == 15|input$doc_type == 16|input$doc_type == 19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 29 | input$doc_type==81|input$doc_type==82){
         output$instructions <- renderUI(HTML('<ul><li>Séparer les termes par un "&" pour une recherche multiple</li><li>Utiliser "a+b" pour rechercher a OU b</li><li>Cliquer sur un point du graphique pour accéder aux documents dans la bibliothèque numérique correspondante</li></ul>'))
         
       }else if(input$doc_type==13|input$doc_type==14|input$doc_type==17|input$doc_type==18 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 35 | input$doc_type == 37 | input$doc_type == 38 | input$doc_type == 39 | input$doc_type == 40 | input$doc_type == 42 | input$doc_type == 43 | input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48 |  input$doc_type == 49 | input$doc_type == 65){
@@ -3571,7 +3575,7 @@ shinyServer(function(input, output,session){
   observeEvent(input$language,{
     observeEvent(input$bibli,{
       if(input$language == 1 & input$bibli==0){
-        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0,"Presse française / Gallica (~1789-1950)" = 1,"Le Monde (1944-2022)"=30,"Rap français/Genius (1989-2023)"=81,"Persée"=34,"Livres / Gallica (~1600-1940)" = 2, "Livres+Presse / Gallica"=56,"Le Journal des Débats (1789-1944)"=75,"L'Humanité (1904-1952)"=67,"Le Petit Journal (1863-1942)"=72,"Le Petit Parisien (1876-1944)"=73,"Le Journal de Paris (1777-1827)"=69,"Le Temps (1861-1942)"=71,"Le Figaro (1854-1952)"=66,"Le Moniteur universel (1789-1901)"=70),selected = 1)
+        updateSelectInput(session,"doc_type", "Corpus",choices = list("Gallica-presse 1789-1950 / Le Monde 1945-2022" = 0,"Presse française / Gallica (~1789-1950)" = 1,"Le Monde (1944-2022)"=30,"Rap français/Genius (1989-2023)"=81,"Persée"=34,"Livres / Gallica (~1600-1940)" = 2, "Livres+Presse / Gallica"=56,"Le Journal des Débats (1789-1944)"=75,"L'Humanité (1904-1952)"=67,"Le Petit Journal (1863-1942)"=72,"Le Petit Parisien (1876-1944)"=73,"Le Journal de Paris (1777-1827)"=69,"Le Temps (1861-1942)"=71,"Le Figaro (1854-1952)"=66,"Le Moniteur universel (1789-1901)"=70,"Prénoms INSEE (1900-2023)"=82),selected = 1)
       }
       else if(input$language == 1 & input$bibli==1){
         updateSelectInput(session,"doc_type", "Corpus",choices = list("Presse française / Gallica (~1789-1950)" = 1,"Recherche par titre de presse / Gallica" = 3, "Livres / Gallica (~1600-1940)" = 2, 
@@ -3633,7 +3637,7 @@ shinyServer(function(input, output,session){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3,"Par article" = 4),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année","Mois","Semaine"),selected = "Année",inline = T)
     }
-    if( input$doc_type == 77 | input$doc_type == 78 | input$doc_type == 81 ){
+    if( input$doc_type == 77 | input$doc_type == 78 | input$doc_type == 81 | input$doc_type == 82){
       updateSelectInput(session,"search_mode",choices = list("Par n-gramme" = 3),selected = 3)
       updateRadioButtons(session,"resolution",choices = c("Année"),selected = "Année",inline = T)
     }
@@ -4063,6 +4067,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type==99){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://huggingface.co/datasets/dell-research-harvard/AmericanStories', target=\'_blank\'> ","https://huggingface.co/datasets/dell-research-harvard/AmericanStories","</a>"),sep = ""))}
     if(input$doc_type==79){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.lorientlejour.com/', target=\'_blank\'> ","lorientlejour.com","</a>"),sep = ""))}
     if(input$doc_type==81){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://huggingface.co/datasets/regicid/LRFAF', target=\'_blank\'> ","huggingface.co/datasets/regicid/LRFAF","</a>"),sep = ""))}
+    if(input$doc_type==82){output$legende=renderText(HTML(paste("Source : ","<a href = 'https://www.insee.fr/fr/statistiques/3532172', target=\'_blank\'> ","insee.fr/fr/statistiques/3532172","</a>"),sep = ""))}
     
     
     if(input$doc_type==0 | input$doc_type==1 | input$doc_type==2 | input$doc_type == 3 | input$doc_type==4 | input$doc_type==5 | input$doc_type==13 | input$doc_type==15 | input$doc_type==17 | input$doc_type==18 | input$doc_type==19 | input$doc_type == 20 | input$doc_type == 21 | input$doc_type == 22  | input$doc_type == 23 | input$doc_type == 24 | input$doc_type == 25 | input$doc_type == 26 | input$doc_type == 27 | input$doc_type == 28 | input$doc_type == 30 | input$doc_type == 31 | input$doc_type == 32| input$doc_type == 33| input$doc_type == 34| input$doc_type == 36| input$doc_type == 44| input$doc_type == 45| input$doc_type == 50| input$doc_type == 55 | input$doc_type==56| input$doc_type==57 | input$doc_type %in% 66:76 | input$doc_type==79){output$legende4=renderText("Langue : français")}
@@ -4083,6 +4088,7 @@ shinyServer(function(input, output,session){
     if(input$doc_type == 45 | input$doc_type == 46 | input$doc_type == 47 | input$doc_type == 48  | input$doc_type == 49){output$legende1<-renderText("Corpus : paroles de chansons")}
     if(input$doc_type == 77 | input$doc_type == 78){output$legende1<-renderText("Corpus : films")}
     if(input$doc_type == 81){output$legende1<-renderText("Corpus : Rap français")}
+    if(input$doc_type == 82){output$legende1<-renderText("Prénoms INSEE")}
     if(input$doc_type == 3 & input$theme_presse == 1){
       liste_journaux<-read.csv("liste_journaux.csv",encoding="UTF-8")
       title<-liste_journaux$title[liste_journaux$ark==input$titres[1]]
