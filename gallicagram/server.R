@@ -2070,6 +2070,7 @@ get_data <- function(mot,from,to,resolution,doc_type,titres,input,cooccurrences,
     if(doc_type==10){corpus="en-2019"}
     if(doc_type==12){corpus="es-2019"}
     url=str_c("https://books.google.com/ngrams/json?content=",entree,"&year_start=",from,"&year_end=",to,"&corpus=",corpus,"&smoothing=0")
+    url = URLencode(url)
     aie=as.character(RETRY("GET",url,times=6))
     ouille=fromJSON(aie)%>% as.data.frame
     outch=as.data.frame(ouille)
