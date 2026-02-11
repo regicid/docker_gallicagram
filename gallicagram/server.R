@@ -3279,8 +3279,8 @@ options(shiny.maxRequestSize = 100*1024^2)
 
 shinyServer(function(input, output,session){
   shinyalert(
-    title = "Chargement...",
-    text = "Benjamin Azoulay et Benoît de Courson, « Gallicagram, un outil de lexicométrie pour la recherche », 2021, https://doi.org/10.31235/osf.io/84bf3",
+    title = "Gallicagram fait peau neuve !",
+    text = "La nouvelle version est accessible ici: <a href='https://gallicagram.com' target='_blank'>gallicagram.com</a>. <br><br> Vous pouvez utiliser l'ancienne version ici, mais la nouvelle est carrément mieux.",
     size = "s",
     closeOnEsc = TRUE,
     closeOnClickOutside = TRUE,
@@ -3290,7 +3290,7 @@ shinyServer(function(input, output,session){
     showCancelButton = FALSE,
     confirmButtonText = "OK",
     confirmButtonCol = "#377EB8",
-    timer = 3000,
+    timer = 0,
     imageUrl = "",
     animation = TRUE
   )
