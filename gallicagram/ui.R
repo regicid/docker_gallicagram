@@ -12,7 +12,7 @@ library(htmltools)
 library(shinyWidgets)
 library(rclipboard)
 library(lubridate)
-library(leaflet)
+#library(leaflet)
 library(shinyjs)
 library(DT)
 mobileDetect <- function(inputId, value = 0) {
