@@ -26,7 +26,7 @@ RUN R -e "options(repos = c(CRAN = 'https://packagemanager.posit.co/cran/__linux
       'shiny','rmarkdown','ggplot2','plotly','stringr','Hmisc','xml2','shinythemes', \
       'htmlwidgets','httr','ngramr','dplyr','htmltools','shinyWidgets','purrr', \
       'RSelenium','rvest','rclipboard','RSQLite','tidytext','DBI','shinybusy', \
-      'lubridate','ggthemes','RColorBrewer','cowplot','sf','scales','cartogram', \
+      'lubridate','ggthemes','RColorBrewer','cowplot','scales', \
       'shinyjs','gtrendsR','timetk','jsonlite','ggwordcloud','FactoMineR','chron', \
       'tidyr','shinyalert','factoextra','bezier','doParallel','crul' \
     ))"
