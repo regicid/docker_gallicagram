@@ -1,7 +1,5 @@
 library(shiny)
 library(plotly)
-library(cartogram)
-library(sf)
 library(stringr)
 library(xml2)
 library(markdown)
