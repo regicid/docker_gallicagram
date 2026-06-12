@@ -67,7 +67,6 @@ RUN R -e "install.packages(c('RColorBrewer'), repos='https://cloud.r-project.org
 
 RUN R -e "install.packages(c('cowplot'), repos='https://cloud.r-project.org/')"
 
-RUN R -e "install.packages(c('raster','leaflet'), repos='https://cloud.r-project.org/')"
 
 RUN R -e "install.packages(c('sf'), repos='https://cloud.r-project.org/')"
 
