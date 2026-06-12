@@ -1,118 +1,54 @@
-FROM openanalytics/r-base
+FROM rocker/shiny:4.5.2
 
-MAINTAINER Tobias Verbeke "tobias.verbeke@openanalytics.eu"
-
-# system libraries of general use
-RUN apt-get update && apt-get install -y \
-    sudo \
+# System libraries for the heavier R packages (sf, cartogram, FactoMineR, Hmisc, nloptr).
+# rocker/shiny is jammy-based, so these are modern versions (GDAL 3.4+, libcurl 7.81+).
+RUN apt-get update && apt-get install -y --no-install-recommends \
     pandoc \
-    pandoc-citeproc \
-    libcurl4-gnutls-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
     libcairo2-dev \
     libxt-dev \
-    libssl-dev \
     libssh2-1-dev \
-    libssl1.1 \
-    libxml2-dev \
     libgdal-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# system library dependency for the gallicagram app
-RUN apt-get update && apt-get install -y \
-    libmpfr-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update && apt-get install -y \
+    libgeos-dev \
+    libproj-dev \
     libudunits2-dev \
+    libmpfr-dev \
+    libnlopt-dev \
+    cmake \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y \
-	libnlopt-dev \
-	&& rm -rf /var/lib/apt/lists/*
+# All R packages in ONE layer, from P3M jammy BINARIES (no compiling, fast, no libuv/libcurl/GDAL grief).
+# Duplicates from the old Dockerfile (gtrendsR, FactoMineR, jsonlite) removed.
+RUN R -e "options(repos = c(CRAN = 'https://packagemanager.posit.co/cran/__linux__/jammy/latest')); \
+    install.packages(c( \
+      'shiny','rmarkdown','ggplot2','plotly','stringr','Hmisc','xml2','shinythemes', \
+      'htmlwidgets','httr','ngramr','dplyr','htmltools','shinyWidgets','purrr', \
+      'RSelenium','rvest','rclipboard','RSQLite','tidytext','DBI','shinybusy', \
+      'lubridate','ggthemes','RColorBrewer','cowplot','sf','scales','cartogram', \
+      'shinyjs','gtrendsR','timetk','jsonlite','ggwordcloud','FactoMineR','chron', \
+      'tidyr','shinyalert','factoextra','bezier','doParallel','crul' \
+    ))"
 
-RUN apt-get update && apt-get install -y \
-	cmake \
-	&& rm -rf /var/lib/apt/lists/*
+# Build guard: fail the build (with the exact list) if anything didn't install,
+# instead of discovering it at the ShinyProxy timeout.
+RUN R -e "pkgs <- c('shiny','rmarkdown','ggplot2','plotly','stringr','Hmisc','xml2','shinythemes', \
+      'htmlwidgets','httr','ngramr','dplyr','htmltools','shinyWidgets','purrr', \
+      'RSelenium','rvest','rclipboard','RSQLite','tidytext','DBI','shinybusy', \
+      'lubridate','ggthemes','RColorBrewer','cowplot','sf','scales','cartogram', \
+      'shinyjs','gtrendsR','timetk','jsonlite','ggwordcloud','FactoMineR','chron', \
+      'tidyr','shinyalert','factoextra','bezier','doParallel','crul'); \
+    miss <- pkgs[!vapply(pkgs, requireNamespace, logical(1), quietly=TRUE)]; \
+    if (length(miss)) stop('MISSING PACKAGES: ', paste(miss, collapse=', '))"
 
-RUN apt-get update && apt-get upgrade --yes
-
-# basic shiny functionality
-RUN R -e "install.packages(c('shiny', 'rmarkdown'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('ggplot2','plotly','stringr','Hmisc','xml2','shinythemes','htmlwidgets','httr','ngramr','dplyr','htmltools'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('shinyWidgets'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('purrr'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('RSelenium'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('rvest'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('rclipboard'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('RSQLite'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('tidytext'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('DBI'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('shinybusy'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('lubridate'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('ggthemes'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('RColorBrewer'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('cowplot'), repos='https://cloud.r-project.org/')"
-
-
-RUN R -e "install.packages(c('sf'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('scales'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('cartogram'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('shinyjs'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('gtrendsR'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('timetk'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('jsonlite'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('gtrendsR'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('ggwordcloud'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('FactoMineR'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('chron'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('FactoMineR'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('tidyr'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('shinyalert'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('factoextra'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('bezier'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('jsonlite'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('doParallel'), repos='https://cloud.r-project.org/')"
-
-RUN R -e "install.packages(c('crul'), repos='https://cloud.r-project.org/')"
-
-
-# copy the app to the image
-RUN mkdir /root/gallicagram
+# App code LAST so edits don't bust the package cache.
 COPY gallicagram /root/gallicagram
-
 COPY Rprofile.site /usr/lib/R/etc/
 
 EXPOSE 3838
 
-CMD ["R", "-e", "shiny::runApp('/root/gallicagram')"]
+# Override rocker/shiny's shiny-server entrypoint so only runApp owns the port,
+# and bind 0.0.0.0 so ShinyProxy can reach the container.
+ENTRYPOINT []
+CMD ["R", "-e", "shiny::runApp('/root/gallicagram', host='0.0.0.0', port=3838)"]
